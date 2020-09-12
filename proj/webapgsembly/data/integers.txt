@@ -1,0 +1,173 @@
+# https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=25#p92224
+# R0: the number that is being counted and will be printed
+# R1: number of digits in R0
+# R2: 10^(R1-1)
+# R3: current digit of R0 to print
+# R4, R5, R6: temporary copies of R0, R1, R2
+# R7, R8, R9: temporary helper registers
+# R10: flag that says whether or not to print current R0
+# State    Input    Next state    Actions
+# ---------------------------------------
+INITIAL;   ZZ;      CPYDIG1;      NOP, INC R0, INC R1, INC R2
+
+# Copy R0 to R4 with the help of R7
+CPYDIG1;   ZZ;      CPYDIG2;      TDEC R0
+CPYDIG2;   Z;       CPYDIG3;      TDEC R7
+CPYDIG2;   NZ;      CPYDIG2;      INC R7, TDEC R0
+CPYDIG3;   Z;       CPYDIG4;      NOP
+CPYDIG3;   NZ;      CPYDIG3;      INC R0, INC R4, TDEC R7
+
+# Copy R1 to R5 with the help of R7
+CPYDIG4;   ZZ;      CPYDIG5;      TDEC R1
+CPYDIG5;   Z;       CPYDIG6;      TDEC R7
+CPYDIG5;   NZ;      CPYDIG5;      INC R7, TDEC R1
+CPYDIG6;   Z;       CPYDIG7;      NOP
+CPYDIG6;   NZ;      CPYDIG6;      INC R1, INC R5, TDEC R7
+
+# Copy R2 to R8 with the help of R7
+CPYDIG7;   ZZ;      CPYDIG8;      TDEC R2
+CPYDIG8;   Z;       CPYDIG9;      TDEC R7
+CPYDIG8;   NZ;      CPYDIG8;      INC R7, TDEC R2
+CPYDIG9;   Z;       CPYDIG10;     NOP
+CPYDIG9;   NZ;      CPYDIG9;      INC R2, INC R8, TDEC R7
+
+# Copy R8 to R6 with the help of R7
+CPYDIG10;  ZZ;      CPYDIG11;     TDEC R8
+CPYDIG11;  Z;       CPYDIG12;     TDEC R7
+CPYDIG11;  NZ;      CPYDIG11;     INC R7, TDEC R8
+CPYDIG12;  Z;       SUB1;         NOP
+CPYDIG12;  NZ;      CPYDIG12;     INC R8, INC R6, TDEC R7
+
+# Check whether R6 <= R4, and subtract if it is
+# If R6 <= R4 then this sets R4 = R4 - R6, R6 = 0 and increases R3 by 1
+# If R4 < R6 then this sets R6 = R6 - R4, R4 = 0 and moves on to digit printing
+# Set R3 = number of times we subtracted
+SUB1;      ZZ;      SUB2;         TDEC R6
+SUB2;      Z;       CPYDIG10;     NOP, INC R3
+SUB2;      NZ;      SUB3;         TDEC R4
+SUB3;      Z;       CHKPRINT;     NOP, INC R6
+SUB3;      NZ;      SUB2;         TDEC R6
+
+### Put any custom sequence code here (i.e., if you want to only print integers
+### with a certain property, test for that property between CHKPRINT and PRINTRES).
+### If you want to print the integer, give a Z input to PRINTRES, otherwise give
+### it an NZ input.
+### You can use R7 and R9 as temporary helper registers, if needed, but reset them
+### to 0 when done with them.
+CHKPRINT;  ZZ;      PRINTRES;     NOP
+
+PRINTRES;  Z;       PRINTDIG;     NOP
+### End custom checking code
+
+# Not printing R3? Have to zero out some registers. Also set a flag (R10) so we
+# know to skip printing other digits and the period.
+PRINTRES;  NZ;      NOPRINT1;     TDEC R4, INC R10
+NOPRINT1;  Z;       NOPRINT2;     TDEC R5
+NOPRINT1;  NZ;      NOPRINT1;     TDEC R4
+NOPRINT2;  Z;       NOPRINT3;     TDEC R6
+NOPRINT2;  NZ;      NOPRINT2;     TDEC R5
+NOPRINT3;  Z;       NOPRINT4;     TDEC R8
+NOPRINT3;  NZ;      NOPRINT3;     TDEC R6
+NOPRINT4;  Z;       NOPRINT5;     NOP
+NOPRINT4;  NZ;      NOPRINT4;     TDEC R8
+# If R3 >= 10 then update R1 and R2. Otherwise just loop back.
+NOPRINT5;  ZZ;      NOPRINT6;     TDEC R3
+NOPRINT6;  *;       NOPRINT7;     TDEC R3
+NOPRINT7;  *;       NOPRINT8;     TDEC R3
+NOPRINT8;  *;       NOPRINT9;     TDEC R3
+NOPRINT9;  *;       NOPRINT10;    TDEC R3
+NOPRINT10; *;       NOPRINT11;    TDEC R3
+NOPRINT11; *;       NOPRINT12;    TDEC R3
+NOPRINT12; *;       NOPRINT13;    TDEC R3
+NOPRINT13; *;       NOPRINT14;    TDEC R3
+NOPRINT14; *;       NOPRINT15;    TDEC R3
+NOPRINT15; Z;       CPYDIG1;      NOP, INC R0
+NOPRINT15; NZ;      EXP1;         NOP
+
+# Print the digit currently stored in R3
+PRINTDIG;  ZZ;      OUT0;         TDEC R3
+OUT0;      Z;       OUTD;         NOP, OUTPUT 0
+OUT0;      NZ;      OUT1;         TDEC R3
+OUT1;      Z;       OUTD;         NOP, OUTPUT 1
+OUT1;      NZ;      OUT2;         TDEC R3
+OUT2;      Z;       OUTD;         NOP, OUTPUT 2
+OUT2;      NZ;      OUT3;         TDEC R3
+OUT3;      Z;       OUTD;         NOP, OUTPUT 3
+OUT3;      NZ;      OUT4;         TDEC R3
+OUT4;      Z;       OUTD;         NOP, OUTPUT 4
+OUT4;      NZ;      OUT5;         TDEC R3
+OUT5;      Z;       OUTD;         NOP, OUTPUT 5
+OUT5;      NZ;      OUT6;         TDEC R3
+OUT6;      Z;       OUTD;         NOP, OUTPUT 6
+OUT6;      NZ;      OUT7;         TDEC R3
+OUT7;      Z;       OUTD;         NOP, OUTPUT 7
+OUT7;      NZ;      OUT8;         TDEC R3
+OUT8;      Z;       OUTD;         NOP, OUTPUT 8
+OUT8;      NZ;      OUT9;         TDEC R3
+OUT9;      Z;       OUTD;         NOP, OUTPUT 9
+OUT9;      NZ;      OUT10;        NOP, OUTPUT 1
+OUT10;     ZZ;      EXP1;         NOP, OUTPUT 0
+OUTD;      ZZ;      DECD1;        NOP
+
+# Set R1 = R1 + 1 and R2 = R2 * 10 if R0 just got a new decimal digit
+# Copy R2 to R9 with the help of R7
+EXP1;      ZZ;      EXP2;         INC R1, TDEC R2
+EXP2;      Z;       EXP3;         TDEC R7
+EXP2;      NZ;      EXP2;         INC R7, TDEC R2
+EXP3;      Z;       EXP4;         NOP
+EXP3;      NZ;      EXP3;         INC R2, INC R9, TDEC R7
+# Set R2 = 10 * R9, R9 = 0
+EXP4;      ZZ;      EXP5A;        TDEC R9
+EXP5A;     Z;       CHKFLAG1;     NOP
+EXP5A;     NZ;      EXP5B;        NOP, INC R2
+EXP5B;     ZZ;      EXP5C;        NOP, INC R2
+EXP5C;     ZZ;      EXP5D;        NOP, INC R2
+EXP5D;     ZZ;      EXP5E;        NOP, INC R2
+EXP5E;     ZZ;      EXP5F;        NOP, INC R2
+EXP5F;     ZZ;      EXP5G;        NOP, INC R2
+EXP5G;     ZZ;      EXP5H;        NOP, INC R2
+EXP5H;     ZZ;      EXP5I;        NOP, INC R2
+EXP5I;     ZZ;      EXP5A;        TDEC R9, INC R2
+
+# If R10 = 1 then jump to next R0
+CHKFLAG1;  ZZ;      CHKFLAG2;     TDEC R10
+CHKFLAG2;  Z;       DECD1;        NOP
+CHKFLAG2;  NZ;      CPYDIG1;      NOP, INC R0
+
+# Copy R8 to R4 with the help of R7
+DECD1;     ZZ;      DECD2;        TDEC R8
+DECD2;     Z;       DECD3;        TDEC R7
+DECD2;     NZ;      DECD2;        INC R7, TDEC R8
+DECD3;     Z;       DECD4;        NOP
+DECD3;     NZ;      DECD3;        INC R8, INC R4, TDEC R7
+
+# Set R4 = R4 - R6, R6 = 0, R5 = R5 - 1
+DECD4;     ZZ;      DECD5;        TDEC R6
+DECD5;     Z;       DECDT;        TDEC R5
+DECD5;     NZ;      DECD6;        TDEC R4
+DECD6;     *;       DECD5;        TDEC R6
+
+# Set R6 = R8/10, R8 = 0, or quit if we've printed all digits
+DECDT;     *;       DECD7;        TDEC R5
+DECD7;     Z;       DECD18;       TDEC R8
+DECD7;     NZ;      DECD8;        INC R5, TDEC R8
+DECD8;     *;       DECD9;        TDEC R8
+DECD9;     *;       DECD10;       TDEC R8
+DECD10;    *;       DECD11;       TDEC R8
+DECD11;    *;       DECD12;       TDEC R8
+DECD12;    *;       DECD13;       TDEC R8
+DECD13;    *;       DECD14;       TDEC R8
+DECD14;    *;       DECD15;       TDEC R8
+DECD15;    *;       DECD16;       TDEC R8
+DECD16;    *;       DECD17;       TDEC R8
+DECD17;    Z;       CPYDIG13;     NOP
+DECD17;    NZ;      DECD8;        TDEC R8, INC R6
+DECD18;    Z;       CPYDIG1;      NOP, INC R0, OUTPUT .
+DECD18;    NZ;      DECD18;       TDEC R8
+
+# Copy R6 to R8 with the help of R7
+CPYDIG13;  ZZ;      CPYDIG14;     TDEC R6
+CPYDIG14;  Z;       CPYDIG15;     TDEC R7
+CPYDIG14;  NZ;      CPYDIG14;     INC R7, TDEC R6
+CPYDIG15;  Z;       SUB1;         NOP
+CPYDIG15;  NZ;      CPYDIG15;     INC R6, INC R8, TDEC R7

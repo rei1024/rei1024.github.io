@@ -1,0 +1,344 @@
+# https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=25#p92230
+# State    Input    Next state    Actions
+# ---------------------------------------
+INITIAL;   ZZ;      I1;           READ T0, INC R0
+I1;        ZZ;      I2;           SET T0, READ T2, INC R0
+I2;        ZZ;      I3;           RESET T2, INC T2, INC R0
+I3;        *;       I4;           READ T2, INC R0
+I4;        ZZ;      ICUSTOM;      SET T2, DEC T2, INC R0
+ICUSTOM;   *;       IMEM1;        NOP, INC R3, INC R0
+IMEM1;     ZZ;      IMEM2;        NOP, INC R0
+IMEM2;     ZZ;      IMEM3;        NOP, INC R0
+IMEM3;     ZZ;      IMEM4;        NOP, INC R0
+IMEM4;     ZZ;      ITSTART;      NOP, INC R0
+ITSTART;   ZZ;      ITSTRB;       NOP, INC R6
+ITSTRB;    ZZ;      ITSTRC;       NOP, INC R6
+ITSTRC;    ZZ;      ITSTRD;       NOP, INC R6
+ITSTRD;    ZZ;      ITTEST;       NOP, INC R6
+ITTEST;    ZZ;      IT1;          TDEC R6
+IT1;       Z;       IT5;          TDEC R1
+IT1;       NZ;      IT1B;         NOP, INC R3, INC R4, INC R5
+IT1B;      ZZ;      IT1C;         NOP, INC R3, INC R4, INC R5
+IT1C;      ZZ;      IT1D;         NOP, INC R4, INC R5
+IT1D;      ZZ;      MULA1;        NOP, INC R4, INC R5
+
+## The MULA states compute the (R5 * T1) portion of the top-right entry of B, while also
+## storing the value of T1 in the temporary register T3 (but we don't need it there).
+# First: Copy T1 into T3 (without erasing T1), with the help of temporary registers R7, R8
+MULA1;     ZZ;      MULA2;        TDEC R0
+MULA2;     Z;       MULA3;        TDEC R7
+MULA2;     NZ;      MULA2;        INC R7, TDEC R0
+MULA3;     Z;       MULA4;        TDEC R8
+MULA3;     NZ;      MULA3;        INC R0, INC R8, TDEC R7
+MULA4;     Z;       MULA9;        DEC T1
+MULA4;     NZ;      MULA5;        READ T3
+MULA5;     Z;       MULA6;        READ T1
+MULA5;     NZ;      MULA6;        READ T1
+MULA6;     Z;       MULA7;        RESET T1, RESET T3, INC T1
+MULA6;     NZ;      MULA7;        SET T1, SET T3, INC T1
+MULA7;     Z;       MULA8;        INC T3
+MULA7;     NZ;      MULA8;        INC T3
+MULA8;     Z;       MULA4;        TDEC R8
+MULA8;     NZ;      MULA4;        TDEC R8
+MULA9;     Z;       MULA10;       DEC T3
+MULA9;     NZ;      MULA9;        DEC T1
+MULA10;    Z;       MULA11;       TDEC R5
+MULA10;    NZ;      MULA10;       DEC T3
+
+# Next: Copy R5 to temporary register R9, with the help of temporary register R8
+MULA11;    Z;       MULA12;       TDEC R8
+MULA11;    NZ;      MULA11;       INC R8, TDEC R5
+MULA12;    Z;       MULA13;       TDEC R9
+MULA12;    NZ;      MULA12;       INC R5, INC R9, TDEC R8
+
+# Now loop over R9, adding T3 to T1 each time (so that T1 = R5 * T3 and R9 is reset to 0).
+# This code actually loops over R9-1, since T1 already contains one copy of T3.
+MULA13;    *;       MULA14;       TDEC R9
+MULA14;    Z;       MULB1;        TDEC R0
+MULA14;    NZ;      MULA15;       TDEC R0
+MULA15;    Z;       MULA16;       TDEC R7
+MULA15;    NZ;      MULA15;       TDEC R0, INC R7
+MULA16;    Z;       MULA17;       TDEC R8
+MULA16;    NZ;      MULA16;       INC R0, TDEC R7, INC R8
+MULA17;    Z;       MULA23;       DEC T3
+MULA17;    NZ;      MULA18;       READ T3
+MULA18;    Z;       MULA19;       READ T1, RESET T3
+MULA18;    NZ;      MULA19;       READ T1, SET T3, ADD A1
+MULA19;    Z;       MULA20;       ADD B0
+MULA19;    NZ;      MULA20;       ADD B1
+MULA20;    Z;       MULA21;       RESET T1, INC T1
+MULA20;    NZ;      MULA21;       SET T1, INC T1
+MULA21;    *;       MULA22;       INC T3
+MULA22;    *;       MULA17;       TDEC R8
+MULA23;    Z;       MULA24;       DEC T1
+MULA23;    NZ;      MULA23;       DEC T3
+MULA24;    Z;       MULA14;       TDEC R9
+MULA24;    NZ;      MULA24;       DEC T1
+## Done computing the (R5 * T1) portion of the top-right entry of B.
+
+## The MULB states compute the new top-left entry of B (R3 * T0), while also
+## storing the value of T0 in the temporary register T3.
+# First: Copy T0 into T3 (without erasing T0), with the help of temporary registers R7, R8
+MULB1;     Z;       MULB2;        TDEC R7
+MULB1;     NZ;      MULB1;        INC R7, TDEC R0
+MULB2;     Z;       MULB3;        TDEC R8
+MULB2;     NZ;      MULB2;        INC R0, INC R8, TDEC R7
+MULB3;     Z;       MULB8;        DEC T0
+MULB3;     NZ;      MULB4;        READ T3
+MULB4;     Z;       MULB5;        READ T0
+MULB4;     NZ;      MULB5;        READ T0
+MULB5;     Z;       MULB6;        RESET T0, RESET T3, INC T0
+MULB5;     NZ;      MULB6;        SET T0, SET T3, INC T0
+MULB6;     Z;       MULB7;        INC T3
+MULB6;     NZ;      MULB7;        INC T3
+MULB7;     Z;       MULB3;        TDEC R8
+MULB7;     NZ;      MULB3;        TDEC R8
+MULB8;     Z;       MULB9;        DEC T3
+MULB8;     NZ;      MULB8;        DEC T0
+MULB9;     Z;       MULB10;       TDEC R3
+MULB9;     NZ;      MULB9;        DEC T3
+
+# Next: Copy R3 to temporary register R9, with the help of temporary register R8
+MULB10;    Z;       MULB11;       TDEC R8
+MULB10;    NZ;      MULB10;       INC R8, TDEC R3
+MULB11;    Z;       MULB12;       TDEC R9
+MULB11;    NZ;      MULB11;       INC R3, INC R9, TDEC R8
+
+# Now loop over R9, adding T3 to T0 each time (so that T0 = R3 * T3 and R9 is reset to 0).
+# This code actually loops over R9-1, since T0 already contains one copy of T3.
+MULB12;    *;       MULB13;       TDEC R9
+MULB13;    Z;       MULC1;        TDEC R4
+MULB13;    NZ;      MULB14;       TDEC R0
+MULB14;    Z;       MULB15;       TDEC R7
+MULB14;    NZ;      MULB14;       TDEC R0, INC R7
+MULB15;    Z;       MULB16;       TDEC R8
+MULB15;    NZ;      MULB15;       INC R0, TDEC R7, INC R8
+MULB16;    Z;       MULB22;       DEC T3
+MULB16;    NZ;      MULB17;       READ T3
+MULB17;    Z;       MULB18;       READ T0, RESET T3
+MULB17;    NZ;      MULB18;       READ T0, SET T3, ADD A1
+MULB18;    Z;       MULB19;       ADD B0
+MULB18;    NZ;      MULB19;       ADD B1
+MULB19;    Z;       MULB20;       RESET T0, INC T0
+MULB19;    NZ;      MULB20;       SET T0, INC T0
+MULB20;    *;       MULB21;       INC T3
+MULB21;    *;       MULB16;       TDEC R8
+MULB22;    Z;       MULB23;       DEC T0
+MULB22;    NZ;      MULB22;       DEC T3
+MULB23;    Z;       MULB13;       TDEC R9
+MULB23;    NZ;      MULB23;       DEC T0
+## Done computing the top-left entry of B (R3 * T0).
+
+## The MULC states add the (R4 * T0) portion to the top-right entry of B (T1).
+## This code relies on the fact that the MULB states above stored the value of
+## T0 in the temporary register T3.
+# First: Copy R4 to temporary register R9, with the help of temporary register R8
+MULC1;     Z;       MULC2;        TDEC R8
+MULC1;     NZ;      MULC1;        INC R8, TDEC R4
+MULC2;     Z;       MULC3;        TDEC R9
+MULC2;     NZ;      MULC2;        INC R4, INC R9, TDEC R8
+
+# Now loop over R9, adding T3 to T1 each time (so that T1 = T1 + R4 * T3 and R9 is reset to 0).
+MULC3;     Z;       MULD1;        TDEC R0
+MULC3;     NZ;      MULC4;        TDEC R0
+MULC4;     Z;       MULC5;        TDEC R7
+MULC4;     NZ;      MULC4;        TDEC R0, INC R7
+MULC5;     Z;       MULC6;        TDEC R8
+MULC5;     NZ;      MULC5;        INC R0, TDEC R7, INC R8
+MULC6;     Z;       MULC12;       DEC T3
+MULC6;     NZ;      MULC7;        READ T3
+MULC7;     Z;       MULC8;        READ T1, RESET T3
+MULC7;     NZ;      MULC8;        READ T1, SET T3, ADD A1
+MULC8;     Z;       MULC9;        ADD B0
+MULC8;     NZ;      MULC9;        ADD B1
+MULC9;     Z;       MULC10;       RESET T1, INC T1
+MULC9;     NZ;      MULC10;       SET T1, INC T1
+MULC10;    *;       MULC11;       INC T3
+MULC11;    *;       MULC6;        TDEC R8
+MULC12;    Z;       MULC13;       DEC T1
+MULC12;    NZ;      MULC12;       DEC T3
+MULC13;    Z;       MULC3;        TDEC R9
+MULC13;    NZ;      MULC13;       DEC T1
+## Done computing the top-right entry of B (R5 * T1) + (R4 * T0).
+
+## The MULD states compute the new bottom-right entry of B (R5 * T2), while also
+## storing the value of T2 in the temporary register T3 (not that we need it there).
+# First: Copy T2 into T3 (without erasing T2), with the help of temporary registers R7, R8
+MULD1;     Z;       MULD2;        TDEC R7
+MULD1;     NZ;      MULD1;        INC R7, TDEC R0
+MULD2;     Z;       MULD3;        TDEC R8
+MULD2;     NZ;      MULD2;        INC R0, INC R8, TDEC R7
+MULD3;     Z;       MULD8;        DEC T2
+MULD3;     NZ;      MULD4;        READ T3
+MULD4;     Z;       MULD5;        READ T2
+MULD4;     NZ;      MULD5;        READ T2
+MULD5;     Z;       MULD6;        RESET T2, RESET T3, INC T2
+MULD5;     NZ;      MULD6;        SET T2, SET T3, INC T2
+MULD6;     Z;       MULD7;        INC T3
+MULD6;     NZ;      MULD7;        INC T3
+MULD7;     Z;       MULD3;        TDEC R8
+MULD7;     NZ;      MULD3;        TDEC R8
+MULD8;     Z;       MULD9;        DEC T3
+MULD8;     NZ;      MULD8;        DEC T2
+MULD9;     Z;       MULD10;       TDEC R5
+MULD9;     NZ;      MULD9;        DEC T3
+
+# Next: Copy R5 to temporary register R9, with the help of temporary register R8
+MULD10;    Z;       MULD11;       TDEC R8
+MULD10;    NZ;      MULD10;       INC R8, TDEC R5
+MULD11;    Z;       MULD12;       TDEC R9
+MULD11;    NZ;      MULD11;       INC R5, INC R9, TDEC R8
+
+# Now loop over R9, adding T3 to T2 each time (so that T2 = R5 * T3 and R9 is reset to 0).
+# This code actually loops over R9-1, since T2 already contains one copy of T3.
+MULD12;    *;       MULD13;       TDEC R9
+MULD13;    Z;       IT2;          NOP, INC R2
+MULD13;    NZ;      MULD14;       TDEC R0
+MULD14;    Z;       MULD15;       TDEC R7
+MULD14;    NZ;      MULD14;       TDEC R0, INC R7
+MULD15;    Z;       MULD16;       TDEC R8
+MULD15;    NZ;      MULD15;       INC R0, TDEC R7, INC R8
+MULD16;    Z;       MULD22;       DEC T3
+MULD16;    NZ;      MULD17;       READ T3
+MULD17;    Z;       MULD18;       READ T2, RESET T3
+MULD17;    NZ;      MULD18;       READ T2, SET T3, ADD A1
+MULD18;    Z;       MULD19;       ADD B0
+MULD18;    NZ;      MULD19;       ADD B1
+MULD19;    Z;       MULD20;       RESET T2, INC T2
+MULD19;    NZ;      MULD20;       SET T2, INC T2
+MULD20;    *;       MULD21;       INC T3
+MULD21;    *;       MULD16;       TDEC R8
+MULD22;    Z;       MULD23;       DEC T2
+MULD22;    NZ;      MULD22;       DEC T3
+MULD23;    Z;       MULD13;       TDEC R9
+MULD23;    NZ;      MULD23;       DEC T2
+## Done computing the bottom-right entry of B (R5 * T2).
+
+# Increase the amount of memory that we are allocating to the binary registers, by adding R2 to R0 (via the temporary register R8)
+IT2;       ZZ;      IT3;          TDEC R2
+IT3;       Z;       IT4;          TDEC R8
+IT3;       NZ;      IT3;          INC R8, TDEC R2
+IT4;       Z;       ITTEST;       NOP
+IT4;       NZ;      IT4;          INC R0, INC R2, TDEC R8
+
+## The next step is to extract the units digit from (10^R1)*T0/T2, as that will be
+## the digit of pi that we want to print.
+# Copy R1 to temporary register R9, with the help of temporary register R8
+IT5;       Z;       IT6;          TDEC R8
+IT5;       NZ;      IT5;          INC R8, TDEC R1
+IT6;       Z;       IT7;          TDEC R0
+IT6;       NZ;      IT6;          TDEC R8, INC R1, INC R9
+
+# Copy T1 into T3 (without erasing T1), with the help of temporary registers R7, R8
+IT7;       Z;       IT8;          TDEC R8
+IT7;       NZ;      IT7;          TDEC R0, INC R8
+IT8;       Z;       IT9;          TDEC R7
+IT8;       NZ;      IT8;          INC R0, TDEC R8, INC R7
+IT9;       Z;       IT14;         DEC T3
+IT9;       NZ;      IT10;         READ T3
+IT10;      *;       IT11;         READ T1
+IT11;      Z;       IT12;         RESET T1, RESET T3, INC T3
+IT11;      NZ;      IT12;         SET T1, SET T3, INC T3
+IT12;      *;       IT13;         INC T1
+IT13;      *;       IT9;          TDEC R7
+IT14;      Z;       IT15;         DEC T1
+IT14;      NZ;      IT14;         DEC T3
+IT15;      Z;       CMP1;         TDEC R0
+IT15;      NZ;      IT15;         DEC T1
+
+# Now compare T2 with T3 to see which is bigger.
+# This determines which of the two upcoming code blocks to send us to.
+CMP1;      Z;       CMP2;         TDEC R8
+CMP1;      NZ;      CMP1;         TDEC R0, INC R8
+CMP2;      Z;       CMP3;         TDEC R7
+CMP2;      NZ;      CMP2;         INC R0, TDEC R8, INC R7
+CMP3;      Z;       CMP6;         READ T3
+CMP3;      NZ;      CMP4;         INC T3
+CMP4;      *;       CMP5;         INC T2
+CMP5;      *;       CMP3;         TDEC R7
+CMP6;      Z;       CMP7;         READ T2, RESET T3
+CMP6;      NZ;      CMP10;        READ T2, SET T3
+CMP7;      Z;       CMP8;         RESET T2, DEC T2
+CMP7;      NZ;      CMP11;        SET T2, DEC T3
+CMP8;      *;       CMP9;         DEC T3
+CMP9;      Z;       CMP14;        DEC T2
+CMP9;      NZ;      CMP6;         READ T3
+CMP10;     Z;       CMP13;        RESET T2, DEC T3
+CMP10;     NZ;      CMP8;         SET T2, DEC T2
+CMP11;     Z;       CMP12;        DEC T2
+CMP11;     NZ;      CMP11;        DEC T3
+CMP12;     Z;       DIG1;         TDEC R9
+CMP12;     NZ;      CMP12;        DEC T2
+CMP13;     Z;       CMP14;        DEC T2
+CMP13;     NZ;      CMP13;        DEC T3
+CMP14;     Z;       SUB1;         TDEC R0
+CMP14;     NZ;      CMP14;        DEC T2
+
+# If T2 < T3 then subtract T2 from T3 (i.e., carry on with integer division).
+SUB1;      Z;       SUB2;         TDEC R8
+SUB1;      NZ;      SUB1;         TDEC R0, INC R8
+SUB2;      Z;       SUB3;         TDEC R7
+SUB2;      NZ;      SUB2;         INC R0, TDEC R8, INC R7
+SUB3;      Z;       SUB9;         DEC T3
+SUB3;      NZ;      SUB4;         READ T3
+SUB4;      Z;       SUB5;         READ T2
+SUB4;      NZ;      SUB5;         READ T2, SUB A1
+SUB5;      Z;       SUB6;         RESET T2, SUB B0
+SUB5;      NZ;      SUB6;         SET T2, SUB B1
+SUB6;      Z;       SUB7;         RESET T3, INC T3
+SUB6;      NZ;      SUB7;         SET T3, INC T3
+SUB7;      *;       SUB8;         INC T2
+SUB8;      *;       SUB3;         TDEC R7
+SUB9;      Z;       SUB10;        DEC T2
+SUB9;      NZ;      SUB9;         DEC T3
+SUB10;     Z;       CMP1;         TDEC R0, INC R10
+SUB10;     NZ;      SUB10;        DEC T2
+
+# If T2 > T3 we cannot subtract anymore. Either multiply by T3 by 10 and reset R10, or jump ahead and print the digit that we have now computed.
+DIG1;      Z;       OUT0;         TDEC R10
+DIG1;      NZ;      DIG2;         TDEC R10
+DIG2;      Z;       DIG3;         TDEC R0
+DIG2;      NZ;      DIG2;         TDEC R10
+DIG3;      Z;       DIG4;         TDEC R8
+DIG3;      NZ;      DIG3;         TDEC R0, INC R8
+DIG4;      Z;       DIG5;         TDEC R7
+DIG4;      NZ;      DIG4;         INC R0, TDEC R8, INC R7
+DIG5;      Z;       DIG9;         DEC T3
+DIG5;      NZ;      DIG6;         READ T3
+DIG6;      Z;       DIG7;         MUL 0
+DIG6;      NZ;      DIG7;         MUL 1
+DIG7;      Z;       DIG8;         RESET T3, INC T3
+DIG7;      NZ;      DIG8;         SET T3, INC T3
+DIG8;      *;       DIG5;         TDEC R7
+DIG9;      Z;       CMP1;         TDEC R0
+DIG9;      NZ;      DIG9;         DEC T3
+## Done extracting the next digit of pi.
+
+# Print the current digit, which is stored in R10.
+OUT0;      Z;       OUTDTEST;     NOP, OUTPUT 0
+OUT0;      NZ;      OUT1;         TDEC R10
+OUT1;      Z;       OUTDTEST;     NOP, OUTPUT 1
+OUT1;      NZ;      OUT2;         TDEC R10
+OUT2;      Z;       OUTDTEST;     NOP, OUTPUT 2
+OUT2;      NZ;      OUT3;         TDEC R10
+OUT3;      Z;       OUTDTEST;     NOP, OUTPUT 3
+OUT3;      NZ;      OUT4;         TDEC R10
+OUT4;      Z;       OUTDTEST;     NOP, OUTPUT 4
+OUT4;      NZ;      OUT5;         TDEC R10
+OUT5;      Z;       OUTDTEST;     NOP, OUTPUT 5
+OUT5;      NZ;      OUT6;         TDEC R10
+OUT6;      Z;       OUTDTEST;     NOP, OUTPUT 6
+OUT6;      NZ;      OUT7;         TDEC R10
+OUT7;      Z;       OUTDTEST;     NOP, OUTPUT 7
+OUT7;      NZ;      OUT8;         TDEC R10
+OUT8;      Z;       OUTDTEST;     NOP, OUTPUT 8
+OUT8;      NZ;      OUTDTEST;     NOP, OUTPUT 9
+
+# Check whether or not we just printed the very first digit (1). If so,
+# print a decimal place. Either way, increase R1, which counts which
+# decimal place we are currently at, and loop back to start the next
+# digit calculation.
+OUTDTEST;  ZZ;      OUTD;         TDEC R1
+OUTD;      Z;       ITSTART;      NOP, INC R1, OUTPUT .
+OUTD;      NZ;      OUTD2;        NOP, INC R1
+OUTD2;     ZZ;      ITSTART;      NOP, INC R1

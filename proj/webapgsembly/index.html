@@ -1,0 +1,241 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1, initial-scale=1.0">
+    <title>WebAPGsembly</title>
+    <meta name="description" content="Emulator for APGsembly">
+    <meta name="keywords" content="Game of Life,APGsembly,General purpose calculator,GPC">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./index.js" type="module"></script>
+    <style>
+        body {
+            background-color: #f9f9f9;
+        }
+        :root {  
+            --primary-color: #0D47A1;
+            --primary-light-color: #2196F3;
+            --primary--more-light-color: #BBDEFB;
+        }
+        .txt {
+            border-radius: 10px;
+            padding: 5px;
+            outline: 0;
+            border: 1px solid #ced4da;
+        }
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--primary-color);
+            transition: background-color 0.1s, color 0.1s, border 0.1s;
+        }
+        .btn:focus {
+            outline: none;
+        }
+
+        .btn:hover {
+            background-color: white;
+            color: darkblue;
+        }
+        .btn:active {
+            background-color: var(--primary-light-color);
+            color: white;
+            border: 2px solid var(--primary--more-light-color);
+        }
+        .btn:disabled {
+            background-color: rgb(71, 71, 71);
+            color: rgb(141, 141, 141);
+            border: 2px solid rgb(71, 71, 71);
+        }
+        #freq_output {
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        #message {
+            background-color: lightcoral;
+        }
+        #sample {
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            border: 2px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div style="text-align: center;">
+        <h1 style="margin-bottom: 0;">WebAPGsembly</h1>
+        <h2 style="font-size:1.2em; margin-top:0px">APGsembly emulator</h2>
+    </div>
+    <div class="mb" id="message">
+    </div>
+
+    <div style="text-align: right; margin-bottom: 16px;">
+        <select id="sample">
+            <option value="none" selected>Sample Code</option>
+            <option value="e_calculator">E calculator</option>
+            <option value="phi-program">Phi calculator</option>
+            <option value="pi-program">Pi calculator</option>
+            <option value="sqrt2_calculator">Sqrt(2) calculator</option>
+            <option value="osqrtlogt-program">O(sqrt(log(t)))</option>
+            <option value="integers">Integers</option>
+            <option value="primes">Primes</option>
+            <option value="Koch">Koch curve</option>
+        </select>
+        <label class="btn" for="file">File</label>
+        <input id="file" class="d-none" type="file">
+    </div>
+
+    <textarea placeholder="Input" class="txt w-100 mb" name="" id="program_input" cols="30" rows="10"></textarea>
+    <!-- <button class="btn">Clipboard</button> -->
+    <div style="text-align: left;">
+        <button id="load" class="btn">Load</button>
+        <button id="start" class="btn">Start</button>
+        <button id="step" class="btn">Step</button>
+        <button id="goto" class="btn">Goto</button>
+        <output id="freq_output">1/s</output>
+    </div>
+    <div>
+        <input id="freq_range" type="range" class="w-100" step="1" value="0" min="0" max="81">
+    </div>
+    <textarea placeholder="Output" class="txt w-100" id="output" cols="30" rows="3" readonly></textarea>
+    <style>
+        .info {
+            font-size: 0.95em;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    </style>
+    <div style="text-align: left;">
+        <h5 class="d-inline info" style="margin-right:0.5rem">Steps:<span id="steps">0</span></h5>
+        <!--
+        <br>
+        <h5 class="d-inline info" style="margin-right:0.5rem">State:<span id="state"></span></h5>
+        <br>
+        <h5 class="d-inline info" style="margin-right:0.5rem">Prev Output:
+            <span id="prev_output" style="width: 5em;"></span>
+        </h5>
+        <br>
+        <h5 class="d-inline info" style="margin-right:0.5rem">Actions:<span id="actions"></span></h5>
+        -->
+        <h5 class="info">
+            <span id="state"></span>;
+            <span id="prev_output"></span> -- 
+            <span id="next_state"></span> ::
+            <span id="actions"></span>
+        </h5>
+    </div>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        th {
+            background-color: var(--primary--more-light-color);
+        }
+        td, th {
+            /* border: 1px solid black; */
+            border: 1px solid #7b8186;
+            text-align: center;
+        }
+        #registers {
+            /* overflow: scroll; */
+            table-layout: fixed;
+        }
+        #binary td {
+            text-align: left;
+        }
+        th {
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+        #sq {
+            border: 1px solid #ced4da;
+            background-color: white;
+        }
+    </style>
+    <table id="registers" class="mb w-100">
+        <!-- <tr>
+            <th>R0</th>
+            <th>R1</th>
+        </tr>
+        <tr>
+            <td>133333</td>
+            <td>5</td>
+        </tr> -->
+    </table>
+    <table class="mb">
+        <thead>
+            <tr>
+                <th>ADD</th>
+                <th>SUB</th>
+                <th>MUL</th>
+                <th>SQX</th>
+                <th>SQY</th>
+            </tr>
+        </thead>
+        <tbody id="special">
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="mb" id="binary" style="font-family: monospace; font-size: 1.2em">
+        <!-- <tr>
+            <th>T1</th>
+            <td>10101010111100</td>
+        </tr>
+        <tr>
+            <th>T2</th>
+            <td>100101</td>
+        </tr>
+        <tr>
+            <th>T2</th>
+            <td>100101</td>
+        </tr> -->
+    </table>
+    <canvas id="sq" width="300" height="300">
+
+    </canvas>
+</div>
+<div style="margin-bottom: 100px">
+</div>
+<hr>
+<footer style="font-size: 0.9em;">
+    <div class="container" style="text-align: left;">
+        <ul>
+            <li>
+                <a href="TODO">source</a> GitHub repository
+            </li>
+            <li>
+                <a href="https://conwaylife.com/wiki/APGsembly">
+                    APGsembly<!--
+            --></a> at the Life Wiki
+            </li>
+            <li>
+                <a href="https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4192">
+                    Reverse engineering the phi and pi calculators<!--
+            --></a> (discussion thread) at the ConwayLife.com forums
+            </li>
+            <li>
+                <a href="https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4196">
+                    Smaller Pi Calculator Challenge<!--
+            --></a> (discussion thread) at the ConwayLife.com forums
+            </li>
+            <li>
+                <a href="https://github.com/dvgrn/b3s23life/tree/master/calculator">
+                    dvgrn/b3s23life/calculator/<!--
+            --></a> APGsembly compiler and visual debugger written by dvgrn and simsim314
+            </li>
+        </ul>
+    </div>
+</footer>
+</body>
+</html>
