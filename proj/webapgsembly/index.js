@@ -159,7 +159,9 @@ class App {
                 const tape = this.machine.tapes[i];
                 const { prefix, head, suffix } = tape.toObject();
                 const elems = binary.children[i].children[1].children;
-                elems[0].textContent = "len=" + tape.bits.length + " ptr=" + tape.ptr + " bitcount=" + tape.bits.reduce((acc, x) => x == 1 ? acc + x : acc, 0);
+                elems[0].textContent = "len=" + tape.bits.length + " ptr=" + tape.ptr +
+                                    " bitcount=" + tape.bits.reduce((acc, x) => x == 1 ? acc + x : acc, 0) +
+                                    " value=" + tape.getBigInt();
                 elems[2].textContent = prefix.map(f).join("");
                 elems[3].textContent = f(head);
                 elems[4].textContent = suffix.map(f).join("");

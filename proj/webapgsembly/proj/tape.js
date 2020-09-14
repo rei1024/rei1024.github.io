@@ -13,6 +13,7 @@ export class Tape {
     }
 
     /**
+     * `INC`
      * もしヘッドが一番右にあればヘッドを進めて0を追加しZを返す。
      * そうでなければヘッドを進めてNZを返す
      */
@@ -28,6 +29,7 @@ export class Tape {
     }
 
     /**
+     * `DEC`
      * もしヘッドが一番左にあればZを返す。
      * そうでなければヘッドを戻してNZを返す。
      */
@@ -41,6 +43,7 @@ export class Tape {
     }
 
     /**
+     * `READ`
      * 現在のヘッドの位置の値が0のときその値を消去してZを返す。
      * 1のときの値を消去してNZを返す。
      * そうでなければエラー
@@ -75,6 +78,7 @@ export class Tape {
     }
 
     /**
+     * `SET`
      * @returns {null}
      */
     set() {
@@ -87,6 +91,7 @@ export class Tape {
     }
 
     /**
+     * `RESET`
      * @returns {null}
      */
     reset() {
@@ -110,5 +115,27 @@ export class Tape {
             head: this.bits[this.ptr],
             suffix: this.bits.slice(this.ptr + 1),
         }
+    }
+
+    toArray() {
+        return this.bits.slice();
+    }
+
+    toArrayMinusOneIsZero() {
+        return this.bits.map(v => v === -1 ? 0 : v);
+    }
+
+    getDecimal() {
+        return parseInt(this.toArrayMinusOneIsZero().reverse().join(""), 2);
+    }
+
+    /**
+     * @returns {bigint | number}
+     */
+    getBigInt() {
+        if (typeof BigInt === "undefined") {
+            return this.getDecimal();
+        }
+        return BigInt("0b" + this.toArrayMinusOneIsZero().reverse().join(""));
     }
 }

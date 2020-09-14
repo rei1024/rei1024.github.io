@@ -111,7 +111,7 @@
         }
     </style>
     <div style="text-align: left;">
-        <h5 class="d-inline info" style="margin-right:0.5rem">Steps:<span id="steps">0</span></h5>
+        <h5 class="d-inline info" style="margin-right:0.5rem">Step number:<span id="steps">0</span></h5>
         <!--
         <br>
         <h5 class="d-inline info" style="margin-right:0.5rem">State:<span id="state"></span></h5>
@@ -144,6 +144,10 @@
         #registers {
             /* overflow: scroll; */
             table-layout: fixed;
+        }
+        #registers td, #registers th {
+            padding: 0;
+            margin: 0;
         }
         #binary td {
             text-align: left;
@@ -187,7 +191,7 @@
             </tr>
         </tbody>
     </table>
-    <table class="mb" id="binary" style="font-family: monospace; font-size: 1.2em">
+    <table class="mb" id="binary" style="font-family: monospace; font-size: 1em">
         <!-- <tr>
             <th>T1</th>
             <td>10101010111100</td>

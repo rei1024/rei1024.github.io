@@ -9,28 +9,34 @@ export class Machine {
     /**
      * 
      * @param {{
-    states: string[];
-    array: {
-        Z: {
-            nextState: number;
-            actions: Array<{kind: number}>;
-        };
-        NZ: {
-            nextState: number;
-            actions: Array<{kind: number}>;
-        };
-    }[];
-}} param0 
+        states: string[];
+        array: {
+            Z: {
+                nextState: number;
+                actions: Array<{kind: number}>;
+            };
+            NZ: {
+                nextState: number;
+                actions: Array<{kind: number}>;
+            };
+        }[];
+    }} param0
      * @param {string} initialStateName 
      */
     constructor({ states, array }, initialStateName = "INITIAL") {
         const { r: maxR, t: maxT } = Parse.extractRegister(array);
+        /** 
+         * T: Binary string register
+         */
         this.tapes = Array(maxT + 1).fill(0).map(v => new Tape());
-        /** @type {Array<number>} */
+        /**
+         * R: Sliding block
+         * @type {Array<number>}
+         */
         this.regs = Array(maxR + 1).fill(0);
         const initialId = states.findIndex(x => x === initialStateName);
         if (initialId === -1) {
-            throw Error("Initialization failed: Can't find " + initialStateName);
+            throw Error("Initialization failed: Can't find \"" + initialStateName + "\"");
         }
         /** @type {number} */
         this.state = initialId;
@@ -39,10 +45,15 @@ export class Machine {
         this.array = array;
         /** @type {Array<string>} */
         this.states = states;
+        /** SQ: 2d binary register */
         this.memory = new Memory();
+        /** OUTPUT */
         this.output_text = "";
+        /** MUL */
         this.mul_reg = 0;
+        /** SUB */
         this.sub_reg = 0;
+        /** ADD */
         this.add_reg = 0;
     }
 
@@ -109,7 +120,7 @@ export class Machine {
     }
 
     /**
-     * 
+     * `INC`
      * @param {number} reg 
      */
     inc_r(reg) {
@@ -118,7 +129,7 @@ export class Machine {
     }
 
     /**
-     * 
+     * `TDEC`
      * @param {number} reg 
      */
     tdec_r(reg) {
@@ -131,6 +142,7 @@ export class Machine {
     }
 
     /**
+     * `ADD A1`
      * @returns {null}
      */
     add_a1() {
@@ -139,6 +151,7 @@ export class Machine {
     }
 
     /**
+     * `ADD B0`
      * @returns {0 | 1}
      */
     add_b0() {
@@ -148,6 +161,7 @@ export class Machine {
     }
 
     /**
+     * `ADD B1`
      * @returns {0 | 1}
      */
     add_b1() {
@@ -157,6 +171,7 @@ export class Machine {
     }
 
     /**
+     * `MUL 0`
      * @returns {0 | 1}
      */
     mul_0() {
@@ -166,6 +181,7 @@ export class Machine {
     }
 
     /**
+     * `MUL 1`
      * @returns {0 | 1}
      */
     mul_1() {
@@ -181,6 +197,7 @@ export class Machine {
     }
 
     /**
+     * `SUB A1`
      * @returns {null}
      */
     sub_a1() {
@@ -193,6 +210,7 @@ export class Machine {
     }
 
     /**
+     * `SUB B0`
      * @returns {0 | 1}
      */
     sub_b0() {
@@ -202,6 +220,7 @@ export class Machine {
     }
 
     /**
+     * `SUB B1`
      * @returns {0 | 1}
      */
     sub_b1() {
@@ -211,7 +230,7 @@ export class Machine {
     }
 
     /**
-     * 
+     * `OUTPUT`
      * @param {number} num 
      */
     output(num) {

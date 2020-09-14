@@ -33,6 +33,9 @@ export class Memory {
         return this.array[j][i]
     }
 
+    /**
+     * READ SQ
+     */
     read() {
         const a = this.array[this.sqy];
         if (a[this.sqx] === 0) {
@@ -43,6 +46,9 @@ export class Memory {
         }
     }
 
+    /**
+     * `SET SQ`
+     */
     set() {
         const a = this.array[this.sqy];
         if (a[this.sqx] === 0) {
@@ -53,6 +59,9 @@ export class Memory {
         }
     }
 
+    /**
+     * `INC SQX`
+     */
     inc_sqx() {
         this.sqx += 1;
         if (this.maxSQX < this.sqx) {
@@ -64,6 +73,9 @@ export class Memory {
         return null;
     }
 
+    /**
+     * `INC SQY`
+     */
     inc_sqy() {
         this.sqy += 1;
         if (this.maxSQY < this.sqy) {
@@ -73,6 +85,9 @@ export class Memory {
         return null;
     }
 
+    /**
+     * `DEC SQX`
+     */
     dec_sqx() {
         if (this.sqx === 0) {
             return 0;
@@ -82,6 +97,9 @@ export class Memory {
         }
     }
 
+    /**
+     * DEC SQY
+     */
     dec_sqy() {
         if (this.sqy === 0) {
             return 0;
