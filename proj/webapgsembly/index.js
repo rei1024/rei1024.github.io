@@ -5,11 +5,15 @@ import { generateArray } from './proj/util.js'
 const data_path = './data/';
 
 const message = document.querySelector("#message");
+/** @type {HTMLInputElement} */
 const file = document.querySelector("#file");
 const sample = document.querySelector("#sample");
 const program_input = document.querySelector("#program_input");
+/** @type {HTMLButtonElement} */
 const load = document.querySelector("#load");
+/** @type {HTMLButtonElement} */
 const start = document.querySelector("#start");
+/** @type {HTMLButtonElement} */
 const step = document.querySelector("#step");
 const freq_output = document.querySelector("#freq_output");
 const freq_range = document.querySelector("#freq_range");
@@ -26,6 +30,16 @@ const actions = document.querySelector("#actions");
 const sq = document.querySelector("#sq");
 const ctx = sq.getContext("2d");
 const goto = document.querySelector("#goto");
+/**
+ * Config
+ */
+/** @type {HTMLInputElement} */
+const config = document.querySelector("#config");
+const config_area = document.querySelector("#config_area");
+const show_binary = document.querySelector("#show_binary");
+const show_memory = document.querySelector("#show_memory");
+const show_value = document.querySelector("#show_value");
+const step_config = document.querySelector("#step_config");
 
 class App {
     constructor() {
@@ -36,6 +50,7 @@ class App {
         this.frequency = 1;
         this.halted = false;
         this.registersDOM = null;
+        this.showConfig = config.checked;
     }
 
     /**
@@ -161,16 +176,25 @@ class App {
                 const elems = binary.children[i].children[1].children;
                 elems[0].textContent = "len=" + tape.bits.length + " ptr=" + tape.ptr +
                                     " bitcount=" + tape.bits.reduce((acc, x) => x == 1 ? acc + x : acc, 0) +
-                                    " value=" + tape.getBigInt();
-                elems[2].textContent = prefix.map(f).join("");
-                elems[3].textContent = f(head);
-                elems[4].textContent = suffix.map(f).join("");
+                                    (show_value.checked ? " value=" + tape.getBigInt() : "");
+                if (show_binary.checked) {
+                    elems[2].textContent = prefix.map(f).join("");
+                    elems[3].textContent = f(head);
+                    elems[4].textContent = suffix.map(f).join("");
+                } else {
+                    elems[2].textContent = "";
+                    elems[3].textContent = "";
+                    elems[4].textContent = "";
+                }
             }
         }
     }
 
     renderSQ() {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        if (!show_memory.checked) {
+            return;
+        }
         if (this.machine !== null) {
             ctx.canvas.height = ctx.canvas.width;
             const n = Math.max(this.machine.memory.maxSQX, this.machine.memory.maxSQY) + 1;
@@ -327,7 +351,17 @@ step.addEventListener("click", () => {
     if (app.playing) {
         app.stop();
     }
-    app.run(1);
+    let str = step_config.value;
+    if (str == null || str == "") {
+        app.run(1);
+    } else {
+        const n = parseInt(str, 10);
+        if (n == null && isNaN(n) && n <= 0) {
+            app.run(1);
+        } else {
+            app.run(n);
+        }
+    }
 });
 
 let prevTime = 0;
@@ -442,3 +476,20 @@ document.addEventListener('keydown', event => {
     }
 });
 */
+
+config.addEventListener("click", () => {
+    app.showConfig = !app.showConfig;
+    if (app.showConfig) {
+        config_area.style.display = "block";
+    } else {
+        config_area.style.display = "none";
+    }
+});
+
+show_memory.addEventListener("input", () => {
+    if (show_memory.checked) {
+        sq.style.display = "";
+    } else {
+        sq.style.display = "none";
+    }
+});

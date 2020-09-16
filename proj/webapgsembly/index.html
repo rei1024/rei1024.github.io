@@ -82,9 +82,10 @@
             <option value="pi-program">Pi calculator</option>
             <option value="sqrt2_calculator">Sqrt(2) calculator</option>
             <option value="osqrtlogt-program">O(sqrt(log(t)))</option>
-            <option value="integers">Integers</option>
-            <option value="primes">Primes</option>
+            <option value="integers">Integer printer</option>
+            <option value="primes">Prime printer</option>
             <option value="Koch">Koch curve</option>
+            <option value="rule124">Rule 124 CA</option>
         </select>
         <label class="btn" for="file">File</label>
         <input id="file" class="d-none" type="file">
@@ -97,10 +98,33 @@
         <button id="start" class="btn">Start</button>
         <button id="step" class="btn">Step</button>
         <button id="goto" class="btn">Goto</button>
+        <button id="config" class="btn">Config</button>
         <output id="freq_output">1/s</output>
     </div>
     <div>
         <input id="freq_range" type="range" class="w-100" step="1" value="0" min="0" max="81">
+    </div>
+    <style>
+        #config_area {
+            text-align: left;
+            border:1px solid #ced4da;
+            background-color: white;
+            margin-bottom: 4px
+        }
+    </style>
+    <div id="config_area" style="display: none;">
+        <!--
+        <input id="r_hex" type="checkbox">
+        <label for="r_hex">show value of registers in hex</label>      
+        -->
+        <input id="show_binary" type="checkbox" checked>
+        <label for="show_binary">show binary</label>
+        | <input id="show_value" type="checkbox" checked>
+        <label for="show_value">show value</label>
+        | <input id="show_memory" type="checkbox" checked>
+        <label for="show_memory">show memory</label>
+        | <label for="step_config">step:</label>
+        <input id="step_config" type="number" style="border-color: #ced4da;" value="1">
     </div>
     <textarea placeholder="Output" class="txt w-100" id="output" cols="30" rows="3" readonly></textarea>
     <style>
@@ -212,8 +236,23 @@
 <div style="margin-bottom: 100px">
 </div>
 <hr>
+<style>
+    footer h4 {
+        margin-bottom: 0;
+    }
+    footer ul {
+        margin-top: 0.5em;
+    }
+</style>
 <footer style="font-size: 0.9em;">
     <div class="container" style="text-align: left;">
+        <h4>Source</h4>
+        <ul>
+            <li>
+                <a href="https://github.com/rei1024/rei1024.github.io/tree/master/proj/webapgsembly">Source of WebAPGsembly</a> GitHub repository
+            </li>
+        </ul>
+        <h4>References</h4>
         <ul>
             <li>
                 <a href="https://github.com/rei1024/rei1024.github.io/tree/master/proj/webapgsembly">source</a> GitHub repository
@@ -237,6 +276,49 @@
                 <a href="https://github.com/dvgrn/b3s23life/tree/master/calculator">
                     dvgrn/b3s23life/calculator/<!--
             --></a> APGsembly compiler and visual debugger written by dvgrn and simsim314
+            </li>
+        </ul>
+        <h4>Sample Code</h4>
+        <ul>
+            <li>
+                <a href="https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=25#p92230">
+                    e calculator<!--
+                --></a>
+            </li>
+            <li>
+                <a href="https://github.com/dvgrn/b3s23life/blob/master/calculator/phi-program.txt">
+                    phi calculator<!--
+                --></a>
+            </li>
+            <li>
+                <a href="https://github.com/dvgrn/b3s23life/blob/master/calculator/pi-program.txt">
+                    pi calculator<!--
+                --></a>
+            </li>
+            <li>
+                <a href="https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=25#p92230">
+                    sqrt(2) calculator<!--
+                --></a>
+            </li>
+            <li>
+                <a href="https://github.com/dvgrn/b3s23life/blob/master/calculator/osqrtlogt-program.txt">
+                    O(sqrt(log(t)))<!--
+                --></a>
+            </li>
+            <li>
+                <a href="https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=25#p92224">
+                    Integer printer<!--
+                --></a>
+            </li>
+            <li>
+                <a href="https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=25#p92224">
+                    Prime printer<!--
+                --></a>
+            </li>
+            <li>
+                <a href="https://github.com/dvgrn/b3s23life/blob/master/calculator/Koch.txt">
+                    Koch curve<!--
+                --></a>
             </li>
         </ul>
     </div>
