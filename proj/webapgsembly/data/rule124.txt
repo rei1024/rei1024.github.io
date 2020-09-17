@@ -1,52 +1,71 @@
 INITIAL; *; init.1; SET SQ, NOP
-init.1;*;init.2;INC SQX, INC SQY, SET SQ, NOP
-init.2;*;next.gen.01.1; DEC SQX
-next.gen.00.1;*;next.gen.00.2; INC SQX, DEC SQY
-next.gen.00.2;*;next.gen.00.3; READ SQ
-next.gen.01.1;*;next.gen.01.2; INC SQX, DEC SQY
-next.gen.01.2;*;next.gen.01.3; READ SQ
-next.gen.10.1;*;next.gen.10.2; INC SQX, DEC SQY
-next.gen.10.2;*;next.gen.10.3; READ SQ
-next.gen.11.1;*;next.gen.11.2; INC SQX, DEC SQY
-next.gen.11.2;*;next.gen.11.3; READ SQ
-next.gen.00.3;Z;next.gen.000.1;NOP
-next.gen.00.3;NZ;next.gen.001.1;SET SQ, NOP
-next.gen.01.3;Z;next.gen.010.1;NOP
-next.gen.01.3;NZ;next.gen.011.1;SET SQ, NOP
-next.gen.10.3;Z;next.gen.100.1;NOP
-next.gen.10.3;NZ;next.gen.101.1;SET SQ, NOP
-next.gen.11.3;Z;next.gen.110.1;NOP
-next.gen.11.3;NZ;next.gen.111.1;SET SQ, NOP
-next.gen.000.1;*;next.gen.000.2; INC SQY, DEC SQX
-next.gen.001.1;*;next.gen.001.2; INC SQY, DEC SQX
-next.gen.010.1;*;next.gen.010.2; INC SQY, DEC SQX
-next.gen.011.1;*;next.gen.011.2; INC SQY, DEC SQX
-next.gen.100.1;*;next.gen.100.2; INC SQY, DEC SQX
-next.gen.101.1;*;next.gen.101.2; INC SQY, DEC SQX
-next.gen.110.1;*;next.gen.110.2; INC SQY, DEC SQX
-next.gen.111.1;*;next.gen.111.2; INC SQY, DEC SQX
-next.gen.000.2;*;anchor.check.00.1;NOP
-next.gen.001.2;*;anchor.check.01.1;NOP
-next.gen.010.2;*;anchor.check.10.1;SET SQ, NOP
-next.gen.011.2;*;anchor.check.11.1;SET SQ, NOP
-next.gen.100.2;*;anchor.check.00.1;SET SQ, NOP
-next.gen.101.2;*;anchor.check.01.1;SET SQ, NOP
-next.gen.110.2;*;anchor.check.10.1;SET SQ, NOP
-next.gen.111.2;*;anchor.check.11.1;NOP
-anchor.check.00.1;*;anchor.check.00.2; INC SQX, READ SQ
-anchor.check.00.2;Z;next.gen.00.1;NOP
-anchor.check.00.2;NZ;anchor.set.1;SET SQ, NOP
-anchor.check.01.1;*;anchor.check.01.2; INC SQX, READ SQ
-anchor.check.01.2;Z;next.gen.01.1;NOP
-anchor.check.01.2;NZ;anchor.set.1;SET SQ, NOP
-anchor.check.10.1;*;anchor.check.10.2; INC SQX, READ SQ
-anchor.check.10.2;Z;next.gen.10.1;NOP
-anchor.check.10.2;NZ;anchor.set.1;SET SQ, NOP
-anchor.check.11.1;*;anchor.check.11.2; INC SQX, READ SQ
-anchor.check.11.2;Z;next.gen.11.1;NOP
-anchor.check.11.2;NZ;anchor.set.1;SET SQ, NOP
-anchor.set.1;*;return.prev.row;INC SQX, INC SQY, SET SQ, NOP
-return.prev.row;*;return; DEC SQY
-return;*;return.check;DEC SQX
-return.check;Z;next.gen.01.1;INC SQY, NOP
-return.check;NZ;return;NOP
+init.1; *; init.2; INC SQX, NOP
+init.2; *; init.3; INC SQY, NOP
+init.3; *; init.4; SET SQ, NOP
+init.4; *; next.s01.read.1; DEC SQX
+next.s00.read.1; *; next.s00.read.2; INC SQX, NOP
+next.s00.read.2; *; next.s00.read.3; DEC SQY
+next.s00.read.3; *; next.s00.calc.1; READ SQ
+next.s00.calc.1; Z; next.s000.write.1; NOP
+next.s00.calc.1; NZ; next.s001.write.1; SET SQ, NOP
+next.s01.read.1; *; next.s01.read.2; INC SQX, NOP
+next.s01.read.2; *; next.s01.read.3; DEC SQY
+next.s01.read.3; *; next.s01.calc.1; READ SQ
+next.s01.calc.1; Z; next.s010.write.1; NOP
+next.s01.calc.1; NZ; next.s011.write.1; SET SQ, NOP
+next.s10.read.1; *; next.s10.read.2; INC SQX, NOP
+next.s10.read.2; *; next.s10.read.3; DEC SQY
+next.s10.read.3; *; next.s10.calc.1; READ SQ
+next.s10.calc.1; Z; next.s100.write.1; NOP
+next.s10.calc.1; NZ; next.s101.write.1; SET SQ, NOP
+next.s11.read.1; *; next.s11.read.2; INC SQX, NOP
+next.s11.read.2; *; next.s11.read.3; DEC SQY
+next.s11.read.3; *; next.s11.calc.1; READ SQ
+next.s11.calc.1; Z; next.s110.write.1; NOP
+next.s11.calc.1; NZ; next.s111.write.1; SET SQ, NOP
+next.s000.write.1; *; next.s000.write.2; INC SQY, NOP
+next.s000.write.2; *; next.s000.write.3; DEC SQX
+next.s000.write.3; *; anchor.s00.check.1; NOP
+next.s001.write.1; *; next.s001.write.2; INC SQY, NOP
+next.s001.write.2; *; next.s001.write.3; DEC SQX
+next.s001.write.3; *; anchor.s01.check.1; NOP
+next.s010.write.1; *; next.s010.write.2; INC SQY, NOP
+next.s010.write.2; *; next.s010.write.3; DEC SQX
+next.s010.write.3; *; anchor.s10.check.1; SET SQ, NOP
+next.s011.write.1; *; next.s011.write.2; INC SQY, NOP
+next.s011.write.2; *; next.s011.write.3; DEC SQX
+next.s011.write.3; *; anchor.s11.check.1; SET SQ, NOP
+next.s100.write.1; *; next.s100.write.2; INC SQY, NOP
+next.s100.write.2; *; next.s100.write.3; DEC SQX
+next.s100.write.3; *; anchor.s00.check.1; SET SQ, NOP
+next.s101.write.1; *; next.s101.write.2; INC SQY, NOP
+next.s101.write.2; *; next.s101.write.3; DEC SQX
+next.s101.write.3; *; anchor.s01.check.1; SET SQ, NOP
+next.s110.write.1; *; next.s110.write.2; INC SQY, NOP
+next.s110.write.2; *; next.s110.write.3; DEC SQX
+next.s110.write.3; *; anchor.s10.check.1; SET SQ, NOP
+next.s111.write.1; *; next.s111.write.2; INC SQY, NOP
+next.s111.write.2; *; next.s111.write.3; DEC SQX
+next.s111.write.3; *; anchor.s11.check.1; NOP
+anchor.s00.check.1; *; anchor.s00.check.2; INC SQX, NOP
+anchor.s00.check.2; *; anchor.s00.check.3; READ SQ
+anchor.s00.check.3; Z; next.s00.read.1; NOP
+anchor.s00.check.3; NZ; anchor.set.1; SET SQ, NOP
+anchor.s01.check.1; *; anchor.s01.check.2; INC SQX, NOP
+anchor.s01.check.2; *; anchor.s01.check.3; READ SQ
+anchor.s01.check.3; Z; next.s01.read.1; NOP
+anchor.s01.check.3; NZ; anchor.set.1; SET SQ, NOP
+anchor.s10.check.1; *; anchor.s10.check.2; INC SQX, NOP
+anchor.s10.check.2; *; anchor.s10.check.3; READ SQ
+anchor.s10.check.3; Z; next.s10.read.1; NOP
+anchor.s10.check.3; NZ; anchor.set.1; SET SQ, NOP
+anchor.s11.check.1; *; anchor.s11.check.2; INC SQX, NOP
+anchor.s11.check.2; *; anchor.s11.check.3; READ SQ
+anchor.s11.check.3; Z; next.s11.read.1; NOP
+anchor.s11.check.3; NZ; anchor.set.1; SET SQ, NOP
+anchor.set.1; *; anchor.set.2; INC SQX, NOP
+anchor.set.2; *; anchor.set.3; INC SQY, NOP
+anchor.set.3; *; return.move; SET SQ, NOP
+return.move; *; return.check; DEC SQX
+return.check; Z; next.s01.read.1; NOP
+return.check; NZ; return.move; NOP
