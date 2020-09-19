@@ -103,8 +103,7 @@ export function generate(rule) {
     });
     array.push(`return.1; *; return.2; INC SQY, NOP`);
     array.push(`return.2; *; return.3; DEC SQX`);
-    array.push(`return.3; Z; return.4; NOP`);
+    array.push(`return.3; Z; next.s00.read.1; DEC SQY`);
     array.push(`return.3; NZ; return.1; NOP`);
-    array.push(`return.4; *; next.s00.read.1; DEC SQY`);
     return array.join("\n");
 }
