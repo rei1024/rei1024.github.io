@@ -1,6 +1,9 @@
 import { Machine } from './proj/machine.js'
 import { D } from './proj/dom.js'
 import { generateArray } from './proj/util.js'
+import { generate } from './rule/rule.js';
+
+console.log(generate(22));
 
 const data_path = './data/';
 

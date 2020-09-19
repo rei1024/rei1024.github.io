@@ -1,0 +1,48 @@
+
+INITIAL; *; next.s00.read.1; SET SQ, NOP
+
+# 読むセル上にいる
+
+next.s00.read.1; *; next.s00.read.2; READ SQ
+next.s00.read.2; Z; next.s000.write.1; NOP
+next.s00.read.2; NZ; next.s001.write.1; SET SQ, NOP
+
+next.s001.write.1; *; next.s001.write.2; INC SQY, NOP
+next.s001.write.2; *; next.s001.write.3; INC SQY, NOP
+# ここを変化させる
+next.s001.write.3; *; next.s01.check.1; SET SQ, NOP
+
+# 次の読みに行くセルへ移動
+next.s01.check.1; *; next.s01.check.2; INC SQX, NOP
+next.s01.check.2; *; next.s01.check.3; DEC SQY
+next.s01.check.3; *; next.s01.check.4; DEC SQY
+next.s01.check.4; *; next.s01.check.5; DEC SQY
+# 壁かチェック
+# TODO 壁の場合
+next.s01.check.5; Z; finish.s01.write.1; NOP
+# 壁でない場合
+next.s01.check.5; NZ; next.s01.read.1; NOP
+
+# 壁の場合
+finish.s01.write.1; *; finish.s01.write.2; INC SQY, NOP
+# sij0と仮定して計算 sjへ移行
+finish.s01.write.2; *; finish2.s1.write.1; SET SQ, NOP
+finish2.s1.write.1; *; finish2.s1.write.2; INC SQX, NOP
+finish2.s1.write.2; *; finish2.s1.write.3; DEC SQY
+# si00と仮定して計算
+finish2.s1.write.3; *; return.1; SET SQ, NOP
+
+# 帰還
+return.1; *; return.2; INC SQY, NOP
+return.2; *; return.3; DEC SQX
+return.3; Z; return.4; NOP
+return.3; NZ; return.1; NOP 
+
+return.4; *; next.s00.read.1; DEC SQY
+
+# temp
+next.s000.write.1; *; next.s000.write.1; NOP
+next.s01.read.1; *; next.s01.read.1; NOP
+# finish.s01.read.2; *; finish.s01.read.2; NOP
+# finish.s011.write.1; *; finish.s011.write.1; NOP
+# return.4; *; return.4; NOP
