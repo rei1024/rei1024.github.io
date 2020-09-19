@@ -11,7 +11,7 @@
     </style>
 </head>
 <body>
-    <h1>APGsembly Generator</h1>
+    <h1>APGsembly Generator for Elementary cellular automata</h1>
     <div class="container">
         <div class="mb">
             Rule<input id="rule_index" type="number">
@@ -28,7 +28,7 @@
         const generate_button = document.querySelector("#generate");
         const code = document.querySelector("#code");
         generate_button.addEventListener("click", () => {
-            code.value = generate(parseInt(rule_index.value))
+            code.value = generate(parseInt(rule_index.value, 10))
         })
     </script>
 </body>
