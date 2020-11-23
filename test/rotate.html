@@ -18,11 +18,11 @@
     }
     function deviceOrientationHandler(e) {
       console.log(e.alpha, e.beta, e.gamma);
-      document.querySelector("#alpha").textContent = e.alpha;
-      document.querySelector("#beta").textContent = e.beta;
-      document.querySelector("#gamma").textContent = e.gamma;
+      const f = x => Math.round(x * 1000) / 1000;
+      document.querySelector("#alpha").textContent = f(e.alpha);
+      document.querySelector("#beta").textContent = f(e.beta);
+      document.querySelector("#gamma").textContent = f(e.gamma);
     }
   </script>
 </body>
 </html>
-
