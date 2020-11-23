@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotate</title>
+</head>
+<body>
+  alpha <span id="alpha"></span>
+  <br>
+  beta <span id="beta"></span>
+  <br>
+  gamma <span id="gamma"></span>
+  <script>
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', deviceOrientationHandler, false);
+    } else {
+      console.log("not supported");
+    }
+    function deviceOrientationHandler(e) {
+      console.log(e.alpha, e.beta, e.gamma);
+      document.querySelector("#alpha").textContent = e.alpha;
+      document.querySelector("#beta").textContent = e.beta;
+      document.querySelector("#gamma").textContent = e.gamma;
+    }
+  </script>
+</body>
+</html>
+
