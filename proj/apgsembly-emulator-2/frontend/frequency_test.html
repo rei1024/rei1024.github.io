@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <input type="range" id="range">
+    <span id="steps"></span>
+    <script type="module">
+        import { Frequency } from "./frequency.js";
+        let isOn = false;
+        document.querySelector('#start').addEventListener('click', () => {
+            isOn = true;
+        });
+        document.querySelector('#stop').addEventListener('click', () => {
+            isOn = false;
+        });
+
+        let frequencyValue = 50;
+        document.querySelector('#range').addEventListener('input', e => {
+            const n = parseFloat(e.target.value);
+
+            if (!isNaN(n)) {
+                console.log(n);
+                frequencyValue = n;
+            }
+        });
+
+        let steps = 0;
+        document.querySelector('#steps').textContent = steps;
+        const frequency = new Frequency(() => isOn, () => frequencyValue, n => {
+            steps += n;
+            document.querySelector('#steps').textContent = steps;
+        });
+        frequency.start()
+    </script>
+</body>
+</html>
