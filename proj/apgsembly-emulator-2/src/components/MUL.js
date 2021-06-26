@@ -2,6 +2,9 @@
 
 import { MulAction } from "../actions/MulAction.js";
 
+/**
+ * `MUL`
+ */
 export class MUL {
     constructor() {
         /**

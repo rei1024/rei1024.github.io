@@ -2,6 +2,9 @@
 
 import { Action } from "./Action.js";
 
+/**
+ * Action for `SUB`
+ */
 export class SubAction extends Action {
     /**
      * 

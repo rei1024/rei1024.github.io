@@ -41,6 +41,7 @@ export class UReg {
     }
 
     /**
+     * `INC Un`
      * @returns {void}
      */
     inc() {
@@ -48,6 +49,7 @@ export class UReg {
     }
 
     /**
+     * `TDEC Un`
      * @returns {0 | 1}
      */
     tdec() {

@@ -95,6 +95,7 @@ export class B2D {
     }
 
     /**
+     * `INC B2DX`
      * @returns {void}
      */
     incB2DX() {
@@ -108,6 +109,7 @@ export class B2D {
     }
 
     /**
+     * `INC B2DY`
      * @returns {void}
      */
     incB2DY() {
@@ -119,6 +121,7 @@ export class B2D {
     }
 
     /**
+     * `TDEC B2DX`
      * @returns {0 | 1}
      */
     tdecB2DX() {
@@ -131,6 +134,7 @@ export class B2D {
     }
 
     /**
+     * `TDEC B2DY`
      * @returns {0 | 1}
      */
     tdecB2DY() {
@@ -143,6 +147,7 @@ export class B2D {
     }
 
     /**
+     * `READ B2D`
      * @returns {0 | 1}
      */
     read() {
@@ -155,6 +160,7 @@ export class B2D {
     }
 
     /**
+     * `SET B2D`
      * @returns {void}
      */
     set() {
@@ -166,6 +172,10 @@ export class B2D {
         this.array[this.y][this.x] = 1;   
     }
 
+    /**
+     * 
+     * @returns {string}
+     */
     toString() {
         return this.array.map(a => a.join("")).join("\n");
     }

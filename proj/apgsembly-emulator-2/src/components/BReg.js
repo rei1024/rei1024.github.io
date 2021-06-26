@@ -46,6 +46,7 @@ export class BReg {
     }
 
     /**
+     * `INC Bn`
      * @returns {void}
      */
     inc() {
@@ -54,6 +55,7 @@ export class BReg {
     }
 
     /**
+     * `TDEC Bn`
      * @returns {0 | 1}
      */
     tdec() {
@@ -66,6 +68,7 @@ export class BReg {
     }
 
     /**
+     * `READ Bn`
      * @returns {0 | 1}
      */
     read() {
@@ -79,7 +82,7 @@ export class BReg {
     }
 
     /**
-     * 
+     * `SET Bn`
      * @returns {void}
      */
     set() {
@@ -95,6 +98,9 @@ export class BReg {
         }
     }
 
+    /**
+     * ポインターの範囲までメモリを広げる
+     */
     extend() {
         if (this.pointer >= this.bits.length) {
             this.bits = [...this.bits, ...Array(this.pointer - this.bits.length + 1).fill(0)];
@@ -118,7 +124,7 @@ export class BReg {
 
     /**
      * 十進数
-     * @returns {string}
+     * @returns {string} "123"
      */
     toDecimalString() {
         if (typeof BigInt !== "undefined") {

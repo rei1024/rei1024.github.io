@@ -2,6 +2,9 @@
 // @ts-check
 import { NopAction } from "../actions/NopAction.js";
 
+/**
+ * `NOP`
+ */
 export class NOP {
     constructor() {
 

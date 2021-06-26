@@ -2,6 +2,9 @@
 
 import { Action } from "./Action.js";
 
+/**
+ * Action for `MUL`
+ */
 export class MulAction extends Action {
     /**
      * 

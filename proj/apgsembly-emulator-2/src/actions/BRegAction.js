@@ -2,6 +2,9 @@
 
 import { Action } from "./Action.js";
 
+/**
+ * Action for `Bn`
+ */
 export class BRegAction extends Action {
     /**
      * 

@@ -9,6 +9,9 @@ export const subLookupA1 = [3, 2, -1, -1, 7, 6, -1, -1, 11, 10, -1, -1, 15, 14, 
 export const subLookupB0 = [0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 17, 17];
 export const subLookupB1 = [17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 17, 17, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17];
 
+/**
+ * `SUB`
+ */
 export class SUB {
     constructor() {
         /**
@@ -40,7 +43,7 @@ export class SUB {
     }
 
     /**
-     * 
+     * `SUB A1`
      * @returns {void}
      */
     a1() {
@@ -52,7 +55,7 @@ export class SUB {
     }
 
     /**
-     * 
+     * `SUB B0`
      * @returns {0 | 1}
      */
     b0() {
@@ -63,7 +66,7 @@ export class SUB {
     }
 
     /**
-     * 
+     * `SUB B1`
      * @returns {0 | 1}
      */
     b1() {

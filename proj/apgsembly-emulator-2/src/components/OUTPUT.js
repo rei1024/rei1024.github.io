@@ -3,9 +3,8 @@
 import { OutputAction } from "../actions/OutputAction.js";
 
 /**
- * @typedef {"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "."} Digit
+ * `OUTPUT x`
  */
-
 export class OUTPUT {
     constructor() {
         /**
@@ -34,7 +33,7 @@ export class OUTPUT {
 
     /**
      * 
-     * @param {Digit} x 
+     * @param {string} x 
      */
     output(x) {
         this.string += x;

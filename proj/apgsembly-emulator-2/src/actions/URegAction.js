@@ -2,6 +2,9 @@
 
 import { Action } from "./Action.js";
 
+/**
+ * Action for `Un`
+ */
 export class URegAction extends Action {
     /**
      * 

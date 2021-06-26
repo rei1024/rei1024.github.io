@@ -2,17 +2,10 @@
 
 import { Action } from "./Action.js";
 
-/**
- * @typedef {"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "."} Digit
- */
-
-
-const digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
-
 export class OutputAction extends Action {
     /**
      * 
-     * @param {Digit} digit 
+     * @param {string} digit 
      */
     constructor(digit) {
         super();
@@ -44,11 +37,6 @@ export class OutputAction extends Action {
         if (digit === undefined) {
             return undefined;
         }
-        if (digits.includes(digit)) {
-            // @ts-ignore
-            return new OutputAction(digit);
-        }
-
-        return undefined;
+        return new OutputAction(digit);
     }
 }

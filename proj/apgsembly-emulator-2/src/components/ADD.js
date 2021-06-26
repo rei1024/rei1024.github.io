@@ -38,6 +38,7 @@ export class ADD {
     }
 
     /**
+     * `ADD A1`
      * @returns {void}
      */
     a1() {
@@ -46,7 +47,7 @@ export class ADD {
     }
 
     /**
-     * 
+     * `ADD B0`
      * @returns {0 | 1}
      */
     b0() {
@@ -57,7 +58,7 @@ export class ADD {
     }
 
     /**
-     * 
+     * `ADD B1`
      * @returns {0 | 1}
      */
     b1() {

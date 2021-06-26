@@ -43,9 +43,12 @@ function parseBits(str) {
     });
 }
 
+/**
+ * Execute action
+ */
 export class ActionExecutor {
     /**
-     * 
+     * 使用するレジスタ番号を引数に取る
      * @param {{
      *    unaryRegisterNumbers: number[];
      *    binaryRegisterNumbers: number[];
@@ -75,8 +78,8 @@ export class ActionExecutor {
     }
 
     /**
-     * 
-     * @param {RegistersInit} regInit 
+     * `#REGISTERS`による初期化
+     * @param {RegistersInit} regInit オブジェクト
      * @throws
      */
     setByRegistersInit(regInit) {
@@ -126,6 +129,7 @@ export class ActionExecutor {
 
     /**
      * `-1`が正常終了
+     * `-1` is success
      * @param {Action} action 
      * @returns {0 | 1 | -1 | void}
      * @throws

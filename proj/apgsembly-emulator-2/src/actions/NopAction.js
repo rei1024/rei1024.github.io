@@ -2,6 +2,9 @@
 
 import { Action } from "./Action.js";
 
+/**
+ * `NOP` action
+ */
 export class NopAction extends Action {
     constructor() {
         super();

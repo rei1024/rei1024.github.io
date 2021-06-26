@@ -2,6 +2,9 @@
 
 import { Action } from "./Action.js";
 
+/**
+ * `HALT_OUT` action
+ */
 export class HaltOutAction extends Action {
     constructor() {
         super();

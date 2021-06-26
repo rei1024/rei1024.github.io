@@ -2,6 +2,9 @@
 
 import { Action } from "./Action.js";
 
+/**
+ * Action for `B2D`
+ */
 export class B2DAction extends Action {
     /**
      * 

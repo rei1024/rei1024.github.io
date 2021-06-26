@@ -12,7 +12,7 @@ import { SubAction } from "./SubAction.js";
 import { URegAction } from "./URegAction.js";
 
 /**
- * 
+ * アクションをパースする
  * @param {string} str 
  * @returns {Action | undefined}
  */

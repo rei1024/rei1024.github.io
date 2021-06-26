@@ -29,3 +29,7 @@ Deno.test("BRegAction pretty", () => {
     assertEquals(BRegAction.parse('INC B2').pretty(), "INC B2");
     assertEquals(BRegAction.parse('INC  B2').pretty(), "INC B2");
 });
+
+Deno.test("BRegAction extract", () => {
+    assertEquals(BRegAction.parse('INC B2').extractBinaryRegisterNumbers(), [2]);
+});
