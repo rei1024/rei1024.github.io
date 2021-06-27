@@ -7,7 +7,7 @@ import { renderB2D } from "./renderB2D.js";
 import { $type } from "./selector.js";
 
 // データ
-const DATA_DIR = "../data/";
+const DATA_DIR = "../apgsembly-emulator-2/data/";
 
 // エラーメッセージ
 // Error messsage
