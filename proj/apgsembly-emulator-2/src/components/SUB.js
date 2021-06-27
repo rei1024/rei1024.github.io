@@ -49,7 +49,7 @@ export class SUB {
     a1() {
         const x = subLookupA1[this.value] ?? this.error();
         if (x === -1) {
-            throw Error("SUB error: a1");
+            throw Error("SUB error: A1");
         }
         this.value = x;
     }

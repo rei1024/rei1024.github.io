@@ -11,6 +11,7 @@ const INITIAL_STATE = "INITIAL";
  */
 
 /**
+ * @throws
  * @param {Command[]} commands 
  * @returns {Map<string, Map<Input, Command>>} // previous state, input => command
  */
@@ -19,6 +20,9 @@ function commandsToTableMap(commands) {
     const map = new Map();
     for (const command of commands) {
         const childMap = map.get(command.state) ?? new Map();
+        if (childMap.has(command.input)) {
+            throw Error(`Duplicated command: "${childMap.get(command.input)?.pretty()}", "${command.pretty()}"`)
+        }
         childMap.set(command.input, command);
         map.set(command.state, childMap);
     }

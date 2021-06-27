@@ -1,0 +1,6 @@
+# Editor
+.DS_Store
+.idea
+
+# Node.js
+**/node_modules/**

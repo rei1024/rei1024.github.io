@@ -95,7 +95,7 @@ export class ActionExecutor {
                 }
                 const reg = this.uRegMap.get(n);
                 if (reg === undefined) {
-                    throw Error(`U${n} does not exist`);
+                    throw Error(`Invalid #REGISTERS: U${n} does not exist`);
                 }
                 reg.setValue(value);
             } else if (key.startsWith('B')) {
@@ -105,7 +105,7 @@ export class ActionExecutor {
                 }
                 const reg = this.bRegMap.get(n);
                 if (reg === undefined) {
-                    throw Error(`B${n} does not exist`);
+                    throw Error(`Invalid #REGISTERS: B${n} does not exist`);
                 }
                 // 数字の場合の処理は数字をバイナリにして配置する
                 if (typeof value === 'number') {

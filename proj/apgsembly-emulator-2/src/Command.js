@@ -4,56 +4,86 @@ import { Action } from "./actions/Action.js";
 import { parseAction } from "./actions/parse.js";
 
 /**
+ * @abstract
+ */
+export class ProgramLine {
+    /**
+     * @returns {string}
+     */
+    pretty() {
+        return `unimplemented`;
+    }
+}
+
+/**
  * `#COMPONENTS`
  */
-export class ComponentsHeader {
+export class ComponentsHeader extends ProgramLine {
     /**
      * 
      * @param {string} content
      */
     constructor(content) {
+        super();
         this.content = content;
+    }
+
+    /**
+     * @returns {string}
+     */
+    static get key() {
+        return "#COMPONENTS";
     }
 
     /**
      * 
      * @returns {string}
+     * @override
      */
     pretty() {
-        return "#COMPONENTS " + this.content;
+        return ComponentsHeader.key + " " + this.content;
     }
 }
 
 /**
  * `#REGISTERS`
  */
-export class RegistersHeader {
+export class RegistersHeader extends ProgramLine {
     /**
      * 
      * @param {string} content 
      */
     constructor(content) {
+        super();
         this.content = content;
     }
 
     /**
-     * 
+     * @returns {string}
+     */
+    static get key() {
+        return "#REGISTERS";
+    }
+
+    /**
+     * @override
      * @returns {string}
      */
     pretty() {
-        return "#REGISTERS " + this.content;
+        return RegistersHeader.key + " " + this.content;
     }
 }
 
 /**
  * コメント
  */
-export class Comment {
+export class Comment extends ProgramLine {
     /**
      * 
      * @param {string} str 
      */
     constructor(str) {
+        super();
         /**
          * @private
          */
@@ -68,21 +98,35 @@ export class Comment {
         return this.str;
     }
 
+    /**
+     * @override
+     */
+    pretty() {
+        return this.getString();
+    }
+
 }
 
 /**
  * 空行
  */
-export class EmptyLine {
+export class EmptyLine extends ProgramLine {
     constructor() {
+        super();
+    }
 
+    /**
+     * @override
+     */
+    pretty() {
+        return "";
     }
 }
 
 /**
  * A line of program
  */
-export class Command {
+export class Command extends ProgramLine {
     /**
      * 
      * @param {{
@@ -93,6 +137,7 @@ export class Command {
      * }} param0 
      */
     constructor({ state, input, nextState, actions }) {
+        super();
         this.state = state;
         this.input = input;
         this.nextState = nextState;
@@ -114,22 +159,22 @@ export class Command {
         }
         if (trimmedStr.startsWith("#")) {
             // ヘッダーをパースする
-            if (trimmedStr.startsWith('#COMPONENTS')) {
-                return new ComponentsHeader(trimmedStr.slice('#COMPONENTS'.length).trim());
-            } else if (trimmedStr.startsWith('#REGISTERS')) {
-                return new RegistersHeader(trimmedStr.slice('#REGISTERS'.length).trim());
+            if (trimmedStr.startsWith(ComponentsHeader.key)) {
+                return new ComponentsHeader(trimmedStr.slice(ComponentsHeader.key.length).trim());
+            } else if (trimmedStr.startsWith(RegistersHeader.key)) {
+                return new RegistersHeader(trimmedStr.slice(RegistersHeader.key.length).trim());
             }
             return new Comment(str);
         }
         const array = trimmedStr.split(/\s*;\s*/);
         if (array.length < 4) {
-            return "Invalid command " + str;
+            return `Invalid command "${str}"`;
         }
         if (array.length > 4) {
             if (array[4] === "") {
-                return "Extraneous semicolon " + str;
+                return `Extraneous semicolon "${str}"`;
             }
-            return "Invalid command " + str;
+            return `Invalid command "${str}"`;
         }
         const state = array[0] ?? this.error();
         const inputStr = array[1] ?? this.error();
@@ -172,6 +217,7 @@ export class Command {
 
     /**
      * 文字列化する
+     * @override
      * @returns {string}
      */
     pretty() {

@@ -1,6 +1,6 @@
 up:
 	file_server . -p 1123
-test:
+t:
 	deno test
 watch:
 	deno test --watch

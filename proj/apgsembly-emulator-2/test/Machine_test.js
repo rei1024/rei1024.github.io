@@ -4,6 +4,21 @@ import { program9_1, program9_2, program9_3, program9_4 } from "./Program_test.j
 import { piCalculator } from "./pi_calculator.js";
 import { assertEquals, assertThrows } from "./deps.js";
 
+Deno.test('Machine duplicated command', () => {
+    const str = `
+INITIAL; ZZ; ID0; OUTPUT 3, NOP
+INITIAL; ZZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
 Deno.test('Machine no return value', () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3

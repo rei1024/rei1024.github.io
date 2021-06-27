@@ -192,24 +192,38 @@ export class App {
             const th = document.createElement('th');
             th.textContent = `B${key}`;
             const td = document.createElement('td');
-            const code = document.createElement('code');
-            code.style.wordBreak = "break-all";
-            const $prefix = document.createElement('span');
-            $prefix.classList.add('prefix');
-            const $head = document.createElement('span');
-            $head.style.color = "#0D47A1";
-            $head.classList.add('head');
-            const $suffix = document.createElement('span');
-            $suffix.classList.add('suffix');
-            code.append($prefix, $head, $suffix);
 
-            const decimal = document.createElement('td');
-            decimal.classList.add('decimal');
+            if (true) {
+                const code0 = document.createElement('code');
+                code0.style.color = "black";
+                // 長い場合は改行を入れる
+                code0.style.wordBreak = "break-all";            
+    
+                const decimal = document.createElement('span');
+                decimal.classList.add('decimal');
+                const pointer = document.createElement('span');
+                pointer.classList.add('pointer');
+                code0.append(decimal, pointer);
+                const br = document.createElement('br');
+                td.append(code0, br);
+            }
+            if (true) {
+                const code = document.createElement('code');
+                code.style.wordBreak = "break-all";
+                const $prefix = document.createElement('span');
+                $prefix.classList.add('prefix');
+                const $head = document.createElement('span');
+                $head.style.color = "#0D47A1";
+                // 下線
+                $head.style.borderBottom = "3px solid #0D47A1";
+                $head.classList.add('head');
+                const $suffix = document.createElement('span');
+                $suffix.classList.add('suffix');
+                code.append($prefix, $head, $suffix);
+                td.append(code);
+            }
 
-            // 長い場合は改行を入れる
-            decimal.style.wordBreak = "break-all";
-            td.append(code);
-            tr.append(th, td, decimal);
+            tr.append(th, td);
             table.append(tr);
         }
         $binaryRegister.innerHTML = "";
@@ -327,7 +341,8 @@ export class App {
             row.querySelector('.prefix').textContent = obj.prefix.join('');
             row.querySelector('.head').textContent = obj.head.toString();
             row.querySelector('.suffix').textContent = obj.suffix.join('');
-            row.querySelector('.decimal').textContent = reg.toDecimalString();
+            row.querySelector('.decimal').textContent = "value = " + reg.toDecimalString();
+            row.querySelector('.pointer').textContent = ", pointer = " + reg.pointer.toString();
             i++;
         }
     }
