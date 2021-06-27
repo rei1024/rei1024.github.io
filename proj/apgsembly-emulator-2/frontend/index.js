@@ -171,8 +171,9 @@ export class App {
         unaryTable.classList.add('table')
 
         // 幅を均等にする
-        unaryTable.style.tableLayout = "fixed"
-
+        unaryTable.style.tableLayout = "fixed";
+        // 16pxから変更
+        unaryTable.style.marginBottom = "0px";
         $unaryRegister.innerHTML = "";
         $unaryRegister.appendChild(unaryTable);
     }
@@ -483,10 +484,25 @@ $step.addEventListener('click', () => {
     }
 });
 
+/**
+ * 
+ * @param {string} str 
+ * @returns {string}
+ */
+function escapeNum(str) {
+    // @ts-ignore
+    if (typeof str.replaceAll === "function") {
+        // @ts-ignore
+        return str.replaceAll("_", "");
+    } else {
+        return str;
+    }
+}
+
 $stepConfig.addEventListener('click', () => {
     const str = prompt('Set steps', app.stepConfig.toString());
     if (typeof str === 'string') {
-        const n = parseInt(str, 10);
+        const n = parseInt(escapeNum(str), 10);
         if (isNaN(n) || n <= 0) {
             alert('error');
         } else {

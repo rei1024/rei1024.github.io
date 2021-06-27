@@ -20,19 +20,26 @@ if (!($transpile instanceof HTMLElement)) {
 }
 
 const $copy = document.querySelector('#copy');
-if (!($copy instanceof HTMLElement)) {
-    throw Error('input is not a HTMLTextAreaElement');
+if (!($copy instanceof HTMLButtonElement)) {
+    throw Error('copy is not a HTMLButtonElement');
 }
 
 $transpile.addEventListener('click', () => {
     const program = Program.parse($input.value);
     if (program instanceof Program) {
+        $copy.disabled = false;
         $output.value = program.pretty();
     } else {
+        $copy.disabled = true;
         $output.value = program;
     }
 });
 
 $copy.addEventListener('click', () => {
-    navigator.clipboard.writeText($output.value.trim());
+    navigator.clipboard.writeText($output.value.trim()).then(() => {
+        $copy.textContent = "Copied";
+        setTimeout(() => {
+            $copy.textContent = "Copy";
+        }, 1000);
+    });
 });
