@@ -1,5 +1,5 @@
 import { URegAction } from "../src/actions/URegAction.js";
-import { Command, ComponentsHeader, RegistersHeader } from "../src/Command.js";
+import { Command, ComponentsHeader, EmptyLine, RegistersHeader } from "../src/Command.js";
 import { assertEquals } from "./deps.js";
 
 Deno.test('Command parse', () => {
@@ -10,6 +10,17 @@ Deno.test('Command parse', () => {
         assertEquals(res.input, 'ZZ');
         assertEquals(res.nextState, 'DIR0');
         assertEquals(res.actions, [URegAction.parse('TDEC U2')]);
+    } else {
+        throw Error('parse error ' + str);
+    }
+});
+
+
+Deno.test('Command parse empty line', () => {
+    const str = ``;
+    const res = Command.parse(str);
+    if (res instanceof EmptyLine) {
+        
     } else {
         throw Error('parse error ' + str);
     }

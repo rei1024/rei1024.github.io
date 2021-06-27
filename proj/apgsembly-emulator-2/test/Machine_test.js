@@ -2,7 +2,71 @@ import { Machine } from "../src/Machine.js"
 import { Program } from "../src/Program.js";
 import { program9_1, program9_2, program9_3, program9_4 } from "./Program_test.js";
 import { piCalculator } from "./pi_calculator.js";
-import { assertEquals } from "./deps.js";
+import { assertEquals, assertThrows } from "./deps.js";
+
+Deno.test('Machine no return value', () => {
+    const str = `
+INITIAL; ZZ; ID0; OUTPUT 3
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    const machine = new Machine(program);
+
+    assertThrows(() => {
+        machine.execCommand();
+    });
+});
+
+Deno.test('Machine return value twice', () => {
+    const str = `
+INITIAL; ZZ; ID0; NOP, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    const machine = new Machine(program);
+
+    assertThrows(() => {
+        machine.execCommand();
+    });
+});
+
+// > Also, the INITIAL state should never be returned to later in a program’s execution.
+// > It should be the first state, and only the first state.
+Deno.test('Machine INITIAL twice', () => {
+    const str = `
+INITIAL; ZZ; INITIAL; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    const machine = new Machine(program);
+
+    assertThrows(() => {
+        machine.execCommand();
+    });
+});
+
+Deno.test('Machine register header error', () => {
+    const str = `
+#REGISTERS: {"U3": 2}
+INITIAL; ZZ; INITIAL; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
 
 Deno.test('Machine program9_2', () => {
     const program = Program.parse(program9_2);

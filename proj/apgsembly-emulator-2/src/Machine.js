@@ -29,9 +29,12 @@ export class Machine {
     /**
      * 
      * @param {Program} program 
-     * @throws
+     * @throws {Error} #REGISTERSでの初期化に失敗
      */
     constructor(program) {
+        if (!(program instanceof Program)) {
+            throw TypeError('program is not a Program');
+        }
         this.actionExecutor = new ActionExecutor({
             binaryRegisterNumbers: program.extractBinaryRegisterNumbers(),
             unaryRegisterNumbers: program.extractUnaryRegisterNumbers()
@@ -57,7 +60,7 @@ export class Machine {
             try {
                 parsed = JSON.parse(str);
             } catch (e) {
-                throw Error('Invalid #REGISTERS');
+                throw Error('Invalid #REGISTERS: ' + str);
             }
             try {
                 this.actionExecutor.setByRegistersInit(parsed);
@@ -88,23 +91,26 @@ export class Machine {
         if (childMap === undefined) {
             throw Error('Next state not found: current state: ' + this.currentState);
         }
-        if (childMap.has('*')) {
-            return childMap.get('*') ?? this.error();
+        const wildcard = childMap.get('*');
+        if (wildcard !== undefined) {
+            return wildcard;
         }
         if (this.prevOutput === 0) {
-            if (childMap.has('Z')) {
-                return childMap.get('Z') ?? this.error();
-            } else if (childMap.has('ZZ')) {
-                return childMap.get('ZZ') ?? this.error();
-            } else if (childMap.has('*')) {
-                return childMap.get('*') ?? this.error();
+            const z = childMap.get('Z');
+            if (z !== undefined) {
+                return z;
+            }
+            const zz = childMap.get('ZZ');
+            if (zz !== undefined) {
+                return zz;
             }
         } else {
-            if (childMap.has('NZ')) {
-                return childMap.get('NZ') ?? this.error();
+            const nz = childMap.get('NZ');
+            if (nz !== undefined) {
+                return nz;
             }
         }
-        throw Error('Next Command not found');
+        throw Error('Next Command not found: Current state = ' + this.currentState + ', output = ' + this.getPreviousOutput());
     }
 
     /**
@@ -126,12 +132,17 @@ export class Machine {
                 if (result === undefined) {
                     result = res;
                 } else {
-                    throw Error('Return value twice: command =  ' + command.pretty());
+                    throw Error('Return value twice: command = ' + command.pretty());
                 }
             }
         }
         if (result === undefined) {
             throw Error('No return value');
+        }
+
+        // INITIALに返ってくることは禁止
+        if (command.nextState === "INITIAL") {
+            throw Error('INITIAL is return in execution: command = ' + command.pretty());
         }
         this.currentState = command.nextState;
         this.prevOutput = result;

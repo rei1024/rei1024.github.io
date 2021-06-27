@@ -33,7 +33,7 @@ export class B2DAction extends Action {
         if (array.length !== 2) {
             return undefined;
         }
-        const [ op, axis ] = array;
+        let [ op, axis ] = array;
         if (op === undefined || axis === undefined) { return undefined; }
         if (op === "INC" || op === "TDEC") {
             if (axis === "B2DX" || axis === "B2DY") {
@@ -42,6 +42,24 @@ export class B2DAction extends Action {
         } else if (op === "READ" || op === "SET") {
             if (axis === "B2D") {
                 return new B2DAction(op, axis);
+            }
+        }
+        // APGsembly 1.0
+        if (op === "INC" || op === "DEC") {
+            if (op === "DEC") {
+                // rename
+                op = "TDEC";
+            }
+            if (axis === "SQX") {
+                // @ts-ignore
+                return new B2DAction(op, "B2DX");
+            } else if (axis === "SQY") {
+                // @ts-ignore
+                return new B2DAction(op, "B2DY");
+            }
+        } else if (op === "READ" || op === "SET") {
+            if (axis === "SQ") {
+                return new B2DAction(op, "B2D");
             }
         }
         return undefined;

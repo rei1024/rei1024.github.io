@@ -16,6 +16,10 @@ Deno.test("URegAction parse", () => {
     assertEquals(URegAction.parse("TDEC U12"), { op: "TDEC", regNumber: 12 });
 });
 
+Deno.test('URegAction APGsembly 1.0', () => {
+    assertEquals(URegAction.parse("TDEC R12"), { op: "TDEC", regNumber: 12 });
+});
+
 Deno.test("URegAction parse fail", () => {
     assertEquals(URegAction.parse("INC U_0"), undefined);
 

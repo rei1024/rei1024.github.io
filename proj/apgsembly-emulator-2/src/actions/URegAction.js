@@ -45,7 +45,8 @@ export class URegAction extends Action {
         const [ op, reg ] = array;
         if (op === undefined || reg === undefined) { return undefined; }
         if (op === "INC" || op === "TDEC") {
-            if (reg.startsWith("U")) {
+            // R for APGsembly 1.0
+            if (reg.startsWith("U") || reg.startsWith('R')) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/.test(str)) {
                     return new URegAction(op, parseInt(str, 10));

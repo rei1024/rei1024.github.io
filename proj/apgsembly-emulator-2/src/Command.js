@@ -3,6 +3,9 @@
 import { Action } from "./actions/Action.js";
 import { parseAction } from "./actions/parse.js";
 
+/**
+ * `#COMPONENTS`
+ */
 export class ComponentsHeader {
     /**
      * 
@@ -11,8 +14,19 @@ export class ComponentsHeader {
     constructor(content) {
         this.content = content;
     }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    pretty() {
+        return "#COMPONENTS " + this.content;
+    }
 }
 
+/**
+ * `#REGISTERS`
+ */
 export class RegistersHeader {
     /**
      * 
@@ -21,8 +35,19 @@ export class RegistersHeader {
     constructor(content) {
         this.content = content;
     }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    pretty() {
+        return "#REGISTERS " + this.content;
+    }
 }
 
+/**
+ * コメント
+ */
 export class Comment {
     /**
      * 
@@ -36,13 +61,22 @@ export class Comment {
     }
 
     /**
-     * 
+     * シャープを含む
      * @returns {string}
      */
     getString() {
         return this.str;
     }
 
+}
+
+/**
+ * 空行
+ */
+export class EmptyLine {
+    constructor() {
+
+    }
 }
 
 /**
@@ -68,7 +102,7 @@ export class Command {
     /**
      * CommandまたはCommentまたは空行またはエラーメッセージ
      * @param {string} str 
-     * @returns {Command | RegistersHeader | ComponentsHeader | Comment | undefined | string}
+     * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
      */
     static parse(str) {
         if (typeof str !== 'string') {
@@ -76,9 +110,10 @@ export class Command {
         }
         const trimmedStr = str.trim();
         if (trimmedStr === "") {
-            return undefined;
+            return new EmptyLine();
         }
         if (trimmedStr.startsWith("#")) {
+            // ヘッダーをパースする
             if (trimmedStr.startsWith('#COMPONENTS')) {
                 return new ComponentsHeader(trimmedStr.slice('#COMPONENTS'.length).trim());
             } else if (trimmedStr.startsWith('#REGISTERS')) {
@@ -88,13 +123,13 @@ export class Command {
         }
         const array = trimmedStr.split(/\s*;\s*/);
         if (array.length < 4) {
-            return "invalid command";
+            return "Invalid command " + str;
         }
         if (array.length > 4) {
             if (array[4] === "") {
-                return "extraneous semicolon";
+                return "Extraneous semicolon " + str;
             }
-            return "invalid command";
+            return "Invalid command " + str;
         }
         const state = array[0] ?? this.error();
         const inputStr = array[1] ?? this.error();

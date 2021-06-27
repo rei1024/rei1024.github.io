@@ -32,3 +32,11 @@ Stop-->Halted: Step(正常終了)
 Halted-->ParseError: Reset(パース失敗)
 Halted-->Stop: Reset(パース成功)
 @enduml
+
+,Initial,Running,Stop,Halted,ParseError,RuntimeError
+Start,◯,,◯,,,
+Stop,,◯,,,,
+Step,◯,,◯,,,
+Reset,◯,,◯,◯,◯,◯
+,,,,,,
+machine,undefined,◯,◯,◯,undefined,◯

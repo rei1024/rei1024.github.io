@@ -32,8 +32,11 @@
             <button type="button" class="btn btn-primary dropdown-toggle" id="samples" data-bs-toggle="dropdown" aria-expanded="false">Sample</button>
             <ul class="dropdown-menu" aria-labelledby="samples">
                 <li>
-                    <button class="dropdown-item js_sample" data-src="pi_calc.txt">Pi Calculator</button>
-                    <button class="dropdown-item js_sample" data-src="koch.txt">Koch snowfrake</button>
+                    <button class="dropdown-item js_sample" data-src="unary_multiply.apg">Unary register multiplication</button>
+                    <button class="dropdown-item js_sample" data-src="binary_ruler.apg">Binary ruler</button>
+                    <button class="dropdown-item js_sample" data-src="rule110.apg">Rule 110</button>                    
+                    <button class="dropdown-item js_sample" data-src="koch.apg">Koch snowfrake</button>
+                    <button class="dropdown-item js_sample" data-src="pi_calc.apg">π calculator</button>
                 </li>
             </ul>
             <input id="import_file" type="file" style="display: none;">
@@ -80,7 +83,7 @@
         <div class="mb-3">
             <details open>
                 <summary>
-                    Unary Register
+                    Unary Registers
                 </summary>
                 <div id="unary_register"></div>
             </details>
@@ -88,7 +91,7 @@
         <div class="mb-3">
             <details id="binary_register_detail" open>
                 <summary>
-                    Binary Register
+                    Binary Registers
                 </summary>
                 <div id="binary_register"></div>
                 <table>
@@ -109,9 +112,7 @@
                 <summary>
                     ADD SUB MUL
                 </summary>
-                <code id="add_sub_mul">
-
-                </code>
+                <code id="add_sub_mul"></code>
             </details>
         </div>    
         <div class="mb-3">
@@ -123,14 +124,11 @@
                     x = <span id="b2dx"></span>,
                     y = <span id="b2dy"></span>
                 </div>
-                <canvas id="canvas">
-
-                </canvas>                
+                <canvas id="canvas"></canvas>                
             </details>
         </div>
     </main>
     <footer class="mt-3 container">
-        <small>
             <h5>Shortcuts</h5>
             <table>
                 <tr>
@@ -142,7 +140,34 @@
                     <td>Toggle start and stop</td>
                 </tr>
             </table>
-        </small>
+            <h5 class="mt-3">Links</h5>
+            <ul>
+                <li>
+                    <a href="https://rei1024.github.io/proj/apgsembly-emulator-2/generator/">
+                        Code generator for elementary cellular automata
+                    </a>
+                </li>
+                <li>
+                    <a href="https://rei1024.github.io/proj/apgsembly-emulator-2/transpiler/">
+                        Transpiler for APGsembly 1.0 to APGsembly 2.0
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/rei1024/rei1024.github.io/tree/main/proj/apgsembly-emulator-2">
+                        Source code for APGsembly 2.0 Emulator - GitHub
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4192">
+                        Reverse engineering the phi and pi calculators - ConwayLife.com forums<!--
+                --></a> 
+                </li>
+                <li>
+                    <a href="https://www.conwaylife.com/forums/viewtopic.php?f=2&t=4196">
+                        Smaller Pi Calculator Challenge - ConwayLife.com forums<!--
+                --></a>
+                </li>
+            </ul>
     </footer>
 </body>
 </html>

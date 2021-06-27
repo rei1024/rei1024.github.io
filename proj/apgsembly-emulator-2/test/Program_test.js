@@ -58,6 +58,29 @@ LSB2; Z; LSB2; HALT_OUT
 LSB2; NZ; LSB2; TDEC B0
 `
 
+Deno.test('Program pretty program9_1', () => {
+    const program = Program.parse(program9_1);
+    if (program instanceof Program) {
+        assertEquals(program.pretty().trim(), program9_1.trim());
+    } else {
+        throw Error('parse error');
+    }
+});
+
+Deno.test('Program pretty inverse', () => {
+    const str = `
+#COMPONENTS U0-1,HALT_OUT
+#REGISTERS {"U0":7, "U1":5}
+INITIAL; ZZ; ID1; TDEC U0
+    `;
+    const program = Program.parse(str);
+    if (program instanceof Program) {
+        assertEquals(program.pretty().trim(), str.trim());
+    } else {
+        throw Error('parse error');
+    }
+});
+
 Deno.test('Program parse 9.1', () => {
     // p252 APGsembly 9.1
     const str = program9_1

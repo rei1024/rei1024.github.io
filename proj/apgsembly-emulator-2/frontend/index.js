@@ -33,6 +33,7 @@ const $stop = $type('#stop', HTMLButtonElement);
 // Reset machine state and program
 const $reset = $type('#reset', HTMLButtonElement);
 
+// Step Button
 const $step = $type('#step', HTMLButtonElement);
 
 const $currentState = $type('#current_state', HTMLElement);
@@ -63,8 +64,10 @@ const $b2dy = $type('#b2dy', HTMLElement);
 
 const $b2dDetail = $type('#b2d_detail', HTMLDetailsElement);
 
+// スライディングレジスタ
 const $unaryRegister = $type('#unary_register', HTMLElement);
 
+// バイナリレジスタ
 const $binaryRegister = $type('#binary_register', HTMLElement);
 
 const $binaryRegisterDetail = $type('#binary_register_detail', HTMLDetailsElement);
@@ -411,6 +414,11 @@ export class App {
             }
         }
 
+        if (steps === 0) {
+            // no render
+            return;
+        }
+
         for (let i = 0; i < steps; i++) {
             try {
                 const res = this.machine.execCommand();
@@ -478,10 +486,11 @@ document.querySelectorAll('.js_sample').forEach(e => {
         throw Error('is not HTMLElement');
     }
     e.addEventListener('click', () => {
-        e.dataset.src
         fetch(DATA_DIR + e.dataset.src).then(res => res.text()).then(text => {
             $input.value = text;
             app.reset();
+        }).catch(() => {
+            console.log('Fetch Error: ' + e.dataset.src);
         });
     });
 });
