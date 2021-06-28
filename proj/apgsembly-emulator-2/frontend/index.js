@@ -7,7 +7,8 @@ import { renderB2D } from "./renderB2D.js";
 import { $type } from "./selector.js";
 
 // データ
-const DATA_DIR = "../apgsembly-emulator-2/data/";
+// GitHub Pagesは1階層上になる
+const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/data/" : "../data/";
 
 // エラーメッセージ
 // Error messsage
@@ -36,32 +37,32 @@ const $reset = $type('#reset', HTMLButtonElement);
 // Step Button
 const $step = $type('#step', HTMLButtonElement);
 
+// 現在の状態
 const $currentState = $type('#current_state', HTMLElement);
 
+// 前回の出力
 const $previousOutput = $type('#previous_output', HTMLElement);
 
-const $stepConfig = $type('#step_config', HTMLButtonElement);
-
-// スピード
+// スピード入力
 const $frequencyInput = $type('#frequency_input', HTMLInputElement);
 
+// スピード表示
 const $freqencyOutput = $type('#frequency_output', HTMLElement);
 
 // 次のコマンド
 // Next command
 const $command = $type('#command', HTMLElement);
 
+// B2D
 const $canvas = $type('#canvas', HTMLCanvasElement);
-
 const context = $canvas.getContext('2d');
 if (context == null) {
     throw Error('context is null');
 }
-
-// B2D
 const $b2dx = $type('#b2dx', HTMLElement);
 const $b2dy = $type('#b2dy', HTMLElement);
 
+// B2Dの開閉
 const $b2dDetail = $type('#b2d_detail', HTMLDetailsElement);
 
 // スライディングレジスタ
@@ -70,12 +71,26 @@ const $unaryRegister = $type('#unary_register', HTMLElement);
 // バイナリレジスタ
 const $binaryRegister = $type('#binary_register', HTMLElement);
 
+// バイナリレジスタの開閉
 const $binaryRegisterDetail = $type('#binary_register_detail', HTMLDetailsElement);
 
+// ADD SUB MULの表示
 const $addSubMul = $type('#add_sub_mul', HTMLElement);
 
 // ファイルインポート
 const $fileImport = $type('#import_file', HTMLInputElement);
+
+// サンプルコード
+const $sampleCodes = document.querySelectorAll('.js_sample');
+
+// --------- Modal --------- //
+
+// ステップ数入力 
+const $stepInput = $type('#step_input', HTMLInputElement);
+
+// Hide Binary
+// 二進数を非表示にする
+const $hideBinary = $type('#hide_binary', HTMLInputElement);
 
 /**
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
@@ -116,7 +131,7 @@ export class App {
         switch (this.appState) {
             case "Initial": {
                 this.reset();
-                // 成功していれば走らせる
+                // 初期化に成功していれば走らせる
                 // @ts-ignore
                 if (this.appState === "Stop") {
                     this.appState = "Running";
@@ -287,7 +302,7 @@ export class App {
 
     renderCommand() {
         try {
-            $command.textContent = this.machine?.getNextCommand().pretty();
+            $command.textContent = this.machine?.getNextCompiledCommandWithNextState().command.pretty();
         } catch (e) {
             $command.textContent = "";
         }
@@ -336,12 +351,19 @@ export class App {
         }
         const rows = $binaryRegister.querySelectorAll('tr');
         let i = 0;
+        const hideBinary = $hideBinary.checked;
         for (const reg of this.machine.actionExecutor.bRegMap.values()) {
             const row = rows[i];
-            const obj = reg.toObject();
-            row.querySelector('.prefix').textContent = obj.prefix.join('');
-            row.querySelector('.head').textContent = obj.head.toString();
-            row.querySelector('.suffix').textContent = obj.suffix.join('');
+            if (hideBinary) {
+                row.querySelector('.prefix').textContent = '';
+                row.querySelector('.head').textContent = '';
+                row.querySelector('.suffix').textContent = '';
+            } else {
+                const obj = reg.toObject();
+                row.querySelector('.prefix').textContent = obj.prefix.join('');
+                row.querySelector('.head').textContent = obj.head.toString();
+                row.querySelector('.suffix').textContent = obj.suffix.join('');
+            }
             row.querySelector('.decimal').textContent = "value = " + reg.toDecimalString();
             row.querySelector('.pointer').textContent = ", pointer = " + reg.pointer.toString();
             i++;
@@ -435,22 +457,25 @@ export class App {
             return;
         }
 
+        const machine = this.machine;
         for (let i = 0; i < steps; i++) {
             try {
-                const res = this.machine.execCommand();
+                const res = machine.execCommand();
                 if (res === "HALT_OUT") {
                     this.appState = "Halted";
+                    this.steps += i + 1; 
                     this.render();
                     return;
                 }
             } catch (e) {
                 this.appState = "RuntimeError";
                 this.errorMessage = e.message;
+                this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
                 this.render();
                 return;
             }
-            this.steps += 1;
         }
+        this.steps += steps;
         this.render();
     }
 }
@@ -470,12 +495,17 @@ $reset.addEventListener('click', () => {
 });
 
 $step.addEventListener('click', () => {
+    if ($step.disabled) {
+        return;
+    }
     // 時間がかかる時はスピナーを表示する
-    if (app.stepConfig >= 3000000) {
+    if (app.stepConfig >= 5000000) {
         const span = document.createElement('span');
         span.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`;
         $step.append(span);
+        $step.disabled = true;
         setTimeout(() => {
+            // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
             $step.removeChild(span);
         }, 33);
@@ -499,20 +529,27 @@ function escapeNum(str) {
     }
 }
 
-$stepConfig.addEventListener('click', () => {
-    const str = prompt('Set steps', app.stepConfig.toString());
-    if (typeof str === 'string') {
-        const n = parseInt(escapeNum(str), 10);
-        if (isNaN(n) || n <= 0) {
-            alert('error');
-        } else {
-            app.stepConfig = n;
-        }
+$stepInput.addEventListener('input', () => {
+    const n = Number($stepInput.value)
+    if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
+        $stepInput.setCustomValidity('Enter a positive integer');
+        $stepInput.reportValidity();
+        $stepInput.classList.add('is-invalid');
+        app.stepConfig = 1;
+    } else {
+        $stepInput.setCustomValidity('');
+        $stepInput.reportValidity();
+        $stepInput.classList.remove('is-invalid');
+        app.stepConfig = n;
     }
 });
 
+$hideBinary.addEventListener('change', () => {
+    app.renderBinary();
+});
+
 // サンプル
-document.querySelectorAll('.js_sample').forEach(e => {
+$sampleCodes.forEach(e => {
     if (!(e instanceof HTMLElement)) {
         throw Error('is not HTMLElement');
     }
@@ -528,18 +565,14 @@ document.querySelectorAll('.js_sample').forEach(e => {
 
 // rangeの設定
 const frequencyArray = [];
-for (let i = 0; i < 6; i++) {
+for (let i = 0; i < 7; i++) {
     const base = 10 ** i;
     for (let j = 1; j <= 9; j++) {
         frequencyArray.push(base * j);
     }
 }
 
-frequencyArray.push(10 ** 6);
-frequencyArray.push(2 * 10 ** 6);
-frequencyArray.push(3 * 10 ** 6);
-frequencyArray.push(4 * 10 ** 6);
-frequencyArray.push(5 * 10 ** 6);
+frequencyArray.push(10 ** 7);
 
 $frequencyInput.min = "0";
 $frequencyInput.max = (frequencyArray.length - 1).toString();

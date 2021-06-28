@@ -1,7 +1,18 @@
-import { generate } from './rule.js'
+// @ts-check
+
+import { generate } from './rule.js';
+
 const rule = document.querySelector("#rule");
+if (!(rule instanceof HTMLInputElement)) {
+    throw Error('rule is not a HTMLInputElement');
+}
+
 const generateButton = document.querySelector("#generate");
+
 const code = document.querySelector("#output");
+if (!(code instanceof HTMLTextAreaElement)) {
+    throw Error('code is not a HTMLTextAreaElement');
+}
 const copy = document.querySelector('#copy');
 
 if (!(copy instanceof HTMLButtonElement)) {

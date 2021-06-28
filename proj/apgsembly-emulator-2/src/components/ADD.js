@@ -69,6 +69,7 @@ export class ADD {
     }
 
     /**
+     * @private
      * @returns {never}
      */
     error() {

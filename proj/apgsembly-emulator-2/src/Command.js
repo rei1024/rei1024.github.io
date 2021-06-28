@@ -25,6 +25,9 @@ export class ComponentsHeader extends ProgramLine {
      */
     constructor(content) {
         super();
+        /**
+         * @readonly
+         */
         this.content = content;
     }
 
@@ -85,6 +88,7 @@ export class Comment extends ProgramLine {
     constructor(str) {
         super();
         /**
+         * @readonly
          * @private
          */
         this.str = str;
@@ -104,7 +108,6 @@ export class Comment extends ProgramLine {
     pretty() {
         return this.getString();
     }
-
 }
 
 /**
@@ -209,6 +212,7 @@ export class Command extends ProgramLine {
     }
 
     /**
+     * @private
      * @returns {never}
      */
     static error() {

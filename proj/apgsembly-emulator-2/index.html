@@ -30,7 +30,10 @@
             <button id="start" type="button" class="btn btn-primary">Start</button>
             <button id="stop" type="button" class="btn btn-primary">Stop</button>
             <button id="step" type="button" class="btn btn-primary">Step</button>
-            <button id="step_config" type="button" class="btn btn-primary">Step Config</button>
+            <button type="button" class="btn btn-primary"
+                data-bs-toggle="modal" data-bs-target="#config_modal">
+                Config
+            </button>
             <button type="button" class="btn btn-primary dropdown-toggle" id="samples" data-bs-toggle="dropdown" aria-expanded="false">Sample</button>
             <ul class="dropdown-menu" aria-labelledby="samples">
                 <li>
@@ -135,6 +138,33 @@
             </details>
         </div>
     </main>
+
+    <!-- Modal -->
+    <div class="modal fade" id="config_modal" tabindex="-1" aria-labelledby="config_modal_label" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="config_modal_label">Config</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-0">
+                    <label for="step_input" class="form-label">Step: The number of steps to run</label>
+                    <input type="number" value="1" id="step_input" class="form-control">
+                </div>
+                <div class="mt-3 form-check">
+                    <input type="checkbox" id="hide_binary" class="form-check-input">
+                    <label for="hide_binary" class="form-check-label">Binary registers: Hide binary</label>
+                </div>
+            </div>
+            <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div> -->
+        </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+
     <footer class="mt-3 container">
         <h2 style="font-size: 1.5rem;">Shortcuts</h2>
         <table>

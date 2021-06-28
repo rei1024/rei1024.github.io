@@ -19,6 +19,94 @@ ID0; ZZ; ID0; NOP
     });
 });
 
+Deno.test('Machine duplicated command NZ NZ', () => {
+    const str = `
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine duplicated command * *', () => {
+    const str = `
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine duplicated command * NZ', () => {
+    const str = `
+INITIAL; *; ID0; OUTPUT 3, NOP
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine duplicated command * Z', () => {
+    const str = `
+INITIAL; *; ID0; OUTPUT 3, NOP
+INITIAL; Z; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine duplicated command ZZ Z', () => {
+    const str = `
+INITIAL; ZZ; ID0; OUTPUT 3, NOP
+INITIAL; Z; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine INITIAL NOT EXIST', () => {
+    const str = `
+ID0; ZZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
 Deno.test('Machine no return value', () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3
@@ -68,7 +156,7 @@ INITIAL; ZZ; INITIAL; NOP
     });
 });
 
-Deno.test('Machine register header error', () => {
+Deno.test('Machine register header error: register not exist', () => {
     const str = `
 #REGISTERS: {"U3": 2}
 INITIAL; ZZ; INITIAL; NOP
@@ -83,12 +171,25 @@ INITIAL; ZZ; INITIAL; NOP
     });
 });
 
+Deno.test('Machine next state is not found', () => {
+    const str = `
+INITIAL; ZZ; NON_EXIST; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+    assertThrows(() => {
+        const machine = new Machine(program);
+    });
+});
+
 Deno.test('Machine program9_2', () => {
     const program = Program.parse(program9_2);
     const machine = new Machine(program);
     assertEquals(machine.actionExecutor.uRegMap.get(0).getValue(), 7);
     assertEquals(machine.actionExecutor.uRegMap.get(1).getValue(), 5);
-    
+
     machine.execCommand();
 
     assertEquals(machine.actionExecutor.uRegMap.get(0).getValue(), 6);
@@ -147,7 +248,7 @@ Deno.test('Machine PI Calculator', () => {
     // machine.actionExecutor.bRegMap.get(2)?.setBits([1]);
     // console.log(machine);
     // console.log(machine.actionExecutor);
-    for (let i = 0; i < 400000; i++) {
+    for (let i = 0; i < 250000; i++) {
         try {
             const res = machine.execCommand();
             if (res === 'HALT_OUT') {

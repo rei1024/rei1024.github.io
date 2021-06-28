@@ -166,7 +166,7 @@ export class B2D {
     set() {
         // @ts-ignore
         if (this.array[this.y][this.x] === 1) {
-            throw Error('B2D: set');
+            throw Error('B2D SET: Tried to set when it was already 1');
         }
         // @ts-ignore
         this.array[this.y][this.x] = 1;   

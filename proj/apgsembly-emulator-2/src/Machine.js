@@ -1,7 +1,7 @@
 // @ts-check
 
 import { ActionExecutor } from "./ActionExecutor.js";
-import { Command } from "./Command.js";
+import { commandsToLookupTable, CompiledCommandWithNextState } from "./compile.js";
 import { Program } from "./Program.js";
 
 const INITIAL_STATE = "INITIAL";
@@ -9,25 +9,6 @@ const INITIAL_STATE = "INITIAL";
 /**
  * @typedef {"Z" | "NZ" | "ZZ" | "*"} Input
  */
-
-/**
- * @throws
- * @param {Command[]} commands 
- * @returns {Map<string, Map<Input, Command>>} // previous state, input => command
- */
-function commandsToTableMap(commands) {
-    /** @type {Map<string, Map<Input, Command>>} */
-    const map = new Map();
-    for (const command of commands) {
-        const childMap = map.get(command.state) ?? new Map();
-        if (childMap.has(command.input)) {
-            throw Error(`Duplicated command: "${childMap.get(command.input)?.pretty()}", "${command.pretty()}"`)
-        }
-        childMap.set(command.input, command);
-        map.set(command.state, childMap);
-    }
-    return map;
-}
 
 export class Machine {
     /**
@@ -39,20 +20,41 @@ export class Machine {
         if (!(program instanceof Program)) {
             throw TypeError('program is not a Program');
         }
+        /**
+         * @readonly
+         */
         this.actionExecutor = new ActionExecutor({
             binaryRegisterNumbers: program.extractBinaryRegisterNumbers(),
             unaryRegisterNumbers: program.extractUnaryRegisterNumbers()
         });
-        this.currentState = INITIAL_STATE;
-
+    
         /** @type {0 | 1} */
         this.prevOutput = 0;
+
+        /**
+         * @readonly
+         */
         this.program = program;
+    
+        const obj = commandsToLookupTable(program.commands);
+        this.states = obj.states;
+        /**
+         * @readonly
+         * @private
+         */
+        this.stateMap = obj.stateMap;
+        /**
+         * @readonly
+         * @private
+         */
+        this.lookup = obj.lookup;
 
         /**
          * @private
          */
-        this.tableMap = commandsToTableMap(program.commands);
+        this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ?? (() => {
+            throw Error('INITIAL state is not present');
+        })() ;
 
         const regHeader = program.registersHeader;
         if (regHeader !== undefined) {
@@ -75,6 +77,17 @@ export class Machine {
     }
 
     /**
+     * @returns {string}
+     */
+    get currentState() {
+        const name = this.states[this.currentStateIndex];
+        if (name === undefined) {
+            throw Error('State name is not found');
+        }
+        return name;
+    }
+
+    /**
      * @returns {"Z" | "NZ"}
      */
     getPreviousOutput() {
@@ -87,34 +100,27 @@ export class Machine {
 
     /**
      * @throws
-     * @returns {Command}
+     * @returns {CompiledCommandWithNextState}
      */
-    getNextCommand() {
-        const childMap = this.tableMap.get(this.currentState);
-        // console.log(this.tableMap);
-        if (childMap === undefined) {
-            throw Error('Next state not found: current state: ' + this.currentState);
+    getNextCompiledCommandWithNextState() {
+        const compiledCommand = this.lookup[this.currentStateIndex];
+
+        if (compiledCommand === undefined) {
+            throw Error('Internal Error: Next command is not found: Current state: ' + this.currentState);
         }
-        const wildcard = childMap.get('*');
-        if (wildcard !== undefined) {
-            return wildcard;
-        }
+
         if (this.prevOutput === 0) {
-            const z = childMap.get('Z');
+            const z = compiledCommand.z;
             if (z !== undefined) {
                 return z;
             }
-            const zz = childMap.get('ZZ');
-            if (zz !== undefined) {
-                return zz;
-            }
         } else {
-            const nz = childMap.get('NZ');
+            const nz = compiledCommand.nz;
             if (nz !== undefined) {
                 return nz;
             }
         }
-        throw Error('Next Command not found: Current state = ' + this.currentState + ', output = ' + this.getPreviousOutput());
+        throw Error('Next command is not found: Current state = ' + this.currentState + ', output = ' + this.getPreviousOutput());
     }
 
     /**
@@ -122,17 +128,20 @@ export class Machine {
      * @throws
      */
     execCommand() {
-        const command = this.getNextCommand();
+        const compiledCommand = this.getNextCompiledCommandWithNextState();
+
+        const command = compiledCommand.command;
 
         /** @type {0 | 1 | undefined} */
         let result = undefined;
 
+        const actionExecutor = this.actionExecutor;
         for (const action of command.actions) {
-            const res = this.actionExecutor.execAction(action);
+            const res = actionExecutor.execAction(action);
             if (res === -1) {
                 return "HALT_OUT";
             }
-            if (res === 0 || res === 1) {
+            if (res !== undefined) { // res === 1 || res ==== 0
                 if (result === undefined) {
                     result = res;
                 } else {
@@ -141,23 +150,15 @@ export class Machine {
             }
         }
         if (result === undefined) {
-            throw Error('No return value');
+            throw Error(`No return value: command = ${compiledCommand.command.pretty()}`);
         }
 
         // INITIALに返ってくることは禁止
-        if (command.nextState === "INITIAL") {
+        if (command.nextState === INITIAL_STATE) {
             throw Error('INITIAL is return in execution: command = ' + command.pretty());
         }
-        this.currentState = command.nextState;
+        this.currentStateIndex = compiledCommand.nextState;
         this.prevOutput = result;
-
         return undefined;
-    }
-
-    /**
-     * @returns {never}
-     */
-    error() {
-        throw Error('internal error');
     }
 }
