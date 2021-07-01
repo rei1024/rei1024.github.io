@@ -4,12 +4,18 @@ import { ActionExecutor } from "./ActionExecutor.js";
 import { commandsToLookupTable, CompiledCommandWithNextState } from "./compile.js";
 import { Program } from "./Program.js";
 
+/**
+ * 初期状態
+ */
 const INITIAL_STATE = "INITIAL";
 
 /**
  * @typedef {"Z" | "NZ" | "ZZ" | "*"} Input
  */
 
+/**
+ * エミュレーター
+ */
 export class Machine {
     /**
      * 
@@ -37,6 +43,9 @@ export class Machine {
         this.program = program;
     
         const obj = commandsToLookupTable(program.commands);
+        /**
+         * @readonly
+         */
         this.states = obj.states;
         /**
          * @readonly
@@ -77,6 +86,7 @@ export class Machine {
     }
 
     /**
+     * 現在の状態の名前
      * @returns {string}
      */
     get currentState() {
@@ -88,6 +98,23 @@ export class Machine {
     }
 
     /**
+     * 現在の状態の添字を取得する
+     * @returns {number}
+     */
+    getCurrentStateIndex() {
+        return this.currentStateIndex;
+    }
+
+    /**
+     * 状態の文字列から添字へのマップを取得する
+     * @returns {Map<string, number>}
+     */
+    getStateMap() {
+        return this.stateMap
+    }
+
+    /**
+     * 前回の出力を取得する
      * @returns {"Z" | "NZ"}
      */
     getPreviousOutput() {
@@ -124,6 +151,8 @@ export class Machine {
     }
 
     /**
+     * 次のコマンドを実行する
+     * エラーが発生した場合は例外を投げる
      * @returns {"HALT_OUT" | undefined}
      * @throws
      */

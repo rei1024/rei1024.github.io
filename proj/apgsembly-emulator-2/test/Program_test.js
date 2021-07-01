@@ -58,6 +58,41 @@ LSB2; Z; LSB2; HALT_OUT
 LSB2; NZ; LSB2; TDEC B0
 `
 
+Deno.test('Program empty', () => {
+    const program = Program.parse('');
+    if (program instanceof Program) {
+        throw Error('expected parse error');;
+    } else {
+        assertEquals(program, 'Program is empty');
+    }
+});
+
+Deno.test('Program multiple $REGISTERS', () => {
+    const program = Program.parse(`
+#COMPONENTS U0-1,HALT_OUT
+#REGISTERS {"U0":7, "U1":5}
+#REGISTERS {"U0":7, "U1":5}
+INITIAL; ZZ; ID1; TDEC U0`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');;
+    } else {
+        assertEquals(program, 'Multiple #REGISTER');
+    }
+});
+
+Deno.test('Program multiple $COMPONENTS', () => {
+    const program = Program.parse(`
+#COMPONENTS U0-1,HALT_OUT
+#COMPONENTS U0-1,HALT_OUT
+#REGISTERS {"U0":7, "U1":5}
+INITIAL; ZZ; ID1; TDEC U0`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');;
+    } else {
+        assertEquals(program, 'Multiple #COMPONENTS');
+    }
+});
+
 Deno.test('Program pretty program9_1', () => {
     const program = Program.parse(program9_1);
     if (program instanceof Program) {

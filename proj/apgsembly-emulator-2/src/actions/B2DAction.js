@@ -13,7 +13,13 @@ export class B2DAction extends Action {
      */
     constructor(op, axis) {
         super();
+        /**
+         * @readonly
+         */
         this.op = op;
+        /**
+         * @readonly
+         */
         this.axis = axis;
     }
 

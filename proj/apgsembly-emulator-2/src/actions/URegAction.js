@@ -13,7 +13,13 @@ export class URegAction extends Action {
      */
     constructor(op, regNumber) {
         super();
+        /**
+         * @readonly
+         */
         this.op = op;
+        /**
+         * @readonly
+         */
         this.regNumber = regNumber;
     }
 

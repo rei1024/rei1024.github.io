@@ -12,6 +12,9 @@ export class MulAction extends Action {
      */
     constructor(op) {
         super();
+        /**
+         * @readonly
+         */
         this.op = op;
     }
 

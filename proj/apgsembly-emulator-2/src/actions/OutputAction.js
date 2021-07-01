@@ -9,6 +9,9 @@ export class OutputAction extends Action {
      */
     constructor(digit) {
         super();
+        /**
+         * @readonly
+         */
         this.digit = digit;
     }
 

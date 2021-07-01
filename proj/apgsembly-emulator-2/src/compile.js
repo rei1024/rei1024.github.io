@@ -2,6 +2,9 @@ import { Command } from "./Command.js";
 
 // @ts-check
 
+/**
+ * コマンドと次の状態
+ */
 export class CompiledCommandWithNextState {
     /**
      * 
@@ -13,6 +16,7 @@ export class CompiledCommandWithNextState {
          * @readonly
          */
         this.command = command;
+
         /**
          * 次の状態の添字
          * @readonly
@@ -24,8 +28,8 @@ export class CompiledCommandWithNextState {
 export class CompiledCommand {
     /**
      * 
-     * @param {CompiledCommandWithNextState | undefined} z 
-     * @param {CompiledCommandWithNextState | undefined} nz
+     * @param {CompiledCommandWithNextState | undefined} z Zの場合
+     * @param {CompiledCommandWithNextState | undefined} nz NZの場合
      */
     constructor(z, nz) {
         /**
@@ -40,6 +44,7 @@ export class CompiledCommand {
 }
 
 /**
+ * 速く実行できる形式へ変換する
  * @param {Command[]} commands
  * @returns {{
  *   states: string[];

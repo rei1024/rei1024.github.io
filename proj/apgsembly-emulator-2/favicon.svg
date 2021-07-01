@@ -44,9 +44,10 @@
      inkscape:cx="1.3505554"
      inkscape:cy="8.2187274"
      inkscape:window-x="85"
-     inkscape:window-y="40"
+     inkscape:window-y="23"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0" />
   <g
      inkscape:groupmode="layer"
      id="layer2"
@@ -93,18 +94,18 @@
          id="tspan88" /></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:58.33330000000000126px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:6.25"
-       x="5.2440295"
-       y="93.154694"
+       style="font-style:normal;font-weight:normal;font-size:58.3333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:6.25"
+       x="7.6423316"
+       y="93.754272"
        id="text64-8"><tspan
          sodipodi:role="line"
-         x="5.2440295"
-         y="93.154694"
+         x="7.6423316"
+         y="93.754272"
          style="font-size:58.3333px;stroke-width:6.25"
          id="tspan66-9">G</tspan><tspan
          sodipodi:role="line"
-         x="5.2440295"
-         y="166.07132"
+         x="7.6423316"
+         y="166.6709"
          style="font-size:58.3333px;stroke-width:6.25"
          id="tspan108" /></text>
     <text

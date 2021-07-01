@@ -179,6 +179,7 @@ export class Command extends ProgramLine {
             }
             return `Invalid command "${str}"`;
         }
+        // arrayの長さは4
         const state = array[0] ?? this.error();
         const inputStr = array[1] ?? this.error();
         const nextState = array[2] ?? this.error();

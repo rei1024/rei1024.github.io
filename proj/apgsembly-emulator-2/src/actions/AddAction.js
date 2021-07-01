@@ -12,6 +12,9 @@ export class AddAction extends Action {
      */
     constructor(regName) {
         super();
+        /**
+         * @readonly
+         */
         this.regName = regName;
     }
 

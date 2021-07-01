@@ -1,0 +1,37 @@
+{
+    "INITIAL": {
+        "prefix": ["initial"],
+        "body": "INITIAL",
+        "description": "first state"
+    },
+    "INC Un": {
+        "prefix": ["iu", "incu"],
+        "body": "INC U",
+        "description": "increases the value of the register by 1, no return value"
+    },
+    "TDEC Un": {
+        "prefix": ["tu", "tdecu"],
+        "body": "TDEC U",
+        "description": "returns Z if Un = 0 and NZ otherwise, and then decreases the value of the register by 1 if NZ"
+    },
+    "INC Bn": {
+        "prefix": ["ib", "incb"],
+        "body": "INC B",
+        "description": "increases the position of the read head, no return value"
+    },
+    "TDEC Bn": {
+        "prefix": ["tb", "tdecb"],
+        "body": "TDEC B",
+        "description": "returns Z if read head is at least significant bit and NZ otherwise, and then decreases position by 1 if NZ"
+    },
+    "READ Bn": {
+        "prefix": ["rb", "readb"],
+        "body": "READ B",
+        "description": "returns the bit (Z = 0 or NZ = 1) at the read head, and then sets it equal to 0"
+    },
+    "SET Bn": {
+        "prefix": ["sb", "setb"],
+        "body": "SET B",
+        "description": "set the bit at the read head to 1, no return value, breaks if that bit already equals 1"
+    }
+}

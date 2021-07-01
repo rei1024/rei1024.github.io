@@ -1,0 +1,29 @@
+name: Test by Deno
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git Checkout Deno Module
+        uses: actions/checkout@v2
+      - name: Install Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x # latest
+      # - name: Lint Deno Module
+      #   run: deno fmt --check
+      # - name: Build Deno Module
+      #   run: deno run --reload mod.ts
+      - name: Test Deno Module
+        run: deno test --allow-none

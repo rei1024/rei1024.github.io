@@ -6,6 +6,9 @@ export const addLookupA1 = [5, 4, 7, 6, 1, 0, 3, 2, 13, 12, 15, 14, 9, 8, 11, 10
 export const addLookupB0 = [0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9, 9, 9];
 export const addLookupB1 = [0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9];
 
+/**
+ * ADD
+ */
 export class ADD {
     constructor() {
         /**

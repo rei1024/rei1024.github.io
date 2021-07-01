@@ -2,95 +2,44 @@
 
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
-import { Frequency } from "./frequency.js";
+import { Frequency } from "./util/frequency.js";
+import { setCustomError, removeCustomError } from "./util/validation_ui.js";
+
 import { renderB2D } from "./renderB2D.js";
-import { $type } from "./selector.js";
+import {
+    $error,
+    $input,
+    $output,
+    $steps,
+    $start,
+    $stop,
+    $reset,
+    $step,
+    $currentState,
+    $previousOutput,
+    $freqencyOutput,
+    $frequencyInput,
+    $command,
+    $canvas,
+    context,
+    $b2dx,
+    $b2dy,
+    $b2dDetail,
+    $unaryRegister,
+    $binaryRegister,
+    $binaryRegisterDetail,
+    $addSubMul,
+    $fileImport,
+    $sampleCodes,
+    $stepInput,
+    $hideBinary,
+    $breakpointSelect,
+    $darkMode,
+} from "./bind.js";
 
 // データ
 // GitHub Pagesは1階層上になる
 const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/data/" : "../data/";
-
-// エラーメッセージ
-// Error messsage
-const $error = $type('#error', HTMLElement);
-
-// 入力
-// APGsembly code
-const $input = $type('#input', HTMLTextAreaElement);
-
-// 出力
-// OUTPUT component
-const $output = $type('#output', HTMLTextAreaElement);
-
-// ステップ数表示
-const $steps = $type('#steps', HTMLElement);
-
-// Start execution
-const $start = $type('#start', HTMLButtonElement);
-
-// Stop execution
-const $stop = $type('#stop', HTMLButtonElement);
-
-// Reset machine state and program
-const $reset = $type('#reset', HTMLButtonElement);
-
-// Step Button
-const $step = $type('#step', HTMLButtonElement);
-
-// 現在の状態
-const $currentState = $type('#current_state', HTMLElement);
-
-// 前回の出力
-const $previousOutput = $type('#previous_output', HTMLElement);
-
-// スピード入力
-const $frequencyInput = $type('#frequency_input', HTMLInputElement);
-
-// スピード表示
-const $freqencyOutput = $type('#frequency_output', HTMLElement);
-
-// 次のコマンド
-// Next command
-const $command = $type('#command', HTMLElement);
-
-// B2D
-const $canvas = $type('#canvas', HTMLCanvasElement);
-const context = $canvas.getContext('2d');
-if (context == null) {
-    throw Error('context is null');
-}
-const $b2dx = $type('#b2dx', HTMLElement);
-const $b2dy = $type('#b2dy', HTMLElement);
-
-// B2Dの開閉
-const $b2dDetail = $type('#b2d_detail', HTMLDetailsElement);
-
-// スライディングレジスタ
-const $unaryRegister = $type('#unary_register', HTMLElement);
-
-// バイナリレジスタ
-const $binaryRegister = $type('#binary_register', HTMLElement);
-
-// バイナリレジスタの開閉
-const $binaryRegisterDetail = $type('#binary_register_detail', HTMLDetailsElement);
-
-// ADD SUB MULの表示
-const $addSubMul = $type('#add_sub_mul', HTMLElement);
-
-// ファイルインポート
-const $fileImport = $type('#import_file', HTMLInputElement);
-
-// サンプルコード
-const $sampleCodes = document.querySelectorAll('.js_sample');
-
-// --------- Modal --------- //
-
-// ステップ数入力 
-const $stepInput = $type('#step_input', HTMLInputElement);
-
-// Hide Binary
-// 二進数を非表示にする
-const $hideBinary = $type('#hide_binary', HTMLInputElement);
 
 /**
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
@@ -105,6 +54,7 @@ export class App {
         this.steps = 0;
 
         /**
+         * アプリ状態
          * @type {AppState}
          */
         this.appState = "Initial";
@@ -115,6 +65,9 @@ export class App {
          */
         this.frequency = 30; // index.htmlと同期する
 
+        /**
+         * エラーメッセージ
+         */
         this.errorMessage = "";
 
         /** ステップ数設定 */
@@ -246,12 +199,29 @@ export class App {
         $binaryRegister.append(table);
     }
 
+    setUpBreakpointSelect() {
+        $breakpointSelect.innerHTML = "";
+        const none = document.createElement('option');
+        none.textContent = "None";
+        none.value = "-1";
+        none.selected = true;
+        $breakpointSelect.append(none);
+        const stateMap =  this.machine.getStateMap();
+        for (const state of this.machine.states) {
+            const option = document.createElement('option');
+            option.textContent = state;
+            option.value = stateMap.get(state)?.toString();
+            $breakpointSelect.append(option);
+        }
+    }
+
     /**
      * machineがセットされた時のコールバック
      */
     onMachineSet() {
         this.setUpUnary();
         this.setUpBinary();
+        this.setUpBreakpointSelect();
     }
 
     /**
@@ -280,6 +250,9 @@ export class App {
         }
     }
 
+    /**
+     * 周波数の表示
+     */
     renderFrequencyOutput() {
         if (typeof app.frequency.toLocaleString === "function") {
             // with ","
@@ -300,6 +273,9 @@ export class App {
         }
     }
 
+    /**
+     * 次のコマンドの表示
+     */
     renderCommand() {
         try {
             $command.textContent = this.machine?.getNextCompiledCommandWithNextState().command.pretty();
@@ -308,6 +284,9 @@ export class App {
         }
     }
 
+    /**
+     * B2Dの表示
+     */
     renderB2D() {
         if (!$b2dDetail.open) {
             return;
@@ -325,6 +304,9 @@ export class App {
         }
     }
 
+    /**
+     * スライディングレジスタの表示
+     */
     renderUnary() {
         if (this.machine === undefined) {
             return;
@@ -342,6 +324,9 @@ export class App {
         }
     }
 
+    /**
+     * バイナリレジスタの表示
+     */
     renderBinary() {
         if (this.machine === undefined) {
             return;
@@ -391,6 +376,9 @@ export class App {
         }
     }
 
+    /**
+     * 全体を描画する
+     */
     render() {
         // ボタンの有効無効
         switch (this.appState) {
@@ -457,6 +445,13 @@ export class App {
             return;
         }
 
+        // ブレークポイントの処理
+        let breakpointIndex = -1;
+        const n = parseInt($breakpointSelect.value, 10);
+        if (!isNaN(n)) {
+            breakpointIndex = n;
+        }
+
         const machine = this.machine;
         for (let i = 0; i < steps; i++) {
             try {
@@ -464,6 +459,13 @@ export class App {
                 if (res === "HALT_OUT") {
                     this.appState = "Halted";
                     this.steps += i + 1; 
+                    this.render();
+                    return;
+                }
+                // ブレークポイントの状態の場合、停止する
+                if (machine.getCurrentStateIndex() === breakpointIndex) {
+                    this.appState = "Stop";
+                    this.steps += i + 1;
                     this.render();
                     return;
                 }
@@ -508,38 +510,19 @@ $step.addEventListener('click', () => {
             // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
             $step.removeChild(span);
-        }, 33);
+        }, 33); // 走らせるタミングを遅らせることでスピナーの表示を確定させる
     } else {
         app.run(app.stepConfig);
     }
 });
 
-/**
- * 
- * @param {string} str 
- * @returns {string}
- */
-function escapeNum(str) {
-    // @ts-ignore
-    if (typeof str.replaceAll === "function") {
-        // @ts-ignore
-        return str.replaceAll("_", "");
-    } else {
-        return str;
-    }
-}
-
 $stepInput.addEventListener('input', () => {
     const n = Number($stepInput.value)
     if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
-        $stepInput.setCustomValidity('Enter a positive integer');
-        $stepInput.reportValidity();
-        $stepInput.classList.add('is-invalid');
+        setCustomError($stepInput, 'Enter a positive integer');
         app.stepConfig = 1;
     } else {
-        $stepInput.setCustomValidity('');
-        $stepInput.reportValidity();
-        $stepInput.classList.remove('is-invalid');
+        removeCustomError($stepInput);
         app.stepConfig = n;
     }
 });
@@ -581,7 +564,6 @@ $frequencyInput.addEventListener('input', () => {
     const value = parseInt($frequencyInput.value);
     app.frequency = frequencyArray[value]
     app.renderFrequencyOutput();
-    // app.render();
 });
 
 // 開閉で描画
@@ -607,6 +589,21 @@ $fileImport.addEventListener('input', (e) => {
     // @ts-ignore
     reader.readAsText(e.target.files[0]);
 });
+
+// ダークモード
+$darkMode.addEventListener('change', () => {
+    const onOrOff = $darkMode.checked ? "on" : "off"; 
+    localStorage.setItem('dark_mode', onOrOff);
+    document.body.setAttribute('apge_dark_mode', onOrOff);
+
+    $darkMode.parentElement.querySelector('label').textContent = $darkMode.checked ? "On" : "Off";
+});
+
+if (localStorage.getItem('dark_mode') === "on") {
+    document.body.setAttribute('apge_dark_mode', "on");
+    $darkMode.checked = true;
+    $darkMode.parentElement.querySelector('label').textContent = "On";
+}
 
 // キーボード入力
 // Enter: toggle Start and Stop

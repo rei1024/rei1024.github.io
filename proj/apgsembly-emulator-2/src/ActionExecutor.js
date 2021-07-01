@@ -22,11 +22,14 @@ import { UReg } from "./components/UReg.js";
 
 /**
  * #REGISTERSのJSON
+ * Uの場合はnumberのみ
+ * Bのときはポインタとバイナリの文字列の配列である場合はそのまま設定する。
+ * 数字である場合は二進数に変換してそれを逆さまにして配列へ設定する。ポインタは0とする。
  * @typedef {{ [reg: string]: number | [number, string] }} RegistersInit
  */
 
 /**
- * 
+ * バイナリの文字列を0と1の配列に変換する
  * @param {string} str '01011101'
  * @returns {(0 | 1)[]}
  * @throws
@@ -55,23 +58,53 @@ export class ActionExecutor {
      * }} param0 
      */
     constructor({ unaryRegisterNumbers, binaryRegisterNumbers }) {
+        /**
+         * @readonly
+         */
         this.unaryRegisterNumbers = unaryRegisterNumbers;
+        /**
+         * @readonly
+         */
         this.binaryRegisterNumbers = binaryRegisterNumbers;
 
+        /**
+         * @readonly
+         */
         this.uRegMap = new Map(this.unaryRegisterNumbers.map(n => [n, new UReg()]));
 
+        /**
+         * @readonly
+         */
         this.bRegMap = new Map(this.binaryRegisterNumbers.map(n => [n, new BReg()]));
 
+        /**
+         * @readonly
+         */
         this.add = new ADD();
 
+        /**
+         * @readonly
+         */
         this.sub = new SUB();
 
+        /**
+         * @readonly
+         */
         this.mul = new MUL();
 
+        /**
+         * @readonly
+         */
         this.b2d = new B2D();
 
+        /**
+         * @readonly
+         */
         this.output = new OUTPUT();
 
+        /**
+         * @readonly
+         */
         this.nop = new NOP();
 
         // this.haltOut = new HALTOUT();
@@ -121,6 +154,7 @@ export class ActionExecutor {
                 }
                 reg.pointer = value[0];
                 reg.setBits(parseBits(value[1]));
+                reg.extend();
             } else {
                 throw Error('Invalid #REGISTERS ' + debugStr);
             }

@@ -2,6 +2,9 @@
 
 import { B2DAction } from "../actions/B2DAction.js";
 
+/**
+ * B2D
+ */
 export class B2D {
     /**
      * 
