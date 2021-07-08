@@ -39,8 +39,8 @@ function bit3(f) {
 }
 
 /**
- * 
- * @param {number} rule
+ *
+ * @param {number} rule rule number
  * @returns {{ [key: string]: "0" | "1" }}
  */
 export function parseRule(rule) {
@@ -58,7 +58,7 @@ export function parseRule(rule) {
 
 /**
  * 
- * @param {number} rule
+ * @param {number} rule rule number
  * @returns {(x: number, y: number, z: number) => "0" | "1"}
  */
 export function makeDelta(rule) {
@@ -79,9 +79,9 @@ export function makeDelta(rule) {
 }
 
 /**
- * Generate APGsembly
- * @param {number} rule
- * @returns {string}
+ * Generate APGsembly for elementary cellular automata
+ * @param {number} rule rule number
+ * @returns {string} APGsembly code
  */
 export function generate(rule) {
     const delta = makeDelta(rule);

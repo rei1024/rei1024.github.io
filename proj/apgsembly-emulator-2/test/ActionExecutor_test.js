@@ -12,7 +12,7 @@ Deno.test('ActionExecutor setByRegistersInit empty', () => {
     x.setByRegistersInit({});
 });
 
-Deno.test('ActionExecutor setByRegistersInit empty', () => {
+Deno.test('ActionExecutor setByRegistersInit', () => {
     const x = new ActionExecutor({ unaryRegisterNumbers: [0, 1], binaryRegisterNumbers: [0, 1] });
     x.setByRegistersInit({ "B0": [0, '11010001'], "U0": 8 });
     assertEquals([...x.bRegMap.get(0).toBinaryString()].reverse().join(''), '11010001');

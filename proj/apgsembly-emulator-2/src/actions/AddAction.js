@@ -26,7 +26,7 @@ export class AddAction extends Action {
     }
 
     /**
-     * 
+     * 文字列から変換する
      * @param {string} str 
      * @returns {AddAction | undefined}
      */

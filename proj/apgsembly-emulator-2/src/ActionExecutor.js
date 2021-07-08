@@ -41,7 +41,7 @@ function parseBits(str) {
         } else if (c === '1') {
             return 1;
         } else {
-            throw Error('Invalid #REGISTERS: ' + str);
+            throw Error(`Invalid #REGISTERS: "${str}"`);
         }
     });
 }

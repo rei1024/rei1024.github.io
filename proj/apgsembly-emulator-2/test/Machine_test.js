@@ -96,7 +96,7 @@ ID0; ZZ; ID0; NOP
 
 Deno.test('Machine INITIAL is not exist', () => {
     const str = `
-ID0; ZZ; ID0; NOP
+    ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
@@ -125,7 +125,7 @@ ID0; ZZ; ID0; NOP
 
 Deno.test('Machine return value twice', () => {
     const str = `
-INITIAL; ZZ; ID0; NOP, NOP
+INITIAL; ZZ; ID0; NOP, TDEC U0
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
@@ -159,6 +159,36 @@ INITIAL; ZZ; INITIAL; NOP
 Deno.test('Machine register header error: register is not exist', () => {
     const str = `
 #REGISTERS: {"U3": 2}
+INITIAL; ZZ; INITIAL; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine register header error: is not an object: number', () => {
+    const str = `
+#REGISTERS: 2
+INITIAL; ZZ; INITIAL; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error '  + str);
+    }
+
+    assertThrows(() => {
+        new Machine(program);
+    });
+});
+
+Deno.test('Machine register header error: is not an object: null', () => {
+    const str = `
+#REGISTERS: null
 INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);

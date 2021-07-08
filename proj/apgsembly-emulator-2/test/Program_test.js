@@ -93,6 +93,17 @@ INITIAL; ZZ; ID1; TDEC U0`);
     }
 });
 
+Deno.test('Program duplicated actions', () => {
+    const program = Program.parse(`
+    INITIAL; ZZ; A0; NOP, NOP
+    A0; *; A0; NOP`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');;
+    } else {
+        assertEquals(program, `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`);
+    }
+});
+
 Deno.test('Program pretty program9_1', () => {
     const program = Program.parse(program9_1);
     if (program instanceof Program) {

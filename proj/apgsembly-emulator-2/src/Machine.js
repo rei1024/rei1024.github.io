@@ -75,7 +75,10 @@ export class Machine {
             try {
                 parsed = JSON.parse(str);
             } catch (e) {
-                throw Error('Invalid #REGISTERS: ' + str);
+                throw Error('Invalid #REGISTERS: is not a valid JSON: ' + str);
+            }
+            if (parsed === null || typeof parsed !== 'object') {
+                throw Error(`Invalid #REGISTERS: "${str}" is not an object`);
             }
             try {
                 this.actionExecutor.setByRegistersInit(parsed);
@@ -166,20 +169,20 @@ export class Machine {
 
         const actionExecutor = this.actionExecutor;
         for (const action of command.actions) {
-            const res = actionExecutor.execAction(action);
-            if (res === -1) {
+            const actionResult = actionExecutor.execAction(action);
+            if (actionResult === -1) {
                 return "HALT_OUT";
             }
-            if (res !== undefined) { // res === 1 || res ==== 0
+            if (actionResult !== undefined) { // res === 1 || res ==== 0
                 if (result === undefined) {
-                    result = res;
+                    result = actionResult;
                 } else {
                     throw Error('Return value twice: command = ' + command.pretty());
                 }
             }
         }
         if (result === undefined) {
-            throw Error(`No return value: command = ${compiledCommand.command.pretty()}`);
+            throw Error(`No return value: command = ${command.pretty()}`);
         }
 
         // INITIALに返ってくることは禁止

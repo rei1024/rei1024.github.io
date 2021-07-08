@@ -58,6 +58,9 @@ export class RegistersHeader extends ProgramLine {
      */
     constructor(content) {
         super();
+        /**
+         * @readonly
+         */
         this.content = content;
     }
 
@@ -141,9 +144,24 @@ export class Command extends ProgramLine {
      */
     constructor({ state, input, nextState, actions }) {
         super();
+        /**
+         * @readonly
+         */
         this.state = state;
+
+        /**
+         * @readonly
+         */
         this.input = input;
+
+        /**
+         * @readonly
+         */
         this.nextState = nextState;
+
+        /**
+         * @readonly
+         */
         this.actions = actions;   
     }
 

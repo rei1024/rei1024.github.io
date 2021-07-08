@@ -4,6 +4,7 @@ import { B2D } from "../src/components/B2D.js";
 
 /**
  * B2Dをcanvasに描画する
+ * render B2D to canvas
  * @param {CanvasRenderingContext2D} context 
  * @param {B2D} b2d 
  */

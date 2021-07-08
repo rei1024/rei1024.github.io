@@ -36,6 +36,7 @@ import {
     $breakpointSelect,
     $darkMode,
 } from "./bind.js";
+import { makeSpinner } from "./util/spinner.js";
 
 // データ
 // GitHub Pagesは1階層上になる
@@ -45,6 +46,9 @@ const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/d
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
  */
 
+/**
+ * APGsembly 2.0 Emulator frontend application
+ */
 export class App {
     constructor() {
         /** @type {Machine | undefined} */
@@ -199,6 +203,9 @@ export class App {
         $binaryRegister.append(table);
     }
 
+    /**
+     * ブレークポイントの選択肢の設定
+     */
     setUpBreakpointSelect() {
         $breakpointSelect.innerHTML = "";
         const none = document.createElement('option');
@@ -484,51 +491,41 @@ export class App {
 
 const app = new App();
 
-$start.addEventListener('click', () => {
-    app.start();
-});
-
-$stop.addEventListener('click', () => {
-    app.stop();
-});
-
+// Reset button
 $reset.addEventListener('click', () => {
     app.reset();
 });
 
+// Start button
+$start.addEventListener('click', () => {
+    app.start();
+});
+
+// Stop button
+$stop.addEventListener('click', () => {
+    app.stop();
+});
+
+const spinner = makeSpinner();
+
+// Step button
 $step.addEventListener('click', () => {
     if ($step.disabled) {
         return;
     }
     // 時間がかかる時はスピナーを表示する
+    // show a spinner
     if (app.stepConfig >= 5000000) {
-        const span = document.createElement('span');
-        span.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`;
-        $step.append(span);
+        $step.append(spinner);
         $step.disabled = true;
         setTimeout(() => {
             // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
-            $step.removeChild(span);
+            $step.removeChild(spinner);
         }, 33); // 走らせるタミングを遅らせることでスピナーの表示を確定させる
     } else {
         app.run(app.stepConfig);
     }
-});
-
-$stepInput.addEventListener('input', () => {
-    const n = Number($stepInput.value)
-    if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
-        setCustomError($stepInput, 'Enter a positive integer');
-        app.stepConfig = 1;
-    } else {
-        removeCustomError($stepInput);
-        app.stepConfig = n;
-    }
-});
-
-$hideBinary.addEventListener('change', () => {
-    app.renderBinary();
 });
 
 // サンプル
@@ -546,7 +543,7 @@ $sampleCodes.forEach(e => {
     });
 });
 
-// rangeの設定
+// 周波数の設定
 const frequencyArray = [];
 for (let i = 0; i < 7; i++) {
     const base = 10 ** i;
@@ -590,6 +587,24 @@ $fileImport.addEventListener('input', (e) => {
     reader.readAsText(e.target.files[0]);
 });
 
+// ** Modal ** //
+
+$stepInput.addEventListener('input', () => {
+    const n = Number($stepInput.value)
+    if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
+        setCustomError($stepInput, 'Enter a positive integer');
+        app.stepConfig = 1;
+    } else {
+        removeCustomError($stepInput);
+        app.stepConfig = n;
+    }
+});
+
+// バイナリを非表示にする
+$hideBinary.addEventListener('change', () => {
+    app.renderBinary();
+});
+
 // ダークモード
 $darkMode.addEventListener('change', () => {
     const onOrOff = $darkMode.checked ? "on" : "off"; 
@@ -606,6 +621,7 @@ if (localStorage.getItem('dark_mode') === "on") {
 }
 
 // キーボード入力
+// keyboard input
 // Enter: toggle Start and Stop
 // Space: Step
 document.addEventListener('keydown', e => {
@@ -638,6 +654,7 @@ document.addEventListener('keydown', e => {
 });
 
 // 初回描画
+// first render
 try {
     app.render();
 } catch (e) {

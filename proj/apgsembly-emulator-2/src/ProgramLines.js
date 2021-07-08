@@ -13,6 +13,7 @@ export class ProgramLines {
     constructor(array) {
         /**
          * @private
+         * @readonly
          */
         this.array = array;
     }
