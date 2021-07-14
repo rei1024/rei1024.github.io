@@ -52,7 +52,8 @@ $copy.addEventListener('click', () => {
     });
 });
 
-const DATA_DIR = "../apgc_frontend/data/";
+// GitHub Pagesは1階層上になる
+const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/apgc_frontend/data/" : "../apgc_frontend/data/";
 
 $samples.forEach(sample => {
     if (!(sample instanceof HTMLElement)) {
