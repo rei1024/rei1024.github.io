@@ -209,13 +209,13 @@ export class Command extends ProgramLine {
         for (const actionsStr of actionStrs) {
             const result = parseAction(actionsStr);
             if (result === undefined) {
-                return `Unkown action "${actionsStr}" at "${str}"`;
+                return `Unknown action "${actionsStr}" at "${str}"`;
             }
             actions.push(result);
         }
 
         if (!["Z", "NZ", "ZZ", "*"].includes(inputStr)) {
-            return `Unkown input "${inputStr}" at "${str}"`;
+            return `Unknown input "${inputStr}" at "${str}"`;
         }
 
         /** @type {"Z" | "NZ" | "ZZ" | "*"} */

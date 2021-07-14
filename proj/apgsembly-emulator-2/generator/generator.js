@@ -8,6 +8,9 @@ if (!(rule instanceof HTMLInputElement)) {
 }
 
 const generateButton = document.querySelector("#generate");
+if (generateButton === null) {
+    throw Error('generateButton is null');
+}
 
 const code = document.querySelector("#output");
 if (!(code instanceof HTMLTextAreaElement)) {

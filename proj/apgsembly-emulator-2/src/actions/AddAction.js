@@ -2,6 +2,10 @@
 
 import { Action } from "./Action.js";
 
+export const ADD_A1 = "A1";
+export const ADD_B0 = "B0";
+export const ADD_B1 = "B1";
+
 /**
  * Action for `ADD`
  */

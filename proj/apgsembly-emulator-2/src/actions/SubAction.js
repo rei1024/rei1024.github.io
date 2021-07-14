@@ -2,6 +2,10 @@
 
 import { Action } from "./Action.js";
 
+export const SUB_A1 = "A1";
+export const SUB_B0 = "B0";
+export const SUB_B1 = "B1";
+
 /**
  * Action for `SUB`
  */

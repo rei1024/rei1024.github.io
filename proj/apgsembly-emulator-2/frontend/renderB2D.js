@@ -21,6 +21,9 @@ export function renderB2D(context, b2d) {
     context.fillStyle = "#212529";
     for (let j = 0; j <= maxY; j++) {
         const row = array[j];
+        if (row === undefined) {
+            throw Error('renderB2D: internal error');
+        }
         const jMultCell = j * cellSize;
         for (let i = 0; i <= maxX; i++) {
             if (row[i] === 1) {

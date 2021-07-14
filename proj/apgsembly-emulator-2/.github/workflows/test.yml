@@ -5,11 +5,13 @@ on:
     branches: [main]
     paths:
       - "src/**"
+      - "apgc/**"
       - "test/**"
   pull_request:
     branches: [main]
     paths:
       - "src/**"
+      - "apgc/**"
       - "test/**"
 
 jobs:
@@ -28,4 +30,4 @@ jobs:
       # - name: Build Deno Module
       #   run: deno run --reload mod.ts
       - name: Test Deno Module
-        run: deno test --allow-none
+        run: deno test --allow-none --no-check

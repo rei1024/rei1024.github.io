@@ -158,7 +158,7 @@ INITIAL; ZZ; INITIAL; NOP
 
 Deno.test('Machine register header error: register is not exist', () => {
     const str = `
-#REGISTERS: {"U3": 2}
+#REGISTERS {"U3": 2}
 INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);
@@ -173,7 +173,7 @@ INITIAL; ZZ; INITIAL; NOP
 
 Deno.test('Machine register header error: is not an object: number', () => {
     const str = `
-#REGISTERS: 2
+#REGISTERS 2
 INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);
@@ -188,7 +188,7 @@ INITIAL; ZZ; INITIAL; NOP
 
 Deno.test('Machine register header error: is not an object: null', () => {
     const str = `
-#REGISTERS: null
+#REGISTERS null
 INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);

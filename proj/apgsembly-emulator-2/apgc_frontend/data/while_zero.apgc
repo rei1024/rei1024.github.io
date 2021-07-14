@@ -1,0 +1,5 @@
+while_zero(tdec_u(0)) {
+    // execute while `tdec_u(0)` returns Z
+    output("1");
+    inc_u(0);
+}

@@ -544,6 +544,7 @@ $sampleCodes.forEach(e => {
 });
 
 // 周波数の設定
+/** @type {number[]} */
 const frequencyArray = [];
 for (let i = 0; i < 7; i++) {
     const base = 10 ** i;
@@ -576,7 +577,7 @@ $binaryRegisterDetail.addEventListener('toggle', () => {
 $fileImport.addEventListener('input', (e) => {
     const reader = new FileReader();
     reader.onload = function (e) {
-        const result = e.target.result;
+        const result = e.target?.result;
         if (typeof result !== "string") {
             throw Error('import: internal error');
         }
@@ -626,9 +627,9 @@ if (localStorage.getItem('dark_mode') === "on") {
 // Space: Step
 document.addEventListener('keydown', e => {
     // 入力中は無し
-    if (document.activeElement.tagName === "TEXTAREA" ||
-        document.activeElement.tagName === "INPUT" ||
-        document.activeElement.tagName === "DETAILS"
+    if (document.activeElement?.tagName === "TEXTAREA" ||
+        document.activeElement?.tagName === "INPUT" ||
+        document.activeElement?.tagName === "DETAILS"
         ) {
         return;
     }

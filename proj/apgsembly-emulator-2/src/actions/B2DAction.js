@@ -2,6 +2,14 @@
 
 import { Action } from "./Action.js";
 
+export const B2D_INC = "INC";
+export const B2D_TDEC = "TDEC";
+export const B2D_READ = "READ";
+export const B2D_SET = "SET";
+export const B2D_B2DX = "B2DX";
+export const B2D_B2DY = "B2DY";
+export const B2D_B2D = "B2D";
+
 /**
  * Action for `B2D`
  */

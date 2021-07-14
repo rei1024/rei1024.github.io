@@ -188,6 +188,6 @@ export class ActionExecutor {
         } else if (action instanceof HaltOutAction) {
             return -1;
         }
-        throw Error('execAction: unkown action ' + action.pretty());
+        throw Error('execAction: unknown action ' + action.pretty());
     }
 }

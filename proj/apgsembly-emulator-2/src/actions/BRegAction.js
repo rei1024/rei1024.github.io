@@ -2,6 +2,11 @@
 
 import { Action } from "./Action.js";
 
+export const B_INC = "INC";
+export const B_TDEC = "TDEC";
+export const B_READ = "READ";
+export const B_SET = "SET";
+
 /**
  * Action for `Bn`
  */

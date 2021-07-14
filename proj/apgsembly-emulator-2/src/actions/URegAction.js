@@ -2,6 +2,9 @@
 
 import { Action } from "./Action.js";
 
+export const U_INC = "INC";
+export const U_TDEC = "TDEC";
+
 /**
  * Action for `Un`
  */

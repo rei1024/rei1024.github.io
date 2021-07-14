@@ -91,6 +91,18 @@ export class Program {
     }
 
     /**
+     * @returns {Program}
+     */
+    reconstructProgramLines() {
+        return new Program({
+            commands: this.commands,
+            componentsHeader: this.componentsHeader,
+            registersHeader: this.registersHeader,
+            programLines: new ProgramLines(this.commands.slice())
+        });
+    }
+
+    /**
      * @returns {number[]}
      */
     extractUnaryRegisterNumbers() {

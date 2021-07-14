@@ -1,0 +1,5 @@
+#REGISTERS { "U0": 7, "U1": 5 }
+
+while_non_zero(tdec_u(0)) {
+    inc_u(1);
+}

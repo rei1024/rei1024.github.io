@@ -24,6 +24,10 @@
         "paths": {}
     },
     "include": [
-        "src/**/*.js"
+        "src/**/*.js",
+        "apgc/**/*.js",
+        "frontend/**/*.js",
+        "generator/**/*.js",
+        "transpiler/**/*.js"
     ]
 }

@@ -39,11 +39,11 @@ Deno.test('Command parse multi action', () => {
     }
 });
 
-Deno.test('Command parse unkown action', () => {
-    const str = `INITIAL; ZZ; DIR0; UNKOWN`;
+Deno.test('Command parse unknown action', () => {
+    const str = `INITIAL; ZZ; DIR0; UNKNOWN`;
     const res = Command.parse(str);
     if (typeof res === "string") {
-        assertEquals(res, 'Unkown action "UNKOWN" at "INITIAL; ZZ; DIR0; UNKOWN"');
+        assertEquals(res, 'Unknown action "UNKNOWN" at "INITIAL; ZZ; DIR0; UNKNOWN"');
     } else {
         throw Error('expect parse error ' + str);
     }
@@ -59,11 +59,11 @@ Deno.test('Command parse empty action', () => {
     }
 });
 
-Deno.test('Command parse unkown input', () => {
+Deno.test('Command parse unknown input', () => {
     const str = `INITIAL; XXXXX; DIR0; INC U3`;
     const res = Command.parse(str);
     if (typeof res === "string") {
-        assertEquals(res, 'Unkown input "XXXXX" at "INITIAL; XXXXX; DIR0; INC U3"');
+        assertEquals(res, 'Unknown input "XXXXX" at "INITIAL; XXXXX; DIR0; INC U3"');
     } else {
         throw Error('expect parse error ' + str);
     }

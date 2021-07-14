@@ -2,6 +2,9 @@
 
 import { Action } from "./Action.js";
 
+export const MUL_0 = "0";
+export const MUL_1 = "1";
+
 /**
  * Action for `MUL`
  */
