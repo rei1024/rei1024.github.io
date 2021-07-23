@@ -222,7 +222,7 @@ Deno.test('Machine program9_2', () => {
 
     for (let i = 0; i < 100; i++) {
         const res = machine.execCommand();
-        if (res === 'HALT_OUT') {
+        if (res === -1) {
             break;
         }
     }
@@ -241,7 +241,7 @@ Deno.test('Machine program9_3', () => {
     assertEquals(machine.actionExecutor.uRegMap.get(1)?.getValue(), 5);
     for (let i = 0; i < 100; i++) {
         const res = machine.execCommand();
-        if (res === 'HALT_OUT') {
+        if (res === -1) {
             break;
         }
     }
@@ -261,7 +261,7 @@ Deno.test('Machine program9_4', () => {
 
     for (let i = 0; i < 100; i++) {
         const res = machine.execCommand();
-        if (res === 'HALT_OUT') {
+        if (res === -1) {
             break;
         }
     }
@@ -281,7 +281,7 @@ Deno.test('Machine PI Calculator', () => {
     for (let i = 0; i < 250000; i++) {
         try {
             const res = machine.execCommand();
-            if (res === 'HALT_OUT') {
+            if (res === -1) {
                 break;
             }
         } catch (e) {

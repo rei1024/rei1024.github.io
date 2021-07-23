@@ -33,6 +33,7 @@ import {
     $sampleCodes,
     $stepInput,
     $hideBinary,
+    $reverseBinary,
     $breakpointSelect,
     $darkMode,
     $darkModeLabel,
@@ -83,6 +84,11 @@ export class App {
         this.stepConfig = 1;
 
         this.frequencyManager = new Frequency(() => this.appState === "Running", () => this.frequency, n => this.run(n));
+
+        /**
+         * @type {undefined | NodeListOf<ChildNode>}
+         */
+        this.unaryRegisterItems = undefined;
     }
 
     /**
@@ -153,6 +159,8 @@ export class App {
         unaryTable.style.marginBottom = "0px";
         $unaryRegister.innerHTML = "";
         $unaryRegister.appendChild(unaryTable);
+
+        this.unaryRegisterItems = $unaryRegister.querySelectorAll('tr')[1]?.childNodes;
     }
 
     /**
@@ -328,12 +336,10 @@ export class App {
         if (this.machine === undefined) {
             return;
         }
-        const rows = $unaryRegister.querySelectorAll('tr');
-        const row = rows[1];
-        if (row === undefined) {
+        const items = this.unaryRegisterItems;
+        if (items === undefined) {
             return;
         }
-        const items = row.children;
         let i = 0;
         for (const reg of this.machine.actionExecutor.uRegMap.values()) {
             const item = items[i];
@@ -358,6 +364,7 @@ export class App {
         const rows = $binaryRegister.querySelectorAll('tr');
         let i = 0;
         const hideBinary = $hideBinary.checked;
+        const reverseBinary = $reverseBinary.checked;
         for (const reg of this.machine.actionExecutor.bRegMap.values()) {
             const row = rows[i];
             if (row === undefined) {
@@ -372,6 +379,11 @@ export class App {
                 $prefix.textContent = '';
                 $head.textContent = '';
                 $suffix.textContent = '';
+            } else if (reverseBinary) {
+                const obj = reg.toObject();
+                $prefix.textContent = obj.suffix.slice().reverse().join('');
+                $head.textContent = obj.head.toString();
+                $suffix.textContent = obj.prefix.slice().reverse().join('');
             } else {
                 const obj = reg.toObject();
                 $prefix.textContent = obj.prefix.join('');
@@ -488,7 +500,7 @@ export class App {
         for (let i = 0; i < steps; i++) {
             try {
                 const res = machine.execCommand();
-                if (res === "HALT_OUT") {
+                if (res === -1) {
                     this.appState = "Halted";
                     this.steps += i + 1; 
                     this.render();
@@ -635,6 +647,16 @@ $hideBinary.addEventListener('change', () => {
 
 if (localStorage.getItem('hide_binary') === "true") {
     $hideBinary.checked = true;
+    app.renderBinary();
+}
+
+$reverseBinary.addEventListener('change', () => {
+    app.renderBinary();
+    localStorage.setItem('reverse_binary', $reverseBinary.checked.toString());
+});
+
+if (localStorage.getItem('reverse_binary') === "true") {
+    $reverseBinary.checked = true;
     app.renderBinary();
 }
 

@@ -88,6 +88,9 @@ export const $stepInput = $type('#step_input', HTMLInputElement);
 // 二進数を非表示にする
 export const $hideBinary = $type('#hide_binary', HTMLInputElement);
 
+// 二進数を逆順にする
+export const $reverseBinary = $type('#reverse_binary', HTMLInputElement);
+
 // ブレークポイント
 export const $breakpointSelect = $type('#breakpoint_select', HTMLSelectElement);
 

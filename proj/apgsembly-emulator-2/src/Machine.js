@@ -156,7 +156,8 @@ export class Machine {
     /**
      * 次のコマンドを実行する
      * エラーが発生した場合は例外を投げる
-     * @returns {"HALT_OUT" | undefined}
+     * -1はHALT_OUT
+     * @returns {-1 | undefined}
      * @throws
      */
     execCommand() {
@@ -171,7 +172,7 @@ export class Machine {
         for (const action of command.actions) {
             const actionResult = actionExecutor.execAction(action);
             if (actionResult === -1) {
-                return "HALT_OUT";
+                return -1;
             }
             if (actionResult !== undefined) { // res === 1 || res ==== 0
                 if (result === undefined) {

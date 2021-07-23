@@ -47,3 +47,8 @@ body[apge_dark_mode=on] .dropdown-item, body[apge_dark_mode=on] .dropdown-menu {
 body[apge_dark_mode=on] .btn-close {
     background-color: var(--dark-mode-color);
 }
+
+body[apge_dark_mode=on] #error {
+    color: black;
+    background-color: #CF6679;
+}

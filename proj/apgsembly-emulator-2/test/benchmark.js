@@ -11,7 +11,7 @@ for (let k = 0; k < 10; k++) {
     for (let i = 0; i < N; i++) {
         try {
             const res = machine.execCommand();
-            if (res === 'HALT_OUT') {
+            if (res === -1) {
                 break;
             }
         } catch (e) {
