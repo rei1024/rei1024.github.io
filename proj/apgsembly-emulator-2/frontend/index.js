@@ -35,6 +35,8 @@ import {
     $hideBinary,
     $breakpointSelect,
     $darkMode,
+    $darkModeLabel,
+    $b2dHidePointer,
 } from "./bind.js";
 import { makeSpinner } from "./util/spinner.js";
 
@@ -45,6 +47,9 @@ const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/d
 /**
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
  */
+
+// index.htmlと同期する
+const DEFUALT_FREQUENCY = 30;
 
 /**
  * APGsembly 2.0 Emulator frontend application
@@ -67,7 +72,7 @@ export class App {
          * frequency of update
          * 周波数[Hz]
          */
-        this.frequency = 30; // index.htmlと同期する
+        this.frequency = DEFUALT_FREQUENCY;
 
         /**
          * エラーメッセージ
@@ -126,13 +131,13 @@ export class App {
         }
         const regs = this.machine.actionExecutor.uRegMap;
         const unaryHeader = document.createElement('tr');
-        for (const [key, value] of regs) {
+        for (const key of regs.keys()) {
             const th = document.createElement('th');
             th.textContent = `U${key}`;
             unaryHeader.appendChild(th);
         }
         const unaryData = document.createElement('tr');
-        for (const [key, value] of regs) {
+        for (const value of regs.values()) {
             const td = document.createElement('td');
             td.textContent = value.getValue().toString();
             unaryData.appendChild(td);
@@ -160,7 +165,7 @@ export class App {
         }
         const regs = this.machine.actionExecutor.bRegMap;
         const table = document.createElement('table');
-        for (const [key, reg] of regs) {
+        for (const key of regs.keys()) {
             const tr = document.createElement('tr');
             const th = document.createElement('th');
             th.textContent = `B${key}`;
@@ -208,16 +213,20 @@ export class App {
      */
     setUpBreakpointSelect() {
         $breakpointSelect.innerHTML = "";
+        const machine = this.machine;
+        if (machine === undefined) {
+            return;
+        }
         const none = document.createElement('option');
         none.textContent = "None";
         none.value = "-1";
         none.selected = true;
         $breakpointSelect.append(none);
-        const stateMap =  this.machine.getStateMap();
-        for (const state of this.machine.states) {
+        const stateMap = machine.getStateMap();
+        for (const [state, stateIndex] of stateMap.entries()) {
             const option = document.createElement('option');
             option.textContent = state;
-            option.value = stateMap.get(state)?.toString();
+            option.value = stateIndex.toString();
             $breakpointSelect.append(option);
         }
     }
@@ -239,6 +248,7 @@ export class App {
         this.errorMessage = "";
         const program = Program.parse($input.value);
         this.machine = undefined;
+        this.frequencyManager.reset();
         if (typeof program === "string") {
             this.appState = "ParseError";
             this.errorMessage = program;
@@ -285,7 +295,7 @@ export class App {
      */
     renderCommand() {
         try {
-            $command.textContent = this.machine?.getNextCompiledCommandWithNextState().command.pretty();
+            $command.textContent = this.machine?.getNextCompiledCommandWithNextState().command.pretty() ?? "";
         } catch (e) {
             $command.textContent = "";
         }
@@ -298,17 +308,17 @@ export class App {
         if (!$b2dDetail.open) {
             return;
         }
-
-        const b2d = this.machine?.actionExecutor.b2d;
-        if (b2d !== null && b2d !== undefined) {
-            renderB2D(context, this.machine?.actionExecutor.b2d);
-            $b2dx.textContent = b2d.x.toString();
-            $b2dy.textContent = b2d.y.toString();
-        } else {
+        const machine = this.machine;
+        if (machine === undefined) {
             $b2dx.textContent = "0";
             $b2dy.textContent = "0";
             context.clearRect(0, 0, $canvas.width, $canvas.height);
+            return;
         }
+        const b2d = machine.actionExecutor.b2d;
+        renderB2D(context, b2d, $b2dHidePointer.checked);
+        $b2dx.textContent = b2d.x.toString();
+        $b2dy.textContent = b2d.y.toString();
     }
 
     /**
@@ -326,7 +336,11 @@ export class App {
         const items = row.children;
         let i = 0;
         for (const reg of this.machine.actionExecutor.uRegMap.values()) {
-            items[i].textContent = reg.getValue().toString();
+            const item = items[i];
+            if (item === undefined) {
+                throw Error('renderUnary: internal error');
+            }
+            item.textContent = reg.getValue().toString();
             i++;
         }
     }
@@ -346,18 +360,26 @@ export class App {
         const hideBinary = $hideBinary.checked;
         for (const reg of this.machine.actionExecutor.bRegMap.values()) {
             const row = rows[i];
+            if (row === undefined) {
+                throw Error('renderBinary: internal error');
+            }
+            const $prefix = row.querySelector('.prefix');
+            const $head = row.querySelector('.head');
+            const $suffix = row.querySelector('.suffix');
+            const $decimal = row.querySelector('.decimal');
+            const $pointer = row.querySelector('.pointer');
             if (hideBinary) {
-                row.querySelector('.prefix').textContent = '';
-                row.querySelector('.head').textContent = '';
-                row.querySelector('.suffix').textContent = '';
+                $prefix.textContent = '';
+                $head.textContent = '';
+                $suffix.textContent = '';
             } else {
                 const obj = reg.toObject();
-                row.querySelector('.prefix').textContent = obj.prefix.join('');
-                row.querySelector('.head').textContent = obj.head.toString();
-                row.querySelector('.suffix').textContent = obj.suffix.join('');
+                $prefix.textContent = obj.prefix.join('');
+                $head.textContent = obj.head.toString();
+                $suffix.textContent = obj.suffix.join('');
             }
-            row.querySelector('.decimal').textContent = "value = " + reg.toDecimalString();
-            row.querySelector('.pointer').textContent = ", pointer = " + reg.pointer.toString();
+            $decimal.textContent = "value = " + reg.toDecimalString();
+            $pointer.textContent = ", pointer = " + reg.pointer.toString();
             i++;
         }
     }
@@ -427,8 +449,8 @@ export class App {
         $steps.textContent = this.steps.toString();
 
         // current state
-        $currentState.textContent = this.machine?.currentState;
-        $previousOutput.textContent = this.machine?.getPreviousOutput();
+        $currentState.textContent = this.machine?.currentState ?? "";
+        $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
     }
 
     /**
@@ -460,6 +482,9 @@ export class App {
         }
 
         const machine = this.machine;
+        if (machine === undefined) {
+            return;
+        }
         for (let i = 0; i < steps; i++) {
             try {
                 const res = machine.execCommand();
@@ -533,12 +558,13 @@ $sampleCodes.forEach(e => {
     if (!(e instanceof HTMLElement)) {
         throw Error('is not HTMLElement');
     }
+    const SRC = 'src';
     e.addEventListener('click', () => {
-        fetch(DATA_DIR + e.dataset.src).then(res => res.text()).then(text => {
+        fetch(DATA_DIR + e.dataset[SRC]).then(res => res.text()).then(text => {
             $input.value = text;
             app.reset();
         }).catch(() => {
-            console.log('Fetch Error: ' + e.dataset.src);
+            console.log('Fetch Error: ' + e.dataset[SRC]);
         });
     });
 });
@@ -560,7 +586,7 @@ $frequencyInput.max = (frequencyArray.length - 1).toString();
 
 $frequencyInput.addEventListener('input', () => {
     const value = parseInt($frequencyInput.value);
-    app.frequency = frequencyArray[value]
+    app.frequency = frequencyArray[value] ?? DEFUALT_FREQUENCY;
     app.renderFrequencyOutput();
 });
 
@@ -604,7 +630,13 @@ $stepInput.addEventListener('input', () => {
 // バイナリを非表示にする
 $hideBinary.addEventListener('change', () => {
     app.renderBinary();
+    localStorage.setItem('hide_binary', $hideBinary.checked.toString());
 });
+
+if (localStorage.getItem('hide_binary') === "true") {
+    $hideBinary.checked = true;
+    app.renderBinary();
+}
 
 // ダークモード
 $darkMode.addEventListener('change', () => {
@@ -612,25 +644,27 @@ $darkMode.addEventListener('change', () => {
     localStorage.setItem('dark_mode', onOrOff);
     document.body.setAttribute('apge_dark_mode', onOrOff);
 
-    $darkMode.parentElement.querySelector('label').textContent = $darkMode.checked ? "On" : "Off";
+    $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
 });
 
 if (localStorage.getItem('dark_mode') === "on") {
     document.body.setAttribute('apge_dark_mode', "on");
     $darkMode.checked = true;
-    $darkMode.parentElement.querySelector('label').textContent = "On";
+    $darkModeLabel.textContent = "On";
 }
+
+$b2dHidePointer.addEventListener('change', () => {
+    app.renderB2D();
+});
 
 // キーボード入力
 // keyboard input
 // Enter: toggle Start and Stop
 // Space: Step
 document.addEventListener('keydown', e => {
+    const activeElementTagName = document.activeElement?.tagName ?? "";
     // 入力中は無し
-    if (document.activeElement?.tagName === "TEXTAREA" ||
-        document.activeElement?.tagName === "INPUT" ||
-        document.activeElement?.tagName === "DETAILS"
-        ) {
+    if (["TEXTAREA", "INPUT", "DETAILS", "BUTTON"].includes(activeElementTagName)) {
         return;
     }
 

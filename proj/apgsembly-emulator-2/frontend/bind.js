@@ -47,10 +47,14 @@ export const $command = $type('#command', HTMLElement);
 
 // B2D
 export const $canvas = $type('#canvas', HTMLCanvasElement);
-export const context = $canvas.getContext('2d');
-if (context == null) {
+
+/**
+ * @type {CanvasRenderingContext2D}
+ */
+export const context = $canvas.getContext('2d') ?? (() => {
     throw Error('context is null');
-}
+})();
+
 export const $b2dx = $type('#b2dx', HTMLElement);
 export const $b2dy = $type('#b2dy', HTMLElement);
 
@@ -89,3 +93,9 @@ export const $breakpointSelect = $type('#breakpoint_select', HTMLSelectElement);
 
 // ダークモード
 export const $darkMode = $type('#dark_mode', HTMLInputElement);
+
+export const $darkModeLabel = $darkMode.parentElement?.querySelector('label') ?? (() => {
+    throw Error('label of #dark_mode is not found');
+})();
+
+export const $b2dHidePointer = $type('#b2d_hide_pointer', HTMLInputElement);

@@ -262,6 +262,5 @@ STATE_2; *; STATE_4; OUTPUT 1, NOP
 STATE_4; *; STATE_5; NOP
 STATE_3; *; STATE_5; NOP
 STATE_5; *; STATE_5; HALT_OUT`
-    console.log(main(input));
     assertEquals(main(input), output);
 });

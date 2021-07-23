@@ -107,36 +107,22 @@ Deno.test('Machine INITIAL is not exist', () => {
     });
 });
 
-Deno.test('Machine no return value', () => {
+Deno.test('Machine Program no return value', () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
-    }
-    const machine = new Machine(program);
-
-    assertThrows(() => {
-        machine.execCommand();
-    });
+    assertEquals(program, `Does not return the value in "INITIAL; ZZ; ID0; OUTPUT 3"`);
 });
 
-Deno.test('Machine return value twice', () => {
+Deno.test('Machine Program return value twice', () => {
     const str = `
 INITIAL; ZZ; ID0; NOP, TDEC U0
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
-    }
-    const machine = new Machine(program);
-
-    assertThrows(() => {
-        machine.execCommand();
-    });
+    assertEquals(program, 'The return value is returned more than once in "INITIAL; ZZ; ID0; NOP, TDEC U0": Actions that return a return value more than once are NOP, TDEC U0');
 });
 
 // > Also, the INITIAL state should never be returned to later in a program’s execution.
@@ -216,6 +202,9 @@ INITIAL; ZZ; NON_EXIST; NOP
 
 Deno.test('Machine program9_2', () => {
     const program = Program.parse(program9_2);
+    if (!(program instanceof Program)) {
+        throw Error('parse error program9_2');
+    }
     const machine = new Machine(program);
     assertEquals([...machine.actionExecutor.uRegMap.keys()], [0, 1]);
     assertEquals(machine.actionExecutor.uRegMap.get(0)?.getValue(), 7);
@@ -243,6 +232,9 @@ Deno.test('Machine program9_2', () => {
 
 Deno.test('Machine program9_3', () => {
     const program = Program.parse(program9_3);
+    if (!(program instanceof Program)) {
+        throw Error('parse error program9_3');
+    }
     const machine = new Machine(program);
     assertEquals([...machine.actionExecutor.uRegMap.keys()], [0, 1, 2, 3]);
     assertEquals(machine.actionExecutor.uRegMap.get(0)?.getValue(), 7);
@@ -261,6 +253,9 @@ Deno.test('Machine program9_3', () => {
 
 Deno.test('Machine program9_4', () => {
     const program = Program.parse(program9_4);
+    if (!(program instanceof Program)) {
+        throw Error('parse error program9_4');
+    }
     const machine = new Machine(program);
     assertEquals(machine.actionExecutor.bRegMap.get(0)?.toBinaryString(), "0");
 
@@ -275,6 +270,9 @@ Deno.test('Machine program9_4', () => {
 
 Deno.test('Machine PI Calculator', () => {
     const program = Program.parse(piCalculator);
+    if (!(program instanceof Program)) {
+        throw Error('parse error PI Calculator');
+    }
     const machine = new Machine(program);
     // machine.actionExecutor.bRegMap.get(0)?.setBits([0, 1]);
     // machine.actionExecutor.bRegMap.get(2)?.setBits([1]);

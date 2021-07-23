@@ -34,4 +34,12 @@ export class HaltOutAction extends Action {
         }
         return new HaltOutAction();
     }
+
+    /**
+     * 実際には値はどちらでも良い
+     * @override
+     */
+    doesReturnValue() {
+        return false;
+    }
 }

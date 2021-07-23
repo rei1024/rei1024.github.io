@@ -1,6 +1,6 @@
 // @ts-check
 
-import { AddAction } from "../actions/AddAction.js";
+import { AddAction, ADD_A1, ADD_B0, ADD_B1 } from "../actions/AddAction.js";
 
 export const addLookupA1 = [5, 4, 7, 6, 1, 0, 3, 2, 13, 12, 15, 14, 9, 8, 11, 10];
 export const addLookupB0 = [0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9, 9, 9];
@@ -24,10 +24,10 @@ export class ADD {
      * @param {AddAction} act 
      */
     action(act) {
-        switch (act.regName) {
-            case "A1": return this.a1();
-            case "B0": return this.b0();
-            case "B1": return this.b1();
+        switch (act.op) {
+            case ADD_A1: return this.a1();
+            case ADD_B0: return this.b0();
+            case ADD_B1: return this.b1();
             default: throw Error('ADD action: internal');
         }
     }

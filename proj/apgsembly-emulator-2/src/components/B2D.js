@@ -1,6 +1,15 @@
 // @ts-check
 
-import { B2DAction } from "../actions/B2DAction.js";
+import {
+    B2DAction,
+    B2D_INC,
+    B2D_TDEC,
+    B2D_SET,
+    B2D_READ,
+    B2D_B2D,
+    B2D_B2DX,
+    B2D_B2DY,
+} from "../actions/B2DAction.js";
 
 /**
  * B2D
@@ -67,31 +76,35 @@ export class B2D {
      */
     action(act) {
         switch (act.op) {
-            case "INC": {
+            case B2D_INC: {
                 switch (act.axis) {
-                    case "B2DX": return this.incB2DX();
-                    case "B2DY": return this.incB2DY();
-                    case "B2D": throw Error('B2D: internal');
+                    case B2D_B2DX: return this.incB2DX();
+                    case B2D_B2DY: return this.incB2DY();
+                    case B2D_B2D: throw Error('B2D: internal');
                 }
+                break;
             }
-            case "TDEC": {
+            case B2D_TDEC: {
                 switch (act.axis) {
-                    case "B2DX": return this.tdecB2DX();
-                    case "B2DY": return this.tdecB2DY();
-                    case "B2D": throw Error('B2D: internal');
+                    case B2D_B2DX: return this.tdecB2DX();
+                    case B2D_B2DY: return this.tdecB2DY();
+                    case B2D_B2D: throw Error('B2D: internal');
                 }
+                break;
             }
-            case "READ": {
+            case B2D_READ: {
                 switch (act.axis) {
-                    case "B2D": return this.read();
+                    case B2D_B2D: return this.read();
                     default: throw Error('B2D: internal');
                 }
+                break;
             }
-            case "SET": {
+            case B2D_SET: {
                 switch (act.axis) {
-                    case "B2D": return this.set();
+                    case B2D_B2D: return this.set();
                     default: throw Error('B2D: internal');
                 }
+                break;
             }
             default: throw Error('B2D: internal');
         }
@@ -154,11 +167,15 @@ export class B2D {
      * @returns {0 | 1}
      */
     read() {
-        // @ts-ignore
-        const value = this.array[this.y][this.x];
-        // @ts-ignore
-        this.array[this.y][this.x] = 0;
-        // @ts-ignore
+        const arrayY = this.array[this.y]
+        if (arrayY === undefined) {
+            throw Error('B2D: internal error');
+        }
+        const value = arrayY[this.x];
+        if (value === undefined) {
+            throw Error('B2D: internal error');
+        }
+        arrayY[this.x] = 0;
         return value;
     }
 
@@ -167,12 +184,14 @@ export class B2D {
      * @returns {void}
      */
     set() {
-        // @ts-ignore
-        if (this.array[this.y][this.x] === 1) {
+        const arrayY = this.array[this.y]
+        if (arrayY === undefined) {
+            throw Error('B2D: internal error');
+        }
+        if (arrayY[this.x] === 1) {
             throw Error('B2D SET: Tried to set when it was already 1');
         }
-        // @ts-ignore
-        this.array[this.y][this.x] = 1;   
+        arrayY[this.x] = 1;   
     }
 
     /**

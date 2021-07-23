@@ -22,6 +22,12 @@ Deno.test('B2DAction parse APGsembly 1.0', () => {
     assertEquals(B2DAction.parse('DEC SQX')?.pretty(), "TDEC B2DX");
     assertEquals(B2DAction.parse('DEC SQY')?.pretty(), "TDEC B2DY");
 
+    assertEquals(B2DAction.parse('SET SQ')?.pretty(), "SET B2D");
+    assertEquals(B2DAction.parse('READ SQ')?.pretty(), "READ B2D");
+
+    assertEquals(B2DAction.parse('READ SQX')?.pretty(), undefined);
+    assertEquals(B2DAction.parse('SET SQX')?.pretty(), undefined);
+
     assertEquals(B2DAction.parse('TDEC SQX'), undefined);
     assertEquals(B2DAction.parse('TDEC SQY'), undefined);
 });

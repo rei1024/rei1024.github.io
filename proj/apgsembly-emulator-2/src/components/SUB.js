@@ -1,6 +1,6 @@
 // @ts-check
 
-import { SubAction } from "../actions/SubAction.js";
+import { SubAction, SUB_A1, SUB_B0, SUB_B1 } from "../actions/SubAction.js";
 
 /**
  * `-1` is `"FAILURE"`
@@ -26,10 +26,10 @@ export class SUB {
      * @param {SubAction} act 
      */
     action(act) {
-        switch(act.regName) {
-            case "A1": return this.a1();
-            case "B0": return this.b0();
-            case "B1": return this.b1();
+        switch(act.op) {
+            case SUB_A1: return this.a1();
+            case SUB_B0: return this.b0();
+            case SUB_B1: return this.b1();
             default: throw Error('SUB: action error')
         }
     }

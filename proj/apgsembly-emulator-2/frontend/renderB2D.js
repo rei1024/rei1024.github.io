@@ -7,8 +7,9 @@ import { B2D } from "../src/components/B2D.js";
  * render B2D to canvas
  * @param {CanvasRenderingContext2D} context 
  * @param {B2D} b2d 
+ * @param {boolean} hidePointer ポインタを非表示にする
  */
-export function renderB2D(context, b2d) {
+export function renderB2D(context, b2d, hidePointer) {
     context.canvas.height = context.canvas.width;
     const maxX = b2d.getMaxX();
     const maxY = b2d.getMaxY();
@@ -32,7 +33,9 @@ export function renderB2D(context, b2d) {
         }
     }
     context.fill();
-    context.strokeStyle = "#03A9F4";
-    context.lineWidth = 4;
-    context.strokeRect(b2d.x * cellSize, b2d.y * cellSize, cellSize, cellSize);
+    if (!hidePointer) {
+        context.strokeStyle = "#03A9F4";
+        context.lineWidth = 4;
+        context.strokeRect(b2d.x * cellSize, b2d.y * cellSize, cellSize, cellSize);
+    }
 }

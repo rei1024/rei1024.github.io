@@ -42,4 +42,11 @@ export class OutputAction extends Action {
         }
         return new OutputAction(digit);
     }
+
+    /**
+     * @override
+     */
+    doesReturnValue() {
+        return false;
+    }
 }

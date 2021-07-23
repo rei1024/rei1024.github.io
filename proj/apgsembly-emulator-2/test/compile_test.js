@@ -4,10 +4,11 @@ import { assertEquals } from "./deps.js";
 import { program9_2 } from "./Program_test.js";
 
 Deno.test('Compile empty', () => {
-    commandsToLookupTable([]);
+    const obj = commandsToLookupTable([]);
+    assertEquals(obj, { lookup: [], stateMap: new Map(), states: [] });
 });
 
-Deno.test('Compile empty', () => {
+Deno.test('Compile program9_2', () => {
     const program = Program.parse(program9_2);
    
     if (!(program instanceof Program)) {

@@ -1,4 +1,4 @@
-import { BRegAction } from "../../src/actions/BRegAction.js";
+import { BRegAction, B_INC, B_TDEC, B_READ, B_SET } from "../../src/actions/BRegAction.js";
 import { BReg } from "../../src/components/BReg.js"
 import { assertEquals, assertThrows } from "../deps.js";
 
@@ -83,12 +83,12 @@ Deno.test('BReg error', () => {
 
 Deno.test('BReg action', () => {
     const x = new BReg();
-    assertEquals(x.action(new BRegAction("INC", 0)), undefined);
+    assertEquals(x.action(new BRegAction(B_INC, 0)), undefined);
     assertEquals(x.pointer, 1);
-    assertEquals(x.action(new BRegAction("TDEC", 0)), 1);
+    assertEquals(x.action(new BRegAction(B_TDEC, 0)), 1);
 
-    assertEquals(x.action(new BRegAction("SET", 0)), undefined);
+    assertEquals(x.action(new BRegAction(B_SET, 0)), undefined);
 
-    assertEquals(x.action(new BRegAction("READ", 0)), 1);
-    assertEquals(x.action(new BRegAction("READ", 0)), 0);
+    assertEquals(x.action(new BRegAction(B_READ, 0)), 1);
+    assertEquals(x.action(new BRegAction(B_READ, 0)), 0);
 });

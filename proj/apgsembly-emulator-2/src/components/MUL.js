@@ -1,6 +1,6 @@
 // @ts-check
 
-import { MulAction } from "../actions/MulAction.js";
+import { MulAction, MUL_0, MUL_1 } from "../actions/MulAction.js";
 
 /**
  * `MUL`
@@ -21,8 +21,8 @@ export class MUL {
      */
     action(act) {
         switch (act.op) {
-            case "0": return this.mul0();
-            case "1": return this.mul1();
+            case MUL_0: return this.mul0();
+            case MUL_1: return this.mul1();
             default: throw Error('MUL: action');
         }
     }

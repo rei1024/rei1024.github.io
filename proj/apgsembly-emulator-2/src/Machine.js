@@ -7,7 +7,7 @@ import { Program } from "./Program.js";
 /**
  * 初期状態
  */
-const INITIAL_STATE = "INITIAL";
+export const INITIAL_STATE = "INITIAL";
 
 /**
  * @typedef {"Z" | "NZ" | "ZZ" | "*"} Input

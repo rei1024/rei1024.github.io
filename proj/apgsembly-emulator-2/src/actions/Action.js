@@ -30,4 +30,12 @@ export class Action {
     extractBinaryRegisterNumbers() {
         return [];
     }
+
+    /**
+     * 値を返すかどうか
+     * @returns {boolean} 値を返す場合true
+     */
+    doesReturnValue() {
+        return false;
+    }
 }

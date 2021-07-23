@@ -1,6 +1,7 @@
 // @ts-check
 import {
     Command,
+    INITIAL_STATE,
     Action,
     HaltOutAction,
     NopAction,
@@ -50,6 +51,7 @@ import {
     StringExpression,
     LABEL_FUNCTION_NAME,
     GOTO_FUNCTION_NAME,
+    APGCExpression,
 } from "../types/apgc_types.js";
 import { compileOutput } from "./functions/output.js";
 import { compileEmptyArgumentFunction } from "./functions/empty_argument_function.js";
@@ -93,7 +95,7 @@ export class APGCCompiler {
      * @throws
      */
     compile() {
-        const initialState = "INITIAL"
+        const initialState = INITIAL_STATE;
         const apgcInitialState = "APGC_INITIAL";
         this.addCommand(new Command({
             state: initialState,
@@ -133,6 +135,25 @@ export class APGCCompiler {
     generateState() {
         this.id++;
         return "STATE_" + this.id;
+    }
+
+    /**
+     * 
+     * @param {string} inputState 
+     * @param {APGCExpression} expr
+     * @param {string} [msg]
+     * @returns {string} outputState
+     */
+    compileAPGCExpression(inputState, expr, msg = undefined) {
+        if (expr instanceof FunctionCallExpression) {
+            return this.compileFunctionCallExpression(inputState, expr);
+        } else {
+            if (msg === undefined) {
+                throw Error('expression cannot compile');
+            } else {
+                throw Error(msg);
+            }
+        }
     }
 
     /**
@@ -232,10 +253,7 @@ export class APGCCompiler {
  */
 function compileIfStatement(ctx, inputState, statement) {
     const expr = statement.expr;
-    if (!(expr instanceof FunctionCallExpression)) {
-        throw Error(`${statement.keyword()} only accept function call`);
-    }
-    const ifState = ctx.compileFunctionCallExpression(inputState, expr);
+    const ifState = ctx.compileAPGCExpression(inputState, expr, `${statement.keyword()} only accept function call`);
 
     const ifThenState = ctx.generateState();
     const ifElseState = ctx.generateState();
@@ -286,10 +304,7 @@ function compileIfStatement(ctx, inputState, statement) {
  */
 function compileWhileStatement(ctx, inputState, statement) {
     const expr = statement.expr;
-    if (!(expr instanceof FunctionCallExpression)) {
-        throw Error(`${statement.keyword()} only accept function call`);
-    }
-    const whileState = ctx.compileFunctionCallExpression(inputState, expr);
+    const whileState = ctx.compileAPGCExpression(inputState, expr, `${statement.keyword()} only accept function call`);
 
     const continueState = ctx.generateState();
     const finalState = ctx.generateState();

@@ -2,8 +2,43 @@
 
 import { Action } from "./Action.js";
 
-export const U_INC = "INC";
-export const U_TDEC = "TDEC";
+export const U_INC = 0;
+export const U_TDEC = 1;
+
+const U_INC_STRING = "INC";
+const U_TDEC_STRING = "TDEC";
+
+/**
+ * @typedef {U_INC | U_TDEC} UOp
+ */
+
+/**
+ * @typedef {U_INC_STRING | U_TDEC_STRING} UOpString
+ */
+
+/**
+ * 
+ * @param {UOp} op
+ * @returns {UOpString}
+ */
+function prettyOp(op) {
+    switch (op) {
+        case U_INC: return U_INC_STRING;
+        case U_TDEC: return U_TDEC_STRING;
+    }
+}
+
+/**
+ * 
+ * @param {UOpString} op
+ * @returns {UOp}
+ */
+ function parseOp(op) {
+    switch (op) {
+        case U_INC_STRING: return U_INC;
+        case U_TDEC_STRING: return U_TDEC;
+    }
+}
 
 /**
  * Action for `Un`
@@ -11,12 +46,13 @@ export const U_TDEC = "TDEC";
 export class URegAction extends Action {
     /**
      * 
-     * @param {"INC" | "TDEC"} op 
+     * @param {UOp} op 
      * @param {number} regNumber
      */
     constructor(op, regNumber) {
         super();
         /**
+         * @type {UOp}
          * @readonly
          */
         this.op = op;
@@ -38,7 +74,7 @@ export class URegAction extends Action {
      * @override
      */
     pretty() {
-        return `${this.op} U${this.regNumber}`;
+        return `${prettyOp(this.op)} U${this.regNumber}`;
     }
 
     /**
@@ -53,15 +89,25 @@ export class URegAction extends Action {
         }
         const [ op, reg ] = array;
         if (op === undefined || reg === undefined) { return undefined; }
-        if (op === "INC" || op === "TDEC") {
+        if (op === U_INC_STRING || op === U_TDEC_STRING) {
             // R for APGsembly 1.0
             if (reg.startsWith("U") || reg.startsWith('R')) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/.test(str)) {
-                    return new URegAction(op, parseInt(str, 10));
+                    return new URegAction(parseOp(op), parseInt(str, 10));
                 }
             }
         }
         return undefined;
+    }
+
+    /**
+     * @override
+     */
+    doesReturnValue() {
+        switch (this.op) {
+            case U_INC: return false;
+            case U_TDEC: return true;
+        }
     }
 }

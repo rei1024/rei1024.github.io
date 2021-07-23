@@ -15,7 +15,6 @@ Deno.test('Command parse', () => {
     }
 });
 
-
 Deno.test('Command parse empty line', () => {
     const str = ``;
     const res = Command.parse(str);

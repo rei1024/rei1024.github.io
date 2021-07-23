@@ -2,9 +2,47 @@
 
 import { Action } from "./Action.js";
 
-export const ADD_A1 = "A1";
-export const ADD_B0 = "B0";
-export const ADD_B1 = "B1";
+export const ADD_A1 = 0;
+export const ADD_B0 = 1;
+export const ADD_B1 = 2;
+
+const ADD_A1_STRING = "A1";
+const ADD_B0_STRING = "B0";
+const ADD_B1_STRING = "B1";
+
+/**
+ * @typedef {ADD_A1 | ADD_B0 | ADD_B1} AddOp
+ */
+
+/**
+ * @typedef {ADD_A1_STRING | ADD_B0_STRING | ADD_B1_STRING} AddOpString
+ */
+
+/**
+ * 
+ * @param {AddOp} op 
+ * @returns {AddOpString}
+ */
+function prettyOp(op) {
+    switch (op) {
+        case ADD_A1: return ADD_A1_STRING;
+        case ADD_B0: return ADD_B0_STRING;
+        case ADD_B1: return ADD_B1_STRING;
+    }
+}
+
+/**
+ * 
+ * @param {AddOpString} op 
+ * @returns {AddOp}
+ */
+ function parseOp(op) {
+    switch (op) {
+        case ADD_A1_STRING: return ADD_A1;
+        case ADD_B0_STRING: return ADD_B0;
+        case ADD_B1_STRING: return ADD_B1;
+    }
+}
 
 /**
  * Action for `ADD`
@@ -12,21 +50,22 @@ export const ADD_B1 = "B1";
 export class AddAction extends Action {
     /**
      * 
-     * @param {"A1" | "B0" | "B1"} regName 
+     * @param {AddOp} op 
      */
-    constructor(regName) {
+    constructor(op) {
         super();
         /**
+         * @type {AddOp}
          * @readonly
          */
-        this.regName = regName;
+        this.op = op;
     }
 
     /**
      * @override
      */
     pretty() {
-        return `ADD ${this.regName}`;
+        return `ADD ${prettyOp(this.op)}`;
     }
 
     /**
@@ -43,9 +82,20 @@ export class AddAction extends Action {
         if (add !== "ADD") {
             return undefined;
         }
-        if (reg === "A1" || reg === "B0" || reg === "B1") {
-            return new AddAction(reg);
+        if (reg === ADD_A1_STRING || reg === ADD_B0_STRING || reg === ADD_B1_STRING) {
+            return new AddAction(parseOp(reg));
         }
         return undefined;
+    }
+
+    /**
+     * @override
+     */
+    doesReturnValue() {
+        switch (this.op) {
+            case ADD_A1: return false;
+            case ADD_B0: return true;
+            case ADD_B1: return true;
+        }
     }
 }

@@ -11,3 +11,4 @@ export { MulAction, MUL_0, MUL_1 } from "../src/actions/MulAction.js";
 export { NopAction } from "../src/actions/NopAction.js";
 export { HaltOutAction } from "../src/actions/HaltOutAction.js";
 export { OutputAction } from "../src/actions/OutputAction.js";
+export { INITIAL_STATE } from "../src/Machine.js";

@@ -1,20 +1,20 @@
-import { BRegAction } from "../../src/actions/BRegAction.js"
+import { BRegAction, B_INC, B_TDEC, B_READ, B_SET } from "../../src/actions/BRegAction.js"
 import { assertEquals } from "../deps.js";
 
 Deno.test("BRegAction parse success", () => {
-    assertEquals(BRegAction.parse('INC B2'),  new BRegAction("INC", 2));
+    assertEquals(BRegAction.parse('INC B2'),  new BRegAction(B_INC, 2));
 
-    assertEquals(BRegAction.parse('TDEC B2'), new BRegAction("TDEC", 2));
+    assertEquals(BRegAction.parse('TDEC B2'), new BRegAction(B_TDEC, 2));
 
-    assertEquals(BRegAction.parse('READ B2'), new BRegAction("READ", 2));
+    assertEquals(BRegAction.parse('READ B2'), new BRegAction(B_READ, 2));
 
-    assertEquals(BRegAction.parse('SET B2'), new BRegAction("SET", 2));
+    assertEquals(BRegAction.parse('SET B2'), new BRegAction(B_SET, 2));
 });
 
 Deno.test("BRegAction parse whitespace", () => {
-    assertEquals(BRegAction.parse(' INC B2'), new BRegAction("INC", 2));
-    assertEquals(BRegAction.parse('INC B2   '), new BRegAction("INC", 2));
-    assertEquals(BRegAction.parse('INC    B2'), new BRegAction("INC", 2));
+    assertEquals(BRegAction.parse(' INC B2'), new BRegAction(B_INC, 2));
+    assertEquals(BRegAction.parse('INC B2   '), new BRegAction(B_INC, 2));
+    assertEquals(BRegAction.parse('INC    B2'), new BRegAction(B_INC, 2));
 });
 
 Deno.test("BRegAction parse fail", () => {

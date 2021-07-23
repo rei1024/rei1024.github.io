@@ -34,4 +34,12 @@ export class NopAction extends Action {
         }
         return new NopAction();
     }
+
+    /**
+     * 
+     * @returns @override
+     */
+    doesReturnValue() {
+        return true;
+    }
 }

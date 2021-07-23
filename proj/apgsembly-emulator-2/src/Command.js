@@ -130,6 +130,21 @@ export class EmptyLine extends ProgramLine {
 }
 
 /**
+ * 
+ * @param {string} inputStr
+ * @returns {"Z" | "NZ" | "ZZ" | "*" | undefined}
+ */
+function parseInput(inputStr) {
+    switch (inputStr) {
+        case "Z": return inputStr;
+        case "NZ": return inputStr;
+        case "ZZ": return inputStr;
+        case "*": return inputStr;
+        default: return undefined;
+    }
+}
+
+/**
  * A line of program
  */
 export class Command extends ProgramLine {
@@ -214,13 +229,10 @@ export class Command extends ProgramLine {
             actions.push(result);
         }
 
-        if (!["Z", "NZ", "ZZ", "*"].includes(inputStr)) {
+        const input = parseInput(inputStr);
+        if (input === undefined) {
             return `Unknown input "${inputStr}" at "${str}"`;
         }
-
-        /** @type {"Z" | "NZ" | "ZZ" | "*"} */
-        // @ts-ignore
-        const input = inputStr;
 
         return new Command({
             state: state,

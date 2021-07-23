@@ -1,6 +1,6 @@
 // @ts-check
 
-import { BRegAction } from "../actions/BRegAction.js";
+import { BRegAction, B_INC, B_TDEC, B_SET, B_READ } from "../actions/BRegAction.js";
 
 /**
  * Bn: Binary Register
@@ -22,10 +22,10 @@ export class BReg {
      */
     action(act) {
         switch (act.op) {
-            case "INC": return this.inc();
-            case "READ": return this.read();
-            case "TDEC": return this.tdec();
-            case "SET": return this.set();
+            case B_INC: return this.inc();
+            case B_READ: return this.read();
+            case B_TDEC: return this.tdec();
+            case B_SET: return this.set();
             default: throw Error('BReg action: ' + act.op);
         }
     }
