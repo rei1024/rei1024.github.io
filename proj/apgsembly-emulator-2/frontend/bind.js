@@ -76,6 +76,8 @@ export const $addSubMul = $type('#add_sub_mul', HTMLElement);
 // ファイルインポート
 export const $fileImport = $type('#import_file', HTMLInputElement);
 
+export const $samples =  $type('#samples', HTMLButtonElement);
+
 // サンプルコード
 export const $sampleCodes = document.querySelectorAll('.js_sample');
 
@@ -102,3 +104,11 @@ export const $darkModeLabel = $darkMode.parentElement?.querySelector('label') ??
 })();
 
 export const $b2dHidePointer = $type('#b2d_hide_pointer', HTMLInputElement);
+
+export const $b2dFlipUpsideDown = $type('#b2d_flip_upside_down', HTMLInputElement);
+
+// Stats Modal
+
+export const $statsModal = $type('#stats_modal', HTMLElement);
+
+export const $statsBody = $type('#stats_body', HTMLTableSectionElement);

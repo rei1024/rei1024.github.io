@@ -19,7 +19,7 @@
  * @param {(_: number) => void} f 
  */
 function bit1(f) {
-    rangeForEach(0, 1, f)
+    rangeForEach(0, 1, f);
 }
 
 /**
@@ -53,7 +53,7 @@ export function parseRule(rule) {
         o[key] = str[i];
     }
     // @ts-ignore
-    return o
+    return o;
 }
 
 /**
@@ -126,7 +126,7 @@ export function generate(rule) {
 
         array.push(`FINISH_S${i}${j}_WRITE_1; *; FINISH_S${i}${j}_WRITE_2; INC B2DY, NOP`);
         if (delta(i, j, boundary) === "0") {
-            array.push(`FINISH_S${i}${j}_WRITE_2; *; FINISH2_S${j}_WRITE_1; NOP`)
+            array.push(`FINISH_S${i}${j}_WRITE_2; *; FINISH2_S${j}_WRITE_1; NOP`);
         } else {
             array.push(`FINISH_S${i}${j}_WRITE_2; *; FINISH2_S${j}_WRITE_1; SET B2D, NOP`);
         }

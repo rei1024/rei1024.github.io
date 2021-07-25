@@ -15,6 +15,7 @@ for (let k = 0; k < 10; k++) {
                 break;
             }
         } catch (e) {
+            console.log(e);
             throw e;
         }
     }

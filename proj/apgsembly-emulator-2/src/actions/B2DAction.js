@@ -78,7 +78,7 @@ export class B2DAction extends Action {
         if (array.length !== 2) {
             return undefined;
         }
-        let [ op, axis ] = array;
+        const [ op, axis ] = array;
         if (op === undefined || axis === undefined) { return undefined; }
         if (op === B2D_INC_STRING || op === B2D_TDEC_STRING) {
             if (axis === B2D_B2DX_STRING || axis === B2D_B2DY_STRING) {

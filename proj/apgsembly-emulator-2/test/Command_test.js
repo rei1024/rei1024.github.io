@@ -1,8 +1,8 @@
 import { URegAction } from "../src/actions/URegAction.js";
 import { Command, ComponentsHeader, EmptyLine, RegistersHeader } from "../src/Command.js";
-import { assertEquals } from "./deps.js";
+import { assertEquals, test } from "./deps.js";
 
-Deno.test('Command parse', () => {
+test('Command parse', () => {
     const str = `INITIAL; ZZ; DIR0; TDEC U2`;
     const res = Command.parse(str);
     if (res instanceof Command) {
@@ -15,17 +15,15 @@ Deno.test('Command parse', () => {
     }
 });
 
-Deno.test('Command parse empty line', () => {
+test('Command parse empty line', () => {
     const str = ``;
     const res = Command.parse(str);
-    if (res instanceof EmptyLine) {
-        
-    } else {
-        throw Error('parse error ' + str);
+    if (!(res instanceof EmptyLine)) {
+        throw Error('parse error ' + str);        
     }
 });
 
-Deno.test('Command parse multi action', () => {
+test('Command parse multi action', () => {
     const str = `INITIAL; ZZ; DIR0; TDEC U2, INC U3`;
     const res = Command.parse(str);
     if (res instanceof Command) {
@@ -38,7 +36,7 @@ Deno.test('Command parse multi action', () => {
     }
 });
 
-Deno.test('Command parse unknown action', () => {
+test('Command parse unknown action', () => {
     const str = `INITIAL; ZZ; DIR0; UNKNOWN`;
     const res = Command.parse(str);
     if (typeof res === "string") {
@@ -48,17 +46,15 @@ Deno.test('Command parse unknown action', () => {
     }
 });
 
-Deno.test('Command parse empty action', () => {
+test('Command parse empty action', () => {
     const str = `INITIAL; ZZ; DIR0;`;
     const res = Command.parse(str);
-    if (typeof res === "string") {
-        
-    } else {
-        throw Error('expect parse error ' + str);
+    if (typeof res !== "string") {
+        throw Error('expect parse error ' + str);        
     }
 });
 
-Deno.test('Command parse unknown input', () => {
+test('Command parse unknown input', () => {
     const str = `INITIAL; XXXXX; DIR0; INC U3`;
     const res = Command.parse(str);
     if (typeof res === "string") {
@@ -68,7 +64,7 @@ Deno.test('Command parse unknown input', () => {
     }
 });
 
-Deno.test('Command parse pretty', () => {
+test('Command parse pretty', () => {
     const str = `INITIAL; ZZ; DIR0; TDEC U2`;
     const res = Command.parse(str);
     if (res instanceof Command) {
@@ -78,7 +74,7 @@ Deno.test('Command parse pretty', () => {
     }
 });
 
-Deno.test('Command REGISTERS', () => {
+test('Command REGISTERS', () => {
     const str = '#REGISTERS {}';
     const res = Command.parse(str);
     if (res instanceof RegistersHeader) {
@@ -88,7 +84,7 @@ Deno.test('Command REGISTERS', () => {
     }
 });
 
-Deno.test('Command REGISTERS space', () => {
+test('Command REGISTERS space', () => {
     const str = '#REGISTERS{}';
     const res = Command.parse(str);
     if (res instanceof RegistersHeader) {
@@ -98,7 +94,7 @@ Deno.test('Command REGISTERS space', () => {
     }
 });
 
-Deno.test('Command COMPONENTS', () => {
+test('Command COMPONENTS', () => {
     const str = '#COMPONENTS B2';
     const res = Command.parse(str);
     if (res instanceof ComponentsHeader) {
@@ -108,7 +104,7 @@ Deno.test('Command COMPONENTS', () => {
     }
 });
 
-Deno.test('Command COMPONENTS space', () => {
+test('Command COMPONENTS space', () => {
     const str = '#COMPONENTSB2';
     const res = Command.parse(str);
     if (res instanceof ComponentsHeader) {

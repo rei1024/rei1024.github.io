@@ -117,7 +117,7 @@ export class ActionExecutor {
      */
     setByRegistersInit(regInit) {
         for (const [key, value] of Object.entries(regInit)) {
-            const debugStr = `"${key}": ${JSON.stringify(value)}`
+            const debugStr = `"${key}": ${JSON.stringify(value)}`;
             if (key.startsWith('U')) {
                 const n = parseInt(key.slice(1), 10);
                 if (isNaN(n)) {

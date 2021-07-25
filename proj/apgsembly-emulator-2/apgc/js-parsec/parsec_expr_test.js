@@ -1,14 +1,5 @@
 import { Parser } from "./parsec.js";
-import { assertEquals } from "../../test/deps.js";
-
-/**
- * 
- * @param {string} name 
- * @param {() => void} fn 
- */
-function test(name, fn) {
-    Deno.test(name, fn);
-}
+import { assertEquals, test } from "../../test/deps.js";
 
 const numberParser = Parser.regexp(/^[0-9]+/);
 

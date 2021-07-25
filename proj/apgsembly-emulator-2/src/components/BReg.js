@@ -42,7 +42,7 @@ export class BReg {
      * @param {(0 | 1)[]} bits 
      */
     setBits(bits) {
-        this.bits = bits
+        this.bits = bits;
     }
 
     /**

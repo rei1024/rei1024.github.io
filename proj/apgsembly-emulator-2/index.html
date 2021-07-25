@@ -26,7 +26,7 @@
         </div>
         <div class="mb-3">
             <label for="input" class="form-label">Input</label>
-            <textarea class="form-control" name="" id="input" cols="50" rows="8"></textarea>
+            <textarea class="code-mono form-control" name="" id="input" cols="50" rows="8"></textarea>
         </div>
         <div class="btn-group" role="group" aria-label="Control">
             <!-- 読み込まれるまではdisabled -->
@@ -37,6 +37,10 @@
             <button type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#config_modal">
                 Config
+            </button>
+            <button type="button" class="btn btn-primary"
+                data-bs-toggle="modal" data-bs-target="#stats_modal">
+                Stats
             </button>
             <button type="button" class="btn btn-primary dropdown-toggle" id="samples" data-bs-toggle="dropdown" aria-expanded="false">Sample</button>
             <ul class="dropdown-menu" aria-labelledby="samples">
@@ -73,17 +77,24 @@
                 body[apge_dark_mode=on] #steps {
                     color: var(--dark-mode-color);
                 }
+                .code-mono {
+                    font-family: var(--bs-font-monospace);
+                    font-size: .875em;
+                    word-wrap: break-word;
+                }
             </style>
             <table class="table" id="state">
-                <tbody>
+                <thead>
                     <tr>
                         <th>Current state</th>
                         <th>Previous output</th>
                         <th>Steps</th>
                     </tr>
+                </thead>
+                <tbody>
                     <tr class="pb-0">
-                        <td id="current_state">INITIAL</td>
-                        <td id="previous_output">Z</td>
+                        <td class="code-mono" id="current_state">INITIAL</td>
+                        <td class="code-mono" id="previous_output">Z</td>
                         <td><code id="steps"></code></td>
                     </tr>
                 </tbody>
@@ -97,7 +108,7 @@
                 <summary>
                     Output
                 </summary>
-                <textarea class="form-control" name="" id="output" cols="50" rows="3"></textarea>
+                <textarea class="code-mono form-control" name="" id="output" cols="50" rows="3"></textarea>
             </details>
         </div>
         <div class="mb-2">
@@ -152,7 +163,7 @@
         </div>
     </main>
 
-    <!-- Modal -->
+    <!-- Config Modal -->
     <div class="modal fade" id="config_modal" tabindex="-1" aria-labelledby="config_modal_label" aria-hidden="true">
         <div class="modal-dialog">
         <div class="modal-content">
@@ -188,6 +199,10 @@
                         B2D:
                     </div>
                     <div class="form-check">
+                        <input type="checkbox" id="b2d_flip_upside_down" class="form-check-input">
+                        <label for="b2d_flip_upside_down" class="form-check-label">Flip upside down</label>
+                    </div>
+                    <div class="form-check">
                         <input type="checkbox" id="b2d_hide_pointer" class="form-check-input">
                         <label for="b2d_hide_pointer" class="form-check-label">Hide pointer</label>
                     </div>
@@ -208,7 +223,59 @@
         </div>
         </div>
     </div>
-    <!-- End Modal -->
+    <!-- End Config Modal -->
+    <!-- Stats Modal -->
+    <div class="modal fade" id="stats_modal" tabindex="-1" aria-labelledby="stats_modal_label" aria-hidden="true">
+        <div style="max-width: 550px;" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="stats_modal_label">Stats</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <style>
+                    #stats_table td, #stats_table th {
+                        padding: 2px;
+                    }
+                </style>
+                <table id="stats_table" style="table-layout: fixed;" class="table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">State</th>
+                            <th>Sum</th>
+                            <th>Z</th>
+                            <th>NZ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stats_body">
+                        <!-- <tr>
+                            <td colspan="2">I</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">I</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">I</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>2</td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div> -->
+        </div>
+        </div>
+    </div>
+    <!-- Stats Modal -->
 
     <footer class="mt-3 container">
         <h2 style="font-size: 1.5rem;">Shortcuts</h2>

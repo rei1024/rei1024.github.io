@@ -14,7 +14,7 @@ export class Parser {
         /**
          * @readonly
          */
-        this.parse = parse
+        this.parse = parse;
     }
 
     /**
@@ -27,7 +27,7 @@ export class Parser {
         if (result === undefined) {
             return undefined;
         }
-        return result.value
+        return result.value;
     }
 
     /**
@@ -113,7 +113,7 @@ export class Parser {
                 return {
                     rest: str.slice(string.length),
                     value: string
-                }
+                };
             } else {
                 return undefined;
             }
@@ -175,7 +175,7 @@ export class Parser {
      * @returns {Parser<B>}
      */
     map(f) {
-        return this.andThen(x => Parser.pure(f(x)))
+        return this.andThen(x => Parser.pure(f(x)));
     }
 
     /**

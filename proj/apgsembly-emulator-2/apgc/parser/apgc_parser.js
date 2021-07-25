@@ -181,11 +181,11 @@ function makeIfParser(keywordParser, makeStatement) {
                         })
                     ).or(Parser.pure(
                         makeStatement(keyword, expr, statements, new APGCStatements([]))
-                    ))
+                    ));
                 });
             })
         )
-    )
+    );
 }
 
 /**
@@ -216,11 +216,11 @@ function makeWhileParser(keywordParser, makeWhileStatement) {
                 return paren(apgcStatementsParser(), "{", "}").then(statements => {
                     return (Parser.pure(
                         makeWhileStatement(keyword, expr, statements)
-                    ))
+                    ));
                 });
             })
         )
-    )
+    );
 }
 
 /**

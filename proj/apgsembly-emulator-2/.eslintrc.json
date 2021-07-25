@@ -1,0 +1,50 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "eslint:recommended",
+    // "extends": "eslint:all",
+    "parserOptions": {
+        "ecmaVersion": 11,
+        "sourceType": "module"
+    },
+    "ignorePatterns": ["cypress_default/**/*.js", "cypress/**/*.js"],
+    "rules": {
+        "no-unused-vars": "off",
+        "no-constant-condition": "off",
+        "no-unreachable": "off",
+        "semi": ["error", "always"],
+        "curly": "error",
+        "no-caller": "error",
+        "no-implied-eval": "error",
+        "no-new-func": "error",
+        "no-return-assign": "error",
+        "no-void": "error",
+        "radix": "error",
+        "prefer-rest-params": "error",
+        "prefer-const": "error",
+        "no-var": "error",
+        "space-infix-ops": "error",
+        "keyword-spacing": "error",
+        "space-before-blocks": "error",
+        "object-curly-spacing": ["error", "always"],
+        "no-array-constructor": "error",
+        "new-parens": ["error", "always"],
+        "comma-spacing": ["error", { "before": false, "after": true }],
+        "camelcase": ["error"],
+        "padded-blocks": "off",
+        "one-var": ["error", "never"],
+        "quotes": "off", // TODO
+        "quote-props": ["error", "as-needed"],
+        "function-call-argument-newline": "off", // TODO
+        "sort-imports": "off", // TODO
+        "array-bracket-newline": "error"
+        // "array-element-newline": "error"
+        // "no-trailing-spaces": "error"
+        
+    },
+    "globals": {
+        "Deno": true
+    }
+}

@@ -123,7 +123,7 @@ export class APGCCompiler {
      */
     compileStatements(inputState, apgcStatements) {
         for (const statement of apgcStatements.statements) {
-            inputState = this.compileStatement(inputState, statement)
+            inputState = this.compileStatement(inputState, statement);
         }
         return inputState;
     }
@@ -263,7 +263,7 @@ function compileIfStatement(ctx, inputState, statement) {
         nextState: statement.zeroOrNonZero === 'zero' ? ifThenState : ifElseState,
         actions: [new NopAction()]
     });
-    ctx.addCommand(ifCommandZero)
+    ctx.addCommand(ifCommandZero);
     const ifCommandNonZero = new Command({
         state: ifState,
         input: "NZ",
@@ -315,7 +315,7 @@ function compileWhileStatement(ctx, inputState, statement) {
         nextState: statement.zeroOrNonZero === "non_zero" ? finalState : continueState,
         actions: [new NopAction()]
     });
-    ctx.addCommand(ifCommandZero)
+    ctx.addCommand(ifCommandZero);
     const ifCommandNonZero = new Command({
         state: whileState,
         input: "NZ",

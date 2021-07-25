@@ -1,14 +1,5 @@
-import { assertEquals } from "../test/deps.js";
+import { assertEquals, test } from "../test/deps.js";
 import { main } from "./apgc.js";
-
-/**
- * 
- * @param {string} name 
- * @param {() => void} fn 
- */
-function test(name, fn) {
-    Deno.test(name, fn);
-}
 
 test('apgc main output("1");', () => {
     assertEquals(main(`output("1");`), 
@@ -199,7 +190,7 @@ test('apgc main if_zero tdec_u', () => {
         output("1");
     } else {
         output("2");
-    }`
+    }`;
     const output = `INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; TDEC U0
 STATE_1; Z; STATE_2; NOP
@@ -208,7 +199,7 @@ STATE_2; *; STATE_4; OUTPUT 1, NOP
 STATE_3; *; STATE_5; OUTPUT 2, NOP
 STATE_4; *; STATE_6; NOP
 STATE_5; *; STATE_6; NOP
-STATE_6; *; STATE_6; HALT_OUT`
+STATE_6; *; STATE_6; HALT_OUT`;
     assertEquals(main(input), output);
 });
 
@@ -216,44 +207,44 @@ test('apgc main goto label', () => {
     const input = `
 label("a");
 goto("a");
-    `
+    `;
     const output = `INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; NOP
 APGC_LABEL_a; *; STATE_1; NOP
-STATE_1; *; APGC_LABEL_a; NOP`
+STATE_1; *; APGC_LABEL_a; NOP`;
     assertEquals(main(input), output);
 });
 
 test('apgc main while_non_zero', () => {
     const input = `
 while_non_zero(tdec_u(0)) {  }
-    `
+    `;
     const output = `INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; TDEC U0
 STATE_1; Z; STATE_3; NOP
 STATE_1; NZ; STATE_2; NOP
 STATE_2; *; APGC_INITIAL; NOP
-STATE_3; *; STATE_3; HALT_OUT`
+STATE_3; *; STATE_3; HALT_OUT`;
     assertEquals(main(input), output);
 });
 
 test('apgc main while_zero', () => {
     const input = `
 while_zero(tdec_u(0)) {  }
-    `
+    `;
     const output = `INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; TDEC U0
 STATE_1; Z; STATE_2; NOP
 STATE_1; NZ; STATE_3; NOP
 STATE_2; *; APGC_INITIAL; NOP
-STATE_3; *; STATE_3; HALT_OUT`
+STATE_3; *; STATE_3; HALT_OUT`;
     assertEquals(main(input), output);
 });
 
 test('apgc main if_non_zero', () => {
     const input = `
 if_non_zero(tdec_u(0)) { output("1"); }
-    `
+    `;
     const output = `INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; TDEC U0
 STATE_1; Z; STATE_3; NOP
@@ -261,6 +252,6 @@ STATE_1; NZ; STATE_2; NOP
 STATE_2; *; STATE_4; OUTPUT 1, NOP
 STATE_4; *; STATE_5; NOP
 STATE_3; *; STATE_5; NOP
-STATE_5; *; STATE_5; HALT_OUT`
+STATE_5; *; STATE_5; HALT_OUT`;
     assertEquals(main(input), output);
 });

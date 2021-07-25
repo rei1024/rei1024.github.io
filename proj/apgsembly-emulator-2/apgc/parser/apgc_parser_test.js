@@ -17,16 +17,7 @@ import {
     stringExpressionParser
 } from "./apgc_parser.js";
 
-import { assertEquals } from "../../test/deps.js";
-
-/**
- * 
- * @param {string} name 
- * @param {() => void} fn 
- */
-function test(name, fn) {
-    Deno.test(name, fn);
-}
+import { assertEquals, test } from "../../test/deps.js";
 
 test('numberExpressionParser', () => {
     assertEquals(numberExpressionParser.parseToValueOrUndefined("123"), new NumberExpression(123));
@@ -111,16 +102,14 @@ test('apgcProgramParser', () => {
     const str = `
 output(1);
 output(2, 3);    
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
                 new APGCExpressionStatement(
                     new FunctionCallExpression(
                         'output',
-                        [
-                            new NumberExpression(1)
-                        ]
+                        [new NumberExpression(1)]
                     )
                 ),
                 new APGCExpressionStatement(
@@ -134,7 +123,7 @@ output(2, 3);
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser comment', () => {
@@ -148,14 +137,12 @@ output(1); // abc
                 new APGCExpressionStatement(
                     new FunctionCallExpression(
                         'output',
-                        [
-                            new NumberExpression(1)
-                        ]
+                        [new NumberExpression(1)]
                     )
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser if_zero', () => {
@@ -165,7 +152,7 @@ if_zero(tdec_u(0) ) {
 } else {
     output(2);  
 }
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
@@ -189,7 +176,7 @@ if_zero(tdec_u(0) ) {
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser if_zero empty else', () => {
@@ -197,7 +184,7 @@ test('apgcProgramParser if_zero empty else', () => {
 if_zero(tdec_u(0)) {
     output(1);
 }
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
@@ -217,7 +204,7 @@ if_zero(tdec_u(0)) {
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser while_non_zero', () => {
@@ -225,7 +212,7 @@ test('apgcProgramParser while_non_zero', () => {
 while_non_zero(tdec_u(0)) {
     output(1);
 }
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
@@ -242,7 +229,7 @@ while_non_zero(tdec_u(0)) {
                 )
             ]
         )
-    ))
+    ));
 });
 
 test('apgcProgramParser while_zero', () => {
@@ -250,7 +237,7 @@ test('apgcProgramParser while_zero', () => {
 while_zero(tdec_u(0)) {
     output(1);
 }
-`
+`;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
             [
@@ -267,5 +254,5 @@ while_zero(tdec_u(0)) {
                 )
             ]
         )
-    ))
+    ));
 });

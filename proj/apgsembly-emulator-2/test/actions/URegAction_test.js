@@ -1,7 +1,7 @@
-import { URegAction, U_INC, U_TDEC } from "../../src/actions/URegAction.js"
-import { assertEquals } from "../deps.js";
+import { URegAction, U_INC, U_TDEC } from "../../src/actions/URegAction.js";
+import { assertEquals, test } from "../deps.js";
 
-Deno.test("URegAction parse", () => {
+test("URegAction parse", () => {
     assertEquals(URegAction.parse("INC U0"), new URegAction(U_INC, 0));
     assertEquals(URegAction.parse("INC U7"), new URegAction(U_INC, 7));
 
@@ -11,16 +11,16 @@ Deno.test("URegAction parse", () => {
 
     assertEquals(URegAction.parse("TDEC U0"), new URegAction(U_TDEC, 0));
 
-    assertEquals(URegAction.parse("TDEC U5"),new URegAction(U_TDEC, 5));
+    assertEquals(URegAction.parse("TDEC U5"), new URegAction(U_TDEC, 5));
 
     assertEquals(URegAction.parse("TDEC U12"), new URegAction(U_TDEC, 12));
 });
 
-Deno.test('URegAction APGsembly 1.0', () => {
+test('URegAction APGsembly 1.0', () => {
     assertEquals(URegAction.parse("TDEC R12"), new URegAction(U_TDEC, 12));
 });
 
-Deno.test("URegAction parse fail", () => {
+test("URegAction parse fail", () => {
     assertEquals(URegAction.parse("INC U_0"), undefined);
 
     assertEquals(URegAction.parse("INC U"), undefined);
@@ -32,7 +32,7 @@ Deno.test("URegAction parse fail", () => {
     assertEquals(URegAction.parse("DEC U0"), undefined);
 });
 
-Deno.test("URegAction pretty", () => {
+test("URegAction pretty", () => {
     assertEquals(URegAction.parse("INC U0").pretty(), "INC U0");
     assertEquals(URegAction.parse("INC U7").pretty(), "INC U7");
 
@@ -40,6 +40,6 @@ Deno.test("URegAction pretty", () => {
     assertEquals(URegAction.parse("TDEC U7").pretty(), "TDEC U7");
 });
 
-Deno.test("URegAction extract", () => {
+test("URegAction extract", () => {
     assertEquals(URegAction.parse("TDEC U7").extractUnaryRegisterNumbers(), [7]);
 });

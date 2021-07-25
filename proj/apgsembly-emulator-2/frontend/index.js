@@ -4,8 +4,11 @@ import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 import { Frequency } from "./util/frequency.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
+import { makeSpinner } from "./util/spinner.js";
+import { importFileAsText } from "./util/import_file.js";
 
 import { renderB2D } from "./renderB2D.js";
+
 import {
     $error,
     $input,
@@ -38,8 +41,12 @@ import {
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
+    $b2dFlipUpsideDown,
+    $statsModal,
+    $statsBody,
+    $samples,
 } from "./bind.js";
-import { makeSpinner } from "./util/spinner.js";
+import { renderStats } from "./renderStats.js";
 
 // データ
 // GitHub Pagesは1階層上になる
@@ -83,9 +90,14 @@ export class App {
         /** ステップ数設定 */
         this.stepConfig = 1;
 
-        this.frequencyManager = new Frequency(() => this.appState === "Running", () => this.frequency, n => this.run(n));
+        this.frequencyManager = new Frequency(
+            () => this.appState === "Running",
+            () => this.frequency,
+            n => this.run(n)
+        );
 
         /**
+         * キャッシュ
          * @type {undefined | NodeListOf<ChildNode>}
          */
         this.unaryRegisterItems = undefined;
@@ -151,7 +163,7 @@ export class App {
         const unaryTable = document.createElement('table');
         unaryTable.appendChild(unaryHeader);
         unaryTable.appendChild(unaryData);
-        unaryTable.classList.add('table')
+        unaryTable.classList.add('table');
 
         // 幅を均等にする
         unaryTable.style.tableLayout = "fixed";
@@ -160,7 +172,7 @@ export class App {
         $unaryRegister.innerHTML = "";
         $unaryRegister.appendChild(unaryTable);
 
-        this.unaryRegisterItems = $unaryRegister.querySelectorAll('tr')[1]?.childNodes;
+        this.unaryRegisterItems = unaryData.childNodes;
     }
 
     /**
@@ -324,7 +336,7 @@ export class App {
             return;
         }
         const b2d = machine.actionExecutor.b2d;
-        renderB2D(context, b2d, $b2dHidePointer.checked);
+        renderB2D(context, b2d, $b2dHidePointer.checked, $b2dFlipUpsideDown.checked);
         $b2dx.textContent = b2d.x.toString();
         $b2dy.textContent = b2d.y.toString();
     }
@@ -352,6 +364,13 @@ export class App {
     }
 
     /**
+     * @returns {never}
+     */
+    __error__() {
+        throw Error('internal error');
+    }
+
+    /**
      * バイナリレジスタの表示
      */
     renderBinary() {
@@ -370,11 +389,11 @@ export class App {
             if (row === undefined) {
                 throw Error('renderBinary: internal error');
             }
-            const $prefix = row.querySelector('.prefix');
-            const $head = row.querySelector('.head');
-            const $suffix = row.querySelector('.suffix');
-            const $decimal = row.querySelector('.decimal');
-            const $pointer = row.querySelector('.pointer');
+            const $prefix = row.querySelector('.prefix') ?? this.__error__();
+            const $head = row.querySelector('.head') ?? this.__error__();
+            const $suffix = row.querySelector('.suffix') ?? this.__error__();
+            const $decimal = row.querySelector('.decimal') ?? this.__error__();
+            const $pointer = row.querySelector('.pointer') ?? this.__error__();
             if (hideBinary) {
                 $prefix.textContent = '';
                 $head.textContent = '';
@@ -401,10 +420,11 @@ export class App {
             $addSubMul.textContent = "";
             return;
         }
+        const actionExecutor = this.machine.actionExecutor;
         $addSubMul.textContent = `
-        ADD = ${this.machine.actionExecutor.add.toStringDetail()},
-        SUB = ${this.machine.actionExecutor.sub.toStringDetail()},
-        MUL = ${this.machine.actionExecutor.mul.toString()}
+        ADD = ${actionExecutor.add.toStringDetail()},
+        SUB = ${actionExecutor.sub.toStringDetail()},
+        MUL = ${actionExecutor.mul.toString()}
         `;
     }
 
@@ -415,6 +435,18 @@ export class App {
         } else {
             $output.value = "";
         }
+    }
+
+    renderStats() {
+        if (!$statsModal.classList.contains('show')) {
+            $statsBody.innerHTML = "";
+            return;
+        }
+        if (this.machine === undefined) {
+            $statsBody.innerHTML = "";
+            return;
+        }
+        renderStats($statsBody, this.machine.stateStats, this.machine.states, this.machine.getCurrentStateIndex());
     }
 
     /**
@@ -457,6 +489,7 @@ export class App {
         this.renderFrequencyOutput();
         // output
         this.renderOutput();
+        this.renderStats();
 
         $steps.textContent = this.steps.toString();
 
@@ -572,11 +605,14 @@ $sampleCodes.forEach(e => {
     }
     const SRC = 'src';
     e.addEventListener('click', () => {
+        $samples.disabled = true;
         fetch(DATA_DIR + e.dataset[SRC]).then(res => res.text()).then(text => {
             $input.value = text;
             app.reset();
         }).catch(() => {
             console.log('Fetch Error: ' + e.dataset[SRC]);
+        }).finally(() => {
+            $samples.disabled = false;
         });
     });
 });
@@ -597,7 +633,7 @@ $frequencyInput.min = "0";
 $frequencyInput.max = (frequencyArray.length - 1).toString();
 
 $frequencyInput.addEventListener('input', () => {
-    const value = parseInt($frequencyInput.value);
+    const value = parseInt($frequencyInput.value, 10);
     app.frequency = frequencyArray[value] ?? DEFUALT_FREQUENCY;
     app.renderFrequencyOutput();
 });
@@ -612,24 +648,15 @@ $binaryRegisterDetail.addEventListener('toggle', () => {
 });
 
 // ファイルインポート
-$fileImport.addEventListener('input', (e) => {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const result = e.target?.result;
-        if (typeof result !== "string") {
-            throw Error('import: internal error');
-        }
-        $input.value = result;
-        app.reset();
-    };
-    // @ts-ignore
-    reader.readAsText(e.target.files[0]);
+importFileAsText($fileImport, result => {
+    $input.value = result;
+    app.reset();
 });
 
 // ** Modal ** //
 
 $stepInput.addEventListener('input', () => {
-    const n = Number($stepInput.value)
+    const n = Number($stepInput.value);
     if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
         setCustomError($stepInput, 'Enter a positive integer');
         app.stepConfig = 1;
@@ -679,33 +706,53 @@ $b2dHidePointer.addEventListener('change', () => {
     app.renderB2D();
 });
 
+$b2dFlipUpsideDown.addEventListener('change', () => {
+    localStorage.setItem('b2d_flip_upside_down', $b2dFlipUpsideDown.checked.toString());
+    app.renderB2D();
+});
+
+if (localStorage.getItem('b2d_flip_upside_down') === "true") {
+    $b2dFlipUpsideDown.checked = true;
+    app.renderB2D();
+}
+
+// showの場合クラスが追加されない
+$statsModal.addEventListener('shown.bs.modal', () => {
+    app.renderStats();
+});
+
 // キーボード入力
 // keyboard input
 // Enter: toggle Start and Stop
 // Space: Step
 document.addEventListener('keydown', e => {
-    const activeElementTagName = document.activeElement?.tagName ?? "";
+    const activeElementTagName = document.activeElement?.tagName.toUpperCase() ?? "";
     // 入力中は無し
     if (["TEXTAREA", "INPUT", "DETAILS", "BUTTON"].includes(activeElementTagName)) {
         return;
     }
 
-    if (e.code === "Enter") {
-        if (app.appState === "Running") {
-            app.stop();
-        } else if (app.appState === "Stop") {
-            app.start();
-        }
-    } else if (e.code === "Space") {
-        // ステップが無効化されていないときだけ
-        if (!$step.disabled) {
-            // スペースで下に移動することを防ぐ
-            e.preventDefault();
-            // 実行中の場合は停止する
+    switch (e.code) {
+        case "Enter": {
             if (app.appState === "Running") {
                 app.stop();
+            } else if (app.appState === "Stop") {
+                app.start();
             }
-            app.run(app.stepConfig);
+            break;
+        }
+        case "Space": {
+            // ステップが無効化されていないときだけ
+            if (!$step.disabled) {
+                // スペースで下に移動することを防ぐ
+                e.preventDefault();
+                // 実行中の場合は停止する
+                if (app.appState === "Running") {
+                    app.stop();
+                }
+                app.run(app.stepConfig);
+            }
+            break;
         }
     }
 });

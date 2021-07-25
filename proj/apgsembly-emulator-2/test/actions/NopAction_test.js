@@ -1,15 +1,15 @@
-import { NopAction } from "../../src/actions/NopAction.js"
-import { assertEquals } from "../deps.js";
+import { NopAction } from "../../src/actions/NopAction.js";
+import { assertEquals, test } from "../deps.js";
 
-Deno.test('parse NOP', () => {
+test('parse NOP', () => {
     assertEquals(NopAction.parse('NOP')?.pretty(), 'NOP');
 });
 
-Deno.test('parse NOP space', () => {
+test('parse NOP space', () => {
     assertEquals(NopAction.parse('  NOP  ')?.pretty(), 'NOP');
 });
 
 
-Deno.test('parse NOP fail', () => {
+test('parse NOP fail', () => {
     assertEquals(NopAction.parse(''), undefined);
 });

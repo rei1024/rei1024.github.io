@@ -1,10 +1,11 @@
-import { Machine } from "../src/Machine.js"
+/* eslint-disable camelcase */
+import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 import { program9_1, program9_2, program9_3, program9_4 } from "./Program_test.js";
 import { piCalculator } from "./pi_calculator.js";
-import { assertEquals, assertThrows } from "./deps.js";
+import { assertEquals, assertThrows, test } from "./deps.js";
 
-Deno.test('Machine duplicated command', () => {
+test('Machine duplicated command', () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3, NOP
 INITIAL; ZZ; ID0; OUTPUT 3, NOP
@@ -19,7 +20,7 @@ ID0; ZZ; ID0; NOP
     });
 });
 
-Deno.test('Machine duplicated command NZ NZ', () => {
+test('Machine duplicated command NZ NZ', () => {
     const str = `
 INITIAL; NZ; ID0; OUTPUT 3, NOP
 INITIAL; NZ; ID0; OUTPUT 3, NOP
@@ -34,7 +35,7 @@ ID0; ZZ; ID0; NOP
     });
 });
 
-Deno.test('Machine duplicated command * *', () => {
+test('Machine duplicated command * *', () => {
     const str = `
 INITIAL; NZ; ID0; OUTPUT 3, NOP
 INITIAL; NZ; ID0; OUTPUT 3, NOP
@@ -49,7 +50,7 @@ ID0; ZZ; ID0; NOP
     });
 });
 
-Deno.test('Machine duplicated command * NZ', () => {
+test('Machine duplicated command * NZ', () => {
     const str = `
 INITIAL; *; ID0; OUTPUT 3, NOP
 INITIAL; NZ; ID0; OUTPUT 3, NOP
@@ -64,7 +65,7 @@ ID0; ZZ; ID0; NOP
     });
 });
 
-Deno.test('Machine duplicated command * Z', () => {
+test('Machine duplicated command * Z', () => {
     const str = `
 INITIAL; *; ID0; OUTPUT 3, NOP
 INITIAL; Z; ID0; OUTPUT 3, NOP
@@ -79,7 +80,7 @@ ID0; ZZ; ID0; NOP
     });
 });
 
-Deno.test('Machine duplicated command ZZ Z', () => {
+test('Machine duplicated command ZZ Z', () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3, NOP
 INITIAL; Z; ID0; OUTPUT 3, NOP
@@ -94,7 +95,7 @@ ID0; ZZ; ID0; NOP
     });
 });
 
-Deno.test('Machine INITIAL is not exist', () => {
+test('Machine INITIAL is not exist', () => {
     const str = `
     ID0; ZZ; ID0; NOP
     `;
@@ -107,7 +108,7 @@ Deno.test('Machine INITIAL is not exist', () => {
     });
 });
 
-Deno.test('Machine Program no return value', () => {
+test('Machine Program no return value', () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3
 ID0; ZZ; ID0; NOP
@@ -116,7 +117,7 @@ ID0; ZZ; ID0; NOP
     assertEquals(program, `Does not return the value in "INITIAL; ZZ; ID0; OUTPUT 3"`);
 });
 
-Deno.test('Machine Program return value twice', () => {
+test('Machine Program return value twice', () => {
     const str = `
 INITIAL; ZZ; ID0; NOP, TDEC U0
 ID0; ZZ; ID0; NOP
@@ -127,7 +128,7 @@ ID0; ZZ; ID0; NOP
 
 // > Also, the INITIAL state should never be returned to later in a program’s execution.
 // > It should be the first state, and only the first state.
-Deno.test('Machine INITIAL twice', () => {
+test('Machine INITIAL twice', () => {
     const str = `
 INITIAL; ZZ; INITIAL; NOP
     `;
@@ -142,7 +143,7 @@ INITIAL; ZZ; INITIAL; NOP
     });
 });
 
-Deno.test('Machine register header error: register is not exist', () => {
+test('Machine register header error: register is not exist', () => {
     const str = `
 #REGISTERS {"U3": 2}
 INITIAL; ZZ; INITIAL; NOP
@@ -157,7 +158,7 @@ INITIAL; ZZ; INITIAL; NOP
     });
 });
 
-Deno.test('Machine register header error: is not an object: number', () => {
+test('Machine register header error: is not an object: number', () => {
     const str = `
 #REGISTERS 2
 INITIAL; ZZ; INITIAL; NOP
@@ -172,7 +173,7 @@ INITIAL; ZZ; INITIAL; NOP
     });
 });
 
-Deno.test('Machine register header error: is not an object: null', () => {
+test('Machine register header error: is not an object: null', () => {
     const str = `
 #REGISTERS null
 INITIAL; ZZ; INITIAL; NOP
@@ -187,7 +188,7 @@ INITIAL; ZZ; INITIAL; NOP
     });
 });
 
-Deno.test('Machine next state is not found', () => {
+test('Machine next state is not found', () => {
     const str = `
 INITIAL; ZZ; NON_EXIST; NOP
     `;
@@ -200,7 +201,7 @@ INITIAL; ZZ; NON_EXIST; NOP
     });
 });
 
-Deno.test('Machine program9_2', () => {
+test('Machine program9_2', () => {
     const program = Program.parse(program9_2);
     if (!(program instanceof Program)) {
         throw Error('parse error program9_2');
@@ -230,7 +231,7 @@ Deno.test('Machine program9_2', () => {
     assertEquals(machine.actionExecutor.uRegMap.get(1).getValue(), 12);
 });
 
-Deno.test('Machine program9_3', () => {
+test('Machine program9_3', () => {
     const program = Program.parse(program9_3);
     if (!(program instanceof Program)) {
         throw Error('parse error program9_3');
@@ -251,7 +252,7 @@ Deno.test('Machine program9_3', () => {
     assertEquals(machine.actionExecutor.uRegMap.get(3)?.getValue(), 0); 
 });
 
-Deno.test('Machine program9_4', () => {
+test('Machine program9_4', () => {
     const program = Program.parse(program9_4);
     if (!(program instanceof Program)) {
         throw Error('parse error program9_4');
@@ -268,7 +269,7 @@ Deno.test('Machine program9_4', () => {
     assertEquals(machine.actionExecutor.bRegMap.get(0).toBinaryString(), "10001011");
 });
 
-Deno.test('Machine PI Calculator', () => {
+test('Machine PI Calculator', () => {
     const program = Program.parse(piCalculator);
     if (!(program instanceof Program)) {
         throw Error('parse error PI Calculator');
@@ -279,15 +280,10 @@ Deno.test('Machine PI Calculator', () => {
     // console.log(machine);
     // console.log(machine.actionExecutor);
     for (let i = 0; i < 250000; i++) {
-        try {
-            const res = machine.execCommand();
-            if (res === -1) {
-                break;
-            }
-        } catch (e) {
-            throw e;
+        const res = machine.execCommand();
+        if (res === -1) {
+            break;
         }
-
     }
     // console.log(machine.actionExecutor);
     assertEquals(machine.actionExecutor.output.getString(), "3.14");

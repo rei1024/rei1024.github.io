@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "apgsembly-emulator-2",
+  "version": "0.1.0",
+  "description": "Emulator for APGsembly",
+  "main": "frontend/index.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "make t",
+    "cypress:open": "cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanakaSatoshiTC/apgsembly-emulator-2.git"
+  },
+  "author": "Rei",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^8.0.0",
+    "eslint": "^7.31.0"
+  }
+}

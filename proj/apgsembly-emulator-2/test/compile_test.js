@@ -1,14 +1,15 @@
+/* eslint-disable camelcase */
 import { commandsToLookupTable } from "../src/compile.js";
 import { Program } from "../src/Program.js";
-import { assertEquals } from "./deps.js";
+import { assertEquals, test } from "./deps.js";
 import { program9_2 } from "./Program_test.js";
 
-Deno.test('Compile empty', () => {
+test('Compile empty', () => {
     const obj = commandsToLookupTable([]);
     assertEquals(obj, { lookup: [], stateMap: new Map(), states: [] });
 });
 
-Deno.test('Compile program9_2', () => {
+test('Compile program9_2', () => {
     const program = Program.parse(program9_2);
    
     if (!(program instanceof Program)) {

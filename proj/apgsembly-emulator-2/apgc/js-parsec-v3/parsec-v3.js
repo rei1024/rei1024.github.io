@@ -1,8 +1,8 @@
 // @ts-check
 
-import { Result } from './result.js'
+import { Result } from './result.js';
 
-export { Result }
+export { Result };
 
 export class ParseState {
     /**
@@ -441,7 +441,7 @@ export class Parser {
  */
 export function parseWithErrorLine(parser, str) {
     const parseStateWithResult = parser.parseToParseStateWithResult(str);
-    return parseStateWithResult.result.mapErr(e => ({ error: e, line: extractLine(str, parseStateWithResult.parseState.offset) }))
+    return parseStateWithResult.result.mapErr(e => ({ error: e, line: extractLine(str, parseStateWithResult.parseState.offset) }));
 }
 
 /**
@@ -466,7 +466,7 @@ export function lines(str) {
     const matches = [...str.matchAll(/\r\n|\n|\r/g)];
 
     /** @type {{ start: number, end: number, line: string }[]} */
-    let objs = [];
+    const objs = [];
     for (const match of matches) {
         /** @type {number} */
         // @ts-ignore

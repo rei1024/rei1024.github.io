@@ -1,14 +1,5 @@
 import { Parser, ParseState, ParseStateWithResult, parseWithErrorLine, Result, stringLiteralParser } from './parsec-v3.js';
-import { assertEquals, assertThrows } from "../../test/deps.js";
-
-/**
- * 
- * @param {string} name 
- * @param {() => void} fn 
- */
-function test(name, fn) {
-    Deno.test(name, fn);
-}
+import { assertEquals, assertThrows, test } from "../../test/deps.js";
 
 test('Parser regexp simple', () => {
     const str = "abc";

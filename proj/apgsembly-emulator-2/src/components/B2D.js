@@ -167,7 +167,7 @@ export class B2D {
      * @returns {0 | 1}
      */
     read() {
-        const arrayY = this.array[this.y]
+        const arrayY = this.array[this.y];
         if (arrayY === undefined) {
             throw Error('B2D: internal error');
         }
@@ -184,7 +184,7 @@ export class B2D {
      * @returns {void}
      */
     set() {
-        const arrayY = this.array[this.y]
+        const arrayY = this.array[this.y];
         if (arrayY === undefined) {
             throw Error('B2D: internal error');
         }

@@ -23,5 +23,5 @@ export function validateGotoLabel(program) {
             };
         }
     }
-    return "OK"
+    return "OK";
 }

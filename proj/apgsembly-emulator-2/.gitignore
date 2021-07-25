@@ -4,3 +4,7 @@
 
 # Node.js
 **/node_modules/**
+
+cypress_default/**
+
+package-lock.json

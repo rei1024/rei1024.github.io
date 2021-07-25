@@ -32,7 +32,7 @@ export class MUL {
      * @returns {number}
      */
     getValue() {
-        return this.value
+        return this.value;
     }
 
     /**
@@ -55,9 +55,9 @@ export class MUL {
         if (this.value <= 21) {
             // (x / 2) + 5
             // (x + 10) / 2
-            this.value = (this.value >> 1) + 5
+            this.value = (this.value >> 1) + 5;
         } else {
-            this.value = (this.value - 22) >> 1
+            this.value = (this.value - 22) >> 1;
         }
         // @ts-ignore
         return r;   

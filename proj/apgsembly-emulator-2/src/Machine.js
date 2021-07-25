@@ -63,12 +63,17 @@ export class Machine {
          */
         this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ?? (() => {
             throw Error('INITIAL state is not present');
-        })() ;
+        })();
+
+        /**
+         * @type {{ z: number, nz: number }[]}
+         */
+        this.stateStats = this.lookup.map(() => ({ z: 0, nz: 0 }));
 
         const regHeader = program.registersHeader;
         if (regHeader !== undefined) {
             /** @type {string} */
-            const str = regHeader.content
+            const str = regHeader.content;
 
             /** @type {import("./ActionExecutor.js").RegistersInit} */
             let parsed = {};
@@ -80,11 +85,9 @@ export class Machine {
             if (parsed === null || typeof parsed !== 'object') {
                 throw Error(`Invalid #REGISTERS: "${str}" is not an object`);
             }
-            try {
-                this.actionExecutor.setByRegistersInit(parsed);
-            } catch (e) {
-               throw e;
-            }
+            
+            // throw if error is occurred
+            this.actionExecutor.setByRegistersInit(parsed);
         }
     }
 
@@ -113,7 +116,7 @@ export class Machine {
      * @returns {Map<string, number>}
      */
     getStateMap() {
-        return this.stateMap
+        return this.stateMap;
     }
 
     /**
@@ -129,10 +132,11 @@ export class Machine {
     }
 
     /**
+     * @param {boolean} [logStats=false] 記録する
      * @throws
      * @returns {CompiledCommandWithNextState}
      */
-    getNextCompiledCommandWithNextState() {
+    getNextCompiledCommandWithNextState(logStats = false) {
         const compiledCommand = this.lookup[this.currentStateIndex];
 
         if (compiledCommand === undefined) {
@@ -140,11 +144,21 @@ export class Machine {
         }
 
         if (this.prevOutput === 0) {
+            if (logStats) {
+                const stat = this.stateStats[this.currentStateIndex];
+                if (stat === undefined) { throw Error('Internal error'); }
+                stat.z += 1;
+            }
             const z = compiledCommand.z;
             if (z !== undefined) {
                 return z;
             }
         } else {
+            if (logStats) {
+                const stat = this.stateStats[this.currentStateIndex];
+                if (stat === undefined) { throw Error('Internal error'); }
+                stat.nz += 1;
+            }
             const nz = compiledCommand.nz;
             if (nz !== undefined) {
                 return nz;
@@ -161,7 +175,7 @@ export class Machine {
      * @throws
      */
     execCommand() {
-        const compiledCommand = this.getNextCompiledCommandWithNextState();
+        const compiledCommand = this.getNextCompiledCommandWithNextState(true);
 
         const command = compiledCommand.command;
 

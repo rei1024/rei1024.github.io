@@ -27,6 +27,6 @@ export function compileOutput(ctx, inputState, callExpr) {
         ctx.addCommand(command);
         return nextState;
     } else {
-        throw Error('output accepts only string')
+        throw Error('output accepts only string');
     }
 }

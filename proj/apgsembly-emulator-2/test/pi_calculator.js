@@ -84,7 +84,7 @@ MULB8; Z; MULB9; TDEC U7
 MULB8; NZ; MULB8; TDEC U0, INC U7
 MULB9; Z; MULB10; TDEC U8
 MULB9; NZ; MULB9; TDEC U7, INC U0, INC U8
-`
+`;
 
 const part2 = `
 # Set B0 = U0 * B3 and U8 = 0.
@@ -172,7 +172,7 @@ MULD18; Z; MULD19; TDEC B2
 MULD18; NZ; MULD18; TDEC B3
 MULD19; Z; MULD11; TDEC U8
 MULD19; NZ; MULD19; TDEC B2
-`
+`;
 
 const part3 = `
 # Increase the amount of memory that we are allocating to the
@@ -266,7 +266,7 @@ DIG7; Z; DIG5; INC B3, TDEC U9
 DIG7; NZ; DIG7; SET B3, NOP
 DIG8; Z; CMP1; TDEC U6
 DIG8; NZ; DIG8; TDEC B3
-`
+`;
 
 const part4 = `
 # Print the current digit, which is stored in U2.
@@ -296,6 +296,6 @@ OUTD1; ZZ; OUTD2; TDEC U3
 OUTD2; Z; ITER1; INC U3, NOP, OUTPUT .
 OUTD2; NZ; OUTD3; INC U3, NOP
 OUTD3; ZZ; ITER1; INC U3, NOP
-`
+`;
 
 export const piCalculator = [part1, part2, part3, part4].join('');

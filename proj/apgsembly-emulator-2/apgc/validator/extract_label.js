@@ -18,7 +18,7 @@ import {
  * @returns {APGCExpression[]}
  */
 export function extractExpressionFromAPGCProgram(program) {
-    return extractExpressionFromAPGCStatements(program.apgcStatements)
+    return extractExpressionFromAPGCStatements(program.apgcStatements);
 }
 
 /**

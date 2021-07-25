@@ -1,6 +1,6 @@
-import { Command } from "./Command.js";
-
 // @ts-check
+
+import { Command } from "./Command.js";
 
 /**
  * コマンドと次の状態
@@ -66,17 +66,17 @@ export function commandsToLookupTable(commands) {
      * @returns {never}
      */
     function error() {
-        throw Error('commandsToLookupTable internal error')
+        throw Error('commandsToLookupTable internal error');
     }
 
     // lookupを初期化
     for (const command of commands) {
         // 記録されていない場合追加
         if (!stateMap.has(command.state)) {
-            let n = states.length;
+            const n = states.length;
             states.push(command.state);
             stateMap.set(command.state, n);
-            lookup.push(new CompiledCommand(undefined, undefined))
+            lookup.push(new CompiledCommand(undefined, undefined));
         }
     }
 

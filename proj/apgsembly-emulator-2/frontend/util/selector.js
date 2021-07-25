@@ -59,7 +59,7 @@ export function $$(selector) {
     }
 
     /** @type {unknown[]} */
-    const array = []
+    const array = [];
     document.querySelectorAll(selector).forEach(element => {
         if (element instanceof klass) {
             array.push(element);

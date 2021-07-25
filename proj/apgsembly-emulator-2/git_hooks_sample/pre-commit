@@ -1,1 +1,2 @@
-deno test --no-check
+make lint
+deno test --no-check src/ apgc/ test/

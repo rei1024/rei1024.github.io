@@ -1,27 +1,27 @@
 import { BRegAction, B_INC, B_TDEC, B_READ, B_SET } from "../../src/actions/BRegAction.js";
-import { BReg } from "../../src/components/BReg.js"
-import { assertEquals, assertThrows } from "../deps.js";
+import { BReg } from "../../src/components/BReg.js";
+import { assertEquals, assertThrows, test } from "../deps.js";
 
-Deno.test("BReg read initial", () => {
+test("BReg read initial", () => {
     const x = new BReg();
     assertEquals(x.read(), 0);
 });
 
-Deno.test("BReg set", () => {
+test("BReg set", () => {
     const x = new BReg();
     assertEquals(x.read(), 0);
     x.set();
     assertEquals(x.read(), 1);
 });
 
-Deno.test("BReg read twice", () => {
+test("BReg read twice", () => {
     const x = new BReg();
     x.set();
     assertEquals(x.read(), 1);
     assertEquals(x.read(), 0);
 });
 
-Deno.test("BReg inc and set", () => {
+test("BReg inc and set", () => {
     const x = new BReg();
     x.inc();
     assertEquals(x.read(), 0);
@@ -29,7 +29,7 @@ Deno.test("BReg inc and set", () => {
     assertEquals(x.getBits(), [0, 1]);
 });
 
-Deno.test("BReg inc twice and set", () => {
+test("BReg inc twice and set", () => {
     const x = new BReg();
     x.inc();
     x.inc();
@@ -38,14 +38,14 @@ Deno.test("BReg inc twice and set", () => {
     assertEquals(x.getBits(), [0, 0, 1]);
 });
 
-Deno.test("BReg tdec", () => {
+test("BReg tdec", () => {
     const x = new BReg();
     assertEquals(x.tdec(), 0);
     x.inc();
     assertEquals(x.tdec(), 1);
 });
 
-Deno.test("BReg toBinaryString", () => {
+test("BReg toBinaryString", () => {
     const x = new BReg();
     assertEquals(x.toBinaryString(), "0");
     x.inc();
@@ -58,7 +58,7 @@ Deno.test("BReg toBinaryString", () => {
     assertEquals(x.toBinaryString(), "010");
 });
 
-Deno.test('BReg toObject', () => {
+test('BReg toObject', () => {
     const x = new BReg();
     assertEquals(x.toBinaryString(), "0");
     x.inc();
@@ -73,7 +73,7 @@ Deno.test('BReg toObject', () => {
     });
 });
 
-Deno.test('BReg error', () => {
+test('BReg error', () => {
     const x = new BReg();
     x.set();
     assertThrows(() => {
@@ -81,7 +81,7 @@ Deno.test('BReg error', () => {
     });
 });
 
-Deno.test('BReg action', () => {
+test('BReg action', () => {
     const x = new BReg();
     assertEquals(x.action(new BRegAction(B_INC, 0)), undefined);
     assertEquals(x.pointer, 1);

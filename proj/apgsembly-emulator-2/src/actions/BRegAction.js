@@ -75,7 +75,7 @@ export class BRegAction extends Action {
      * @returns {number[]}
      */
     extractBinaryRegisterNumbers() {
-        return [this.regNumber]
+        return [this.regNumber];
     }
 
     /**

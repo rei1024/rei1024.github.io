@@ -1,5 +1,6 @@
+/* eslint-disable camelcase */
 import { ProgramLines } from '../src/ProgramLines.js';
-import { assertEquals } from "./deps.js";
+import { assertEquals, test } from "./deps.js";
 import { program9_1, program9_2 } from './Program_test.js';
 import { piCalculator } from "./pi_calculator.js";
 
@@ -16,18 +17,18 @@ function parsePrettyTest(str) {
     }
 }
 
-Deno.test('ProgramLines parse program9_1', () => {
+test('ProgramLines parse program9_1', () => {
     parsePrettyTest(program9_1);
 });
 
-Deno.test('ProgramLines parse program9_2', () => {
+test('ProgramLines parse program9_2', () => {
     parsePrettyTest(program9_2);
 });
 
-Deno.test('ProgramLines parse program9_3', () => {
+test('ProgramLines parse program9_3', () => {
     parsePrettyTest(program9_2);
 });
 
-Deno.test('ProgramLines parse pi', () => {
+test('ProgramLines parse pi', () => {
     parsePrettyTest(piCalculator);
 });
