@@ -113,7 +113,7 @@ $copy.addEventListener('click', () => {
 });
 
 // GitHub Pagesは1階層上になる
-const DATA_DIR = location.origin.includes('github') ? "../apgdsl/frontend/data/" : "./frontend/data/";
+const DATA_DIR = location.origin.includes('github') ? "./frontend/data/" : "./frontend/data/";
 
 $samples.forEach(sample => {
     if (!(sample instanceof HTMLElement)) {
