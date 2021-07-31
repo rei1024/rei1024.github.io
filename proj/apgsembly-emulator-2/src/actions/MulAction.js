@@ -2,8 +2,8 @@
 
 import { Action } from "./Action.js";
 
-export const MUL_0 = "0";
-export const MUL_1 = "1";
+export const MUL_0 = 0;
+export const MUL_1 = 1;
 
 const MUL_0_STRING = "0";
 const MUL_1_STRING = "1";
@@ -15,6 +15,30 @@ const MUL_1_STRING = "1";
 /**
  * @typedef {MUL_0_STRING | MUL_1_STRING} MulOpString
  */
+
+/**
+ * 
+ * @param {MulOpString} op
+ * @returns {MulOp}
+ */
+function parseOp(op) {
+    switch (op) {
+        case MUL_0_STRING: return MUL_0;
+        case MUL_1_STRING: return MUL_1;
+    }
+}
+
+/**
+ * 
+ * @param {MulOp} op
+ * @returns {MulOpString}
+ */
+ function prettyOp(op) {
+    switch (op) {
+        case MUL_0: return MUL_0_STRING;
+        case MUL_1: return MUL_1_STRING;
+    }
+}
 
 /**
  * Action for `MUL`
@@ -37,7 +61,7 @@ export class MulAction extends Action {
      * @override
      */
     pretty() {
-        return `MUL ${this.op}`;
+        return `MUL ${prettyOp(this.op)}`;
     }
 
     /**
@@ -55,7 +79,7 @@ export class MulAction extends Action {
             return undefined;
         }
         if (op === MUL_0_STRING || op === MUL_1_STRING) {
-            return new MulAction(op);
+            return new MulAction(parseOp(op));
         }
         return undefined;
     }

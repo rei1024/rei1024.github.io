@@ -26,18 +26,31 @@ export class Frequency {
          */
         this.prevTime = 0;
 
-
         /**
          * @private
          */
         this.fractionStep = 0;
+
+        /**
+         * @private
+         */
+        this.isStarted = false;
     }
 
     reset() {
         this.fractionStep = 0;
     }
 
+    /**
+     * @throws {Error} if it is already started
+     */
     start() {
+        if (this.isStarted) {
+            throw Error('already started');
+        }
+
+        this.isStarted = true;
+
         /**
          * 
          * @param {number} time 

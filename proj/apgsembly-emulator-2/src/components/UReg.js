@@ -60,4 +60,17 @@ export class UReg {
             return 1;
         }
     }
+
+    /**
+     * 
+     * @param {string} key 
+     * @param {unknown} value 
+     */
+    setByRegistersInit(key, value) {
+        if (typeof value !== "number") {
+            const debugStr = `"${key}": ${JSON.stringify(value)}`;
+            throw Error(`Invalid #REGISTERS ${debugStr}`);
+        }
+        this.setValue(value);
+    }
 }

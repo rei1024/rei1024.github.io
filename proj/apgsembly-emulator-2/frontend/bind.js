@@ -64,6 +64,8 @@ export const $b2dDetail = $type('#b2d_detail', HTMLDetailsElement);
 // スライディングレジスタ
 export const $unaryRegister = $type('#unary_register', HTMLElement);
 
+export const $unaryRegisterDetail = $type('#unary_register_detail', HTMLDetailsElement);
+
 // バイナリレジスタ
 export const $binaryRegister = $type('#binary_register', HTMLElement);
 

@@ -1,6 +1,5 @@
 
 // @ts-check
-import { NopAction } from "../actions/NopAction.js";
 
 /**
  * `NOP`
@@ -11,11 +10,10 @@ export class NOP {
     }
 
     /**
-     * 
-     * @param {NopAction} _act 
+     * 最適化のため引数なし
      * @returns {0}
      */
-    action(_act) {
+    action() {
         return 0;
     }
 

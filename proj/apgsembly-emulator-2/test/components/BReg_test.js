@@ -7,6 +7,16 @@ test("BReg read initial", () => {
     assertEquals(x.read(), 0);
 });
 
+test("BReg extend", () => {
+    const x = new BReg();
+    x.pointer = 3;
+    x.extend();
+    assertEquals(x.getBits(), [0, 0, 0, 0]);
+
+    x.extend();
+    assertEquals(x.getBits(), [0, 0, 0, 0]);
+});
+
 test("BReg set", () => {
     const x = new BReg();
     assertEquals(x.read(), 0);

@@ -9,7 +9,6 @@ test('parse NOP space', () => {
     assertEquals(NopAction.parse('  NOP  ')?.pretty(), 'NOP');
 });
 
-
 test('parse NOP fail', () => {
     assertEquals(NopAction.parse(''), undefined);
 });

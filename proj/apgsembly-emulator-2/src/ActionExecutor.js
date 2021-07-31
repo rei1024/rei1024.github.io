@@ -29,24 +29,6 @@ import { UReg } from "./components/UReg.js";
  */
 
 /**
- * バイナリの文字列を0と1の配列に変換する
- * @param {string} str '01011101'
- * @returns {(0 | 1)[]}
- * @throws
- */
-function parseBits(str) {
-    return [...str].map(c => {
-        if (c === '0') {
-            return 0;
-        } else if (c === '1') {
-            return 1;
-        } else {
-            throw Error(`Invalid #REGISTERS: "${str}"`);
-        }
-    });
-}
-
-/**
  * Execute action
  */
 export class ActionExecutor {
@@ -117,46 +99,31 @@ export class ActionExecutor {
      */
     setByRegistersInit(regInit) {
         for (const [key, value] of Object.entries(regInit)) {
-            const debugStr = `"${key}": ${JSON.stringify(value)}`;
             if (key.startsWith('U')) {
                 const n = parseInt(key.slice(1), 10);
                 if (isNaN(n)) {
-                    throw Error('Invalid #REGISTERS ' + debugStr);
-                }
-                if (typeof value !== "number") {
-                    throw Error('Invalid #REGISTERS ' + debugStr);
+                    const debugStr = `"${key}": ${JSON.stringify(value)}`;
+                    throw Error(`Invalid #REGISTERS ${debugStr}`);
                 }
                 const reg = this.uRegMap.get(n);
                 if (reg === undefined) {
                     throw Error(`Invalid #REGISTERS: U${n} does not exist`);
                 }
-                reg.setValue(value);
+                reg.setByRegistersInit(key, value);
             } else if (key.startsWith('B')) {
                const n = parseInt(key.slice(1), 10);
                 if (isNaN(n)) {
-                    throw Error('Invalid #REGISTERS ' + debugStr);
+                    const debugStr = `"${key}": ${JSON.stringify(value)}`;
+                    throw Error(`Invalid #REGISTERS ${debugStr}`);
                 }
                 const reg = this.bRegMap.get(n);
                 if (reg === undefined) {
                     throw Error(`Invalid #REGISTERS: B${n} does not exist`);
                 }
-                // 数字の場合の処理は数字をバイナリにして配置する
-                if (typeof value === 'number') {
-                    reg.setBits(parseBits(value.toString(2)).reverse());
-                    reg.extend();
-                    continue;
-                }
-                if (!Array.isArray(value)) {
-                    throw Error('Invalid #REGISTERS ' + debugStr);
-                }
-                if (value.length !== 2) {
-                    throw Error('Invalid #REGISTERS ' + debugStr);
-                }
-                reg.pointer = value[0];
-                reg.setBits(parseBits(value[1]));
-                reg.extend();
+                reg.setByRegistersInit(key, value);
             } else {
-                throw Error('Invalid #REGISTERS ' + debugStr);
+                const debugStr = `"${key}": ${JSON.stringify(value)}`;
+                throw Error(`Invalid #REGISTERS ${debugStr}`);
             }
         }
     }
@@ -173,10 +140,10 @@ export class ActionExecutor {
             return this.bRegMap.get(action.regNumber)?.action(action);
         } else if (action instanceof URegAction) {
             return this.uRegMap.get(action.regNumber)?.action(action);
+        } else if (action instanceof NopAction) {
+            return this.nop.action();
         } else if (action instanceof B2DAction) {
             return this.b2d.action(action);
-        } else if (action instanceof NopAction) {
-            return this.nop.action(action);
         } else if (action instanceof AddAction) {
             return this.add.action(action);
         } else if (action instanceof MulAction) {
@@ -188,6 +155,6 @@ export class ActionExecutor {
         } else if (action instanceof HaltOutAction) {
             return -1;
         }
-        throw Error('execAction: unknown action ' + action.pretty());
+        throw Error(`execAction: unknown action ${action.pretty()}`);
     }
 }

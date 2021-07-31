@@ -1,13 +1,18 @@
 // @ts-check
 
-import { Machine } from "../src/Machine.js";
-import { Program } from "../src/Program.js";
-import { Frequency } from "./util/frequency.js";
+// critical path 
+import {} from "./util/selector.js";
+
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
 
+import { Machine } from "../src/Machine.js";
+import { Program } from "../src/Program.js";
+import { Frequency } from "./util/frequency.js";
+
 import { renderB2D } from "./renderB2D.js";
+import { renderStats } from "./renderStats.js";
 
 import {
     $error,
@@ -29,6 +34,7 @@ import {
     $b2dy,
     $b2dDetail,
     $unaryRegister,
+    $unaryRegisterDetail,
     $binaryRegister,
     $binaryRegisterDetail,
     $addSubMul,
@@ -46,7 +52,6 @@ import {
     $statsBody,
     $samples,
 } from "./bind.js";
-import { renderStats } from "./renderStats.js";
 
 // データ
 // GitHub Pagesは1階層上になる
@@ -58,6 +63,8 @@ const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/d
 
 // index.htmlと同期する
 const DEFUALT_FREQUENCY = 30;
+
+const hasToLocaleString = typeof (42).toLocaleString === 'function';
 
 /**
  * APGsembly 2.0 Emulator frontend application
@@ -155,9 +162,10 @@ export class App {
             unaryHeader.appendChild(th);
         }
         const unaryData = document.createElement('tr');
-        for (const value of regs.values()) {
+        for (const [key, value] of regs.entries()) {
             const td = document.createElement('td');
             td.textContent = value.getValue().toString();
+            td.dataset['test'] = `U${key}`;
             unaryData.appendChild(td);
         }
         const unaryTable = document.createElement('table');
@@ -190,13 +198,13 @@ export class App {
             const th = document.createElement('th');
             th.textContent = `B${key}`;
             const td = document.createElement('td');
-
+            td.dataset['test'] = `B${key}`;
             if (true) {
                 const code0 = document.createElement('code');
                 code0.style.color = "black";
                 // 長い場合は改行を入れる
                 code0.style.wordBreak = "break-all";            
-    
+
                 const decimal = document.createElement('span');
                 decimal.classList.add('decimal');
                 const pointer = document.createElement('span');
@@ -291,11 +299,11 @@ export class App {
      * 周波数の表示
      */
     renderFrequencyOutput() {
-        if (typeof app.frequency.toLocaleString === "function") {
+        if (hasToLocaleString) {
             // with ","
-            $freqencyOutput.textContent = app.frequency.toLocaleString() + "Hz";
+            $freqencyOutput.textContent = this.frequency.toLocaleString() + "Hz";
         } else {
-            $freqencyOutput.textContent = app.frequency.toString() + "Hz";
+            $freqencyOutput.textContent = this.frequency.toString() + "Hz";
         }
     }
 
@@ -346,6 +354,9 @@ export class App {
      */
     renderUnary() {
         if (this.machine === undefined) {
+            return;
+        }
+        if (!$unaryRegisterDetail.open) {
             return;
         }
         const items = this.unaryRegisterItems;
@@ -439,11 +450,9 @@ export class App {
 
     renderStats() {
         if (!$statsModal.classList.contains('show')) {
-            $statsBody.innerHTML = "";
             return;
         }
         if (this.machine === undefined) {
-            $statsBody.innerHTML = "";
             return;
         }
         renderStats($statsBody, this.machine.stateStats, this.machine.states, this.machine.getCurrentStateIndex());
@@ -530,8 +539,9 @@ export class App {
         if (machine === undefined) {
             return;
         }
-        for (let i = 0; i < steps; i++) {
-            try {
+        let i = 0;
+        try {
+            for (i = 0; i < steps; i++) {
                 const res = machine.execCommand();
                 if (res === -1) {
                     this.appState = "Halted";
@@ -546,13 +556,13 @@ export class App {
                     this.render();
                     return;
                 }
-            } catch (e) {
-                this.appState = "RuntimeError";
-                this.errorMessage = e.message;
-                this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
-                this.render();
-                return;
             }
+        } catch (e) {
+            this.appState = "RuntimeError";
+            this.errorMessage = e.message;
+            this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
+            this.render();
+            return;
         }
         this.steps += steps;
         this.render();
@@ -647,6 +657,10 @@ $binaryRegisterDetail.addEventListener('toggle', () => {
     app.renderBinary();
 });
 
+$unaryRegisterDetail.addEventListener('toggle', () => {
+    app.renderUnary();
+});
+
 // ファイルインポート
 importFileAsText($fileImport, result => {
     $input.value = result;
@@ -672,20 +686,10 @@ $hideBinary.addEventListener('change', () => {
     localStorage.setItem('hide_binary', $hideBinary.checked.toString());
 });
 
-if (localStorage.getItem('hide_binary') === "true") {
-    $hideBinary.checked = true;
-    app.renderBinary();
-}
-
 $reverseBinary.addEventListener('change', () => {
     app.renderBinary();
     localStorage.setItem('reverse_binary', $reverseBinary.checked.toString());
 });
-
-if (localStorage.getItem('reverse_binary') === "true") {
-    $reverseBinary.checked = true;
-    app.renderBinary();
-}
 
 // ダークモード
 $darkMode.addEventListener('change', () => {
@@ -696,12 +700,6 @@ $darkMode.addEventListener('change', () => {
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
 });
 
-if (localStorage.getItem('dark_mode') === "on") {
-    document.body.setAttribute('apge_dark_mode', "on");
-    $darkMode.checked = true;
-    $darkModeLabel.textContent = "On";
-}
-
 $b2dHidePointer.addEventListener('change', () => {
     app.renderB2D();
 });
@@ -710,11 +708,6 @@ $b2dFlipUpsideDown.addEventListener('change', () => {
     localStorage.setItem('b2d_flip_upside_down', $b2dFlipUpsideDown.checked.toString());
     app.renderB2D();
 });
-
-if (localStorage.getItem('b2d_flip_upside_down') === "true") {
-    $b2dFlipUpsideDown.checked = true;
-    app.renderB2D();
-}
 
 // showの場合クラスが追加されない
 $statsModal.addEventListener('shown.bs.modal', () => {
@@ -734,10 +727,9 @@ document.addEventListener('keydown', e => {
 
     switch (e.code) {
         case "Enter": {
-            if (app.appState === "Running") {
-                app.stop();
-            } else if (app.appState === "Stop") {
-                app.start();
+            switch (app.appState) {
+                case "Running": return app.stop();
+                case "Stop": return app.start();
             }
             break;
         }
@@ -757,13 +749,31 @@ document.addEventListener('keydown', e => {
     }
 });
 
+// 実行時間が掛かる処理をまとめる
+if (localStorage.getItem('dark_mode') === "on") {
+    document.body.setAttribute('apge_dark_mode', "on");
+    $darkMode.checked = true;
+    $darkModeLabel.textContent = "On";
+}
+
+if (localStorage.getItem('b2d_flip_upside_down') === "true") {
+    $b2dFlipUpsideDown.checked = true;
+}
+
+if (localStorage.getItem('reverse_binary') === "true") {
+    $reverseBinary.checked = true;
+}
+
+if (localStorage.getItem('hide_binary') === "true") {
+    $hideBinary.checked = true;
+}
+
 // 初回描画
 // first render
 try {
     app.render();
+    app.frequencyManager.start();
 } catch (e) {
     console.error('first render failed');
     console.log(e);
 }
-
-app.frequencyManager.start();
