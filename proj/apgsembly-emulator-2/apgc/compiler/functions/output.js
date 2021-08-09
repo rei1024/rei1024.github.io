@@ -5,10 +5,10 @@ import { FunctionCallExpression, StringExpression } from "../../types/apgc_types
 import { APGCCompiler } from "../apgc_compiler.js";
 
 /**
- * 
- * @param {APGCCompiler} ctx 
+ *
+ * @param {APGCCompiler} ctx
  * @param {string} inputState
- * @param {FunctionCallExpression} callExpr 
+ * @param {FunctionCallExpression} callExpr
  * @returns {string}
  */
 export function compileOutput(ctx, inputState, callExpr) {

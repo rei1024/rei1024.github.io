@@ -28,7 +28,7 @@ const hasBigInt = typeof BigInt !== 'undefined';
 export class BReg {
     constructor() {
         this.pointer = 0;
-        /** 
+        /**
          * @private
          * @type {(0 | 1)[]}
          */
@@ -36,8 +36,8 @@ export class BReg {
     }
 
     /**
-     * 
-     * @param {BRegAction} act 
+     *
+     * @param {BRegAction} act
      * @returns {0 | 1 | void}
      */
     action(act) {
@@ -58,8 +58,8 @@ export class BReg {
     }
 
     /**
-     * 
-     * @param {(0 | 1)[]} bits 
+     *
+     * @param {(0 | 1)[]} bits
      */
     setBits(bits) {
         this.bits = bits;
@@ -148,7 +148,7 @@ export class BReg {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     toBinaryString() {
@@ -184,9 +184,9 @@ export class BReg {
     }
 
     /**
-     * 
-     * @param {string} key 
-     * @param {unknown} value 
+     *
+     * @param {string} key
+     * @param {unknown} value
      */
     setByRegistersInit(key, value) {
         const debugStr = `"${key}": ${JSON.stringify(value)}`;

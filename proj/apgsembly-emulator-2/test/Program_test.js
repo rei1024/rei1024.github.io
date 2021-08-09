@@ -105,6 +105,72 @@ test('Program duplicated actions', () => {
     }
 });
 
+test('Program return one value: no return', () => {
+    const program = Program.parse(`
+    INITIAL; ZZ; A0; OUTPUT 1
+    A0; *; A0; NOP`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');
+    } else {
+        assertEquals(program, `Does not return the value in "INITIAL; ZZ; A0; OUTPUT 1"`);
+    }
+});
+
+test('Program return one value', () => {
+    const program = Program.parse(`
+    INITIAL; ZZ; A0; NOP, TDEC U0
+    A0; *; A0; NOP`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');
+    } else {
+        assertEquals(program, `The return value is returned more than once in "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that return a return value more than once are NOP, TDEC U0`);
+    }
+});
+
+test('Program same component actions U', () => {
+    const program = Program.parse(`
+    INITIAL; ZZ; A0; INC U0, TDEC U0
+    A0; *; A0; NOP`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');
+    } else {
+        assertEquals(program, `Actions "INC U0" and "TDEC U0" act on the same component in "INITIAL; ZZ; A0; INC U0, TDEC U0"`);
+    }
+});
+
+test('Program same component actions SUB', () => {
+    const program = Program.parse(`
+    INITIAL; ZZ; A0; SUB A1, SUB B0
+    A0; *; A0; NOP`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');
+    } else {
+        assertEquals(program, `Actions "SUB A1" and "SUB B0" act on the same component in "INITIAL; ZZ; A0; SUB A1, SUB B0"`);
+    }
+});
+
+test('Program same component actions B', () => {
+    const program = Program.parse(`
+    INITIAL; ZZ; A0; INC B0, TDEC B0
+    A0; *; A0; NOP`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');
+    } else {
+        assertEquals(program, `Actions "INC B0" and "TDEC B0" act on the same component in "INITIAL; ZZ; A0; INC B0, TDEC B0"`);
+    }
+});
+
+test('Program same component actions OUTPUT', () => {
+    const program = Program.parse(`
+    INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2
+    A0; *; A0; NOP`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');
+    } else {
+        assertEquals(program, `Actions "OUTPUT 1" and "OUTPUT 2" act on the same component in "INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2"`);
+    }
+});
+
 test('Program pretty program9_1', () => {
     const program = Program.parse(program9_1);
     if (program instanceof Program) {

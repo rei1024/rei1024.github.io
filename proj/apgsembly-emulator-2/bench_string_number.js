@@ -1,9 +1,9 @@
 // @ts-check
 
 /**
- * 
- * @param {string} name 
- * @param {() => void} fn 
+ *
+ * @param {string} name
+ * @param {() => void} fn
  */
 function bench(name, fn) {
     const start = performance.now();
@@ -14,8 +14,8 @@ function bench(name, fn) {
 
 class A {
     /**
-     * 
-     * @param {string} x 
+     *
+     * @param {string} x
      */
     constructor(x) {
         this.x = x;
@@ -24,8 +24,8 @@ class A {
 
 class B {
     /**
-     * 
-     * @param {number} x 
+     *
+     * @param {number} x
      */
     constructor(x) {
         this.x = x;

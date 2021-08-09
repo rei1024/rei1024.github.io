@@ -1,6 +1,6 @@
 // @ts-check
 
-// critical path 
+// critical path
 import {} from "./util/selector.js";
 
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
@@ -203,7 +203,7 @@ export class App {
                 const code0 = document.createElement('code');
                 code0.style.color = "black";
                 // 長い場合は改行を入れる
-                code0.style.wordBreak = "break-all";            
+                code0.style.wordBreak = "break-all";
 
                 const decimal = document.createElement('span');
                 decimal.classList.add('decimal');
@@ -509,7 +509,7 @@ export class App {
 
     /**
      * `steps`ステップ走らせる
-     * @param {number} steps 
+     * @param {number} steps
      */
     run(steps) {
         switch (this.appState) {
@@ -545,7 +545,7 @@ export class App {
                 const res = machine.execCommand();
                 if (res === -1) {
                     this.appState = "Halted";
-                    this.steps += i + 1; 
+                    this.steps += i + 1;
                     this.render();
                     return;
                 }
@@ -598,6 +598,12 @@ $step.addEventListener('click', () => {
     if (app.stepConfig >= 5000000) {
         $step.append(spinner);
         $step.disabled = true;
+
+        // 他のボタンも一時的に無効化する app.runで有効化される
+        $reset.disabled = true;
+        $start.disabled = true;
+        $stop.disabled = true;
+
         setTimeout(() => {
             // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
@@ -620,7 +626,7 @@ $sampleCodes.forEach(e => {
             $input.value = text;
             app.reset();
         }).catch(() => {
-            console.log('Fetch Error: ' + e.dataset[SRC]);
+            console.error(`Fetch Error: ${e.dataset[SRC]}`);
         }).finally(() => {
             $samples.disabled = false;
         });
@@ -693,7 +699,7 @@ $reverseBinary.addEventListener('change', () => {
 
 // ダークモード
 $darkMode.addEventListener('change', () => {
-    const onOrOff = $darkMode.checked ? "on" : "off"; 
+    const onOrOff = $darkMode.checked ? "on" : "off";
     localStorage.setItem('dark_mode', onOrOff);
     document.body.setAttribute('apge_dark_mode', onOrOff);
 

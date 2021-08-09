@@ -19,7 +19,7 @@ test('Command parse empty line', () => {
     const str = ``;
     const res = Command.parse(str);
     if (!(res instanceof EmptyLine)) {
-        throw Error('parse error ' + str);        
+        throw Error('parse error ' + str);
     }
 });
 
@@ -50,7 +50,7 @@ test('Command parse empty action', () => {
     const str = `INITIAL; ZZ; DIR0;`;
     const res = Command.parse(str);
     if (typeof res !== "string") {
-        throw Error('expect parse error ' + str);        
+        throw Error('expect parse error ' + str);
     }
 });
 

@@ -2,7 +2,7 @@ import { assertEquals, test } from "../test/deps.js";
 import { main } from "./apgc.js";
 
 test('apgc main output("1");', () => {
-    assertEquals(main(`output("1");`), 
+    assertEquals(main(`output("1");`),
 `INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; OUTPUT 1, NOP
 STATE_1; *; STATE_1; HALT_OUT`);
@@ -11,7 +11,7 @@ STATE_1; *; STATE_1; HALT_OUT`);
 test('apgc main #REGISTERS output("1");', () => {
     assertEquals(main(`
 #REGISTERS {}
-output("1");`), 
+output("1");`),
 `#REGISTERS {}
 INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; OUTPUT 1, NOP
@@ -21,7 +21,7 @@ STATE_1; *; STATE_1; HALT_OUT`);
 test('apgc main #COMPONENTS output("1");', () => {
     assertEquals(main(`
 #COMPONENTS U0-1
-output("1");`), 
+output("1");`),
 `#COMPONENTS U0-1
 INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; OUTPUT 1, NOP
@@ -29,13 +29,13 @@ STATE_1; *; STATE_1; HALT_OUT`);
 });
 
 test('apgc main empty', () => {
-    assertEquals(main(``), 
+    assertEquals(main(``),
 `INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; APGC_INITIAL; HALT_OUT`);
 });
 
 test('apgc main output("1"); output("2")', () => {
-    assertEquals(main(`output("1"); output("2");`), 
+    assertEquals(main(`output("1"); output("2");`),
 `INITIAL; ZZ; APGC_INITIAL; NOP
 APGC_INITIAL; *; STATE_1; OUTPUT 1, NOP
 STATE_1; *; STATE_2; OUTPUT 2, NOP

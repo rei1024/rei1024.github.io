@@ -4,24 +4,8 @@ import { HaltOutAction } from "./actions/HaltOutAction.js";
 import { Command } from "./Command.js";
 
 /**
- * 同じアクションが複数含まれていないか検査する
- * エラーメッセージを返却する
- * @param {Command[]} commands
- * @returns {string | undefined}
- */
-export function validateNoDuplicatedAction(commands) {
-    for (const command of commands) {
-        const err = validateNoDuplicatedActionCommand(command);
-        if (typeof err === 'string') {
-            return err;
-        }   
-    }
-    return undefined;
-}
-
-/**
- * 
- * @param {Command} command 
+ *
+ * @param {Command} command
  * @returns {string | undefined}
  */
 function validateNoDuplicatedActionCommand(command) {
@@ -41,23 +25,23 @@ function validateNoDuplicatedActionCommand(command) {
 }
 
 /**
- * アクションが値を一度だけ返すか検査する
+ * 同じアクションが複数含まれていないか検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
  * @returns {string | undefined}
  */
- export function validateActionReturnOnce(commands) {
+export function validateNoDuplicatedAction(commands) {
     for (const command of commands) {
-        const err = validateActionReturnOnceCommand(command);
+        const err = validateNoDuplicatedActionCommand(command);
         if (typeof err === 'string') {
             return err;
-        }   
+        }
     }
     return undefined;
 }
 
 /**
- * 
+ *
  * @param {Command} command
  * @returns {string | undefined}
  */
@@ -75,4 +59,62 @@ function validateActionReturnOnceCommand(command) {
     } else {
         return `The return value is returned more than once in "${command.pretty()}": Actions that return a return value more than once are ${valueReturnActions.map(x => x.pretty()).join(', ')}`;
     }
+}
+
+/**
+ * アクションが値を一度だけ返すか検査する
+ * エラーメッセージを返却する
+ * @param {Command[]} commands
+ * @returns {string | undefined}
+ */
+export function validateActionReturnOnce(commands) {
+    for (const command of commands) {
+        const err = validateActionReturnOnceCommand(command);
+        if (typeof err === 'string') {
+            return err;
+        }
+    }
+    return undefined;
+}
+
+/**
+ *
+ * @param {Command} command
+ * @returns {string | undefined}
+ */
+function validateNoSameComponentCommand(command) {
+    // HALT_OUTの場合は一旦無視
+    // FIXME
+    if (command.actions.find(x => x instanceof HaltOutAction) !== undefined) {
+        return undefined;
+    }
+    const actions = command.actions;
+    const len = actions.length;
+    for (let i = 0; i < len; i++) {
+        for (let j = 0; j < len; j++) {
+            if (i === j) { continue; }
+            const a = actions[i];
+            const b = actions[j] ?? (() => { throw Error('internal error'); })();
+            if (a?.isSameComponent(b)) {
+                return `Actions "${a.pretty()}" and "${b.pretty()}" act on the same component in "${command.pretty()}"`;
+            }
+        }
+    }
+    return undefined;
+}
+
+/**
+ * アクションが同じコンポーネントを使用していないか検査する
+ * エラーメッセージを返却する
+ * @param {Command[]} commands
+ * @returns {string | undefined}
+ */
+export function validateNoSameComponent(commands) {
+    for (const command of commands) {
+        const err = validateNoSameComponentCommand(command);
+        if (typeof err === 'string') {
+            return err;
+        }
+    }
+    return undefined;
 }

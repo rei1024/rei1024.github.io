@@ -14,8 +14,8 @@ export class OUTPUT {
     }
 
     /**
-     * 
-     * @param {OutputAction} act 
+     *
+     * @param {OutputAction} act
      * @returns {void}
      */
     action(act) {
@@ -24,7 +24,7 @@ export class OUTPUT {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     getString() {
@@ -32,8 +32,8 @@ export class OUTPUT {
     }
 
     /**
-     * 
-     * @param {string} x 
+     *
+     * @param {string} x
      */
     output(x) {
         this.string += x;

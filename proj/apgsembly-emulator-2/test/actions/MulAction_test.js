@@ -8,3 +8,7 @@ test('parse MUL 0', () => {
 test('parse MUL 1', () => {
     assertEquals(MulAction.parse('MUL 1')?.pretty(), 'MUL 1');
 });
+
+test('MUL isSameComponent', () => {
+    assertEquals(MulAction.parse('MUL 1').isSameComponent(MulAction.parse('MUL 1')), true);
+});

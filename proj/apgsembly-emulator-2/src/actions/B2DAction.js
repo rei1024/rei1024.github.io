@@ -44,8 +44,8 @@ const B2D_LEGACY_B2D_STRING = "SQ";
  */
 export class B2DAction extends Action {
     /**
-     * 
-     * @param {B2DOp} op 
+     *
+     * @param {B2DOp} op
      * @param {B2DAxis} axis
      */
     constructor(op, axis) {
@@ -70,11 +70,11 @@ export class B2DAction extends Action {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }
@@ -131,5 +131,15 @@ export class B2DAction extends Action {
             case B2D_READ: return true;
             case B2D_SET: return false;
         }
+    }
+
+    /**
+     *
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof B2DAction;
     }
 }

@@ -5,8 +5,8 @@ import { program9_1, program9_2 } from './Program_test.js';
 import { piCalculator } from "./pi_calculator.js";
 
 /**
- * 
- * @param {string} str 
+ *
+ * @param {string} str
  */
 function parsePrettyTest(str) {
     const programLines = ProgramLines.parse(str);

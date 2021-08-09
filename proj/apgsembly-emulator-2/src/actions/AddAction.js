@@ -19,8 +19,8 @@ const ADD_B1_STRING = "B1";
  */
 
 /**
- * 
- * @param {AddOp} op 
+ *
+ * @param {AddOp} op
  * @returns {AddOpString}
  */
 function prettyOp(op) {
@@ -32,11 +32,11 @@ function prettyOp(op) {
 }
 
 /**
- * 
- * @param {AddOpString} op 
+ *
+ * @param {AddOpString} op
  * @returns {AddOp}
  */
- function parseOp(op) {
+function parseOp(op) {
     switch (op) {
         case ADD_A1_STRING: return ADD_A1;
         case ADD_B0_STRING: return ADD_B0;
@@ -49,8 +49,8 @@ function prettyOp(op) {
  */
 export class AddAction extends Action {
     /**
-     * 
-     * @param {AddOp} op 
+     *
+     * @param {AddOp} op
      */
     constructor(op) {
         super();
@@ -70,11 +70,11 @@ export class AddAction extends Action {
 
     /**
      * 文字列から変換する
-     * @param {string} str 
+     * @param {string} str
      * @returns {AddAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }
@@ -97,5 +97,15 @@ export class AddAction extends Action {
             case ADD_B0: return true;
             case ADD_B1: return true;
         }
+    }
+
+    /**
+     *
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof AddAction;
     }
 }

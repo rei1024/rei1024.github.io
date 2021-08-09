@@ -2,8 +2,8 @@
 
 /**
  * input要素にエラーを表示する
- * @param {HTMLInputElement} $input 
- * @param {string} message 
+ * @param {HTMLInputElement} $input
+ * @param {string} message
  */
 export function setCustomError($input, message) {
     $input.setCustomValidity(message);
@@ -13,7 +13,7 @@ export function setCustomError($input, message) {
 
 /**
  * input要素からエラーを取り除く
- * @param {HTMLInputElement} $input 
+ * @param {HTMLInputElement} $input
  */
  export function removeCustomError($input) {
     $input.setCustomValidity('');

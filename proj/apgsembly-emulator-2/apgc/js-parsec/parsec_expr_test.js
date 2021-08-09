@@ -1,14 +1,14 @@
 import { Parser } from "./parsec.js";
 import { assertEquals, test } from "../../test/deps.js";
 
-const numberParser = Parser.regexp(/^[0-9]+/);
+const numberParser = Parser.regexp(/^[0-9]+/u);
 
 const leftParen = Parser.satisfy(c => c === '(');
 const rightParen = Parser.satisfy(c => c === ')');
 const plus = Parser.satisfy(c => c === "+");
 
 /**
- * 
+ *
  * @returns {Parser<unknown>}
  */
 function exprParser() {

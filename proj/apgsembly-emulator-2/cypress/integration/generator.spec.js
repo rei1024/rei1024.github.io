@@ -6,3 +6,5 @@ describe('Generator Load', () => {
         cy.contains('Code generator for elementary cellular automata');
     });
 });
+
+export {};

@@ -78,14 +78,14 @@ export const $addSubMul = $type('#add_sub_mul', HTMLElement);
 // ファイルインポート
 export const $fileImport = $type('#import_file', HTMLInputElement);
 
-export const $samples =  $type('#samples', HTMLButtonElement);
+export const $samples = $type('#samples', HTMLButtonElement);
 
 // サンプルコード
 export const $sampleCodes = document.querySelectorAll('.js_sample');
 
 // --------- Modal --------- //
 
-// ステップ数入力 
+// ステップ数入力
 export const $stepInput = $type('#step_input', HTMLInputElement);
 
 // Hide Binary

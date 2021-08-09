@@ -7,8 +7,8 @@ export { Result };
 export class ParseState {
     /**
      * @private
-     * @param {string} rest 
-     * @param {number} offset 
+     * @param {string} rest
+     * @param {number} offset
      */
     constructor(rest, offset) {
         /**
@@ -24,9 +24,9 @@ export class ParseState {
     }
 
     /**
-     * 
-     * @param {string} rest 
-     * @param {number} offset 
+     *
+     * @param {string} rest
+     * @param {number} offset
      * @returns {ParseState}
      */
     static unsafeMakeParseState(rest, offset) {
@@ -34,8 +34,8 @@ export class ParseState {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {ParseState}
      */
     static init(str) {
@@ -43,7 +43,7 @@ export class ParseState {
     }
 
     /**
-     * 
+     *
      * @param {number} n
      * @returns {ParseState}
      */
@@ -57,9 +57,9 @@ export class ParseState {
  */
 export class ParseStateWithResult {
     /**
-     * 
-     * @param {ParseState} parseState 
-     * @param {Result<A, E>} result 
+     *
+     * @param {ParseState} parseState
+     * @param {Result<A, E>} result
      */
     constructor(parseState, result) {
         /**
@@ -74,8 +74,8 @@ export class ParseStateWithResult {
 
     /**
      * @template A
-     * @param {ParseState} state 
-     * @param {A} value 
+     * @param {ParseState} state
+     * @param {A} value
      * @returns {ParseStateWithResult<A, never>}
      */
     static makeOk(state, value) {
@@ -84,8 +84,8 @@ export class ParseStateWithResult {
 
     /**
      * @template E
-     * @param {ParseState} state 
-     * @param {E} err 
+     * @param {ParseState} state
+     * @param {E} err
      * @returns {ParseStateWithResult<never, E>}
      */
     static makeError(state, err) {
@@ -94,7 +94,7 @@ export class ParseStateWithResult {
 
     /**
      * @template B
-     * @param {(_: A) => B} f 
+     * @param {(_: A) => B} f
      * @returns {ParseStateWithResult<B, E>}
      */
     map(f) {
@@ -103,7 +103,7 @@ export class ParseStateWithResult {
 
     /**
      * @template E2
-     * @param {(_: E) => E2} f 
+     * @param {(_: E) => E2} f
      * @returns {ParseStateWithResult<A, E2>}
      */
     mapErr(f) {
@@ -114,8 +114,8 @@ export class ParseStateWithResult {
 }
 
 /**
- * 
- * @param {RegExp} regexp 
+ *
+ * @param {RegExp} regexp
  * @returns {string}
  */
  function regexpToString(regexp) {
@@ -127,8 +127,8 @@ export class ParseStateWithResult {
  */
 export class Parser {
     /**
-     * 
-     * @param {(parseState: ParseState) => ParseStateWithResult<A, E>} parse 
+     *
+     * @param {(parseState: ParseState) => ParseStateWithResult<A, E>} parse
      */
     constructor(parse) {
         /**
@@ -139,7 +139,7 @@ export class Parser {
 
     /**
      * @template A
-     * @param {A} x 
+     * @param {A} x
      * @returns {Parser<A, never>}
      */
     static pure(x) {
@@ -181,7 +181,7 @@ export class Parser {
 
     /**
      * @template B
-     * @param {(_: A) => B} f 
+     * @param {(_: A) => B} f
      * @returns {Parser<B, E>}
      */
     map(f) {
@@ -234,7 +234,7 @@ export class Parser {
 
     /**
      * @template E
-     * @param {E} e 
+     * @param {E} e
      * @returns {Parser<never, E>}
      */
     static fail(e) {
@@ -249,7 +249,7 @@ export class Parser {
     catch() {
         const __this__ = this;
         /**
-         * @param {ParseState} state 
+         * @param {ParseState} state
          * @returns {ParseStateWithResult<Result<A, E>, never>}
          */
         function temp(state) {
@@ -270,7 +270,7 @@ export class Parser {
 
     /**
      * @template E2
-     * @param {E2} e 
+     * @param {E2} e
      * @returns {Parser<A, E2>}
      */
     withError(e) {
@@ -329,7 +329,7 @@ export class Parser {
     }
 
     /**
-     * 
+     *
      * @param {string} str
      * @returns {Result<A, E>}
      */
@@ -338,8 +338,8 @@ export class Parser {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {ParseStateWithResult<A, E>}
      */
     parseToParseStateWithResult(str) {
@@ -347,7 +347,7 @@ export class Parser {
     }
 
     /**
-     * 
+     *
      * @param {string} str
      * @returns {A | undefined}
      */
@@ -357,7 +357,7 @@ export class Parser {
 
     /**
      * single character
-     * @param {(char: string) => boolean} condition 
+     * @param {(char: string) => boolean} condition
      * @returns {Parser<string, string>}
      */
     static satisfyChar(condition) {
@@ -404,7 +404,7 @@ export class Parser {
     }
 
     /**
-     * @param {Parser<unknown, unknown>} separatorParser 
+     * @param {Parser<unknown, unknown>} separatorParser
      * @returns {Parser<A[], never>}
      */
     sepBy(separatorParser) {
@@ -435,7 +435,7 @@ export class Parser {
 
 /**
  * @template A, E
- * @param {Parser<A, E>} parser 
+ * @param {Parser<A, E>} parser
  * @param {string} str
  * @returns {Result<A, { error: E, line: string } >}
  */
@@ -446,8 +446,8 @@ export function parseWithErrorLine(parser, str) {
 
 /**
  *
- * @param {string} str 
- * @param {number} offset 
+ * @param {string} str
+ * @param {number} offset
  * @returns {string} line
  */
 export function extractLine(str, offset) {
@@ -463,7 +463,7 @@ export function extractLine(str, offset) {
  */
 export function lines(str) {
     let start = 0;
-    const matches = [...str.matchAll(/\r\n|\n|\r/g)];
+    const matches = [...str.matchAll(/\r\n|\n|\r/gu)];
 
     /** @type {{ start: number, end: number, line: string }[]} */
     const objs = [];

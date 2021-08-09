@@ -15,8 +15,8 @@ export class MUL {
     }
 
     /**
-     * 
-     * @param {MulAction} act 
+     *
+     * @param {MulAction} act
      * @returns {0 | 1}
      */
     action(act) {
@@ -28,7 +28,7 @@ export class MUL {
     }
 
     /**
-     * 
+     *
      * @returns {number}
      */
     getValue() {
@@ -36,7 +36,7 @@ export class MUL {
     }
 
     /**
-     * 
+     *
      * @returns {0 | 1}
      */
     mul0() {
@@ -47,7 +47,7 @@ export class MUL {
     }
 
     /**
-     * 
+     *
      * @returns {0 | 1}
      */
     mul1() {
@@ -60,11 +60,11 @@ export class MUL {
             this.value = (this.value - 22) >> 1;
         }
         // @ts-ignore
-        return r;   
+        return r;
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     toString() {

@@ -2,7 +2,7 @@
 import {
     APGCProgram,
     APGCExpressionStatement,
-    APGCStatements, 
+    APGCStatements,
     FunctionCallExpression,
     IfStatement,
     WhileStatement,
@@ -10,7 +10,7 @@ import {
     StringExpression,
 } from "../types/apgc_types.js";
 import {
-    apgcProgramParser, 
+    apgcProgramParser,
     functionCallExpressionParser,
     identifierParser,
     numberExpressionParser,
@@ -101,7 +101,7 @@ test('stringExpression', () => {
 test('apgcProgramParser', () => {
     const str = `
 output(1);
-output(2, 3);    
+output(2, 3);
 `;
     assertEquals(apgcProgramParser(str), new APGCProgram(
         new APGCStatements(
@@ -150,7 +150,7 @@ test('apgcProgramParser if_zero', () => {
 if_zero(tdec_u(0) ) {
     output(1);
 } else {
-    output(2);  
+    output(2);
 }
 `;
     assertEquals(apgcProgramParser(str), new APGCProgram(
@@ -163,7 +163,7 @@ if_zero(tdec_u(0) ) {
                         [
                             new APGCExpressionStatement(
                                 new FunctionCallExpression('output', [new NumberExpression(1)])
-                            )  
+                            )
                         ]
                     ),
                     new APGCStatements(
@@ -195,7 +195,7 @@ if_zero(tdec_u(0)) {
                         [
                             new APGCExpressionStatement(
                                 new FunctionCallExpression('output', [new NumberExpression(1)])
-                            )  
+                            )
                         ]
                     ),
                     new APGCStatements(
@@ -223,7 +223,7 @@ while_non_zero(tdec_u(0)) {
                         [
                             new APGCExpressionStatement(
                                 new FunctionCallExpression('output', [new NumberExpression(1)])
-                            )  
+                            )
                         ]
                     )
                 )
@@ -248,7 +248,7 @@ while_zero(tdec_u(0)) {
                         [
                             new APGCExpressionStatement(
                                 new FunctionCallExpression('output', [new NumberExpression(1)])
-                            )  
+                            )
                         ]
                     )
                 )

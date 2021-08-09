@@ -16,3 +16,7 @@ test('SubAction parse SUB B1', () => {
 test('SubAction parse fail', () => {
     assertEquals(SubAction.parse('SUB'), undefined);
 });
+
+test('SubAction isSameComponent', () => {
+    assertEquals(SubAction.parse('SUB A1').isSameComponent(SubAction.parse('SUB B0')), true);
+});

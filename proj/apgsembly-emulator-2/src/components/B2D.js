@@ -16,9 +16,9 @@ import {
  */
 export class B2D {
     /**
-     * 
-     * @param {number} x 
-     * @param {number} y 
+     *
+     * @param {number} x
+     * @param {number} y
      */
     constructor(x = 0, y = 0) {
         if (x < 0 || y < 0) {
@@ -54,7 +54,7 @@ export class B2D {
     }
 
     /**
-     * 
+     *
      * @returns {number}
      */
     getMaxX() {
@@ -62,7 +62,7 @@ export class B2D {
     }
 
     /**
-     * 
+     *
      * @returns {number}
      */
     getMaxY() {
@@ -70,8 +70,8 @@ export class B2D {
     }
 
     /**
-     * 
-     * @param {B2DAction} act 
+     *
+     * @param {B2DAction} act
      * @returns {0 | 1 | void}
      */
     action(act) {
@@ -191,11 +191,11 @@ export class B2D {
         if (arrayY[this.x] === 1) {
             throw Error('B2D SET: Tried to set when it was already 1');
         }
-        arrayY[this.x] = 1;   
+        arrayY[this.x] = 1;
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     toString() {

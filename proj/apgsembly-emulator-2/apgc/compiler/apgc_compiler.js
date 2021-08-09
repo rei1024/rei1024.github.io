@@ -57,15 +57,15 @@ import { compileOutput } from "./functions/output.js";
 import { compileEmptyArgumentFunction } from "./functions/empty_argument_function.js";
 import { compileSingleNumberArgumentFunction } from "./functions/single_number_argument_function.js";
 
-const UNREACHABLE_PREFIX =  "APGC_UNREACHABLE_";
+const UNREACHABLE_PREFIX = "APGC_UNREACHABLE_";
 
 // goto and label
 const LABEL_PREFIX = "APGC_LABEL_";
 
 export class APGCCompiler {
     /**
-     * 
-     * @param {APGCProgram} program 
+     *
+     * @param {APGCProgram} program
      */
     constructor(program) {
         /**
@@ -83,8 +83,8 @@ export class APGCCompiler {
     }
 
     /**
-     * 
-     * @param {Command} command 
+     *
+     * @param {Command} command
      */
     addCommand(command) {
         this.commands.push(command);
@@ -102,7 +102,7 @@ export class APGCCompiler {
             nextState: apgcInitialState,
             input: "ZZ",
             actions: [new NopAction()]
-        }));        
+        }));
         const outputState = this.compileStatements(apgcInitialState, this.program.apgcStatements);
         this.addCommand(new Command({
             state: outputState,
@@ -117,7 +117,7 @@ export class APGCCompiler {
 
     /**
      * @param {string} inputState
-     * @param {APGCStatements} apgcStatements 
+     * @param {APGCStatements} apgcStatements
      * @returns {string} outputState
      * @throws
      */
@@ -129,7 +129,7 @@ export class APGCCompiler {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     generateState() {
@@ -138,8 +138,8 @@ export class APGCCompiler {
     }
 
     /**
-     * 
-     * @param {string} inputState 
+     *
+     * @param {string} inputState
      * @param {APGCExpression} expr
      * @param {string} [msg]
      * @returns {string} outputState
@@ -158,15 +158,15 @@ export class APGCCompiler {
 
     /**
      * @param {string} inputState
-     * @param {FunctionCallExpression} expr 
+     * @param {FunctionCallExpression} expr
      * @returns {string} outputState
      * @throws
      */
     compileFunctionCallExpression(inputState, expr) {
         const __this__ = this;
         /**
-         * 
-         * @param {(_: number) => Action[]} actions 
+         *
+         * @param {(_: number) => Action[]} actions
          * @returns {string}
          */
         function single(actions) {
@@ -174,8 +174,8 @@ export class APGCCompiler {
         }
 
         /**
-         * 
-         * @param {Action[]} actions 
+         *
+         * @param {Action[]} actions
          */
         function empty(actions) {
             return compileEmptyArgumentFunction(__this__, inputState, expr, actions);
@@ -222,7 +222,7 @@ export class APGCCompiler {
 
     /**
      * @param {string} inputState
-     * @param {APGCStatement} statement 
+     * @param {APGCStatement} statement
      * @returns {string} outputState
      * @throws
      */
@@ -246,9 +246,9 @@ export class APGCCompiler {
 
 /**
  *
- * @param {APGCCompiler} ctx 
- * @param {string} inputState 
- * @param {IfStatement} statement 
+ * @param {APGCCompiler} ctx
+ * @param {string} inputState
+ * @param {IfStatement} statement
  * @returns {string} outputState
  */
 function compileIfStatement(ctx, inputState, statement) {
@@ -273,7 +273,7 @@ function compileIfStatement(ctx, inputState, statement) {
     ctx.addCommand(ifCommandNonZero);
 
     const thenCommandOutputState = ctx.compileStatements(ifThenState, statement.thenStatements);
-   
+
     const elseCommandOutputState = ctx.compileStatements(ifElseState, statement.elseStataments);
 
     const finalState = ctx.generateState();
@@ -296,10 +296,10 @@ function compileIfStatement(ctx, inputState, statement) {
 }
 
 /**
- * 
- * @param {APGCCompiler} ctx 
- * @param {string} inputState 
- * @param {WhileStatement} statement 
+ *
+ * @param {APGCCompiler} ctx
+ * @param {string} inputState
+ * @param {WhileStatement} statement
  * @returns {string} outputState
  */
 function compileWhileStatement(ctx, inputState, statement) {
@@ -337,9 +337,9 @@ function compileWhileStatement(ctx, inputState, statement) {
 }
 
 /**
- * @param {APGCCompiler} ctx 
- * @param {string} inputState 
- * @param {FunctionCallExpression} expr 
+ * @param {APGCCompiler} ctx
+ * @param {string} inputState
+ * @param {FunctionCallExpression} expr
  * @returns {string} outputState
  */
 function compileLabel(ctx, inputState, expr) {
@@ -374,9 +374,9 @@ function compileLabel(ctx, inputState, expr) {
 }
 
 /**
- * @param {APGCCompiler} ctx 
- * @param {string} inputState 
- * @param {FunctionCallExpression} expr 
+ * @param {APGCCompiler} ctx
+ * @param {string} inputState
+ * @param {FunctionCallExpression} expr
  * @returns {string} unreachable state
  */
 function compileGoto(ctx, inputState, expr) {

@@ -25,7 +25,7 @@ export class Result {
 
     /**
      * @template A, E
-     * @param {A} x 
+     * @param {A} x
      * @returns {Result<A, E>}
      */
     static ok(x) {
@@ -35,7 +35,7 @@ export class Result {
 
     /**
      * @template A, E
-     * @param {E} x 
+     * @param {E} x
      * @returns {Result<A, E>}
      */
     static err(x) {
@@ -45,8 +45,8 @@ export class Result {
 
     /**
      * @template B
-     * @param {(_: A) => B} okFunc 
-     * @param {(_: E) => B} errFunc 
+     * @param {(_: A) => B} okFunc
+     * @param {(_: E) => B} errFunc
      * @returns {B}
      */
     fold(okFunc, errFunc) {
@@ -68,7 +68,7 @@ export class Result {
     }
 
     /**
-     * 
+     *
      * @returns {boolean}
      */
     isOk() {
@@ -77,7 +77,7 @@ export class Result {
 
     /**
      * @template B
-     * @param {(_: A) => B} f 
+     * @param {(_: A) => B} f
      * @returns {Result<B, E>}
      */
     mapOk(f) {
@@ -86,7 +86,7 @@ export class Result {
 
     /**
      * @template E2
-     * @param {(_: E) => E2} f 
+     * @param {(_: E) => E2} f
      * @returns {Result<A, E2>}
      */
     mapErr(f) {
@@ -105,7 +105,7 @@ export class Result {
 
     /**
      * @template A
-     * @param {Result<A, never>} result 
+     * @param {Result<A, never>} result
      * @returns {A}
      */
     static eraseError(result) {

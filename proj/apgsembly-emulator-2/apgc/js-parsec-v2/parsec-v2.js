@@ -7,9 +7,9 @@ import { Result } from "../js-parsec-v3/result.js";
  */
 export class ValueWithRest {
     /**
-     * 
-     * @param {A} value 
-     * @param {string} rest 
+     *
+     * @param {A} value
+     * @param {string} rest
      */
     constructor(value, rest) {
         /**
@@ -25,7 +25,7 @@ export class ValueWithRest {
 
     /**
      * @template B
-     * @param {(_: A) => B} f 
+     * @param {(_: A) => B} f
      * @returns {ValueWithRest<B>}
      */
     mapValue(f) {
@@ -34,8 +34,8 @@ export class ValueWithRest {
 }
 
 /**
- * 
- * @param {RegExp} regexp 
+ *
+ * @param {RegExp} regexp
  * @returns {string}
  */
 function regexpToString(regexp) {
@@ -49,7 +49,7 @@ function regexpToString(regexp) {
  */
 export class Parser {
     /**
-     * @param {(str: string) => Result<ValueWithRest<A>, E>} parse 
+     * @param {(str: string) => Result<ValueWithRest<A>, E>} parse
      */
     constructor(parse) {
         /**
@@ -88,7 +88,7 @@ export class Parser {
 
     /**
      * @template B
-     * @param {(_: A) => B} f 
+     * @param {(_: A) => B} f
      * @returns {Parser<B, E>}
      */
     map(f) {
@@ -137,7 +137,7 @@ export class Parser {
 
     /**
      * @template E
-     * @param {E} e 
+     * @param {E} e
      * @returns {Parser<never, E>}
      */
     static fail(e) {
@@ -152,8 +152,8 @@ export class Parser {
     catch() {
         const __this__ = this;
         /**
-         * 
-         * @param {string} str 
+         *
+         * @param {string} str
          * @returns {Result<ValueWithRest<Result<A, E>>, never>}
          */
         function temp(str) {
@@ -177,7 +177,7 @@ export class Parser {
 
     /**
      * @template E2
-     * @param {E2} e 
+     * @param {E2} e
      * @returns {Parser<A, E2>}
      */
     withError(e) {
@@ -237,7 +237,7 @@ export class Parser {
 
     /**
      * single character
-     * @param {(char: string) => boolean} condition 
+     * @param {(char: string) => boolean} condition
      * @returns {Parser<string, string>}
      */
     static satisfyChar(condition) {
@@ -277,7 +277,7 @@ export class Parser {
     }
 
     /**
-     * @param {Parser<unknown, unknown>} separatorParser 
+     * @param {Parser<unknown, unknown>} separatorParser
      * @returns {Parser<A[], never>}
      */
     sepBy(separatorParser) {
@@ -309,7 +309,7 @@ export class Parser {
 
     /**
      * @template E2
-     * @param {Parser<unknown ,E2>} parser 
+     * @param {Parser<unknown ,E2>} parser
      * @returns {Parser<A, E | E2>}
      */
     followedBy(parser) {

@@ -7,8 +7,8 @@
  */
 export class Parser {
     /**
-     * 
-     * @param {(_: string) => ({ rest: string, value: A } | undefined)} parse 
+     *
+     * @param {(_: string) => ({ rest: string, value: A } | undefined)} parse
      */
     constructor(parse) {
         /**
@@ -19,7 +19,7 @@ export class Parser {
 
     /**
      * Parse a string
-     * @param {string} str 
+     * @param {string} str
      * @returns {A | undefined}
      */
     parseValue(str) {
@@ -32,7 +32,7 @@ export class Parser {
 
     /**
      * @template A
-     * @param {A} value 
+     * @param {A} value
      * @returns {Parser<A>}
      */
     static pure(value) {
@@ -71,7 +71,7 @@ export class Parser {
 
     /**
      * single character
-     * @param {(char: string) => boolean} condition 
+     * @param {(char: string) => boolean} condition
      * @returns {Parser<string>}
      */
     static satisfy(condition) {
@@ -93,7 +93,7 @@ export class Parser {
 
     /**
      * single character
-     * @param {string} char 
+     * @param {string} char
      * @returns {Parser<string>}
      */
     static char(char) {
@@ -104,7 +104,7 @@ export class Parser {
     }
 
     /**
-     * 
+     *
      * @param {string} string
      */
     static string(string) {
@@ -139,7 +139,7 @@ export class Parser {
     /**
      * >>=
      * @template B
-     * @param {(_: A) => Parser<B>} parser 
+     * @param {(_: A) => Parser<B>} parser
      * @returns {Parser<B>}
      */
     andThen(parser) {
@@ -153,7 +153,7 @@ export class Parser {
     }
 
     /**
-     * @param {Parser<unknown>} parser 
+     * @param {Parser<unknown>} parser
      * @returns {Parser<A>}
      */
     andFirst(parser) {
@@ -162,7 +162,7 @@ export class Parser {
 
     /**
      * @template B
-     * @param {Parser<B>} parser 
+     * @param {Parser<B>} parser
      * @returns {Parser<B>}
      */
     andSecond(parser) {
@@ -180,14 +180,14 @@ export class Parser {
 
     /**
      * @template B
-     * @param {Parser<B>} parser 
+     * @param {Parser<B>} parser
      * @returns {Parser<A | B>}
      */
     or(parser) {
         const parse = this.parse;
         /**
-         * 
-         * @param {string} str 
+         *
+         * @param {string} str
          * @returns {{ rest: string, value: A | B } | undefined}
          */
         function temp(str) {
@@ -201,8 +201,8 @@ export class Parser {
     }
 
     /**
-     * 
-     * @param {Parser<A>[]} array 
+     *
+     * @param {Parser<A>[]} array
      * @returns {Parser<A>}
      */
     orArray(array) {
@@ -233,8 +233,8 @@ export class Parser {
     }
 
     /**
-     * 
-     * @param {(char: string) => boolean} condition 
+     *
+     * @param {(char: string) => boolean} condition
      * @returns {Parser<string>}
      */
     static takeWhile(condition) {
@@ -260,8 +260,8 @@ export class Parser {
     }
 
     /**
-     * 
-     * @param {Parser<unknown>} separatorParser 
+     *
+     * @param {Parser<unknown>} separatorParser
      * @returns {Parser<A[]>}
      */
     sepBy(separatorParser) {

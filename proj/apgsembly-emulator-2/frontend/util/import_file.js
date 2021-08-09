@@ -1,9 +1,9 @@
 // @ts-check
 
 /**
- * 
- * @param {HTMLInputElement} $file 
- * @param {(_: string) => void} callback 
+ *
+ * @param {HTMLInputElement} $file
+ * @param {(_: string) => void} callback
  */
 export function importFileAsText($file, callback) {
     $file.addEventListener('input', (e) => {

@@ -17,7 +17,7 @@ import { validate } from "./validator/apgc_validator.js";
 
 /**
  * 構文解析
- * @param {string} string 
+ * @param {string} string
  * @returns {APGCProgram}
  * @throws
  */
@@ -27,7 +27,7 @@ export function parser(string) {
 
 /**
  * コンパイル
- * @param {APGCProgram} program 
+ * @param {APGCProgram} program
  * @returns {Program}
  * @throws
  */
@@ -56,7 +56,7 @@ export function main(str) {
 }
 
 /**
- * 
+ *
  * @param {string} str APGC
  * @returns {string} APGsembly
  */

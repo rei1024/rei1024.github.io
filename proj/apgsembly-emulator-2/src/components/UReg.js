@@ -14,8 +14,8 @@ export class UReg {
     }
 
     /**
-     * 
-     * @param {URegAction} act 
+     *
+     * @param {URegAction} act
      * @returns {0 | 1 | void}
      */
     action(act) {
@@ -33,8 +33,8 @@ export class UReg {
     }
 
     /**
-     * 
-     * @param {number} v 
+     *
+     * @param {number} v
      */
     setValue(v) {
         this.value = v;
@@ -62,9 +62,9 @@ export class UReg {
     }
 
     /**
-     * 
-     * @param {string} key 
-     * @param {unknown} value 
+     *
+     * @param {string} key
+     * @param {unknown} value
      */
     setByRegistersInit(key, value) {
         if (typeof value !== "number") {

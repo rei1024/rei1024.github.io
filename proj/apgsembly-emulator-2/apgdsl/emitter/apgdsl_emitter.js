@@ -61,7 +61,7 @@ import {
  */
 
 /**
- * 
+ *
  * @param {never} _never
  * @returns {never}
  */
@@ -91,8 +91,8 @@ export class Emitter {
     }
 
     /**
-     * 
-     * @param {Expr} expr 
+     *
+     * @param {Expr} expr
      */
     emitExprWrapped(expr) {
         const nextState = this.getNextState();
@@ -112,7 +112,7 @@ export class Emitter {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     getNextState() {
@@ -126,16 +126,16 @@ export class Emitter {
     }
 
     /**
-     * 
-     * @param {Command} command 
+     *
+     * @param {Command} command
      */
     emitCommand(command) {
         this.commands.push(command);
     }
 
     /**
-     * 
-     * @param {StateName} input 
+     *
+     * @param {StateName} input
      * @param {Expr} expr
      * @returns {StateName}
      */
@@ -151,7 +151,7 @@ export class Emitter {
 
     /**
      *
-     * @param {StateName} input 
+     * @param {StateName} input
      * @param {CallExpr} expr
      * @returns {StateName}
      */
@@ -161,8 +161,8 @@ export class Emitter {
         }
         const __this__ = this;
         /**
-         * 
-         * @param {(_: number) => Action[]} fn 
+         *
+         * @param {(_: number) => Action[]} fn
          * @returns {StateName}
          */
         function single(fn) {
@@ -170,8 +170,8 @@ export class Emitter {
         }
 
         /**
-         * 
-         * @param {Action[]} actions 
+         *
+         * @param {Action[]} actions
          * @returns {StateName}
          */
         function empty(actions) {
@@ -222,9 +222,9 @@ export class Emitter {
     }
 
     /**
-     * 
-     * @param {StateName} input 
-     * @param {boolean} isZero 
+     *
+     * @param {StateName} input
+     * @param {boolean} isZero
      * @param {CallExpr} expr
      * @returns {StateName}
      */
@@ -269,10 +269,10 @@ export class Emitter {
     }
 
     /**
-     * 
-     * @param {StateName} input 
-     * @param {boolean} isZero 
-     * @param {CallExpr} expr 
+     *
+     * @param {StateName} input
+     * @param {boolean} isZero
+     * @param {CallExpr} expr
      * @returns {StateName}
      */
     emitWhile(input, isZero, expr) {
@@ -308,8 +308,8 @@ export class Emitter {
     }
 
     /**
-     * 
-     * @param {StateName} input 
+     *
+     * @param {StateName} input
      * @param {CallExpr} expr
      * @returns {StateName}
      */
@@ -332,10 +332,10 @@ export class Emitter {
     }
 
     /**
-     * 
-     * @param {StateName} input 
-     * @param {CallExpr} expr 
-     * @param {(_: number) => Action[] | undefined} fn 
+     *
+     * @param {StateName} input
+     * @param {CallExpr} expr
+     * @param {(_: number) => Action[] | undefined} fn
      */
     emitSingleNumberFunction(input, expr, fn) {
         if (expr.args.length !== 1) {
@@ -360,9 +360,9 @@ export class Emitter {
     }
 
     /**
-     * 
-     * @param {StateName} input 
-     * @param {CallExpr} expr 
+     *
+     * @param {StateName} input
+     * @param {CallExpr} expr
      * @param {Action[]} actions
      * @returns {StateName}
      */
@@ -381,9 +381,9 @@ export class Emitter {
     }
 
     /**
-     * 
-     * @param {StateName} input 
-     * @param {SeqExpr} expr 
+     *
+     * @param {StateName} input
+     * @param {SeqExpr} expr
      * @returns {StateName}
      */
     emitSequence(input, expr) {

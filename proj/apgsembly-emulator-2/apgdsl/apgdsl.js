@@ -5,13 +5,13 @@ import { Emitter } from "./emitter/apgdsl_emitter.js";
 import { Command } from "./apgdsl_deps.js";
 
 /**
- * 
- * @typedef {import('./emitter/apgdsl_emitter.js').Expr} Expr 
+ *
+ * @typedef {import('./emitter/apgdsl_emitter.js').Expr} Expr
  */
 
 /**
- * 
- * @param {Expr} expr 
+ *
+ * @param {Expr} expr
  * @returns {Command[]}
  */
 export function emit(expr) {
@@ -21,7 +21,7 @@ export function emit(expr) {
 }
 
 /**
- * 
+ *
  * @param {unknown} obj
  * @returns {Expr}
  */
@@ -43,8 +43,8 @@ export function promote(obj) {
 }
 
 /**
- * 
- * @param {string} name 
+ *
+ * @param {string} name
  * @param {unknown[]} [args]
  * @returns {Expr}
  */
@@ -93,28 +93,28 @@ export const nop = () => func('nop');
 export const halt_out = () => func('halt_out');
 
 /**
- * 
- * @param {Expr} cond 
- * @param {unknown} zero 
- * @param {unknown} nonZero 
+ *
+ * @param {Expr} cond
+ * @param {unknown} zero
+ * @param {unknown} nonZero
  */
 export function if_zero(cond, zero = [], nonZero = []) {
     return func('if_zero', [cond, zero, nonZero]);
 }
 
 /**
- * 
- * @param {Expr} cond 
- * @param {unknown} nonZero 
- * @param {unknown} zero 
+ *
+ * @param {Expr} cond
+ * @param {unknown} nonZero
+ * @param {unknown} zero
  */
 export function if_non_zero(cond, nonZero = [], zero = []) {
     return func('if_non_zero', [cond, nonZero, zero]);
 }
 
 /**
- * 
- * @param {Expr} cond 
+ *
+ * @param {Expr} cond
  * @param {unknown} expr
  */
 export function while_zero(cond, expr = []) {
@@ -122,8 +122,8 @@ export function while_zero(cond, expr = []) {
 }
 
 /**
- * 
- * @param {Expr} cond 
+ *
+ * @param {Expr} cond
  * @param {unknown} expr
  */
 export function while_non_zero(cond, expr = []) {

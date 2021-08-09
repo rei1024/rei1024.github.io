@@ -3,40 +3,40 @@ import { assertEquals, assertThrows, test } from "../../test/deps.js";
 
 test('Parser regexp simple', () => {
     const str = "abc";
-    const parser = Parser.regexp(/^abc/);
+    const parser = Parser.regexp(/^abc/u);
     assertEquals(parser.parseToResult(str), Result.ok('abc'));
 });
 
 test('Parser regexp fail', () => {
     const str = "ab";
-    const parser = Parser.regexp(/^abc/);
-    assertEquals(parser.parseToResult(str), Result.err("regexp: /^abc/"));
+    const parser = Parser.regexp(/^abc/u);
+    assertEquals(parser.parseToResult(str), Result.err("regexp: /^abc/u"));
 });
 
 test('Parser regexp state', () => {
     const str = "abcdef";
-    const parser = Parser.regexp(/^abc/);
+    const parser = Parser.regexp(/^abc/u);
     assertEquals(parser.parseToParseStateWithResult(str), ParseStateWithResult.makeOk(new ParseState('def', 3), 'abc'));
 });
 
 test('Parser then', () => {
     const str = "abcdef";
-    const parser1 = Parser.regexp(/^abc/);
-    const parser2 = Parser.regexp(/^def/);
+    const parser1 = Parser.regexp(/^abc/u);
+    const parser2 = Parser.regexp(/^def/u);
     assertEquals(parser1.then(x => parser2.map(y => x + y)).parseToResult(str), Result.ok('abcdef'));
 });
 
 test('Parser or 1', () => {
     const str = "abc";
-    const parser1 = Parser.regexp(/^abc/);
-    const parser2 = Parser.regexp(/^def/);
+    const parser1 = Parser.regexp(/^abc/u);
+    const parser2 = Parser.regexp(/^def/u);
     assertEquals(parser1.or(parser2).parseToResult(str), Result.ok('abc'));
 });
 
 test('Parser or 2', () => {
     const str = "def";
-    const parser1 = Parser.regexp(/^abc/);
-    const parser2 = Parser.regexp(/^def/);
+    const parser1 = Parser.regexp(/^abc/u);
+    const parser2 = Parser.regexp(/^def/u);
     assertEquals(parser1.or(parser2).parseToResult(str), Result.ok('def'));
 });
 

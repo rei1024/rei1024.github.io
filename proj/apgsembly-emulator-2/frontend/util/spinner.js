@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * 
+ *
  * @returns {HTMLElement}
  */
 export function makeSpinner() {

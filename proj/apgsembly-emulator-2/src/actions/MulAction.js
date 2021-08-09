@@ -17,7 +17,7 @@ const MUL_1_STRING = "1";
  */
 
 /**
- * 
+ *
  * @param {MulOpString} op
  * @returns {MulOp}
  */
@@ -29,11 +29,11 @@ function parseOp(op) {
 }
 
 /**
- * 
+ *
  * @param {MulOp} op
  * @returns {MulOpString}
  */
- function prettyOp(op) {
+function prettyOp(op) {
     switch (op) {
         case MUL_0: return MUL_0_STRING;
         case MUL_1: return MUL_1_STRING;
@@ -45,8 +45,8 @@ function parseOp(op) {
  */
 export class MulAction extends Action {
     /**
-     * 
-     * @param {MulOp} op 
+     *
+     * @param {MulOp} op
      */
     constructor(op) {
         super();
@@ -65,12 +65,12 @@ export class MulAction extends Action {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {MulAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }
@@ -89,5 +89,15 @@ export class MulAction extends Action {
      */
     doesReturnValue() {
         return true;
+    }
+
+    /**
+     *
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof MulAction;
     }
 }

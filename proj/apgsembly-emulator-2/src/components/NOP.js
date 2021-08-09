@@ -18,7 +18,7 @@ export class NOP {
     }
 
     /**
-     * 
+     *
      * @returns {0}
      */
     nop() {

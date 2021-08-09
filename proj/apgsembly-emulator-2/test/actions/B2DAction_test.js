@@ -57,3 +57,7 @@ test('B2DAction parse fail', () => {
     assertEquals(B2DAction.parse(''), undefined);
     assertEquals(B2DAction.parse('a b c'), undefined);
 });
+
+test('B2DAction isSameComponent', () => {
+    assertEquals(B2DAction.parse('TDEC B2DX').isSameComponent(B2DAction.parse('SET B2D')), true);
+});

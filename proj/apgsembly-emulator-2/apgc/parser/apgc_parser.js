@@ -21,16 +21,16 @@ import { Parser, parseWithErrorLine, stringLiteralParser } from "../js-parsec-v3
 /**
  * 識別子の正規表現
  */
-const identifierRexExp = /^[a-zA-Z_][a-zA-Z_0-9]*/;
+const identifierRexExp = /^[a-zA-Z_][a-zA-Z_0-9]*/u;
 
 /**
  * 識別子
- * @type {Parser<string, string>} 
+ * @type {Parser<string, string>}
  */
 export const identifierParser = Parser.regexp(identifierRexExp).withError('expect identifier');
 
 // .は通常は改行文字と一致しない
-const whitespaceRegExp = /^(\s*\/\/.*(\r\n|\n|\r|$))*\s*/m;
+const whitespaceRegExp = /^(\s*\/\/.*(\r\n|\n|\r|$))*\s*/mu;
 
 class Whitespace {}
 
@@ -62,7 +62,7 @@ const rightParen = Parser.string(')').map(_ => new Paren());
 /**
  * @type {Parser<NumberExpression, string>}
  */
-export const numberExpressionParser = Parser.regexp(/^[0-9]+/).then(str => {
+export const numberExpressionParser = Parser.regexp(/^[0-9]+/u).then(str => {
     const n = parseInt(str, 10);
     if (Number.isInteger(n)) {
         return Parser.pure(new NumberExpression(n));
@@ -79,7 +79,7 @@ export const stringExpressionParser = stringLiteralParser.map(x => new StringExp
  * @throws
  */
 export function apgcProgramParser(str) {
-    const lines = str.split(/\r\n|\n|\r/);
+    const lines = str.split(/\r\n|\n|\r/u);
     /** @type {string[]} */
     const outputLines = [];
     /**
@@ -136,7 +136,7 @@ const commaAndWhitespace = whitespaceParser.skip(Parser.string(',')).skip(whites
 
 /**
  * @template A, E
- * @param {Parser<A, E>} parser 
+ * @param {Parser<A, E>} parser
  * @param {string} openChar
  * @param {string} closeChar
  * @returns {Parser<A, E | string>}
@@ -167,7 +167,7 @@ export function functionCallExpressionParser() {
 /**
  * @template A
  * @param {Parser<string, string>} keywordParser
- * @param {(keyword: string, expr: APGCExpression, stmts1: APGCStatements, stmts2: APGCStatements) => A} makeStatement 
+ * @param {(keyword: string, expr: APGCExpression, stmts1: APGCStatements, stmts2: APGCStatements) => A} makeStatement
  * @returns {Parser<A, string>}
  */
 function makeIfParser(keywordParser, makeStatement) {
@@ -206,7 +206,7 @@ export function ifStatementParser() {
 /**
  * @template A
  * @param {Parser<string, string>} keywordParser
- * @param {(keyword: string, expr: APGCExpression, statemtns: APGCStatements) => A} makeWhileStatement 
+ * @param {(keyword: string, expr: APGCExpression, statemtns: APGCStatements) => A} makeWhileStatement
  * @returns {Parser<A, string>}
  */
 function makeWhileParser(keywordParser, makeWhileStatement) {

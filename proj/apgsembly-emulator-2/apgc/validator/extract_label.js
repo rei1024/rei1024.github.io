@@ -14,7 +14,7 @@ import {
 } from "../types/apgc_types.js";
 
 /**
- * @param {APGCProgram} program 
+ * @param {APGCProgram} program
  * @returns {APGCExpression[]}
  */
 export function extractExpressionFromAPGCProgram(program) {
@@ -22,8 +22,8 @@ export function extractExpressionFromAPGCProgram(program) {
 }
 
 /**
- * 
- * @param {APGCStatements} stmts 
+ *
+ * @param {APGCStatements} stmts
  * @returns {APGCExpression[]}
  */
 function extractExpressionFromAPGCStatements(stmts) {
@@ -31,7 +31,7 @@ function extractExpressionFromAPGCStatements(stmts) {
 }
 
 /**
- * 
+ *
  * @param {APGCStatement} stmt
  * @returns {APGCExpression[]}
  */
@@ -55,7 +55,7 @@ function extractExpressionFromAPGCStatements(stmts) {
 
 /**
  * labelのラベルを抽出する
- * @param {APGCProgram} program 
+ * @param {APGCProgram} program
  * @returns {string[]}
  */
 export function extractLabelFromAPGCProgram(program) {
@@ -77,7 +77,7 @@ export function extractLabelFromAPGCProgram(program) {
 
 /**
  * gotoのラベルを抽出する
- * @param {APGCProgram} program 
+ * @param {APGCProgram} program
  * @returns {string[]}
  */
  export function extractGotoLabelFromAPGCProgram(program) {

@@ -17,7 +17,7 @@ const U_TDEC_STRING = "TDEC";
  */
 
 /**
- * 
+ *
  * @param {UOp} op
  * @returns {UOpString}
  */
@@ -29,11 +29,11 @@ function prettyOp(op) {
 }
 
 /**
- * 
+ *
  * @param {UOpString} op
  * @returns {UOp}
  */
- function parseOp(op) {
+function parseOp(op) {
     switch (op) {
         case U_INC_STRING: return U_INC;
         case U_TDEC_STRING: return U_TDEC;
@@ -45,8 +45,8 @@ function prettyOp(op) {
  */
 export class URegAction extends Action {
     /**
-     * 
-     * @param {UOp} op 
+     *
+     * @param {UOp} op
      * @param {number} regNumber
      */
     constructor(op, regNumber) {
@@ -78,12 +78,12 @@ export class URegAction extends Action {
     }
 
     /**
-     * 
+     *
      * @param {string} str
      * @returns {URegAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }
@@ -93,7 +93,7 @@ export class URegAction extends Action {
             // R for APGsembly 1.0
             if (reg.startsWith("U") || reg.startsWith('R')) {
                 const str = reg.slice(1);
-                if (/^[0-9]+$/.test(str)) {
+                if (/^[0-9]+$/u.test(str)) {
                     return new URegAction(parseOp(op), parseInt(str, 10));
                 }
             }
@@ -108,6 +108,20 @@ export class URegAction extends Action {
         switch (this.op) {
             case U_INC: return false;
             case U_TDEC: return true;
+        }
+    }
+
+    /**
+     *
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        if (action instanceof URegAction) {
+            return this.regNumber === action.regNumber;
+        } else {
+            return false;
         }
     }
 }

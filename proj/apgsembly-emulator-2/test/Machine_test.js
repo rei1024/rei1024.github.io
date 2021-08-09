@@ -13,7 +13,7 @@ ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
     assertThrows(() => {
         new Machine(program);
@@ -28,7 +28,7 @@ ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
     assertThrows(() => {
         new Machine(program);
@@ -43,7 +43,7 @@ ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
     assertThrows(() => {
         new Machine(program);
@@ -58,7 +58,7 @@ ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
     assertThrows(() => {
         new Machine(program);
@@ -73,7 +73,7 @@ ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
     assertThrows(() => {
         new Machine(program);
@@ -88,7 +88,7 @@ ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
     assertThrows(() => {
         new Machine(program);
@@ -101,7 +101,7 @@ test('Machine INITIAL is not exist', () => {
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
     assertThrows(() => {
         new Machine(program);
@@ -134,7 +134,7 @@ INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
     const machine = new Machine(program);
 
@@ -150,7 +150,7 @@ INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
 
     assertThrows(() => {
@@ -165,7 +165,7 @@ INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
 
     assertThrows(() => {
@@ -180,7 +180,7 @@ INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
 
     assertThrows(() => {
@@ -194,7 +194,7 @@ INITIAL; ZZ; NON_EXIST; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error '  + str);
+        throw Error('parse error ' + str);
     }
     assertThrows(() => {
         const machine = new Machine(program);
@@ -249,7 +249,7 @@ test('Machine program9_3', () => {
     assertEquals(machine.actionExecutor.uRegMap.get(0)?.getValue(), 0);
     assertEquals(machine.actionExecutor.uRegMap.get(1)?.getValue(), 5);
     assertEquals(machine.actionExecutor.uRegMap.get(2)?.getValue(), 35);
-    assertEquals(machine.actionExecutor.uRegMap.get(3)?.getValue(), 0); 
+    assertEquals(machine.actionExecutor.uRegMap.get(3)?.getValue(), 0);
 });
 
 test('Machine program9_4', () => {

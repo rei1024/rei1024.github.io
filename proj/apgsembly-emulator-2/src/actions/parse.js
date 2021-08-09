@@ -13,7 +13,7 @@ import { URegAction } from "./URegAction.js";
 
 /**
  * アクションをパースする
- * @param {string} str 
+ * @param {string} str
  * @returns {Action | undefined}
  */
 export function parseAction(str) {

@@ -13,8 +13,8 @@ export class APGCStatement {
  */
 export class APGCStatements {
     /**
-     * 
-     * @param {APGCStatement[]} statements 
+     *
+     * @param {APGCStatement[]} statements
      */
     constructor(statements) {
         /**
@@ -31,15 +31,15 @@ export class APGCStatements {
 export class APGCExpression {
 
 }
- 
+
 /**
  * 数字
  * 42
  */
 export class NumberExpression extends APGCExpression {
     /**
-     * 
-     * @param {number} value 
+     *
+     * @param {number} value
      */
     constructor(value) {
         super();
@@ -57,8 +57,8 @@ export class NumberExpression extends APGCExpression {
  */
 export class StringExpression extends APGCExpression {
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      */
     constructor(str) {
         super();
@@ -75,7 +75,7 @@ export class StringExpression extends APGCExpression {
  */
 export class FunctionCallExpression extends APGCExpression {
     /**
-     * 
+     *
      * @param {string} name 関数名
      * @param {APGCExpression[]} args 引数
      */
@@ -101,8 +101,8 @@ export const GOTO_FUNCTION_NAME = "goto";
 // expression with ;
 export class APGCExpressionStatement extends APGCStatement {
     /**
-     * 
-     * @param {APGCExpression} expr 
+     *
+     * @param {APGCExpression} expr
      */
     constructor(expr) {
         super();
@@ -148,7 +148,7 @@ export class IfStatement extends APGCStatement {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     keyword() {
@@ -161,13 +161,13 @@ export const whileZeroKeyword = 'while_zero';
 
 /**
  * 0でない間繰り替えす
- * while_non_zero (expr) { statements } 
+ * while_non_zero (expr) { statements }
  */
 export class WhileStatement extends APGCStatement {
     /**
      * @param {"zero" | "non_zero"} zeroOrNonZero
-     * @param {APGCExpression} expr 
-     * @param {APGCStatements} statements 
+     * @param {APGCExpression} expr
+     * @param {APGCStatements} statements
      */
     constructor(zeroOrNonZero, expr, statements) {
         super();
@@ -185,7 +185,7 @@ export class WhileStatement extends APGCStatement {
         this.statements = statements;
     }
     /**
-     * 
+     *
      * @returns {string}
      */
     keyword() {
@@ -198,7 +198,7 @@ export class WhileStatement extends APGCStatement {
  */
 export class APGCProgram {
     /**
-     * @param {APGCStatements} apgcStatements 
+     * @param {APGCStatements} apgcStatements
      * @param {string[]} headers
      */
     constructor(apgcStatements, headers = []) {

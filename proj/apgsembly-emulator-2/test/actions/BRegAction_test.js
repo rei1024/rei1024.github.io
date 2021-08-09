@@ -2,7 +2,7 @@ import { BRegAction, B_INC, B_TDEC, B_READ, B_SET } from "../../src/actions/BReg
 import { assertEquals, test } from "../deps.js";
 
 test("BRegAction parse success", () => {
-    assertEquals(BRegAction.parse('INC B2'),  new BRegAction(B_INC, 2));
+    assertEquals(BRegAction.parse('INC B2'), new BRegAction(B_INC, 2));
 
     assertEquals(BRegAction.parse('TDEC B2'), new BRegAction(B_TDEC, 2));
 
@@ -32,4 +32,9 @@ test("BRegAction pretty", () => {
 
 test("BRegAction extract", () => {
     assertEquals(BRegAction.parse('INC B2').extractBinaryRegisterNumbers(), [2]);
+});
+
+test("BRegAction isSameComponent", () => {
+    assertEquals(BRegAction.parse('INC B2').isSameComponent(BRegAction.parse('INC B2')), true);
+    assertEquals(BRegAction.parse('INC B1').isSameComponent(BRegAction.parse('INC B2')), false);
 });

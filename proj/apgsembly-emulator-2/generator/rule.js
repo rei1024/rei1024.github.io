@@ -3,10 +3,10 @@
 // @ts-check
 
 /**
- * 
- * @param {number} x 
- * @param {number} y 
- * @param {(_: number) => void} f 
+ *
+ * @param {number} x
+ * @param {number} y
+ * @param {(_: number) => void} f
  */
  function rangeForEach(x, y, f) {
     for (let i = x; i <= y; i++) {
@@ -15,24 +15,24 @@
 }
 
 /**
- * 
- * @param {(_: number) => void} f 
+ *
+ * @param {(_: number) => void} f
  */
 function bit1(f) {
     rangeForEach(0, 1, f);
 }
 
 /**
- * 
- * @param {(x: number, y: number) => void} f 
+ *
+ * @param {(x: number, y: number) => void} f
  */
 function bit2(f) {
     bit1(i => bit1(j => f(i, j)));
 }
 
 /**
- * 
- * @param {(x: number, y: number, z: number) => void} f 
+ *
+ * @param {(x: number, y: number, z: number) => void} f
  */
 function bit3(f) {
     bit1(i => bit2((j, k) => f(i, j, k)));
@@ -57,16 +57,16 @@ export function parseRule(rule) {
 }
 
 /**
- * 
+ *
  * @param {number} rule rule number
  * @returns {(x: number, y: number, z: number) => "0" | "1"}
  */
 export function makeDelta(rule) {
     const o = parseRule(rule);
     /**
-     * 
-     * @param {number} i 
-     * @param {number} j 
+     *
+     * @param {number} i
+     * @param {number} j
      * @param {number} k
      * @returns {"0" | "1"}
      */

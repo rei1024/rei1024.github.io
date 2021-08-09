@@ -20,8 +20,8 @@ export class ADD {
     }
 
     /**
-     * 
-     * @param {AddAction} act 
+     *
+     * @param {AddAction} act
      */
     action(act) {
         switch (act.op) {
@@ -33,7 +33,7 @@ export class ADD {
     }
 
     /**
-     * 
+     *
      * @returns {number}
      */
     getValue() {
@@ -80,7 +80,7 @@ export class ADD {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     toString() {
@@ -88,7 +88,7 @@ export class ADD {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     toStringDetail() {

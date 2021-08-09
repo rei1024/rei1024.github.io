@@ -8,3 +8,7 @@ test('OutputAction parse OUTPUT 0', () => {
 test('OutputAction parse OUTPUT A', () => {
     assertEquals(OutputAction.parse('OUTPUT A')?.pretty(), 'OUTPUT A');
 });
+
+test('OutputAction isSameComponent', () => {
+    assertEquals(OutputAction.parse('OUTPUT A')?.isSameComponent(OutputAction.parse('OUTPUT A')), true);
+});

@@ -18,8 +18,8 @@ export const INITIAL_STATE = "INITIAL";
  */
 export class Machine {
     /**
-     * 
-     * @param {Program} program 
+     *
+     * @param {Program} program
      * @throws {Error} #REGISTERSでの初期化に失敗
      */
     constructor(program) {
@@ -33,7 +33,7 @@ export class Machine {
             binaryRegisterNumbers: program.extractBinaryRegisterNumbers(),
             unaryRegisterNumbers: program.extractUnaryRegisterNumbers()
         });
-    
+
         /** @type {0 | 1} */
         this.prevOutput = 0;
 
@@ -41,7 +41,7 @@ export class Machine {
          * @readonly
          */
         this.program = program;
-    
+
         const obj = commandsToLookupTable(program.commands);
         /**
          * @readonly
@@ -93,7 +93,7 @@ export class Machine {
             if (parsed === null || typeof parsed !== 'object') {
                 throw Error(`Invalid #REGISTERS: "${str}" is not an object`);
             }
-            
+
             // throw if error is occurred
             this.actionExecutor.setByRegistersInit(parsed);
         }

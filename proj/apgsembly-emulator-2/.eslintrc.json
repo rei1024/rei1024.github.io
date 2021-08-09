@@ -12,8 +12,8 @@
     "ignorePatterns": ["cypress_default/**/*.js", "cypress/**/*.js", "doc/**/*.js", "apgdsl/frontend/data/**/*.js"],
     "rules": {
         "no-unused-vars": "off",
-        "no-constant-condition": "off",
-        "no-unreachable": "off",
+        "no-constant-condition": "off", // デバッグのため
+        "no-unreachable": "off", // TSで判断
         "semi": ["error", "always"],
         "curly": "error",
         "no-caller": "error",
@@ -39,10 +39,14 @@
         "quote-props": ["error", "as-needed"],
         "function-call-argument-newline": "off", // TODO
         "sort-imports": "off", // TODO
-        "array-bracket-newline": "error"
+        "array-bracket-newline": "error",
         // "array-element-newline": "error"
         // "no-trailing-spaces": "error"
-        
+        "require-unicode-regexp": "error",
+        "no-undefined": "off",
+        "no-multi-spaces": "error",
+        "func-style": "off",
+        "no-trailing-spaces": "error"
     },
     "globals": {
         "Deno": true

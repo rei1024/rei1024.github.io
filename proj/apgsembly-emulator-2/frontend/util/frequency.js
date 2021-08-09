@@ -2,10 +2,10 @@
 
 export class Frequency {
     /**
-     * 
-     * @param {() => boolean} isOn 
-     * @param {() => number} getFrequency 
-     * @param {(_: number) => void} run 
+     *
+     * @param {() => boolean} isOn
+     * @param {() => number} getFrequency
+     * @param {(_: number) => void} run
      */
     constructor(isOn, getFrequency, run) {
         /**
@@ -52,8 +52,8 @@ export class Frequency {
         this.isStarted = true;
 
         /**
-         * 
-         * @param {number} time 
+         *
+         * @param {number} time
          */
         const update = time => {
             if (this.isOn()) {

@@ -22,8 +22,8 @@ export class SUB {
     }
 
     /**
-     * 
-     * @param {SubAction} act 
+     *
+     * @param {SubAction} act
      */
     action(act) {
         switch (act.op) {
@@ -35,7 +35,7 @@ export class SUB {
     }
 
     /**
-     * 
+     *
      * @returns {number}
      */
     getValue() {
@@ -77,7 +77,7 @@ export class SUB {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     toString() {
@@ -85,7 +85,7 @@ export class SUB {
     }
 
     /**
-     * 
+     *
      * @returns {string}
      */
     toStringDetail() {

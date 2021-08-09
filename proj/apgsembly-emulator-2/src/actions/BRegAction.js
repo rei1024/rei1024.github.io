@@ -21,7 +21,7 @@ const B_SET_STRING = "SET";
  */
 
 /**
- * 
+ *
  * @param {BOp} op
  * @returns {BOpString}
  */
@@ -35,11 +35,11 @@ function prettyOp(op) {
 }
 
 /**
- * 
+ *
  * @param {BOpString} op
  * @returns {BOp}
  */
- function parseOp(op) {
+function parseOp(op) {
     switch (op) {
         case B_INC_STRING: return B_INC;
         case B_TDEC_STRING: return B_TDEC;
@@ -53,9 +53,9 @@ function prettyOp(op) {
  */
 export class BRegAction extends Action {
     /**
-     * 
-     * @param {BOp} op 
-     * @param {number} regNumber 
+     *
+     * @param {BOp} op
+     * @param {number} regNumber
      */
     constructor(op, regNumber) {
         super();
@@ -90,7 +90,7 @@ export class BRegAction extends Action {
      * @returns {BRegAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }
@@ -99,7 +99,7 @@ export class BRegAction extends Action {
         if (op === B_INC_STRING || op === B_TDEC_STRING || op === B_READ_STRING || op === B_SET_STRING) {
             if (reg.startsWith("B")) {
                 const str = reg.slice(1);
-                if (/^[0-9]+$/.test(str)) {
+                if (/^[0-9]+$/u.test(str)) {
                     return new BRegAction(parseOp(op), parseInt(str, 10));
                 }
             }
@@ -116,6 +116,20 @@ export class BRegAction extends Action {
             case B_TDEC: return true;
             case B_READ: return true;
             case B_SET: return false;
+        }
+    }
+
+    /**
+     *
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        if (action instanceof BRegAction) {
+            return this.regNumber === action.regNumber;
+        } else {
+            return false;
         }
     }
 }

@@ -4,8 +4,8 @@ import { Action } from "./Action.js";
 
 export class OutputAction extends Action {
     /**
-     * 
-     * @param {string} digit 
+     *
+     * @param {string} digit
      */
     constructor(digit) {
         super();
@@ -24,12 +24,12 @@ export class OutputAction extends Action {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {OutputAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 2) {
             return undefined;
         }
@@ -48,5 +48,15 @@ export class OutputAction extends Action {
      */
     doesReturnValue() {
         return false;
+    }
+
+    /**
+     *
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof OutputAction;
     }
 }

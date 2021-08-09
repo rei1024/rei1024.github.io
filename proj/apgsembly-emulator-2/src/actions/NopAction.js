@@ -19,12 +19,12 @@ export class NopAction extends Action {
     }
 
     /**
-     * 
-     * @param {string} str 
+     *
+     * @param {string} str
      * @returns {NopAction | undefined}
      */
     static parse(str) {
-        const array = str.trim().split(/\s+/);
+        const array = str.trim().split(/\s+/u);
         if (array.length !== 1) {
             return undefined;
         }
@@ -36,10 +36,20 @@ export class NopAction extends Action {
     }
 
     /**
-     * 
+     *
      * @returns @override
      */
     doesReturnValue() {
         return true;
+    }
+
+    /**
+     *
+     * @override
+     * @param {Action} action
+     * @returns {boolean}
+     */
+    isSameComponent(action) {
+        return action instanceof NopAction;
     }
 }

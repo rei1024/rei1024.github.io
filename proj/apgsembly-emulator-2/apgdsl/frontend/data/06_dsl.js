@@ -2,7 +2,7 @@
 
 /**
  * Set a value of Un to 0
- * @param {number} n 
+ * @param {number} n
  */
 function set_u_to_0(n) {
     return [
@@ -16,7 +16,7 @@ function set_u_to_0(n) {
  * from = 0
  * ```
  * @param {number} from
- * @param {number} to 
+ * @param {number} to
  */
 function move_u(from, to) {
     return [

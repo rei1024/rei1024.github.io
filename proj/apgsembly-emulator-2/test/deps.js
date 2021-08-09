@@ -1,8 +1,8 @@
 export { assertEquals, assertThrows } from "https://deno.land/std@0.103.0/testing/asserts.ts";
 
 /**
- * 
- * @param {string} name 
+ *
+ * @param {string} name
  * @param {() => void} fn
  * @returns {void}
  */

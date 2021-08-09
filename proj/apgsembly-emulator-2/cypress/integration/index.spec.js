@@ -1,49 +1,26 @@
-export {};
-
-const apgsemblyEmulatorPageURL = 'http://localhost:1123/';
+import { APGsemblyEmulatorURL, loadProgram, setStep } from "../common/common.js";
 
 describe('Load', () => {
     it('should load', () => {
-        cy.visit(apgsemblyEmulatorPageURL);
+        cy.visit(APGsemblyEmulatorURL);
         cy.get('#start').should('not.be.disabled');
     });
 });
 
 describe('Error', () => {
     it('Error', () => {
-        cy.visit(apgsemblyEmulatorPageURL);
+        cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         cy.get('#start').click();
         cy.contains('Program is empty');
     });
 });
 
-/**
- *
- * @param {string} str 
- */
-function loadProgram(str) {
-    cy.get('#samples').click();
-    cy.get(`[data-src="${str}"]`).click();
-}
-
-/**
- *
- * @param {number} n 
- */
-function setStep(n) {
-    cy.get(`[data-test="config_button"]`).click();
-    cy.wait(500);
-    cy.get('#step_input').type(`{selectall}{backspace}${n}`);
-    cy.get('#config_modal .btn-close').click();
-    cy.wait(50);
-}
-
 const outputSelector = '#output';
 
 describe('Integers', () => {
     it('should print integers', () => {
-        cy.visit(apgsemblyEmulatorPageURL);
+        cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('integers.apg');
 
@@ -57,7 +34,7 @@ describe('Integers', () => {
 
 describe('Pi calculator', () => {
     it('should print pi', () => {
-        cy.visit(apgsemblyEmulatorPageURL);
+        cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('pi_calc.apg');
 
@@ -76,7 +53,7 @@ describe('Pi calculator', () => {
 
 describe('Rule 110', () => {
     it('Rule 110 should work', () => {
-        cy.visit(apgsemblyEmulatorPageURL);
+        cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('rule110.apg');
 
@@ -89,7 +66,7 @@ describe('Rule 110', () => {
 
 describe('Start Stop Reset', () => {
     it('Start, Stop and Reset button', () => {
-        cy.visit(apgsemblyEmulatorPageURL);
+        cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('rule110.apg');
         cy.get('#start').click();
@@ -105,7 +82,7 @@ describe('Start Stop Reset', () => {
 
 describe('unary_multiply.apg', () => {
     it('unary_multiply.apg', () => {
-        cy.visit(apgsemblyEmulatorPageURL);
+        cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('unary_multiply.apg');
 

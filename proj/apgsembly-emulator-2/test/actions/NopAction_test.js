@@ -12,3 +12,7 @@ test('parse NOP space', () => {
 test('parse NOP fail', () => {
     assertEquals(NopAction.parse(''), undefined);
 });
+
+test('NOP isSameComponent', () => {
+    assertEquals(NopAction.parse('NOP').isSameComponent(NopAction.parse('NOP')), true);
+});

@@ -79,7 +79,7 @@ $compile.addEventListener('click', () => {
         const obj = promote(globalThis.main);
         $inner.textContent = JSON.stringify(obj, null, 2);
         const str = typeof globalThis.headers === 'string' ? globalThis.headers.trim() : globalThis.headers.join('\n').trim();
-        $output.value = (str.length === 0 ? "" : (str + "\n"))  + emit(obj).map(x => x.pretty()).join('\n');
+        $output.value = (str.length === 0 ? "" : (str + "\n")) + emit(obj).map(x => x.pretty()).join('\n');
         $copy.disabled = false;
         $error.style.display = "none";
     } catch (e) {

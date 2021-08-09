@@ -11,7 +11,7 @@ test('Compile empty', () => {
 
 test('Compile program9_2', () => {
     const program = Program.parse(program9_2);
-   
+
     if (!(program instanceof Program)) {
         throw TypeError('parse error program');
     }

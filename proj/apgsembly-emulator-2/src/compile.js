@@ -7,9 +7,9 @@ import { Command } from "./Command.js";
  */
 export class CompiledCommandWithNextState {
     /**
-     * 
-     * @param {Command} command 
-     * @param {number} nextState 
+     *
+     * @param {Command} command
+     * @param {number} nextState
      */
     constructor(command, nextState) {
         /**
@@ -27,7 +27,7 @@ export class CompiledCommandWithNextState {
 
 export class CompiledCommand {
     /**
-     * 
+     *
      * @param {CompiledCommandWithNextState | undefined} z Zの場合
      * @param {CompiledCommandWithNextState | undefined} nz NZの場合
      */

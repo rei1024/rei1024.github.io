@@ -5,9 +5,9 @@ import { FunctionCallExpression } from "../../types/apgc_types.js";
 import { APGCCompiler } from "../apgc_compiler.js";
 
 /**
- * @param {APGCCompiler} ctx 
+ * @param {APGCCompiler} ctx
  * @param {string} inputState
- * @param {FunctionCallExpression} callExpr 
+ * @param {FunctionCallExpression} callExpr
  * @param {Action[]} actions
  * @returns {string} outputState
  */
