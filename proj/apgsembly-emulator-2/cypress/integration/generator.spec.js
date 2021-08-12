@@ -1,4 +1,4 @@
-const genURL = 'http://localhost:1123/generator/index.html';
+import { genURL } from "../common/common.js";
 
 describe('Generator Load', () => {
     it('should load', () => {

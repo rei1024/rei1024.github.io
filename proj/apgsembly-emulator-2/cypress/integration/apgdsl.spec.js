@@ -1,6 +1,4 @@
-import { APGsemblyEmulatorURL, setStep } from "../common/common.js";
-
-const dslURL = 'http://localhost:1123/apgdsl/index.html';
+import { APGsemblyEmulatorURL, setStep, dslURL } from "../common/common.js";
 
 describe('APGDSL Load', () => {
     it('should load', () => {

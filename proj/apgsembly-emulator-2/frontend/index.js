@@ -12,6 +12,7 @@ import { Program } from "../src/Program.js";
 import { Frequency } from "./util/frequency.js";
 
 import { renderB2D } from "./renderB2D.js";
+import { setUpBinary, renderBinary } from "./renderBinary.js";
 import { renderStats } from "./renderStats.js";
 
 import {
@@ -191,49 +192,7 @@ export class App {
             $binaryRegister.innerHTML = "";
             return;
         }
-        const regs = this.machine.actionExecutor.bRegMap;
-        const table = document.createElement('table');
-        for (const key of regs.keys()) {
-            const tr = document.createElement('tr');
-            const th = document.createElement('th');
-            th.textContent = `B${key}`;
-            const td = document.createElement('td');
-            td.dataset['test'] = `B${key}`;
-            if (true) {
-                const code0 = document.createElement('code');
-                code0.style.color = "black";
-                // 長い場合は改行を入れる
-                code0.style.wordBreak = "break-all";
-
-                const decimal = document.createElement('span');
-                decimal.classList.add('decimal');
-                const pointer = document.createElement('span');
-                pointer.classList.add('pointer');
-                code0.append(decimal, pointer);
-                const br = document.createElement('br');
-                td.append(code0, br);
-            }
-            if (true) {
-                const code = document.createElement('code');
-                code.style.wordBreak = "break-all";
-                const $prefix = document.createElement('span');
-                $prefix.classList.add('prefix');
-                const $head = document.createElement('span');
-                $head.style.color = "#0D47A1";
-                // 下線
-                $head.style.borderBottom = "3px solid #0D47A1";
-                $head.classList.add('head');
-                const $suffix = document.createElement('span');
-                $suffix.classList.add('suffix');
-                code.append($prefix, $head, $suffix);
-                td.append(code);
-            }
-
-            tr.append(th, td);
-            table.append(tr);
-        }
-        $binaryRegister.innerHTML = "";
-        $binaryRegister.append(table);
+        setUpBinary($binaryRegister, this.machine.actionExecutor.bRegMap);
     }
 
     /**
@@ -391,39 +350,12 @@ export class App {
         if (!$binaryRegisterDetail.open) {
             return;
         }
-        const rows = $binaryRegister.querySelectorAll('tr');
-        let i = 0;
-        const hideBinary = $hideBinary.checked;
-        const reverseBinary = $reverseBinary.checked;
-        for (const reg of this.machine.actionExecutor.bRegMap.values()) {
-            const row = rows[i];
-            if (row === undefined) {
-                throw Error('renderBinary: internal error');
-            }
-            const $prefix = row.querySelector('.prefix') ?? this.__error__();
-            const $head = row.querySelector('.head') ?? this.__error__();
-            const $suffix = row.querySelector('.suffix') ?? this.__error__();
-            const $decimal = row.querySelector('.decimal') ?? this.__error__();
-            const $pointer = row.querySelector('.pointer') ?? this.__error__();
-            if (hideBinary) {
-                $prefix.textContent = '';
-                $head.textContent = '';
-                $suffix.textContent = '';
-            } else if (reverseBinary) {
-                const obj = reg.toObject();
-                $prefix.textContent = obj.suffix.slice().reverse().join('');
-                $head.textContent = obj.head.toString();
-                $suffix.textContent = obj.prefix.slice().reverse().join('');
-            } else {
-                const obj = reg.toObject();
-                $prefix.textContent = obj.prefix.join('');
-                $head.textContent = obj.head.toString();
-                $suffix.textContent = obj.suffix.join('');
-            }
-            $decimal.textContent = "value = " + reg.toDecimalString();
-            $pointer.textContent = ", pointer = " + reg.pointer.toString();
-            i++;
-        }
+        renderBinary(
+            $binaryRegister,
+            this.machine.actionExecutor.bRegMap,
+            $hideBinary.checked,
+            $reverseBinary.checked
+        );
     }
 
     renderAddSubMul() {
@@ -773,6 +705,9 @@ if (localStorage.getItem('reverse_binary') === "true") {
 if (localStorage.getItem('hide_binary') === "true") {
     $hideBinary.checked = true;
 }
+
+// ボタンの有効化
+$samples.disabled = false;
 
 // 初回描画
 // first render

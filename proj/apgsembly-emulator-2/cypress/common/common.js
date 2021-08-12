@@ -1,4 +1,10 @@
-export const APGsemblyEmulatorURL = 'http://localhost:1123/';
+export const baseURL = 'http://localhost:1123';
+
+export const APGsemblyEmulatorURL = baseURL + '/';
+
+export const dslURL = baseURL + '/apgdsl/index.html';
+
+export const genURL = baseURL + '/generator/index.html';
 
 /**
  *

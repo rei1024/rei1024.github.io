@@ -60,4 +60,20 @@ test('B2DAction parse fail', () => {
 
 test('B2DAction isSameComponent', () => {
     assertEquals(B2DAction.parse('TDEC B2DX').isSameComponent(B2DAction.parse('SET B2D')), true);
+
+    assertEquals(B2DAction.parse('INC B2DX').isSameComponent(B2DAction.parse('INC B2DY')), false);
+
+    assertEquals(B2DAction.parse('INC B2DY').isSameComponent(B2DAction.parse('INC B2DY')), true);
+
+    assertEquals(B2DAction.parse('INC B2DY').isSameComponent(B2DAction.parse('TDEC B2DY')), true);
+
+    assertEquals(B2DAction.parse('INC B2DX').isSameComponent(B2DAction.parse('TDEC B2DX')), true);
+
+    assertEquals(B2DAction.parse('INC B2DX').isSameComponent(B2DAction.parse('INC B2DX')), true);
+
+    assertEquals(B2DAction.parse('INC B2DY').isSameComponent(B2DAction.parse('INC B2DX')), false);
+
+    assertEquals(B2DAction.parse('TDEC B2DX').isSameComponent(B2DAction.parse('INC B2DY')), false);
+
+    assertEquals(B2DAction.parse('TDEC B2DY').isSameComponent(B2DAction.parse('INC B2DX')), false);
 });
