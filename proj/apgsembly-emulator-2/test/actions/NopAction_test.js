@@ -14,5 +14,8 @@ test('parse NOP fail', () => {
 });
 
 test('NOP isSameComponent', () => {
-    assertEquals(NopAction.parse('NOP').isSameComponent(NopAction.parse('NOP')), true);
+    assertEquals(
+        NopAction.parse('NOP').isSameComponent(NopAction.parse('NOP')),
+        true
+    );
 });

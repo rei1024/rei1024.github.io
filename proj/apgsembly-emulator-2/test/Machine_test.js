@@ -1,7 +1,12 @@
 /* eslint-disable camelcase */
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
-import { program9_1, program9_2, program9_3, program9_4 } from "./Program_test.js";
+import {
+    program9_1,
+    program9_2,
+    program9_3,
+    program9_4
+} from "./Program_test.js";
 import { piCalculator } from "./pi_calculator.js";
 import { assertEquals, assertThrows, test } from "./deps.js";
 
@@ -114,7 +119,10 @@ INITIAL; ZZ; ID0; OUTPUT 3
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
-    assertEquals(program, `Does not return the value in "INITIAL; ZZ; ID0; OUTPUT 3"`);
+    assertEquals(
+        program,
+        `Does not return the value in "INITIAL; ZZ; ID0; OUTPUT 3"`
+    );
 });
 
 test('Machine Program return value twice', () => {
@@ -123,10 +131,16 @@ INITIAL; ZZ; ID0; NOP, TDEC U0
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
-    assertEquals(program, 'The return value is returned more than once in "INITIAL; ZZ; ID0; NOP, TDEC U0": Actions that return a return value more than once are NOP, TDEC U0');
+    assertEquals(
+        program,
+        'The return value is returned more than once in ' +
+        '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
+        'Actions that return a return value more than once are NOP, TDEC U0'
+    );
 });
 
-// > Also, the INITIAL state should never be returned to later in a program’s execution.
+// > Also, the INITIAL state should never be
+//   returned to later in a program’s execution.
 // > It should be the first state, and only the first state.
 test('Machine INITIAL twice', () => {
     const str = `
@@ -266,7 +280,10 @@ test('Machine program9_4', () => {
             break;
         }
     }
-    assertEquals(machine.actionExecutor.bRegMap.get(0).toBinaryString(), "10001011");
+    assertEquals(
+        machine.actionExecutor.bRegMap.get(0).toBinaryString(),
+        "10001011"
+    );
 });
 
 test('Machine PI Calculator', () => {

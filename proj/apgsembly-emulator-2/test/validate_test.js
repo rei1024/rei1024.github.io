@@ -16,7 +16,10 @@ test('validateNoDuplicatedAction NOP NOP', () => {
     if (err === undefined) {
         throw Error('expected error');
     } else {
-        assertEquals(err, `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`);
+        assertEquals(
+            err,
+            `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`
+        );
     }
 });
 
@@ -32,6 +35,9 @@ test('validateNoDuplicatedAction NOP, OUTPUT 1, NOP', () => {
     if (err === undefined) {
         throw Error('expected error');
     } else {
-        assertEquals(err, `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, OUTPUT 1, NOP"`);
+        assertEquals(
+            err,
+            `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, OUTPUT 1, NOP"`
+        );
     }
 });

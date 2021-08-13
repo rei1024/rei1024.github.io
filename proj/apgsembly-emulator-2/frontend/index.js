@@ -56,10 +56,13 @@ import {
 
 // データ
 // GitHub Pagesは1階層上になる
-const DATA_DIR = location.origin.includes('github') ? "../apgsembly-emulator-2/data/" : "../data/";
+const DATA_DIR = location.origin.includes('github') ?
+    "../apgsembly-emulator-2/data/" :
+    "../data/";
 
 /**
- * @typedef {"Initial" | "Running" | "Stop" | "ParseError" | "RuntimeError" | "Halted"} AppState
+ * @typedef {"Initial" | "Running" | "Stop" | "ParseError" |
+ *           "RuntimeError" | "Halted"} AppState
  */
 
 // index.htmlと同期する
@@ -260,7 +263,8 @@ export class App {
     renderFrequencyOutput() {
         if (hasToLocaleString) {
             // with ","
-            $freqencyOutput.textContent = this.frequency.toLocaleString() + "Hz";
+            $freqencyOutput.textContent =
+                this.frequency.toLocaleString() + "Hz";
         } else {
             $freqencyOutput.textContent = this.frequency.toString() + "Hz";
         }
@@ -268,7 +272,8 @@ export class App {
 
     // エラーメッセージ
     renderErrorMessage() {
-        if (this.appState === "RuntimeError" || this.appState === "ParseError") {
+        if (this.appState === "RuntimeError" ||
+            this.appState === "ParseError") {
             $error.textContent = this.errorMessage;
             $error.style.display = "block";
             console.error("RENDER: " + this.errorMessage);
@@ -282,7 +287,8 @@ export class App {
      */
     renderCommand() {
         try {
-            $command.textContent = this.machine?.getNextCompiledCommandWithNextState().command.pretty() ?? "";
+            const next = this.machine?.getNextCompiledCommandWithNextState();
+            $command.textContent = next?.command.pretty() ?? "";
         } catch (e) {
             $command.textContent = "";
         }
@@ -303,7 +309,12 @@ export class App {
             return;
         }
         const b2d = machine.actionExecutor.b2d;
-        renderB2D(context, b2d, $b2dHidePointer.checked, $b2dFlipUpsideDown.checked);
+        renderB2D(
+            context,
+            b2d,
+            $b2dHidePointer.checked,
+            $b2dFlipUpsideDown.checked
+        );
         $b2dx.textContent = b2d.x.toString();
         $b2dy.textContent = b2d.y.toString();
     }
@@ -387,7 +398,12 @@ export class App {
         if (this.machine === undefined) {
             return;
         }
-        renderStats($statsBody, this.machine.stateStats, this.machine.states, this.machine.getCurrentStateIndex());
+        renderStats(
+            $statsBody,
+            this.machine.stateStats,
+            this.machine.states,
+            this.machine.getCurrentStateIndex()
+        );
     }
 
     /**
@@ -643,7 +659,10 @@ $b2dHidePointer.addEventListener('change', () => {
 });
 
 $b2dFlipUpsideDown.addEventListener('change', () => {
-    localStorage.setItem('b2d_flip_upside_down', $b2dFlipUpsideDown.checked.toString());
+    localStorage.setItem(
+        'b2d_flip_upside_down',
+        $b2dFlipUpsideDown.checked.toString()
+    );
     app.renderB2D();
 });
 
@@ -657,9 +676,11 @@ $statsModal.addEventListener('shown.bs.modal', () => {
 // Enter: toggle Start and Stop
 // Space: Step
 document.addEventListener('keydown', e => {
-    const activeElementTagName = document.activeElement?.tagName.toUpperCase() ?? "";
+    const activeElementTagName =
+        document.activeElement?.tagName.toUpperCase() ?? "";
+    const tags = ["TEXTAREA", "INPUT", "DETAILS", "BUTTON"];
     // 入力中は無し
-    if (["TEXTAREA", "INPUT", "DETAILS", "BUTTON"].includes(activeElementTagName)) {
+    if (tags.includes(activeElementTagName)) {
         return;
     }
 

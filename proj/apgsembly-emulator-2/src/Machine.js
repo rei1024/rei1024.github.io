@@ -1,7 +1,10 @@
 // @ts-check
 
 import { ActionExecutor } from "./ActionExecutor.js";
-import { commandsToLookupTable, CompiledCommandWithNextState } from "./compile.js";
+import {
+    commandsToLookupTable,
+    CompiledCommandWithNextState
+} from "./compile.js";
 import { Program } from "./Program.js";
 
 /**
@@ -148,13 +151,16 @@ export class Machine {
         const compiledCommand = this.lookup[this.currentStateIndex];
 
         if (compiledCommand === undefined) {
-            throw Error(`Internal Error: Next command is not found: Current state: this.currentState`);
+            throw Error(`Internal Error: Next command is not found: ` +
+                        `Current state: ${this.currentStateIndex}`);
         }
 
         if (this.prevOutput === 0) {
             if (logStats) {
                 const stat = this.stateStats[this.currentStateIndex];
-                if (stat === undefined) { throw Error('Internal error'); }
+                if (stat === undefined) {
+                    throw Error('Internal error');
+                }
                 stat.z += 1;
             }
             const z = compiledCommand.z;
@@ -164,7 +170,9 @@ export class Machine {
         } else {
             if (logStats) {
                 const stat = this.stateStats[this.currentStateIndex];
-                if (stat === undefined) { throw Error('Internal error'); }
+                if (stat === undefined) {
+                    throw Error('Internal error');
+                }
                 stat.nz += 1;
             }
             const nz = compiledCommand.nz;
@@ -172,7 +180,8 @@ export class Machine {
                 return nz;
             }
         }
-        throw Error('Next command is not found: Current state = ' + this.currentState + ', output = ' + this.getPreviousOutput());
+        throw Error('Next command is not found: Current state = ' +
+            this.currentState + ', output = ' + this.getPreviousOutput());
     }
 
     /**
@@ -198,18 +207,24 @@ export class Machine {
                 if (result === undefined) {
                     result = actionResult;
                 } else {
-                    throw Error(`Return value twice: line = ${compiledCommand.command.pretty()}`);
+                    throw Error(`Return value twice: line = ${
+                        compiledCommand.command.pretty()
+                    }`);
                 }
             }
         }
         if (result === undefined) {
-            throw Error(`No return value: line = ${compiledCommand.command.pretty()}`);
+            throw Error(`No return value: line = ${
+                compiledCommand.command.pretty()
+            }`);
         }
 
         // INITIALに返ってくることは禁止
         const nextStateIndex = compiledCommand.nextState;
         if (nextStateIndex === this.initialIndex) {
-            throw Error(`Return to INITIAL state during execution: line = ${compiledCommand.command.pretty()}`);
+            throw Error(`Return to INITIAL state during execution: line = ${
+                compiledCommand.command.pretty()
+            }`);
         }
         this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;

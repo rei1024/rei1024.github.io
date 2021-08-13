@@ -64,13 +64,15 @@ export const $b2dDetail = $type('#b2d_detail', HTMLDetailsElement);
 // スライディングレジスタ
 export const $unaryRegister = $type('#unary_register', HTMLElement);
 
-export const $unaryRegisterDetail = $type('#unary_register_detail', HTMLDetailsElement);
+export const $unaryRegisterDetail =
+    $type('#unary_register_detail', HTMLDetailsElement);
 
 // バイナリレジスタ
 export const $binaryRegister = $type('#binary_register', HTMLElement);
 
 // バイナリレジスタの開閉
-export const $binaryRegisterDetail = $type('#binary_register_detail', HTMLDetailsElement);
+export const $binaryRegisterDetail =
+    $type('#binary_register_detail', HTMLDetailsElement);
 
 // ADD SUB MULの表示
 export const $addSubMul = $type('#add_sub_mul', HTMLElement);
@@ -101,13 +103,15 @@ export const $breakpointSelect = $type('#breakpoint_select', HTMLSelectElement);
 // ダークモード
 export const $darkMode = $type('#dark_mode', HTMLInputElement);
 
-export const $darkModeLabel = $darkMode.parentElement?.querySelector('label') ?? (() => {
+export const $darkModeLabel =
+    $darkMode.parentElement?.querySelector('label') ?? (() => {
     throw Error('label of #dark_mode is not found');
 })();
 
 export const $b2dHidePointer = $type('#b2d_hide_pointer', HTMLInputElement);
 
-export const $b2dFlipUpsideDown = $type('#b2d_flip_upside_down', HTMLInputElement);
+export const $b2dFlipUpsideDown =
+    $type('#b2d_flip_upside_down', HTMLInputElement);
 
 // Stats Modal
 

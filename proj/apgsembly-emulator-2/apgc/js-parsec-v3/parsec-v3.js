@@ -199,7 +199,10 @@ export class Parser {
             if (parseStateWithResultA.result.isOk()) {
                 // SAFETY: parseStateWithResultA.result is success
                 const value = parseStateWithResultA.result.unsafeGetValue();
-                return ParseStateWithResult.makeOk(parseStateWithResultA.parseState, value);
+                return ParseStateWithResult.makeOk(
+                    parseStateWithResultA.parseState,
+                    value
+                );
             }
             /**
              * @type {ParseStateWithResult<A | A2, E2>}
@@ -221,7 +224,9 @@ export class Parser {
 
     /**
      * sequence
-     * @type {<X, Err, B extends unknown[]>(arg: Parser<X, Err>, ...args: {[K in keyof B]: Parser<B[K], Err>}) => Parser<[X, ...B], Err> }
+     * @type {<X, Err, B extends unknown[]>
+     * (arg: Parser<X, Err>, ...args: {[K in keyof B]: Parser<B[K], Err>}) =>
+     * Parser<[X, ...B], Err> }
      */
     static seq(arg, ...args) {
         const x = args.reduce((acc, parser) => acc.then(xs => parser.map(x =>
@@ -254,7 +259,10 @@ export class Parser {
          */
         function temp(state) {
             const parseStateWithResult = __this__.parse(state);
-            return ParseStateWithResult.makeOk(parseStateWithResult.parseState, parseStateWithResult.result);
+            return ParseStateWithResult.makeOk(
+                parseStateWithResult.parseState,
+                parseStateWithResult.result
+            );
         }
         return new Parser(temp);
     }
@@ -290,13 +298,22 @@ export class Parser {
         return new Parser(state => {
             const result = regexp.exec(state.rest);
             if (result === null) {
-                return ParseStateWithResult.makeError(state, `regexp: ${regexpToString(regexp)}`);
+                return ParseStateWithResult.makeError(
+                    state,
+                    `regexp: ${regexpToString(regexp)}`
+                );
             }
             const match = result[index];
             if (match === undefined) {
-                return ParseStateWithResult.makeError(state, `regexp: ${regexpToString(regexp)}, index: ${index}`);
+                return ParseStateWithResult.makeError(
+                    state,
+                    `regexp: ${regexpToString(regexp)}, index: ${index}`
+                );
             }
-            return ParseStateWithResult.makeOk(state.consume(match.length), match);
+            return ParseStateWithResult.makeOk(
+                state.consume(match.length),
+                match
+            );
         });
     }
 
@@ -308,9 +325,15 @@ export class Parser {
     static string(string) {
         return new Parser(state => {
             if (state.rest.startsWith(string)) {
-                return ParseStateWithResult.makeOk(state.consume(string.length), string);
+                return ParseStateWithResult.makeOk(
+                    state.consume(string.length),
+                    string
+                );
             } else {
-                return ParseStateWithResult.makeError(state, `expect "${string}"`);
+                return ParseStateWithResult.makeError(
+                    state,
+                    `expect "${string}"`
+                );
             }
         });
     }
@@ -364,12 +387,18 @@ export class Parser {
         return new Parser(state => {
             const char = state.rest[0];
             if (char === undefined) {
-                return ParseStateWithResult.makeError(state, `satisfyChar failed: input is empty`);
+                return ParseStateWithResult.makeError(
+                    state,
+                    `satisfyChar failed: input is empty`
+                );
             }
             if (condition(char)) {
                 return ParseStateWithResult.makeOk(state.consume(1), char);
             } else {
-                return ParseStateWithResult.makeError(state, `satisfyChar failed: condition is not satisfied`);
+                return ParseStateWithResult.makeError(
+                    state,
+                    `satisfyChar failed: condition is not satisfied`
+                );
             }
         });
     }
@@ -419,7 +448,8 @@ export class Parser {
                     // SAFETY: parseStateWithResult.result is ok
                     const value = parseStateWithResult.result.unsafeGetValue();
                     array.push(value);
-                    const sepParseStateWithResult = separatorParser.parse(state);
+                    const sepParseStateWithResult =
+                        separatorParser.parse(state);
                     if (sepParseStateWithResult.result.isOk()) {
                         state = sepParseStateWithResult.parseState;
                     } else {
@@ -441,7 +471,13 @@ export class Parser {
  */
 export function parseWithErrorLine(parser, str) {
     const parseStateWithResult = parser.parseToParseStateWithResult(str);
-    return parseStateWithResult.result.mapErr(e => ({ error: e, line: extractLine(str, parseStateWithResult.parseState.offset) }));
+    return parseStateWithResult.result.
+        mapErr(e => (
+            {
+                error: e,
+                line: extractLine(str, parseStateWithResult.parseState.offset)
+            })
+        );
 }
 
 /**
@@ -452,7 +488,9 @@ export function parseWithErrorLine(parser, str) {
  */
 export function extractLine(str, offset) {
     const array = lines(str);
-    const line = array.find(o => (o.start <= offset && offset <= o.end) || (o.start >= offset));
+    const line = array.find(
+        o => (o.start <= offset && offset <= o.end) || (o.start >= offset)
+    );
     return line?.line ?? "";
 }
 
@@ -479,7 +517,11 @@ export function lines(str) {
         }
     }
     if (start !== str.length - 1) {
-        objs.push({ start: start, end: str.length, line: str.slice(start, str.length) });
+        objs.push({
+            start: start,
+            end: str.length,
+            line: str.slice(start, str.length)
+        });
     }
     return objs;
 }
@@ -490,17 +532,25 @@ export function lines(str) {
 export const stringLiteralParser = new Parser(state => {
     const first = state.rest[0];
     if (first !== `"`) {
-        return ParseStateWithResult.makeError(state, 'string literal: expect "');
+        return ParseStateWithResult.makeError(
+            state,
+            'string literal: expect "'
+        );
     }
     let i = 1;
     const rest = state.rest;
     const len = rest.length;
     while (i < len) {
         const char = rest[i];
-        if (char === undefined) { throw Error('stringExpressionParser: internal error'); }
+        if (char === undefined) {
+            throw Error('stringExpressionParser: internal error');
+        }
         if (char === `"`) {
             if (rest[i - 1] !== '\\') {
-                const x = ParseState.unsafeMakeParseState(rest.slice(i + 1), state.offset + i + 1);
+                const x = ParseState.unsafeMakeParseState(
+                    rest.slice(i + 1),
+                    state.offset + i + 1
+                );
 
                 return new ParseStateWithResult(x, Result.ok(rest.slice(1, i).
                     // @ts-ignore

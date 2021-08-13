@@ -1,4 +1,10 @@
-import { BRegAction, B_INC, B_TDEC, B_READ, B_SET } from "../../src/actions/BRegAction.js";
+import {
+    BRegAction,
+    B_INC,
+    B_TDEC,
+    B_READ,
+    B_SET
+} from "../../src/actions/BRegAction.js";
 import { BReg } from "../../src/components/BReg.js";
 import { assertEquals, assertThrows, test } from "../deps.js";
 

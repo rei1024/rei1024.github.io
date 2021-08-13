@@ -33,7 +33,7 @@
         "new-parens": ["error", "always"],
         "comma-spacing": ["error", { "before": false, "after": true }],
         "camelcase": ["error"],
-        "padded-blocks": "off",
+        "padded-blocks": ["off"],
         "one-var": ["error", "never"],
         "quotes": "off", // TODO
         "quote-props": ["error", "as-needed"],
@@ -41,12 +41,14 @@
         "sort-imports": "off", // TODO
         "array-bracket-newline": "error",
         // "array-element-newline": "error"
-        // "no-trailing-spaces": "error"
         "require-unicode-regexp": "error",
         "no-undefined": "off",
+        "no-plusplus": "off",
         "no-multi-spaces": "error",
         "func-style": "off",
-        "no-trailing-spaces": "error"
+        "no-trailing-spaces": "error",
+        "brace-style": "error"
+        // "max-len": "error" // TODO
     },
     "globals": {
         "Deno": true

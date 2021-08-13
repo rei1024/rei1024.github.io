@@ -20,5 +20,8 @@ test('ADD parse fail', () => {
 });
 
 test('ADD isSameComponent', () => {
-    assertEquals(AddAction.parse('ADD A1').isSameComponent(AddAction.parse('ADD B0')), true);
+    assertEquals(
+        AddAction.parse('ADD A1').isSameComponent(AddAction.parse('ADD B0')),
+        true
+    );
 });

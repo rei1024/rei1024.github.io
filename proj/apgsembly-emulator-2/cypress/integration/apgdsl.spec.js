@@ -11,7 +11,7 @@ describe('APGDSL Integration', () => {
     it('Integration', () => {
         cy.visit(dslURL);
         cy.get('#samples').click();
-        cy.get('[data-src="01_output.js"]').click();
+        cy.get('[data-src="01_output.txt"]').click();
         cy.get('#compile').click();
         cy.get('#output').then(x => {
             const prog = x.val();

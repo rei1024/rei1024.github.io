@@ -88,7 +88,9 @@ export class URegAction extends Action {
             return undefined;
         }
         const [ op, reg ] = array;
-        if (op === undefined || reg === undefined) { return undefined; }
+        if (op === undefined || reg === undefined) {
+            return undefined;
+        }
         if (op === U_INC_STRING || op === U_TDEC_STRING) {
             // R for APGsembly 1.0
             if (reg.startsWith("U") || reg.startsWith('R')) {

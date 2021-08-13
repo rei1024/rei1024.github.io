@@ -10,5 +10,10 @@ test('OutputAction parse OUTPUT A', () => {
 });
 
 test('OutputAction isSameComponent', () => {
-    assertEquals(OutputAction.parse('OUTPUT A')?.isSameComponent(OutputAction.parse('OUTPUT A')), true);
+    assertEquals(
+        OutputAction.parse('OUTPUT A')?.isSameComponent(
+            OutputAction.parse('OUTPUT A')
+        ),
+        true
+    );
 });

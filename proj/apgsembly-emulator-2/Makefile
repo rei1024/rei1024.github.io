@@ -7,7 +7,7 @@ watch:
 cy:
 	npm run cypress:open
 lint:
-	eslint .
+	./node_modules/.bin/eslint .
 chore:
 	deno upgrade
 	npm audit

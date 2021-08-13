@@ -1,5 +1,10 @@
 import { URegAction } from "../src/actions/URegAction.js";
-import { Command, ComponentsHeader, EmptyLine, RegistersHeader } from "../src/Command.js";
+import {
+    Command,
+    ComponentsHeader,
+    EmptyLine,
+    RegistersHeader
+} from "../src/Command.js";
 import { assertEquals, test } from "./deps.js";
 
 test('Command parse', () => {
@@ -30,7 +35,10 @@ test('Command parse multi action', () => {
         assertEquals(res.state, 'INITIAL');
         assertEquals(res.input, 'ZZ');
         assertEquals(res.nextState, 'DIR0');
-        assertEquals(res.actions, [URegAction.parse('TDEC U2'), URegAction.parse('INC U3')]);
+        assertEquals(
+            res.actions,
+            [URegAction.parse('TDEC U2'), URegAction.parse('INC U3')]
+        );
     } else {
         throw Error('parse error ' + str);
     }
@@ -40,7 +48,10 @@ test('Command parse unknown action', () => {
     const str = `INITIAL; ZZ; DIR0; UNKNOWN`;
     const res = Command.parse(str);
     if (typeof res === "string") {
-        assertEquals(res, 'Unknown action "UNKNOWN" at "INITIAL; ZZ; DIR0; UNKNOWN"');
+        assertEquals(
+            res,
+            'Unknown action "UNKNOWN" at "INITIAL; ZZ; DIR0; UNKNOWN"'
+        );
     } else {
         throw Error('expect parse error ' + str);
     }
@@ -58,7 +69,10 @@ test('Command parse unknown input', () => {
     const str = `INITIAL; XXXXX; DIR0; INC U3`;
     const res = Command.parse(str);
     if (typeof res === "string") {
-        assertEquals(res, 'Unknown input "XXXXX" at "INITIAL; XXXXX; DIR0; INC U3"');
+        assertEquals(
+            res,
+            'Unknown input "XXXXX" at "INITIAL; XXXXX; DIR0; INC U3"'
+        );
     } else {
         throw Error('expect parse error ' + str);
     }

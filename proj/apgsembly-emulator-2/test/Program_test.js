@@ -101,7 +101,10 @@ test('Program duplicated actions', () => {
     if (program instanceof Program) {
         throw Error('expected parse error');
     } else {
-        assertEquals(program, `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`);
+        assertEquals(
+            program,
+            `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`
+        );
     }
 });
 
@@ -112,7 +115,10 @@ test('Program return one value: no return', () => {
     if (program instanceof Program) {
         throw Error('expected parse error');
     } else {
-        assertEquals(program, `Does not return the value in "INITIAL; ZZ; A0; OUTPUT 1"`);
+        assertEquals(
+            program,
+            `Does not return the value in "INITIAL; ZZ; A0; OUTPUT 1"`
+        );
     }
 });
 
@@ -123,7 +129,12 @@ test('Program return one value', () => {
     if (program instanceof Program) {
         throw Error('expected parse error');
     } else {
-        assertEquals(program, `The return value is returned more than once in "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that return a return value more than once are NOP, TDEC U0`);
+        assertEquals(
+            program,
+            `The return value is returned more than once in ` +
+            `"INITIAL; ZZ; A0; NOP, TDEC U0": ` +
+            `Actions that return a return value more than once are NOP, TDEC U0`
+        );
     }
 });
 
@@ -134,7 +145,11 @@ test('Program same component actions U', () => {
     if (program instanceof Program) {
         throw Error('expected parse error');
     } else {
-        assertEquals(program, `Actions "INC U0" and "TDEC U0" act on the same component in "INITIAL; ZZ; A0; INC U0, TDEC U0"`);
+        assertEquals(
+            program,
+            `Actions "INC U0" and "TDEC U0" act on the same component in ` +
+            `"INITIAL; ZZ; A0; INC U0, TDEC U0"`
+        );
     }
 });
 
@@ -145,7 +160,11 @@ test('Program same component actions SUB', () => {
     if (program instanceof Program) {
         throw Error('expected parse error');
     } else {
-        assertEquals(program, `Actions "SUB A1" and "SUB B0" act on the same component in "INITIAL; ZZ; A0; SUB A1, SUB B0"`);
+        assertEquals(
+            program,
+            `Actions "SUB A1" and "SUB B0" act on the same component in ` +
+            `"INITIAL; ZZ; A0; SUB A1, SUB B0"`
+        );
     }
 });
 
@@ -156,7 +175,11 @@ test('Program same component actions B', () => {
     if (program instanceof Program) {
         throw Error('expected parse error');
     } else {
-        assertEquals(program, `Actions "INC B0" and "TDEC B0" act on the same component in "INITIAL; ZZ; A0; INC B0, TDEC B0"`);
+        assertEquals(
+            program,
+            `Actions "INC B0" and "TDEC B0"` +
+            ` act on the same component in "INITIAL; ZZ; A0; INC B0, TDEC B0"`
+        );
     }
 });
 
@@ -167,7 +190,11 @@ test('Program same component actions OUTPUT', () => {
     if (program instanceof Program) {
         throw Error('expected parse error');
     } else {
-        assertEquals(program, `Actions "OUTPUT 1" and "OUTPUT 2" act on the same component in "INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2"`);
+        assertEquals(
+            program,
+            `Actions "OUTPUT 1" and "OUTPUT 2" act on the same component in ` +
+            `"INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2"`
+        );
     }
 });
 

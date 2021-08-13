@@ -1,4 +1,10 @@
-import { BRegAction, B_INC, B_TDEC, B_READ, B_SET } from "../../src/actions/BRegAction.js";
+import {
+    BRegAction,
+    B_INC,
+    B_TDEC,
+    B_READ,
+    B_SET
+} from "../../src/actions/BRegAction.js";
 import { assertEquals, test } from "../deps.js";
 
 test("BRegAction parse success", () => {
@@ -31,10 +37,19 @@ test("BRegAction pretty", () => {
 });
 
 test("BRegAction extract", () => {
-    assertEquals(BRegAction.parse('INC B2').extractBinaryRegisterNumbers(), [2]);
+    assertEquals(
+        BRegAction.parse('INC B2').extractBinaryRegisterNumbers(),
+        [2]
+    );
 });
 
 test("BRegAction isSameComponent", () => {
-    assertEquals(BRegAction.parse('INC B2').isSameComponent(BRegAction.parse('INC B2')), true);
-    assertEquals(BRegAction.parse('INC B1').isSameComponent(BRegAction.parse('INC B2')), false);
+    assertEquals(
+        BRegAction.parse('INC B2').isSameComponent(BRegAction.parse('INC B2')),
+        true
+    );
+    assertEquals(
+        BRegAction.parse('INC B1').isSameComponent(BRegAction.parse('INC B2')),
+        false
+    );
 });

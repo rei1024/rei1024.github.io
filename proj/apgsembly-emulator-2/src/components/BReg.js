@@ -1,6 +1,12 @@
 // @ts-check
 
-import { BRegAction, B_INC, B_TDEC, B_SET, B_READ } from "../actions/BRegAction.js";
+import {
+    BRegAction,
+    B_INC,
+    B_TDEC,
+    B_SET,
+    B_READ
+} from "../actions/BRegAction.js";
 
 /**
  * バイナリの文字列を0と1の配列に変換する
@@ -115,7 +121,10 @@ export class BReg {
         }
         const value = bits[pointer];
         if (value === 1) {
-            throw Error('The bit of binary register is already 1: bits = ' + bits.join('') + " pointer = " + pointer);
+            throw Error(
+                'The bit of binary register is already 1: bits = ' +
+                bits.join('') + " pointer = " + pointer
+            );
         }
         bits[pointer] = 1;
     }

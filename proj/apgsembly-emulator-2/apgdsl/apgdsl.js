@@ -34,7 +34,7 @@ export function promote(obj) {
         return { kind: 'string', value: obj };
     } else if (Array.isArray(obj)) {
         return { kind: 'sequence', exprs: obj.map(promote) };
-    } else if (typeof obj === 'object' && 'kind' in obj) {
+    } else if (typeof obj === 'object' && obj !== null && 'kind' in obj) {
         // @ts-ignore
         return obj;
     } else {

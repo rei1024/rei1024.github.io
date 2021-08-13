@@ -17,7 +17,8 @@ const B_SET_STRING = "SET";
  */
 
 /**
- * @typedef {B_INC_STRING | B_TDEC_STRING | B_READ_STRING | B_SET_STRING} BOpString
+ * @typedef {B_INC_STRING | B_TDEC_STRING |
+ *          B_READ_STRING | B_SET_STRING} BOpString
  */
 
 /**
@@ -95,8 +96,11 @@ export class BRegAction extends Action {
             return undefined;
         }
         const [ op, reg ] = array;
-        if (op === undefined || reg === undefined) { return undefined; }
-        if (op === B_INC_STRING || op === B_TDEC_STRING || op === B_READ_STRING || op === B_SET_STRING) {
+        if (op === undefined || reg === undefined) {
+            return undefined;
+        }
+        if (op === B_INC_STRING || op === B_TDEC_STRING ||
+            op === B_READ_STRING || op === B_SET_STRING) {
             if (reg.startsWith("B")) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/u.test(str)) {

@@ -5,9 +5,21 @@ import { SubAction, SUB_A1, SUB_B0, SUB_B1 } from "../actions/SubAction.js";
 /**
  * `-1` is `"FAILURE"`
  */
-export const subLookupA1 = [3, 2, -1, -1, 7, 6, -1, -1, 11, 10, -1, -1, 15, 14, -1, -1, 19, 18, -1, -1, 23, 22, -1, -1, 27, 26, -1, -1, 31, 30, -1, -1];
-export const subLookupB0 = [0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 17, 17];
-export const subLookupB1 = [17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 17, 17, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17];
+export const subLookupA1 =
+    [
+        3, 2, -1, -1, 7, 6, -1, -1, 11, 10, -1, -1, 15, 14, -1, -1,
+        19, 18, -1, -1, 23, 22, -1, -1, 27, 26, -1, -1, 31, 30, -1, -1
+    ];
+export const subLookupB0 =
+    [
+        0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17,
+        17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 17, 17
+    ];
+export const subLookupB1 =
+    [
+        17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 0, 0, 0, 0,
+        17, 17, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17
+    ];
 
 /**
  * `SUB`
@@ -90,7 +102,8 @@ export class SUB {
      */
     toStringDetail() {
         const str = this.toString();
-        return str.slice(0, 3) + " stopper" + str.slice(3, 4) + " bit" + str.slice(4);
+        return str.slice(0, 3) + " stopper" + str.slice(3, 4) +
+                " bit" + str.slice(4);
     }
 
     /**

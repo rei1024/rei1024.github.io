@@ -59,21 +59,25 @@ test('B2DAction parse fail', () => {
 });
 
 test('B2DAction isSameComponent', () => {
-    assertEquals(B2DAction.parse('TDEC B2DX').isSameComponent(B2DAction.parse('SET B2D')), true);
-
-    assertEquals(B2DAction.parse('INC B2DX').isSameComponent(B2DAction.parse('INC B2DY')), false);
-
-    assertEquals(B2DAction.parse('INC B2DY').isSameComponent(B2DAction.parse('INC B2DY')), true);
-
-    assertEquals(B2DAction.parse('INC B2DY').isSameComponent(B2DAction.parse('TDEC B2DY')), true);
-
-    assertEquals(B2DAction.parse('INC B2DX').isSameComponent(B2DAction.parse('TDEC B2DX')), true);
-
-    assertEquals(B2DAction.parse('INC B2DX').isSameComponent(B2DAction.parse('INC B2DX')), true);
-
-    assertEquals(B2DAction.parse('INC B2DY').isSameComponent(B2DAction.parse('INC B2DX')), false);
-
-    assertEquals(B2DAction.parse('TDEC B2DX').isSameComponent(B2DAction.parse('INC B2DY')), false);
-
-    assertEquals(B2DAction.parse('TDEC B2DY').isSameComponent(B2DAction.parse('INC B2DX')), false);
+    /**
+     *
+     * @param {string} str1
+     * @param {string} str2
+     * @param {boolean} value
+     */
+    function same(str1, str2, value) {
+        assertEquals(
+            B2DAction.parse(str1).isSameComponent(B2DAction.parse(str2)),
+            value
+        );
+    }
+    same('TDEC B2DX', 'SET B2D', true);
+    same('INC B2DX', 'INC B2DY', false);
+    same('INC B2DY', 'INC B2DY', true);
+    same('INC B2DY', 'TDEC B2DY', true);
+    same('INC B2DX', 'TDEC B2DX', true);
+    same('INC B2DX', 'INC B2DX', true);
+    same('INC B2DY', 'INC B2DX', false);
+    same('TDEC B2DX', 'INC B2DY', false);
+    same('TDEC B2DY', 'INC B2DX', false);
 });

@@ -57,7 +57,11 @@ function validateActionReturnOnceCommand(command) {
     } else if (valueReturnActions.length === 0) {
         return `Does not return the value in "${command.pretty()}"`;
     } else {
-        return `The return value is returned more than once in "${command.pretty()}": Actions that return a return value more than once are ${valueReturnActions.map(x => x.pretty()).join(', ')}`;
+        return `The return value is returned more than once in "${
+            command.pretty()
+        }": Actions that return a return value more than once are ${
+            valueReturnActions.map(x => x.pretty()).join(', ')
+        }`;
     }
 }
 
@@ -92,11 +96,19 @@ function validateNoSameComponentCommand(command) {
     const len = actions.length;
     for (let i = 0; i < len; i++) {
         for (let j = 0; j < len; j++) {
-            if (i === j) { continue; }
+            if (i === j) {
+                continue;
+            }
             const a = actions[i];
-            const b = actions[j] ?? (() => { throw Error('internal error'); })();
+            const b = actions[j] ?? (() => {
+                throw Error('internal error');
+            })();
             if (a?.isSameComponent(b)) {
-                return `Actions "${a.pretty()}" and "${b.pretty()}" act on the same component in "${command.pretty()}"`;
+                return `Actions "${
+                    a.pretty()
+                }" and "${
+                    b.pretty()
+                }" act on the same component in "${command.pretty()}"`;
             }
         }
     }

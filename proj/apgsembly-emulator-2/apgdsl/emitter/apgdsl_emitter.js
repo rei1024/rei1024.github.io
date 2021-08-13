@@ -222,6 +222,13 @@ export class Emitter {
     }
 
     /**
+     * @returns {never}
+     */
+    internalError() {
+        throw Error('internal error');
+    }
+
+    /**
      *
      * @param {StateName} input
      * @param {boolean} isZero
@@ -232,10 +239,10 @@ export class Emitter {
         if (expr.args.length !== 3) {
             throw Error('if need 3 argments');
         }
-        const condExpr = expr.args[0];
+        const condExpr = expr.args[0] ?? this.internalError();
         const ifState = this.emitExpr(input, condExpr);
-        const zeroExpr = isZero ? expr.args[1] : expr.args[2];
-        const nonZeroExpr = isZero ? expr.args[2] : expr.args[1];
+        const zeroExpr = (isZero ? expr.args[1] : expr.args[2]) ?? this.internalError();
+        const nonZeroExpr = (isZero ? expr.args[2] : expr.args[1]) ?? this.internalError();
         const zeroState = this.getNextState();
         const nonZeroState = this.getNextState();
         this.emitCommand(new Command({
@@ -269,6 +276,29 @@ export class Emitter {
     }
 
     /**
+     * @param {StateName} input
+     * @param {boolean} isZero
+     * @param {StateName} condOutputState
+     * @returns {StateName}
+     */
+    emitEmptyWhile(input, isZero, condOutputState) {
+        const finalState = this.getNextState();
+        this.emitCommand(new Command({
+            state: condOutputState,
+            input: 'Z',
+            nextState: isZero ? input : finalState,
+            actions: [new NopAction()]
+        }));
+        this.emitCommand(new Command({
+            state: condOutputState,
+            input: 'NZ',
+            nextState: isZero ? finalState : input,
+            actions: [new NopAction()]
+        }));
+        return finalState;
+    }
+
+    /**
      *
      * @param {StateName} input
      * @param {boolean} isZero
@@ -279,9 +309,13 @@ export class Emitter {
         if (expr.args.length !== 2) {
             throw Error('while need 2 argments');
         }
-        const condExpr = expr.args[0];
-        const innerExpr = expr.args[1];
+        const condExpr = expr.args[0] ?? this.internalError();
+        const innerExpr = expr.args[1] ?? this.internalError();
         const condOutputState = this.emitExpr(input, condExpr);
+
+        if (innerExpr.kind === 'sequence' && innerExpr.exprs.length === 0) {
+            return this.emitEmptyWhile(input, isZero, condOutputState);
+        }
 
         const continueState = this.getNextState();
         const finalState = this.getNextState();
@@ -317,7 +351,7 @@ export class Emitter {
         if (expr.args.length !== 1) {
             throw Error('output argment length is not 1');
         }
-        const arg = expr.args[0];
+        const arg = expr.args[0] ?? this.internalError();
         if (arg.kind !== 'string') {
             throw Error('output argment is not a string');
         }
@@ -341,7 +375,7 @@ export class Emitter {
         if (expr.args.length !== 1) {
             throw Error(`${expr.name} arguments length is not 1`);
         }
-        const arg = expr.args[0];
+        const arg = expr.args[0] ?? this.internalError();
         if (arg.kind !== 'number') {
             throw Error(`${expr.name} accepts only numbers`);
         }

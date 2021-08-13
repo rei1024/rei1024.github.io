@@ -15,7 +15,8 @@ export const B2D_B2D = "B2D";
  */
 
 /**
- * @typedef {B2D_INC_STRING | B2D_TDEC_STRING | B2D_READ_STRING | B2D_SET_STRING} B2DOpString
+ * @typedef {B2D_INC_STRING | B2D_TDEC_STRING |
+ *          B2D_READ_STRING | B2D_SET_STRING} B2DOpString
  */
 
 /**
@@ -79,7 +80,9 @@ export class B2DAction extends Action {
             return undefined;
         }
         const [ op, axis ] = array;
-        if (op === undefined || axis === undefined) { return undefined; }
+        if (op === undefined || axis === undefined) {
+            return undefined;
+        }
         if (op === B2D_INC_STRING || op === B2D_TDEC_STRING) {
             if (axis === B2D_B2DX_STRING || axis === B2D_B2DY_STRING) {
                 return new B2DAction(op, axis);
@@ -93,27 +96,33 @@ export class B2DAction extends Action {
         switch (op) {
             case B2D_INC_STRING: {
                 switch (axis) {
-                    case B2D_LEGACY_B2DX_STRING: return new B2DAction(B2D_INC, B2D_B2DX);
-                    case B2D_LEGACY_B2DY_STRING: return new B2DAction(B2D_INC, B2D_B2DY);
+                    case B2D_LEGACY_B2DX_STRING:
+                        return new B2DAction(B2D_INC, B2D_B2DX);
+                    case B2D_LEGACY_B2DY_STRING:
+                        return new B2DAction(B2D_INC, B2D_B2DY);
                     default: return undefined;
                 }
             }
             case B2D_LEGACY_TDEC_STRING: {
                 switch (axis) {
-                    case B2D_LEGACY_B2DX_STRING: return new B2DAction(B2D_TDEC, B2D_B2DX);
-                    case B2D_LEGACY_B2DY_STRING: return new B2DAction(B2D_TDEC, B2D_B2DY);
+                    case B2D_LEGACY_B2DX_STRING:
+                        return new B2DAction(B2D_TDEC, B2D_B2DX);
+                    case B2D_LEGACY_B2DY_STRING:
+                        return new B2DAction(B2D_TDEC, B2D_B2DY);
                     default: return undefined;
                 }
             }
             case B2D_READ_STRING: {
                 switch (axis) {
-                    case B2D_LEGACY_B2D_STRING: return new B2DAction(B2D_READ, B2D_B2D);
+                    case B2D_LEGACY_B2D_STRING:
+                        return new B2DAction(B2D_READ, B2D_B2D);
                     default: return undefined;
                 }
             }
             case B2D_SET_STRING: {
                 switch (axis) {
-                    case B2D_LEGACY_B2D_STRING: return new B2DAction(B2D_SET, B2D_B2D);
+                    case B2D_LEGACY_B2D_STRING:
+                        return new B2DAction(B2D_SET, B2D_B2D);
                     default: return undefined;
                 }
             }
