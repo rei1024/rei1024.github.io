@@ -98,7 +98,7 @@ class Complex {
     abs() {
         const sqrt = Math.sqrt(this.r ** 2, this.i ** 2);
         if (isNaN(sqrt)) {
-            return Infinity
+            return Infinity;
         }
         return sqrt;
     }
@@ -129,8 +129,11 @@ function makeMandelbrot() {
             let acc = new Complex(0, 0);
             for (let i = 0; i < 100; i++) {
                 acc = acc.mul(acc).add(c);
+                if (acc.abs() > 2) {
+                    return 0;
+                }
             }
-            return acc.abs() > 2 ? 0 : 1;
+            return 1;
         });
     });
 }

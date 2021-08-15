@@ -1,0 +1,119 @@
+/* eslint-disable */
+
+/**
+ *
+ * @param {number} dx
+ * @param {number} dy
+ */
+function b2d_move_relative(dx, dy) {
+    const x = dx < 0 ? Array(-dx).fill(tdec_b2dx()) : Array(dx).fill(inc_b2dx());
+    const y = dy < 0 ? Array(-dy).fill(tdec_b2dy()) : Array(dy).fill(inc_b2dy());
+    return x.concat(y);
+}
+
+/**
+ *
+ * @param {number} reg
+ * @param {number} n
+ */
+function u_set(reg, n) {
+    return Array(n).fill(inc_u(reg));
+}
+
+/**
+ *
+ * @param {number} regNumber
+ * @param {unknown[]} cases 0, 1, ...
+ */
+function u_switch(regNumber, ...cases) {
+    const res = [];
+    if (cases.length === 0) {
+        return [];
+    }
+    const [ c, ...rest ] = cases;
+    return if_zero(
+        tdec_u(regNumber),
+        [c],
+        [u_switch(regNumber, ...rest)]
+    );
+}
+
+/**
+ * .--- x
+ * |
+ * |
+ * y
+ *
+ * UP 0
+ * RIGHT 1
+ * DOWN 2
+ * LEFT 3
+ */
+const STATE = 0;
+
+const UP = 0;
+const RIGHT = 1;
+const DOWN = 2;
+const LEFT = 3;
+
+const STEP = 1;
+
+main = [
+    // inc_u(0),
+    // u_switch(0, output('0'), output('1'), output('2'), output('3')),
+
+    b2d_move_relative(30, 30),
+    u_set(STATE, LEFT),
+    while_zero(nop(), [
+        u_switch(STATE, [
+            // UP
+            if_zero(read_b2d(), [
+                // white
+                u_set(STATE, RIGHT),
+                set_b2d(),
+                inc_b2dx()
+            ], [
+                // black
+                u_set(STATE, LEFT),
+                tdec_b2dx()
+            ])
+        ], [
+            // RIGHT
+            if_zero(read_b2d(), [
+                // white
+                u_set(STATE, DOWN),
+                set_b2d(),
+                inc_b2dy()
+            ], [
+                // black
+                u_set(STATE, UP),
+                tdec_b2dy()
+            ])
+        ], [
+            // DOWN
+            if_zero(read_b2d(), [
+                // white
+                u_set(STATE, LEFT),
+                set_b2d(),
+                tdec_b2dx()
+            ], [
+                // black
+                u_set(STATE, RIGHT),
+                inc_b2dx()
+            ])
+        ], [
+            // LEFT
+            if_zero(read_b2d(), [
+                // white
+                u_set(STATE, UP),
+                set_b2d(),
+                tdec_b2dy()
+            ], [
+                // black
+                u_set(STATE, DOWN),
+                inc_b2dy()
+            ])
+        ]),
+        inc_u(STEP)
+    ])
+]

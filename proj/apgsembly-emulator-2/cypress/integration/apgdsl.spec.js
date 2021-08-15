@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import { APGsemblyEmulatorURL, setStep, dslURL } from "../common/common.js";
 
 describe('APGDSL Load', () => {

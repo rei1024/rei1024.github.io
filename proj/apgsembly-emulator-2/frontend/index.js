@@ -12,6 +12,11 @@ import { Program } from "../src/Program.js";
 import { Frequency } from "./util/frequency.js";
 
 import { renderB2D } from "./renderB2D.js";
+import {
+    renderUnary,
+    setUpUnary,
+    UNARY_REG_ITEMS_CLASS
+} from "./renderUnary.js";
 import { setUpBinary, renderBinary } from "./renderBinary.js";
 import { renderStats } from "./renderStats.js";
 
@@ -24,6 +29,8 @@ import {
     $stop,
     $reset,
     $step,
+    $configButton,
+    $statsButton,
     $currentState,
     $previousOutput,
     $freqencyOutput,
@@ -159,32 +166,8 @@ export class App {
             return;
         }
         const regs = this.machine.actionExecutor.uRegMap;
-        const unaryHeader = document.createElement('tr');
-        for (const key of regs.keys()) {
-            const th = document.createElement('th');
-            th.textContent = `U${key}`;
-            unaryHeader.appendChild(th);
-        }
-        const unaryData = document.createElement('tr');
-        for (const [key, value] of regs.entries()) {
-            const td = document.createElement('td');
-            td.textContent = value.getValue().toString();
-            td.dataset['test'] = `U${key}`;
-            unaryData.appendChild(td);
-        }
-        const unaryTable = document.createElement('table');
-        unaryTable.appendChild(unaryHeader);
-        unaryTable.appendChild(unaryData);
-        unaryTable.classList.add('table');
-
-        // 幅を均等にする
-        unaryTable.style.tableLayout = "fixed";
-        // 16pxから変更
-        unaryTable.style.marginBottom = "0px";
-        $unaryRegister.innerHTML = "";
-        $unaryRegister.appendChild(unaryTable);
-
-        this.unaryRegisterItems = unaryData.childNodes;
+        setUpUnary($unaryRegister, regs);
+        this.unaryRegisterItems = $unaryRegister.querySelector(`.${UNARY_REG_ITEMS_CLASS}`)?.childNodes;
     }
 
     /**
@@ -333,15 +316,7 @@ export class App {
         if (items === undefined) {
             return;
         }
-        let i = 0;
-        for (const reg of this.machine.actionExecutor.uRegMap.values()) {
-            const item = items[i];
-            if (item === undefined) {
-                throw Error('renderUnary: internal error');
-            }
-            item.textContent = reg.getValue().toString();
-            i++;
-        }
+        renderUnary(items, this.machine.actionExecutor.uRegMap);
     }
 
     /**
@@ -439,12 +414,11 @@ export class App {
         }
         this.renderCommand();
         this.renderErrorMessage();
+        this.renderFrequencyOutput();
         this.renderB2D();
         this.renderUnary();
         this.renderBinary();
         this.renderAddSubMul();
-        this.renderFrequencyOutput();
-        // output
         this.renderOutput();
         this.renderStats();
 
@@ -729,6 +703,8 @@ if (localStorage.getItem('hide_binary') === "true") {
 
 // ボタンの有効化
 $samples.disabled = false;
+$configButton.disabled = false;
+$statsButton.disabled = false;
 
 // 初回描画
 // first render

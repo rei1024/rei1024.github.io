@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 export const baseURL = 'http://localhost:1123';
 
 export const APGsemblyEmulatorURL = baseURL + '/';

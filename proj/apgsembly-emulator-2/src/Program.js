@@ -2,7 +2,12 @@
 
 import { Command, ComponentsHeader, RegistersHeader } from "./Command.js";
 import { ProgramLines } from "./ProgramLines.js";
-import { validateActionReturnOnce, validateNoDuplicatedAction, validateNoSameComponent } from "./validate.js";
+import {
+    validateActionReturnOnce,
+    validateNoDuplicatedAction,
+    validateNoSameComponent,
+    validateNextStateIsNotINITIAL
+} from "./validate.js";
 
 /**
  * APGsembly program
@@ -88,6 +93,11 @@ export class Program {
         const noSameComponentError = validateNoSameComponent(commands);
         if (typeof noSameComponentError === 'string') {
             return noSameComponentError;
+        }
+
+        const nextStateIsNotInitialError = validateNextStateIsNotINITIAL(commands);
+        if (typeof nextStateIsNotInitialError === 'string') {
+            return nextStateIsNotInitialError;
         }
 
         return new Program({

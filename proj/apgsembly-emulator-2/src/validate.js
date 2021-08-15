@@ -1,7 +1,19 @@
 // @ts-check
 
 import { HaltOutAction } from "./actions/HaltOutAction.js";
-import { Command } from "./Command.js";
+import { Command, INITIAL_STATE } from "./Command.js";
+
+/**
+ *
+ * @param {Command} command
+ * @returns {string | undefined}
+ */
+function validateNextStateIsNotINITIALCommand(command) {
+    if (command.nextState === INITIAL_STATE) {
+        return `Return to initial state in "${command.pretty()}"`;
+    }
+    return undefined;
+}
 
 /**
  *
@@ -55,11 +67,11 @@ function validateActionReturnOnceCommand(command) {
     if (valueReturnActions.length === 1) {
         return undefined;
     } else if (valueReturnActions.length === 0) {
-        return `Does not return the value in "${command.pretty()}"`;
+        return `Does not produce the return value in "${command.pretty()}"`;
     } else {
-        return `The return value is returned more than once in "${
+        return `Does not contain exactly one action that produces a return value "${
             command.pretty()
-        }": Actions that return a return value more than once are ${
+        }": Actions that produce value are ${
             valueReturnActions.map(x => x.pretty()).join(', ')
         }`;
     }
@@ -124,6 +136,22 @@ function validateNoSameComponentCommand(command) {
 export function validateNoSameComponent(commands) {
     for (const command of commands) {
         const err = validateNoSameComponentCommand(command);
+        if (typeof err === 'string') {
+            return err;
+        }
+    }
+    return undefined;
+}
+
+/**
+ * アクションが同じコンポーネントを使用していないか検査する
+ * エラーメッセージを返却する
+ * @param {Command[]} commands
+ * @returns {string | undefined}
+ */
+export function validateNextStateIsNotINITIAL(commands) {
+    for (const command of commands) {
+        const err = validateNextStateIsNotINITIALCommand(command);
         if (typeof err === 'string') {
             return err;
         }

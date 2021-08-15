@@ -2,13 +2,13 @@
 
 import { Action } from "./Action.js";
 
-export const B2D_INC = "INC";
-export const B2D_TDEC = "TDEC";
-export const B2D_READ = "READ";
-export const B2D_SET = "SET";
-export const B2D_B2DX = "B2DX";
-export const B2D_B2DY = "B2DY";
-export const B2D_B2D = "B2D";
+export const B2D_INC = 0;
+export const B2D_TDEC = 1;
+export const B2D_READ = 2;
+export const B2D_SET = 3;
+export const B2D_B2DX = 4;
+export const B2D_B2DY = 5;
+export const B2D_B2D = 6;
 
 /**
  * @typedef {B2D_INC | B2D_TDEC | B2D_READ | B2D_SET} B2DOp
@@ -41,6 +41,59 @@ const B2D_LEGACY_B2DY_STRING = "SQY";
 const B2D_LEGACY_B2D_STRING = "SQ";
 
 /**
+ *
+ * @param {B2DOpString} op
+ * @returns {B2DOp}
+ */
+function parseOp(op) {
+    switch (op) {
+        case B2D_INC_STRING: return B2D_INC;
+        case B2D_TDEC_STRING: return B2D_TDEC;
+        case B2D_READ_STRING: return B2D_READ;
+        case B2D_SET_STRING: return B2D_SET;
+    }
+}
+
+/**
+ *
+ * @param {B2DOp} op
+ * @returns {B2DOpString}
+ */
+function prettyOp(op) {
+    switch (op) {
+        case B2D_INC: return B2D_INC_STRING;
+        case B2D_TDEC: return B2D_TDEC_STRING;
+        case B2D_READ: return B2D_READ_STRING;
+        case B2D_SET: return B2D_SET_STRING;
+    }
+}
+/**
+ *
+ * @param {B2DAxisString} op
+ * @returns {B2DAxis}
+ */
+function parseAxis(op) {
+    switch (op) {
+        case B2D_B2DX_STRING: return B2D_B2DX;
+        case B2D_B2DY_STRING: return B2D_B2DY;
+        case B2D_B2D_STRING: return B2D_B2D;
+    }
+}
+
+/**
+ *
+ * @param {B2DAxis} op
+ * @returns {B2DAxisString}
+ */
+function prettyAxis(op) {
+    switch (op) {
+        case B2D_B2DX: return B2D_B2DX_STRING;
+        case B2D_B2DY: return B2D_B2DY_STRING;
+        case B2D_B2D: return B2D_B2D_STRING;
+    }
+}
+
+/**
  * Action for `B2D`
  */
 export class B2DAction extends Action {
@@ -67,7 +120,7 @@ export class B2DAction extends Action {
      * @override
      */
     pretty() {
-        return `${this.op} ${this.axis}`;
+        return `${prettyOp(this.op)} ${prettyAxis(this.axis)}`;
     }
 
     /**
@@ -85,11 +138,11 @@ export class B2DAction extends Action {
         }
         if (op === B2D_INC_STRING || op === B2D_TDEC_STRING) {
             if (axis === B2D_B2DX_STRING || axis === B2D_B2DY_STRING) {
-                return new B2DAction(op, axis);
+                return new B2DAction(parseOp(op), parseAxis(axis));
             }
         } else if (op === B2D_READ_STRING || op === B2D_SET_STRING) {
             if (axis === B2D_B2D_STRING) {
-                return new B2DAction(op, axis);
+                return new B2DAction(parseOp(op), parseAxis(axis));
             }
         }
         // APGsembly 1.0

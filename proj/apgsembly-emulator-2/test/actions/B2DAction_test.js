@@ -1,8 +1,8 @@
-import { B2DAction } from "../../src/actions/B2DAction.js";
+import { B2DAction, B2D_INC, B2D_B2DX } from "../../src/actions/B2DAction.js";
 import { assertEquals, test } from "../deps.js";
 
 test('B2DAction pretty', () => {
-    assertEquals(new B2DAction('INC', 'B2DX')?.pretty(), "INC B2DX");
+    assertEquals(new B2DAction(B2D_INC, B2D_B2DX)?.pretty(), "INC B2DX");
 });
 
 test('B2DAction parse INC', () => {

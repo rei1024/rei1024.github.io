@@ -117,11 +117,13 @@ test("B2D action INC B2DX", () => {
     const x = new B2D();
     x.action(B2DAction.parse('INC B2DX'));
     assertEquals(x.x, 1);
+    assertEquals(x.y, 0);
 });
 
 test("B2D action INC B2DY", () => {
     const x = new B2D();
     x.action(B2DAction.parse('INC B2DY'));
+    assertEquals(x.x, 0);
     assertEquals(x.y, 1);
 });
 
@@ -129,6 +131,13 @@ test("B2D action TDEC B2DX", () => {
     const x = new B2D();
     const res = x.action(B2DAction.parse('TDEC B2DX'));
     assertEquals(res, 0);
+    const inc = B2DAction.parse('INC B2DX');
+    x.action(inc);
+    x.action(inc);
+    assertEquals(x.x, 2);
+    const res2 = x.action(B2DAction.parse('TDEC B2DX'));
+    assertEquals(res2, 1);
+    assertEquals(x.x, 1);
 });
 
 test("B2D action TDEC B2DY", () => {

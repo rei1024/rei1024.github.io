@@ -117,7 +117,7 @@ test('Program return one value: no return', () => {
     } else {
         assertEquals(
             program,
-            `Does not return the value in "INITIAL; ZZ; A0; OUTPUT 1"`
+            'Does not produce the return value in "INITIAL; ZZ; A0; OUTPUT 1"'
         );
     }
 });
@@ -131,9 +131,8 @@ test('Program return one value', () => {
     } else {
         assertEquals(
             program,
-            `The return value is returned more than once in ` +
-            `"INITIAL; ZZ; A0; NOP, TDEC U0": ` +
-            `Actions that return a return value more than once are NOP, TDEC U0`
+            'Does not contain exactly one action that produces a return value' +
+            ' "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that produce value are NOP, TDEC U0'
         );
     }
 });

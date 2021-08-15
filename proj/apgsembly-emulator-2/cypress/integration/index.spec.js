@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import { APGsemblyEmulatorURL, loadProgram, setStep } from "../common/common.js";
 
 describe('Load', () => {
@@ -17,6 +19,24 @@ describe('Error', () => {
 });
 
 const outputSelector = '#output';
+
+describe('unary_multiply.apg', () => {
+    it('unary_multiply.apg', () => {
+        cy.visit(APGsemblyEmulatorURL);
+        cy.contains('APGsembly');
+        loadProgram('unary_multiply.apg');
+
+        cy.get(`[data-test="U0"]`).should('have.text', '7');
+        cy.get(`[data-test="U1"]`).should('have.text', '5');
+
+        setStep(100);
+        cy.get('#step').click();
+
+        cy.get('#steps').should('have.text', '93');
+
+        cy.get(`[data-test="U2"]`).should('have.text', '35');
+    });
+});
 
 describe('Integers', () => {
     it('should print integers', () => {
@@ -79,23 +99,5 @@ describe('Start Stop Reset', () => {
         cy.get('#reset').click();
 
         cy.get('#steps').should('have.text', '0');
-    });
-});
-
-describe('unary_multiply.apg', () => {
-    it('unary_multiply.apg', () => {
-        cy.visit(APGsemblyEmulatorURL);
-        cy.contains('APGsembly');
-        loadProgram('unary_multiply.apg');
-
-        cy.get(`[data-test="U0"]`).should('have.text', '7');
-        cy.get(`[data-test="U1"]`).should('have.text', '5');
-
-        setStep(100);
-        cy.get('#step').click();
-
-        cy.get('#steps').should('have.text', '93');
-
-        cy.get(`[data-test="U2"]`).should('have.text', '35');
     });
 });

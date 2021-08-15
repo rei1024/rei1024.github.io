@@ -84,6 +84,9 @@ export function makeDelta(rule) {
  * @returns {string} APGsembly code
  */
 export function generate(rule) {
+    if (typeof rule !== 'number') {
+        throw Error('rule is not a number');
+    }
     const delta = makeDelta(rule);
     const boundary = 0;
 

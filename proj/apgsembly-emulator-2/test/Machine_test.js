@@ -121,7 +121,7 @@ ID0; ZZ; ID0; NOP
     const program = Program.parse(str);
     assertEquals(
         program,
-        `Does not return the value in "INITIAL; ZZ; ID0; OUTPUT 3"`
+        'Does not produce the return value in "INITIAL; ZZ; ID0; OUTPUT 3"'
     );
 });
 
@@ -133,9 +133,12 @@ ID0; ZZ; ID0; NOP
     const program = Program.parse(str);
     assertEquals(
         program,
-        'The return value is returned more than once in ' +
+        'Does not contain exactly one action that produces a return value ' +
         '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
-        'Actions that return a return value more than once are NOP, TDEC U0'
+        'Actions that produce value are NOP, TDEC U0'
+        // 'The return value is returned more than once in ' +
+        // '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
+        // 'Actions that return a return value more than once are NOP, TDEC U0'
     );
 });
 
@@ -147,20 +150,18 @@ test('Machine INITIAL twice', () => {
 INITIAL; ZZ; INITIAL; NOP
     `;
     const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
+    if (typeof program === 'string') {
+        assertEquals(program, 'Return to initial state in "INITIAL; ZZ; INITIAL; NOP"');
+    } else {
+        throw Error('expect parse error');
     }
-    const machine = new Machine(program);
-
-    assertThrows(() => {
-        machine.execCommand();
-    });
 });
 
 test('Machine register header error: register is not exist', () => {
     const str = `
 #REGISTERS {"U3": 2}
-INITIAL; ZZ; INITIAL; NOP
+INITIAL; ZZ; A0; NOP
+A0; *; A0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
@@ -175,7 +176,8 @@ INITIAL; ZZ; INITIAL; NOP
 test('Machine register header error: is not an object: number', () => {
     const str = `
 #REGISTERS 2
-INITIAL; ZZ; INITIAL; NOP
+INITIAL; ZZ; A0; NOP
+A0; *; A0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
@@ -190,7 +192,8 @@ INITIAL; ZZ; INITIAL; NOP
 test('Machine register header error: is not an object: null', () => {
     const str = `
 #REGISTERS null
-INITIAL; ZZ; INITIAL; NOP
+INITIAL; ZZ; A0; NOP
+A0; *; A0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {

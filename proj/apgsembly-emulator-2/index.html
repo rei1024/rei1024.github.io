@@ -72,17 +72,18 @@
             <label for="input" class="form-label">Input</label>
             <textarea class="code-mono form-control" name="input" id="input" cols="50" rows="8"></textarea>
         </div>
+        <!-- Buttons -->
         <div data-test="control_buttons" class="btn-group" role="group" aria-label="Control">
-            <!-- 読み込まれるまではdisabled -->
+            <!-- index.jsが読み込まれるまではdisabled -->
             <button id="reset" type="button" class="btn btn-primary" disabled>Reset</button>
             <button id="start" type="button" class="btn btn-primary" disabled>Start</button>
             <button id="stop" type="button" class="btn btn-primary" disabled>Stop</button>
             <button id="step" type="button" class="btn btn-primary" disabled>Step</button>
-            <button data-test="config_button" type="button" class="btn btn-primary"
+            <button id="config_button" disabled data-test="config_button" type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#config_modal">
                 Config
             </button>
-            <button type="button" class="btn btn-primary"
+            <button id="stats_button" disabled type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#stats_modal">
                 Stats
             </button>
@@ -94,6 +95,7 @@
                     <button class="dropdown-item js_sample" data-src="integers.apg">Integers</button>
                     <button class="dropdown-item js_sample" data-src="sqrt_log_t.apg">O(sqrt(log(t)))</button>
                     <button class="dropdown-item js_sample" data-src="rule110.apg">Rule 110</button>
+                    <button class="dropdown-item js_sample" data-src="ant.apg">Langton's ant</button>
                     <button class="dropdown-item js_sample" data-src="koch.apg">Koch snowfrake</button>
                     <button class="dropdown-item js_sample" data-src="pi_calc.apg">π calculator</button>
                 </li>
@@ -101,8 +103,10 @@
             <input id="import_file" type="file" class="d-none">
             <label for="import_file" class="btn btn-primary">Import</label>
         </div>
+        <!-- End Buttons -->
         <div class="mt-1 mb-2">
-            <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output"></span></label>
+            <!-- チラつき防止のためデフォルト値を設定 DEFUALT_FREQUENCYと同期すること -->
+            <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output">30Hz</span></label>
             <!-- index.jsでminとmaxは設定するが、ジャンプを防ぐため手動でも設定する -->
             <input id="frequency_input" class="form-range" value="11" type="range" max="63">
         </div>

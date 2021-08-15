@@ -6,11 +6,8 @@ import {
     CompiledCommandWithNextState
 } from "./compile.js";
 import { Program } from "./Program.js";
-
-/**
- * 初期状態
- */
-export const INITIAL_STATE = "INITIAL";
+import { INITIAL_STATE } from "./Command.js";
+export { INITIAL_STATE } from "./Command.js";
 
 /**
  * @typedef {"Z" | "NZ" | "ZZ" | "*"} Input

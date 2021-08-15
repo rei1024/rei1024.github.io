@@ -4,6 +4,11 @@ import { Action } from "./actions/Action.js";
 import { parseAction } from "./actions/parse.js";
 
 /**
+ * 初期状態
+ */
+export const INITIAL_STATE = "INITIAL";
+
+/**
  * @abstract
  */
 export class ProgramLine {

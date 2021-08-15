@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import { genURL } from "../common/common.js";
 
 describe('Generator Load', () => {

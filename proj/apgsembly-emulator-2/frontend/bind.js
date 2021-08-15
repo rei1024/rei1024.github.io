@@ -29,6 +29,12 @@ export const $reset = $type('#reset', HTMLButtonElement);
 // Step Button
 export const $step = $type('#step', HTMLButtonElement);
 
+// Config modal button
+export const $configButton = $type('#config_button', HTMLButtonElement);
+
+// Stats modal button
+export const $statsButton = $type('#stats_button', HTMLButtonElement);
+
 // 現在の状態
 export const $currentState = $type('#current_state', HTMLElement);
 
