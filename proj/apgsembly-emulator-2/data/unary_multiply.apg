@@ -1,3 +1,4 @@
+# Unary registers multiplication
 #COMPONENTS U0-3,HALT_OUT
 #REGISTERS {"U0":7, "U1":5}
 # State Input Next state Actions

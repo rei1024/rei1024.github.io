@@ -33,6 +33,11 @@ for (let k = 0; k < 5; k++) {
         }
     }
     const end = performance.now();
+    const exp = '3.1415926';
+    const act = machine.actionExecutor.output.getString();
+    if (exp !== act) {
+        throw Error('error' + act);
+    }
     // console.log(machine.actionExecutor.output.getString());
     console.log((end - start) + "ms");
 }

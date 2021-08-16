@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "make t",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "repository": {
     "type": "git",

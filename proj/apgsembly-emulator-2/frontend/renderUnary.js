@@ -42,7 +42,7 @@ export function setUpUnary($unaryRegister, regs) {
 
 /**
  *
- * @param {NodeListOf<ChildNode>} items setUpUnaryのunaryData
+ * @param {NodeListOf<ChildNode>} items setUpUnaryのunaryDataのchildNodes
  * @param {Map<number, UReg>} regs
  */
 export function renderUnary(items, regs) {

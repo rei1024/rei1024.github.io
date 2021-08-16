@@ -1,3 +1,4 @@
+# Binary ruler
 #COMPONENTS B0,NOP
 #REGISTERS {}
 # State Input Next state Actions
