@@ -18,7 +18,7 @@ describe('APGDSL Integration', () => {
         cy.get('#output').then(x => {
             const prog = x.val();
             cy.visit(APGsemblyEmulatorURL);
-            cy.get('#input').type(prog);
+            cy.get('#input').type(prog, { delay: 1 });
             setStep(100);
             cy.get('#step').click();
             cy.get('#output').should('have.value', '123');

@@ -15,7 +15,13 @@ export function importFileAsText($file, callback) {
             }
             callback(result);
         };
+
+        /** @type {File} */
         // @ts-ignore
-        reader.readAsText(e.target.files[0]);
+        const file = e.target?.files[0];
+
+        if (file !== undefined) {
+            reader.readAsText(file);
+        }
     });
 }

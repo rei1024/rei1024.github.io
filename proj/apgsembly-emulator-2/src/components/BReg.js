@@ -177,6 +177,7 @@ export class BReg {
     }
 
     /**
+     * prefixとsuffixがsliceされていることは保証する
      * @returns {{
         prefix: (0 | 1)[];
         head: 0 | 1;

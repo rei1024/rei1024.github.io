@@ -3,6 +3,11 @@
 import { Action } from "./Action.js";
 
 /**
+ * @type {string}
+ */
+const HALT_OUT_STRING = `HALT_OUT`;
+
+/**
  * `HALT_OUT` action
  */
 export class HaltOutAction extends Action {
@@ -15,7 +20,7 @@ export class HaltOutAction extends Action {
      * @returns {string}
      */
     pretty() {
-        return `HALT_OUT`;
+        return HALT_OUT_STRING;
     }
 
     /**
@@ -29,7 +34,7 @@ export class HaltOutAction extends Action {
             return undefined;
         }
         const [haltOut] = array;
-        if (haltOut !== "HALT_OUT") {
+        if (haltOut !== HALT_OUT_STRING) {
             return undefined;
         }
         return new HaltOutAction();

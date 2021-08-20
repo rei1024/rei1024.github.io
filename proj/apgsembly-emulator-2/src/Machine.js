@@ -7,7 +7,7 @@ import {
 } from "./compile.js";
 import { Program } from "./Program.js";
 import { INITIAL_STATE } from "./Command.js";
-export { INITIAL_STATE } from "./Command.js";
+export { INITIAL_STATE };
 
 /**
  * @typedef {"Z" | "NZ" | "ZZ" | "*"} Input
@@ -62,7 +62,7 @@ export class Machine {
          * @private
          */
         this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ?? (() => {
-            throw Error('INITIAL state is not present');
+            throw Error(`${INITIAL_STATE} state is not present`);
         })();
 
         /**

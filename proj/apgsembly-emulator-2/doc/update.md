@@ -9,3 +9,4 @@
 * deno_stdの更新を確認してtest/deps.jsを更新する
    * https://deno.land/std
 * file_serverを更新する
+   * `deno install --allow-net --allow-read -f https://deno.land/std@0.105.0/http/file_server.ts`

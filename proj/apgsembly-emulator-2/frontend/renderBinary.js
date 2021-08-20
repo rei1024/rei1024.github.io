@@ -85,9 +85,10 @@ export function renderBinary($binaryRegister, regs, hideBinary, reverseBinary) {
             $suffix.textContent = '';
         } else if (reverseBinary) {
             const obj = reg.toObject();
-            $prefix.textContent = obj.suffix.slice().reverse().join('');
+            // toObjectは新しい配列を返すため、reverseの副作用は無視する
+            $prefix.textContent = obj.suffix.reverse().join('');
             $head.textContent = obj.head.toString();
-            $suffix.textContent = obj.prefix.slice().reverse().join('');
+            $suffix.textContent = obj.prefix.reverse().join('');
         } else {
             const obj = reg.toObject();
             $prefix.textContent = obj.prefix.join('');

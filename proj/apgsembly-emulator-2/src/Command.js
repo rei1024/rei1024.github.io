@@ -30,6 +30,7 @@ export class ComponentsHeader extends ProgramLine {
      */
     constructor(content) {
         super();
+
         /**
          * @readonly
          */
@@ -63,6 +64,7 @@ export class RegistersHeader extends ProgramLine {
      */
     constructor(content) {
         super();
+
         /**
          * @readonly
          */
@@ -95,6 +97,7 @@ export class Comment extends ProgramLine {
      */
     constructor(str) {
         super();
+
         /**
          * @readonly
          * @private
@@ -164,6 +167,7 @@ export class Command extends ProgramLine {
      */
     constructor({ state, input, nextState, actions }) {
         super();
+
         /**
          * @readonly
          */

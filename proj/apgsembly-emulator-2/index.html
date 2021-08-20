@@ -62,6 +62,12 @@
     </style>
 </head>
 <body>
+    <script>
+        // Fix Dark mode flashing
+        if (localStorage.getItem('dark_mode') === "on") {
+            document.body.setAttribute('apge_dark_mode', "on");
+        }
+    </script>
     <header class="text-center">
         <h1>APGsembly 2.0 Emulator</h1>
     </header>
@@ -97,7 +103,7 @@
                     <button class="dropdown-item js_sample" data-src="rule110.apg">Rule 110</button>
                     <button class="dropdown-item js_sample" data-src="ant2.apg">Langton's ant</button>
                     <button class="dropdown-item js_sample" data-src="koch.apg">Koch snowfrake</button>
-                    <button class="dropdown-item js_sample" data-src="pi_calc.apg">π calculator</button>
+                    <button class="dropdown-item js_sample" data-src="pi_calc.apg">Pi Calculator</button>
                 </li>
             </ul>
             <input id="import_file" type="file" class="d-none">

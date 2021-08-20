@@ -1,14 +1,18 @@
 # Langton's ant
+
+# U0: Initial x coordinate
+# U1: Initial y coordinate
 #REGISTERS { "U0": 30, "U1": 30 }
 INITIAL; ZZ; SET_X_1; NOP
 
-SET_X_1; *; SET_X_2; INC B2DX, TDEC U0
+# Move to (30, 30)
+SET_X_1; *; SET_X_2; TDEC U0
 SET_X_2; Z; SET_Y_1; NOP
-SET_X_2; NZ; SET_X_1; NOP
+SET_X_2; NZ; SET_X_1; INC B2DX, NOP
 
-SET_Y_1; *; SET_Y_2; INC B2DY, TDEC U1
+SET_Y_1; *; SET_Y_2; TDEC U1
 SET_Y_2; Z; LEFT_1; NOP
-SET_Y_2; NZ; SET_Y_1; NOP
+SET_Y_2; NZ; SET_Y_1; INC B2DY, NOP
 
 UP_1; *; UP_2; READ B2D, INC U2
 UP_2; Z; UP_Z_1; SET B2D, NOP

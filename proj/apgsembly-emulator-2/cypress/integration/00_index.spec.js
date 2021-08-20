@@ -83,6 +83,8 @@ describe('Rule 110', () => {
         cy.get('#step').click();
 
         cy.get('#steps').should('have.text', '1000');
+
+        cy.get('#command').should('have.text', 'NEXT_S01_CHECK_3; *; NEXT_S01_CHECK_4; TDEC B2DY');
     });
 });
 

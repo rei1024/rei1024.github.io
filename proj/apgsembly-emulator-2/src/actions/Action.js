@@ -33,6 +33,7 @@ export class Action {
     }
 
     /**
+     * Does this action return a value?
      * 値を返すかどうか
      * @returns {boolean} 値を返す場合true
      */

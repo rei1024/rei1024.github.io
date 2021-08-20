@@ -32,6 +32,7 @@ export class Program {
          * @readonly
          */
         this.commands = commands;
+
         /**
          * @readonly
          */

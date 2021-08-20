@@ -13,6 +13,7 @@ import {
 
 /**
  * B2D
+ * binary 2-dimensional
  */
 export class B2D {
     /**

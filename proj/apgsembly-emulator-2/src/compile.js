@@ -32,10 +32,12 @@ export class CompiledCommand {
      * @param {CompiledCommandWithNextState | undefined} nz NZの場合
      */
     constructor(z, nz) {
+
         /**
          * Zの場合
          */
         this.z = z;
+
         /**
          * NZの場合
          */
