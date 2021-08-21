@@ -30,6 +30,7 @@
         "apgdsl/**/*.js",
         "frontend/**/*.js",
         "generator/**/*.js",
-        "transpiler/**/*.js"
+        "transpiler/**/*.js",
+        "turmites/**/*.js"
     ]
 }
