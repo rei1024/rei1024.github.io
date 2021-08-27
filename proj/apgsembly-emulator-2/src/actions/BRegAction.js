@@ -60,11 +60,13 @@ export class BRegAction extends Action {
      */
     constructor(op, regNumber) {
         super();
+
         /**
          * @type {BOp}
          * @readonly
          */
         this.op = op;
+
         /**
          * @readonly
          */

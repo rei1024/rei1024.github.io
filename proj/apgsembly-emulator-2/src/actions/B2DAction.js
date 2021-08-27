@@ -205,8 +205,7 @@ export class B2DAction extends Action {
         if (action instanceof B2DAction) {
             if (this.axis === B2D_B2DX && action.axis === B2D_B2DY) {
                 return false;
-            }
-            if (this.axis === B2D_B2DY && action.axis === B2D_B2DX) {
+            } else if (this.axis === B2D_B2DY && action.axis === B2D_B2DX) {
                 return false;
             }
             return true;

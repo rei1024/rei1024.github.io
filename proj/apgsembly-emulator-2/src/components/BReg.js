@@ -215,6 +215,8 @@ export class BReg {
             const value1 = value[1];
             if (typeof value0 !== 'number' || typeof value1 !== 'string') {
                 throw Error(`Invalid #REGISTERS ${debugStr}`);
+            } else if (value0 < 0) {
+                throw Error(`Invalid #REGISTERS ${debugStr}`);
             } else {
                 this.pointer = value0;
                 this.setBits(parseBits(value1));

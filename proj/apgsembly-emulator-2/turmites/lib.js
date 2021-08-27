@@ -1,3 +1,4 @@
+/* eslint-disable array-bracket-newline */
 /* eslint-disable no-multi-spaces */
 // @ts-check
 // https://sourceforge.net/p/golly/code/ci/57e0b46e117c8bfa605f0d61d22307ca5c5383d9/tree/Scripts/Python/Rule-Generators/Turmite-gen.py
@@ -79,19 +80,19 @@ export const peggLibrary = [
     //  then type 45 in the top text edit box, then click in the bottom one.)
 
     // just some discoveries of my own, discovered through random search
-// export const timLibrary = [
+export const timLibrary = [
 
-//     // One-turmite effects:
-//     "{{{1,2,1},{0,4,1}},{{1,1,0},{0,8,0}}}", # makes a period-12578 gradient 23 in 29 speed c/340 highway (what is the highest period highway?)
-//     "{{{0,2,1},{0,8,0}},{{1,8,1},{1,4,0}}}", # makes a period-68 (speed c/34) glider (what is the highest period glider?)
-//                                              # (or alternatively, what are the *slowest* highways and gliders?)
-//     "{{{1,4,1},{1,2,1}},{{1,8,0},{1,1,1}}}", # another ice-skater rule, makes H-fractal-like shapes
-//     "{{{1,1,1},{0,2,1}},{{0,2,1},{1,8,0}}}", # period-9 glider
-//     "{{{1,2,1},{0,8,1}},{{1,4,0},{1,8,0}}}", # another ice-skater
-//     "{{{1,4,1},{1,8,1}},{{1,4,0},{0,1,0}}}", # Langton's ant (rot 45) on a 1 background but maze-like on a 0 background
-//     "{{{0,2,1},{0,8,1}},{{1,1,0},{1,8,1}}}", # slow ice-skater makes furry shape
-//     "{{{1,8,0},{1,1,1}},{{1,8,0},{0,2,1}}}", # busy beaver (goes cyclic) <50k
-//     "{{{0,8,1},{1,8,1}},{{1,2,1},{0,2,0}}}", # interesting texture
-//     "{{{1,1,1},{0,1,0}},{{1,2,0},{1,2,1}}}", # period-17 1 in 3 gradient highway (but needs debris to get started...)
-//     "{{{0,2,1},{1,8,1}},{{1,4,0},{0,2,1}}}", # period-56 speed-28 horizontal highway
-//     "{{{1,8,0},{0,1,1}},{{1,2,0},{1,8,0}}}", # somewhat loose growth
+    // One-turmite effects:
+    ["{{{1,2,1},{0,4,1}},{{1,1,0},{0,8,0}}}", "makes a period-12578 gradient 23 in 29 speed c/340 highway (what is the highest period highway?)"],
+    ["{{{0,2,1},{0,8,0}},{{1,8,1},{1,4,0}}}", "makes a period-68 (speed c/34) glider (what is the highest period glider?)"
+                                             + "(or alternatively, what are the *slowest* highways and gliders?"],
+    ["{{{1,4,1},{1,2,1}},{{1,8,0},{1,1,1}}}", "another ice-skater rule, makes H-fractal-like shapes"],
+    ["{{{1,1,1},{0,2,1}},{{0,2,1},{1,8,0}}}", "period-9 glider"],
+    ["{{{1,2,1},{0,8,1}},{{1,4,0},{1,8,0}}}", "another ice-skater"],
+    ["{{{1,4,1},{1,8,1}},{{1,4,0},{0,1,0}}}", "Langton's ant (rot 45) on a 1 background but maze-like on a 0 background"],
+    ["{{{0,2,1},{0,8,1}},{{1,1,0},{1,8,1}}}", "slow ice-skater makes furry shape"],
+    ["{{{1,8,0},{1,1,1}},{{1,8,0},{0,2,1}}}", "busy beaver (goes cyclic) <50k"],
+    ["{{{0,8,1},{1,8,1}},{{1,2,1},{0,2,0}}}", "interesting texture"],
+    ["{{{1,1,1},{0,1,0}},{{1,2,0},{1,2,1}}}", "period-17 1 in 3 gradient highway (but needs debris to get started...)"],
+    ["{{{0,2,1},{1,8,1}},{{1,4,0},{0,2,1}}}", "period-56 speed-28 horizontal highway"],
+    ["{{{1,8,0},{0,1,1}},{{1,2,0},{1,8,0}}}", "somewhat loose growth"]];

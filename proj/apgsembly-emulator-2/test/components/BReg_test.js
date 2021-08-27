@@ -108,3 +108,35 @@ test('BReg action', () => {
     assertEquals(x.action(new BRegAction(B_READ, 0)), 1);
     assertEquals(x.action(new BRegAction(B_READ, 0)), 0);
 });
+
+test('BReg setBy', () => {
+    const x = new BReg();
+    x.setByRegistersInit('1', 3);
+    assertEquals(x.getBits(), [1, 1]);
+
+    x.setByRegistersInit('1', 6);
+
+    assertEquals(x.getBits(), [0, 1, 1]);
+
+    x.setByRegistersInit('1', [1, '0110']);
+
+    assertEquals(x.getBits(), [0, 1, 1, 0]);
+
+    assertEquals(x.pointer, 1);
+
+    assertThrows(() => {
+        x.setByRegistersInit('1', []);
+    });
+
+    assertThrows(() => {
+        x.setByRegistersInit('1', true);
+    });
+
+    assertThrows(() => {
+        x.setByRegistersInit('1', null);
+    });
+
+    assertThrows(() => {
+        x.setByRegistersInit('1', [-3, '0110']);
+    });
+});

@@ -1,6 +1,6 @@
 import { URegAction } from "../../src/actions/URegAction.js";
 import { UReg } from "../../src/components/UReg.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, test, assertThrows } from "../deps.js";
 
 test("UReg tdec", () => {
     const x = new UReg();
@@ -45,4 +45,24 @@ test("UReg action TDEC", () => {
     const res = x.action(URegAction.parse("TDEC U0"));
     assertEquals(x.getValue(), 0);
     assertEquals(res, 0);
+});
+
+test("UReg setBy", () => {
+    const x = new UReg();
+    x.setByRegistersInit('1', 0);
+    assertEquals(x.getValue(), 0);
+    x.setByRegistersInit('1', 3);
+    assertEquals(x.getValue(), 3);
+
+    assertThrows(() => {
+        x.setByRegistersInit('1', []);
+    });
+
+    assertThrows(() => {
+        x.setByRegistersInit('1', true);
+    });
+
+    assertThrows(() => {
+        x.setByRegistersInit('1', 'a');
+    });
 });

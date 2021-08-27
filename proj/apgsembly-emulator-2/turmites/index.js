@@ -3,7 +3,7 @@
 
 import { generate } from './generate_apg.js';
 import { Turmites } from './turmites.js';
-import { peggLibrary } from './lib.js';
+import { peggLibrary, timLibrary } from './lib.js';
 
 const rule = document.querySelector("#rule");
 if (!(rule instanceof HTMLInputElement)) {
@@ -43,7 +43,12 @@ const $sampleList = document.querySelector('#sample_list');
 
 // https://sourceforge.net/p/golly/code/ci/57e0b46e117c8bfa605f0d61d22307ca5c5383d9/tree/Scripts/Python/Rule-Generators/Turmite-gen.py
 
-for (const [ruleString, desc] of peggLibrary) {
+/**
+ *
+ * @param {string} ruleString
+ * @param {string} desc
+ */
+const addSample = (ruleString, desc) => {
     // <button class="dropdown-item">Text</button>
     const button = document.createElement('button');
     button.classList.add('dropdown-item');
@@ -53,6 +58,14 @@ for (const [ruleString, desc] of peggLibrary) {
         rule.value = ruleString;
     });
     $sampleList.append(button);
+};
+
+for (const [ruleString, desc] of peggLibrary) {
+    addSample(ruleString, desc);
+}
+
+for (const [ruleString, desc] of timLibrary) {
+    addSample(ruleString, desc);
 }
 
 generateButton.addEventListener("click", () => {

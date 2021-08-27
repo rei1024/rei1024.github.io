@@ -43,15 +43,18 @@ export class Machine {
         this.program = program;
 
         const obj = commandsToLookupTable(program.commands);
+
         /**
          * @readonly
          */
         this.states = obj.states;
+
         /**
          * @readonly
          * @private
          */
         this.stateMap = obj.stateMap;
+
         /**
          * @readonly
          * @private

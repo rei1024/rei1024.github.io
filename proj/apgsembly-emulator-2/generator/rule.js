@@ -94,7 +94,7 @@ export function generate(rule) {
     const array = [];
     array.push(`# Rule ${rule}`);
     // Set ON cell at (0, 0)
-    array.push(`INITIAL; *; NEXT_S${boundary}${boundary}_READ_1; SET B2D, NOP`);
+    array.push(`INITIAL; ZZ; NEXT_S${boundary}${boundary}_READ_1; SET B2D, NOP`);
     // Current cursor is on the cell that will be read
     bit2((i, j) => {
         array.push(`NEXT_S${i}${j}_READ_1; *; NEXT_S${i}${j}_READ_2; READ B2D`);

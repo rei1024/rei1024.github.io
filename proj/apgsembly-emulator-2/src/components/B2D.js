@@ -26,7 +26,7 @@ export class B2D {
             throw RangeError('B2D constructor: negative');
         }
         this.x = x;
-        this.y = x;
+        this.y = y;
 
         /**
          * @private
