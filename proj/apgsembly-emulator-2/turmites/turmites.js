@@ -128,9 +128,10 @@ export class Next {
         if (str.length !== 3) {
             return undefined;
         }
-        const nextColor = parseInt(str[0], 10);
-        const nextOpNum = parseInt(str[0], 10);
-        const nextState = parseInt(str[0], 10);
+        const [ nextColor, nextOpNum, nextState ] = [...str].map(x => parseInt(x, 10));
+        if (nextColor === undefined || nextOpNum === undefined || nextState === undefined) {
+            return undefined;
+        }
         return Next.fromNumbers(nextColor, nextOpNum, nextState);
     }
 
@@ -191,7 +192,11 @@ export class Turmites {
                     throw error;
                 }
                 // @ts-ignore
-                return Next.fromNumbers(...nextObj);
+                const next = Next.fromNumbers(...nextObj);
+                if (next === undefined) {
+                    throw error;
+                }
+                return next;
             });
             return array3;
         });
@@ -206,6 +211,7 @@ export class Turmites {
      */
     static fromObjectString(str) {
         try {
+            // @ts-expect-error
             const obj = JSON.parse(str.replaceAll('{', '[').replaceAll('}', ']'));
             if (Array.isArray(obj)) {
                 return Turmites.fromObject(obj);
@@ -226,6 +232,7 @@ export class Turmites {
                 return `{${next.nextColor},${next.nextOp},${next.nextState}}`;
             }).join(',') + "}";
         });
-        return "{" + middle.join(',') + "}";
+
+        return `{${middle.join(',')}}`;
     }
 }

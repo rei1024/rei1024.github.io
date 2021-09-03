@@ -134,7 +134,7 @@ export class APGCCompiler {
      */
     generateState() {
         this.id++;
-        return "STATE_" + this.id;
+        return `STATE_${this.id}`;
     }
 
     /**
@@ -239,7 +239,7 @@ export class APGCCompiler {
         } else if (statement instanceof WhileStatement) {
             return compileWhileStatement(this, inputState, statement);
         } else {
-            throw Error('unknown statement ' + statement);
+            throw Error(`unknown statement ${statement}`);
         }
     }
 }

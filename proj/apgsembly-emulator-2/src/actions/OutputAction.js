@@ -2,13 +2,17 @@
 
 import { Action } from "./Action.js";
 
+const OUTPUT_STRING = "OUTPUT";
+
 export class OutputAction extends Action {
+
     /**
      *
      * @param {string} digit
      */
     constructor(digit) {
         super();
+
         /**
          * @readonly
          */
@@ -20,7 +24,7 @@ export class OutputAction extends Action {
      * @returns {string}
      */
     pretty() {
-        return `OUTPUT ${this.digit}`;
+        return `${OUTPUT_STRING} ${this.digit}`;
     }
 
     /**
@@ -34,7 +38,7 @@ export class OutputAction extends Action {
             return undefined;
         }
         const [ output, digit ] = array;
-        if (output !== "OUTPUT") {
+        if (output !== OUTPUT_STRING) {
             return undefined;
         }
         if (digit === undefined) {

@@ -49,6 +49,7 @@
         "no-trailing-spaces": "error",
         "brace-style": "error"
         // "max-len": "error" // TODO
+        // "prefer-template": "error" TODO
     },
     "globals": {
         "Deno": true

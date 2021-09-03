@@ -53,7 +53,7 @@ export function main(str) {
     validate(apgcProgram);
 
     return apgcProgram.headers.
-        map(x => x + "\n").join("") + compiler(apgcProgram).pretty();
+        map(x => `${x}\n`).join("") + compiler(apgcProgram).pretty();
 }
 
 /**
@@ -63,8 +63,12 @@ export function main(str) {
  */
 export function mainWithComment(str) {
     const header = `\n# State    Input    Next state    Actions` +
-        `\n# ---------------------------------------\n`;
-    return "# Generated from APGC \n" +
-        str.trim().split('\n').map(x => "# " + x).join('\n') + "\n" +
-        header + main(str);
+                   `\n# ---------------------------------------\n`;
+    return [
+        "# Generated from APGC \n",
+        str.trim().split('\n').map(x => `# ${x}`).join('\n'),
+        "\n",
+        header,
+        main(str)
+    ].join('');
 }
