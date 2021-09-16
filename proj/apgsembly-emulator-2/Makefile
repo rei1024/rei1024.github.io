@@ -12,3 +12,5 @@ chore:
 	deno upgrade
 	npm audit
 	git gc
+bundle:
+	deno bundle frontend/index.js bundle.js

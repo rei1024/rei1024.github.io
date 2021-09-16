@@ -41,6 +41,10 @@ if (!($y instanceof HTMLInputElement)) {
 
 const $sampleList = document.querySelector('#sample_list');
 
+if ($sampleList === null) {
+    throw TypeError('$sampleList is null');
+}
+
 // https://sourceforge.net/p/golly/code/ci/57e0b46e117c8bfa605f0d61d22307ca5c5383d9/tree/Scripts/Python/Rule-Generators/Turmite-gen.py
 
 /**

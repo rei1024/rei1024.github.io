@@ -57,14 +57,6 @@ test('Command parse unknown action', () => {
     }
 });
 
-test('Command parse empty action', () => {
-    const str = `INITIAL; ZZ; DIR0;`;
-    const res = Command.parse(str);
-    if (typeof res !== "string") {
-        throw Error('expect parse error ' + str);
-    }
-});
-
 test('Command parse unknown input', () => {
     const str = `INITIAL; XXXXX; DIR0; INC U3`;
     const res = Command.parse(str);

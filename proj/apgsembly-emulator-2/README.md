@@ -1,5 +1,5 @@
 # apgsembly-emulator-2
-An Emulator for APGsembly 2.0
+An emulator for APGsembly 2.0
 
 ## Testing
 ### Requirements
@@ -7,7 +7,7 @@ An Emulator for APGsembly 2.0
 * `deno`
     * https://deno.land/#installation
     * `file_server`
-        * https://deno.land/manual@v1.13.0/examples/file_server
+        * https://deno.land/manual@v1.14.0/examples/file_server
 * `npm`
     * Run `$ npm install`
 

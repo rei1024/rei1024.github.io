@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * @type {{ sum: Element, z: Element, nz: Element }[]}
+ * @type {{ sum: Element, z: Element, nz: Element, tr: HTMLElement }[]}
  */
 let cache = [];
 
@@ -31,7 +31,7 @@ export function setUpStats($statsBody, stateStats, states) {
         $nz.textContent = stat.nz.toString();
         $tr.append($name, $sum, $z, $nz);
         $statsBody.append($tr);
-        cache.push({ sum: $sum, z: $z, nz: $nz });
+        cache.push({ sum: $sum, z: $z, nz: $nz, tr: $tr });
     }
 }
 
@@ -43,25 +43,20 @@ function error() {
 }
 
 /**
- * @param {HTMLTableSectionElement} $statsBody
  * @param {{ z: number, nz: number }[]} stateStats
  * @param {number} currentIndex
  */
-export function renderStats($statsBody, stateStats, currentIndex) {
-    const trs = $statsBody.childNodes;
+export function renderStats(stateStats, currentIndex) {
     const stats = stateStats;
-    for (let i = 0; i < trs.length; i++) {
-        const tr = trs.item(i);
-        const stat = stats[i] ?? error();
-        if (!(tr instanceof HTMLTableRowElement)) {
-            throw Error('error');
-        }
-        if (currentIndex === i) {
-            tr.style.backgroundColor = '#e1f5fe';
-        } else {
-            tr.style.backgroundColor = '';
-        }
+    const len = cache.length;
+    for (let i = 0; i < len; i++) {
         const item = cache[i] ?? error();
+        if (currentIndex === i) {
+            item.tr.style.backgroundColor = '#e1f5fe';
+        } else {
+            item.tr.style.backgroundColor = '';
+        }
+        const stat = stats[i] ?? error();
         item.sum.textContent = (stat.z + stat.nz).toString();
         item.z.textContent = stat.z.toString();
         item.nz.textContent = stat.nz.toString();

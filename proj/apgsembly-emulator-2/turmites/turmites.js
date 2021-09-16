@@ -211,8 +211,7 @@ export class Turmites {
      */
     static fromObjectString(str) {
         try {
-            // @ts-expect-error
-            const obj = JSON.parse(str.replaceAll('{', '[').replaceAll('}', ']'));
+            const obj = JSON.parse(str.replace(/\{/ug, '[').replace(/\}/ug, ']'));
             if (Array.isArray(obj)) {
                 return Turmites.fromObject(obj);
             } else {

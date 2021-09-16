@@ -226,7 +226,8 @@ export class Command extends ProgramLine {
         const inputStr = array[1] ?? this.error();
         const nextState = array[2] ?? this.error();
         const actionsStr = array[3] ?? this.error();
-        const actionStrs = actionsStr.trim().split(/\s*,\s*/u);
+        // 空文字を除く
+        const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter(x => x !== "");
 
         /** @type {Action[]} */
         const actions = [];

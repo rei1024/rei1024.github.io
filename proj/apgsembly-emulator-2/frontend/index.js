@@ -385,7 +385,6 @@ export class App {
             return;
         }
         renderStats(
-            $statsBody,
             this.machine.stateStats,
             this.machine.getCurrentStateIndex()
         );

@@ -3,6 +3,9 @@
 // @ts-check
 // https://sourceforge.net/p/golly/code/ci/57e0b46e117c8bfa605f0d61d22307ca5c5383d9/tree/Scripts/Python/Rule-Generators/Turmite-gen.py
 
+/**
+ * @type {[rule: string, desc: string][]}
+ */
 export const peggLibrary = [
     // source: http://demonstrations.wolfram.com/Turmites/
     // Translated into his later notation: 1=noturn, 2=right, 4=u-turn, 8=left
@@ -80,6 +83,10 @@ export const peggLibrary = [
     //  then type 45 in the top text edit box, then click in the bottom one.)
 
     // just some discoveries of my own, discovered through random search
+
+/**
+ * @type {[rule: string, desc: string][]}
+ */
 export const timLibrary = [
 
     // One-turmite effects:
