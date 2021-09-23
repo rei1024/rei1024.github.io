@@ -106,6 +106,9 @@ export const $reverseBinary = $type('#reverse_binary', HTMLInputElement);
 // ブレークポイント
 export const $breakpointSelect = $type('#breakpoint_select', HTMLSelectElement);
 
+// ブレークポイント入力
+export const $breakpointInputSelect = $type('#breakpoint_input_select', HTMLSelectElement);
+
 // ダークモード
 export const $darkMode = $type('#dark_mode', HTMLInputElement);
 

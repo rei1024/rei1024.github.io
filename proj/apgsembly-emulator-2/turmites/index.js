@@ -2,8 +2,12 @@
 // @ts-check
 
 import { generate } from './generate_apg.js';
+import { generate as absGenerate } from './abs_generate_apg.js';
+
 import { Turmites } from './turmites.js';
-import { peggLibrary, timLibrary } from './lib.js';
+import { AbsTurmites } from './abs_turmites.js';
+
+import { peggLibrary, timLibrary, absLibrary } from './lib.js';
 
 const rule = document.querySelector("#rule");
 if (!(rule instanceof HTMLInputElement)) {
@@ -57,19 +61,19 @@ const addSample = (ruleString, desc) => {
     const button = document.createElement('button');
     button.classList.add('dropdown-item');
     button.textContent = desc;
-    button.addEventListener('click', e => {
+    button.addEventListener('click', () => {
         code.value = "";
         rule.value = ruleString;
     });
     $sampleList.append(button);
 };
 
-for (const [ruleString, desc] of peggLibrary) {
-    addSample(ruleString, desc);
-}
+const libraries = [peggLibrary, timLibrary, absLibrary];
 
-for (const [ruleString, desc] of timLibrary) {
-    addSample(ruleString, desc);
+for (const lib of libraries) {
+    for (const [ruleString, desc] of lib) {
+        addSample(ruleString, desc);
+    }
 }
 
 generateButton.addEventListener("click", () => {
@@ -81,8 +85,14 @@ generateButton.addEventListener("click", () => {
         code.value = `# Turmite ${rule.value}\n` + generate(tur, x, y);
         copy.disabled = false;
     } catch (e) {
-        console.log(e);
-        code.value = "";
+        try {
+            const tur = AbsTurmites.fromObjectString(rule.value);
+            code.value = `# Turmite ${rule.value}\n` + absGenerate(tur, x, y);
+            copy.disabled = false;
+        } catch (e) {
+            console.log(e);
+            code.value = "";
+        }
     }
 });
 

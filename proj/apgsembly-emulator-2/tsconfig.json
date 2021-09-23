@@ -18,7 +18,7 @@
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
         // "exactOptionalPropertyTypes": true,
-        // "useUnknownInCatchVariables": true,
+        "useUnknownInCatchVariables": true,
         "noPropertyAccessFromIndexSignature": true,
         "noUncheckedIndexedAccess": true,
         "noUnusedLocals": true,
@@ -31,6 +31,7 @@
         "frontend/**/*.js",
         "generator/**/*.js",
         "transpiler/**/*.js",
-        "turmites/**/*.js"
+        "turmites/**/*.js",
+        "tm_to_apg/**/*.js"
     ]
 }

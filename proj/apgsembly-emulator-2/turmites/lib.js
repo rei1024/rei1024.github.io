@@ -103,3 +103,11 @@ export const timLibrary = [
     ["{{{1,1,1},{0,1,0}},{{1,2,0},{1,2,1}}}", "period-17 1 in 3 gradient highway (but needs debris to get started...)"],
     ["{{{0,2,1},{1,8,1}},{{1,4,0},{0,2,1}}}", "period-56 speed-28 horizontal highway"],
     ["{{{1,8,0},{0,1,1}},{{1,2,0},{1,8,0}}}", "somewhat loose growth"]];
+
+// https://github.com/GollyGang/ruletablerepository/wiki/TwoDimensionalTuringMachines
+/**
+ * @type {[rule: string, desc: string][]}
+ */
+export const absLibrary = [
+    [`{{{0,'N',2},{1,'S',1}},{{0,'E',0},{0,'S',0}},{{1,'W',1},{1,'N',2}}}`, "Alien Counter"]
+];

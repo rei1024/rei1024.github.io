@@ -52,6 +52,7 @@ import {
     $hideBinary,
     $reverseBinary,
     $breakpointSelect,
+    $breakpointInputSelect,
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
@@ -237,7 +238,11 @@ export class App {
                 this.render();
             } catch (e) {
                 this.appState = "ParseError";
-                this.errorMessage = e.message;
+                if (e instanceof Error) {
+                    this.errorMessage = e.message;
+                } else {
+                    this.errorMessage = "Unknown error is occurred.";
+                }
                 this.render();
             }
         }
@@ -461,10 +466,12 @@ export class App {
 
         // ブレークポイントの処理
         let breakpointIndex = -1;
-        const n = parseInt($breakpointSelect.value, 10);
-        if (!isNaN(n)) {
-            breakpointIndex = n;
+        const tempN = parseInt($breakpointSelect.value, 10);
+        if (!isNaN(tempN)) {
+            breakpointIndex = tempN;
         }
+
+        const breakpointInputValue = parseInt($breakpointInputSelect.value, 10);
 
         const machine = this.machine;
         if (machine === undefined) {
@@ -481,7 +488,10 @@ export class App {
                     return;
                 }
                 // ブレークポイントの状態の場合、停止する
-                if (machine.getCurrentStateIndex() === breakpointIndex) {
+                if (
+                    machine.getCurrentStateIndex() === breakpointIndex &&
+                    (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
+                ) {
                     this.appState = "Stop";
                     this.steps += i + 1;
                     this.render();
@@ -490,7 +500,11 @@ export class App {
             }
         } catch (e) {
             this.appState = "RuntimeError";
-            this.errorMessage = e.message;
+            if (e instanceof Error) {
+                this.errorMessage = e.message;
+            } else {
+                this.errorMessage = "Unkown error is occurred.";
+            }
             this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
             this.render();
             return;
@@ -670,7 +684,7 @@ $statsModal.addEventListener('shown.bs.modal', () => {
 document.addEventListener('keydown', e => {
     const activeElementTagName =
         document.activeElement?.tagName.toUpperCase() ?? "";
-    const tags = ["TEXTAREA", "INPUT", "DETAILS", "BUTTON"];
+    const tags = ["TEXTAREA", "INPUT", "DETAILS", "BUTTON", "AUDIO", "VIDEO", "SELECT", "OPTION"];
     // 入力中は無し
     if (tags.includes(activeElementTagName)) {
         return;
