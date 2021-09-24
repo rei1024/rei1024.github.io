@@ -1,4 +1,4 @@
-# https://raw.githubusercontent.com/dvgrn/b3s23life/master/calculator/pi-program.txt
+# https://raw.githubusercontent.com/dvgrn/b3s23life/main/calculator/pi-program.txt
 INITIAL; Z; S1; READ T0
 INITIAL; NZ; S1; READ T0
 S1; Z; S2; SET T0, READ T2

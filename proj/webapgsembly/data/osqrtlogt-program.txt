@@ -1,4 +1,4 @@
-# https://raw.githubusercontent.com/dvgrn/b3s23life/master/calculator/osqrtlogt-program.txt
+# https://raw.githubusercontent.com/dvgrn/b3s23life/main/calculator/osqrtlogt-program.txt
 INITIAL; Z; A1; READ SQ
 INITIAL; NZ; A1; READ SQ
 A1; Z; B1; SET SQ, NOP

@@ -1,6 +1,6 @@
 # Pi Calculator
-#COMPONENTS NOP,DIGITPRINTER_SE,B0-3,U0-9,ADD,SUB,MUL
-#REGISTERS {"U1":1, "U6":6, "B0":2, "B2":1}
+#COMPONENTS NOP,OUTPUT,B0-3,U0-9,ADD,SUB,MUL
+#REGISTERS {"U1":1, "U6":6, "B0":[0,"01"] , "B2":[0,"1"]}
 # State Input Next state Actions
 # ---------------------------------------
 INITIAL; ZZ; ITER1; NOP
