@@ -2,19 +2,18 @@
 
 import { APGsemblyEmulatorURL, setStep, dslURL } from "../common/common.js";
 
-describe('APGDSL Load', () => {
+describe('APGDSL Integration', () => {
     it('should load', () => {
         cy.visit(dslURL);
         cy.get('h1').should('have.text', 'APGDSL');
     });
-});
-
-describe('APGDSL Integration', () => {
-    it('Integration', () => {
-        cy.visit(dslURL);
+    it('should generate', () => {
         cy.get('#samples').click();
         cy.get('[data-src="01_output.txt"]').click();
         cy.get('#compile').click();
+        cy.get('#output').should('include.value', 'INITIAL');
+    });
+    it('should run', () => {
         cy.get('#output').then(x => {
             const prog = x.val();
             cy.visit(APGsemblyEmulatorURL);

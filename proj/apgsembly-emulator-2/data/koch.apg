@@ -1,6 +1,6 @@
 # Koch snowfrake printer
 #COMPONENTS U0-5,B0,B2D,NOP
-#REGISTERS {"U4":6, "U5":8}
+#REGISTERS {'U4':6, 'U5':8}
 # State Input Next state Actions
 # ---------------------------------------
 INITIAL; ZZ; DIR0; TDEC U2

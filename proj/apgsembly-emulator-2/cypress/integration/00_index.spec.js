@@ -89,17 +89,20 @@ describe('Rule 110', () => {
 });
 
 describe('Start Stop Reset', () => {
-    it('Start, Stop and Reset button', () => {
+    it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('rule110.apg');
+        cy.get('#start').should('not.be.disabled');
+    });
+    it('Start and Stop', () => {
         cy.get('#start').click();
-        cy.wait(500);
+        cy.wait(400);
         cy.get('#stop').click();
         cy.get('#steps').should('not.have.text', '0');
-
+    });
+    it('Reset', () => {
         cy.get('#reset').click();
-
         cy.get('#steps').should('have.text', '0');
     });
 });

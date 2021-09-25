@@ -84,7 +84,7 @@ export class Machine {
         const regHeader = program.registersHeader;
         if (regHeader !== undefined) {
             /** @type {string} */
-            const str = regHeader.content;
+            const str = regHeader.content.replace(/'/ug, `"`);
 
             /** @type {import("./ActionExecutor.js").RegistersInit} */
             let parsed = {};

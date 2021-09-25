@@ -1,27 +1,26 @@
 /// <reference types="cypress" />
 
-import { genURL, APGsemblyEmulatorURL, setStep } from "../common/common.js";
+import { turmitesURL, APGsemblyEmulatorURL, setStep } from "../common/common.js";
 
-describe('Generator integration', () => {
+describe('Turmites integration', () => {
     it('should load', () => {
-        cy.visit(genURL);
-        cy.contains('Code generator for elementary cellular automata');
+        cy.visit(turmitesURL);
+        cy.contains('Turmites');
     });
     it('should generate', () => {
-        cy.get('#rule').type(`{selectall}{backspace}110`);
+        cy.get('#samples').click();
+        cy.contains('Langton').click();
         cy.get('#generate').click();
         cy.get('#copy').should('not.be.disabled');
     });
-
     it('should run', () => {
         cy.get('#output').then(x => {
             const prog = x.val();
             cy.visit(APGsemblyEmulatorURL);
-
             cy.get('#input').clear().invoke('val', prog)
-            setStep(100);
+            setStep(500);
             cy.get('#step').click();
-            cy.get('#steps').should('contain.text', '100');
+            cy.get('#steps').should('contain.text', '500');
         })
     });
 });

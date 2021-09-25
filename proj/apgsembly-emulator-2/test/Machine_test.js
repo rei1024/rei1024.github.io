@@ -157,6 +157,34 @@ INITIAL; ZZ; INITIAL; NOP
     }
 });
 
+test('Machine register header: single quotation support', () => {
+    const str = `
+#REGISTERS {'U3': 2}
+INITIAL; ZZ; A0; TDEC U3
+A0; *; A0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error ' + str);
+    }
+    const machine = new Machine(program);
+    assertEquals(machine.actionExecutor.uRegMap.get(3).getValue(), 2);
+});
+
+test('Machine register header: single quotation support for binary', () => {
+    const str = `
+#REGISTERS {'B0': [0, '110']}
+INITIAL; ZZ; A0; TDEC B0
+A0; *; A0; NOP
+    `;
+    const program = Program.parse(str);
+    if (!(program instanceof Program)) {
+        throw Error('parse error ' + str);
+    }
+    const machine = new Machine(program);
+    assertEquals(machine.actionExecutor.bRegMap.get(0).getBits(), [1, 1, 0]);
+});
+
 test('Machine register header error: register is not exist', () => {
     const str = `
 #REGISTERS {"U3": 2}
