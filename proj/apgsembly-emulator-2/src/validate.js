@@ -106,11 +106,16 @@ function validateNoSameComponentCommand(command) {
     }
     const actions = command.actions;
     const len = actions.length;
+
+    if (len <= 1) {
+        return undefined;
+    }
+
     for (let i = 0; i < len; i++) {
-        for (let j = 0; j < len; j++) {
-            if (i === j) {
-                continue;
-            }
+        for (let j = i + 1; j < len; j++) {
+            // if (i === j) {
+            //     continue;
+            // }
             const a = actions[i];
             const b = actions[j] ?? (() => {
                 throw Error('internal error');
@@ -120,7 +125,7 @@ function validateNoSameComponentCommand(command) {
                     a.pretty()
                 }" and "${
                     b.pretty()
-                }" act on the same component in "${command.pretty()}"`;
+                }" use same component in "${command.pretty()}"`;
             }
         }
     }
@@ -144,7 +149,7 @@ export function validateNoSameComponent(commands) {
 }
 
 /**
- * アクションが同じコンポーネントを使用していないか検査する
+ * 次の状態が初期状態でないか検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
  * @returns {string | undefined}

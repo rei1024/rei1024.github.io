@@ -74,11 +74,12 @@ describe('Pi calculator', () => {
 });
 
 describe('Rule 110', () => {
-    it('Rule 110 should work', () => {
+    it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('rule110.apg');
-
+    });
+    it('Rule 110 should work', () => {
         setStep(1000);
         cy.get('#step').click();
 
@@ -93,7 +94,6 @@ describe('Start Stop Reset', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('rule110.apg');
-        cy.get('#start').should('not.be.disabled');
     });
     it('Start and Stop', () => {
         cy.get('#start').click();

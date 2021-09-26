@@ -31,7 +31,8 @@ export class Machine {
          */
         this.actionExecutor = new ActionExecutor({
             binaryRegisterNumbers: program.extractBinaryRegisterNumbers(),
-            unaryRegisterNumbers: program.extractUnaryRegisterNumbers()
+            unaryRegisterNumbers: program.extractUnaryRegisterNumbers(),
+            legacyTRegisterNumbers: program.extractLegacyTRegisterNumbers(),
         });
 
         /** @type {0 | 1} */

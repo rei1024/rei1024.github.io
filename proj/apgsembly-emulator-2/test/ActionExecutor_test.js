@@ -4,7 +4,8 @@ import { assertEquals, test, assertThrows } from './deps.js';
 test('ActionExecutor output', () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [],
-        binaryRegisterNumbers: []
+        binaryRegisterNumbers: [],
+        legacyTRegisterNumbers: [],
     });
     x.output.output('3');
     assertEquals(x.output.getString(), '3');
@@ -13,7 +14,8 @@ test('ActionExecutor output', () => {
 test('ActionExecutor setByRegistersInit empty', () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [],
-        binaryRegisterNumbers: []
+        binaryRegisterNumbers: [],
+        legacyTRegisterNumbers: [],
     });
     x.setByRegistersInit({});
 });
@@ -21,7 +23,8 @@ test('ActionExecutor setByRegistersInit empty', () => {
 test('ActionExecutor setByRegistersInit', () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0, 1],
-        binaryRegisterNumbers: [0, 1]
+        binaryRegisterNumbers: [0, 1],
+        legacyTRegisterNumbers: [],
     });
 
     assertEquals(x.uRegMap.size, 2);
@@ -44,7 +47,8 @@ test('ActionExecutor setByRegistersInit', () => {
 test('ActionExecutor setByRegistersInit', () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0, 1],
-        binaryRegisterNumbers: [0, 1]
+        binaryRegisterNumbers: [0, 1],
+        legacyTRegisterNumbers: [],
     });
 
     assertEquals(x.uRegMap.size, 2);
@@ -61,7 +65,8 @@ test('ActionExecutor setByRegistersInit', () => {
 test('ActionExecutor setByRegistersInit error', () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0, 1],
-        binaryRegisterNumbers: [0, 1]
+        binaryRegisterNumbers: [0, 1],
+        legacyTRegisterNumbers: [],
     });
 
     assertEquals(x.uRegMap.size, 2);

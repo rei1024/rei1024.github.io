@@ -146,7 +146,7 @@ test('Program same component actions U', () => {
     } else {
         assertEquals(
             program,
-            `Actions "INC U0" and "TDEC U0" act on the same component in ` +
+            `Actions "INC U0" and "TDEC U0" use same component in ` +
             `"INITIAL; ZZ; A0; INC U0, TDEC U0"`
         );
     }
@@ -161,7 +161,7 @@ test('Program same component actions SUB', () => {
     } else {
         assertEquals(
             program,
-            `Actions "SUB A1" and "SUB B0" act on the same component in ` +
+            `Actions "SUB A1" and "SUB B0" use same component in ` +
             `"INITIAL; ZZ; A0; SUB A1, SUB B0"`
         );
     }
@@ -177,7 +177,7 @@ test('Program same component actions B', () => {
         assertEquals(
             program,
             `Actions "INC B0" and "TDEC B0"` +
-            ` act on the same component in "INITIAL; ZZ; A0; INC B0, TDEC B0"`
+            ` use same component in "INITIAL; ZZ; A0; INC B0, TDEC B0"`
         );
     }
 });
@@ -191,7 +191,7 @@ test('Program same component actions OUTPUT', () => {
     } else {
         assertEquals(
             program,
-            `Actions "OUTPUT 1" and "OUTPUT 2" act on the same component in ` +
+            `Actions "OUTPUT 1" and "OUTPUT 2" use same component in ` +
             `"INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2"`
         );
     }

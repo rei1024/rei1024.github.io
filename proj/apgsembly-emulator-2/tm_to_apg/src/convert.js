@@ -66,7 +66,13 @@ function direction(array, zOrNZ, state, direction) {
 
     const otherSymbol = otherSymbols[0] ?? '1';
 
-    array.push(`INITIAL; ZZ; ${tmMap.states[0]}__CHECK_SYMBOL_1; NOP`);
+    const firstState = '0';
+
+    if (tmMap.map.get(firstState) === undefined) {
+        return Error(`does not contain state "${firstState}"`);
+    }
+
+    array.push(`INITIAL; ZZ; ${firstState}__CHECK_SYMBOL_1; NOP`);
 
     for (const state of tmMap.states) {
         if (isHaltState(state)) {

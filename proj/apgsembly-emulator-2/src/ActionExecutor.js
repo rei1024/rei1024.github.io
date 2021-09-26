@@ -10,6 +10,7 @@ import { NopAction } from "./actions/NopAction.js";
 import { OutputAction } from "./actions/OutputAction.js";
 import { SubAction } from "./actions/SubAction.js";
 import { URegAction } from "./actions/URegAction.js";
+import { LegacyTRegAction } from "./actions/LegacyTRegAction.js";
 import { ADD } from "./components/ADD.js";
 import { B2D } from "./components/B2D.js";
 import { BReg } from "./components/BReg.js";
@@ -19,6 +20,7 @@ import { NOP } from "./components/NOP.js";
 import { OUTPUT } from "./components/OUTPUT.js";
 import { SUB } from "./components/SUB.js";
 import { UReg } from "./components/UReg.js";
+import { LegacyTReg } from "./components/LegacyTReg.js";
 
 /**
  * #REGISTERSのJSON
@@ -37,9 +39,10 @@ export class ActionExecutor {
      * @param {{
      *    unaryRegisterNumbers: number[];
      *    binaryRegisterNumbers: number[];
+     *    legacyTRegisterNumbers: number[];
      * }} param0
      */
-    constructor({ unaryRegisterNumbers, binaryRegisterNumbers }) {
+    constructor({ unaryRegisterNumbers, binaryRegisterNumbers, legacyTRegisterNumbers }) {
         /**
          * @readonly
          */
@@ -59,6 +62,11 @@ export class ActionExecutor {
          * @readonly
          */
         this.bRegMap = new Map(this.binaryRegisterNumbers.map(n => [n, new BReg()]));
+
+        /**
+         * @readonly
+         */
+        this.legecyTRegMap = new Map(legacyTRegisterNumbers.map(n => [n, new LegacyTReg()]));
 
         /**
          * @readonly
@@ -155,6 +163,8 @@ export class ActionExecutor {
             return this.output.action(action);
         } else if (action instanceof HaltOutAction) {
             return -1;
+        } else if (action instanceof LegacyTRegAction) {
+            return this.legecyTRegMap.get(action.regNumber)?.action(action);
         }
         throw Error(`execAction: unknown action ${action.pretty()}`);
     }

@@ -10,6 +10,7 @@ import { NopAction } from "./NopAction.js";
 import { OutputAction } from "./OutputAction.js";
 import { SubAction } from "./SubAction.js";
 import { URegAction } from "./URegAction.js";
+import { LegacyTRegAction } from "./LegacyTRegAction.js";
 
 /**
  * アクションをパースする
@@ -30,6 +31,7 @@ export function parseAction(str) {
         NopAction.parse,
         OutputAction.parse,
         HaltOutAction.parse,
+        LegacyTRegAction.parse,
     ];
     for (const parser of parsers) {
         const result = parser(str);

@@ -8,6 +8,35 @@
 // # t = 1とする
 // # t < Unの間tを10倍する
 
+function print(un) {
+    const [digit, step] = largestUnit(un);
+    while (true) {
+        let x = 0;
+        while (true) {
+            if (un > step) {
+                un -= step;
+            } else {
+            }
+
+        }
+    }
+}
+
+function largestUnit(un) {
+    let step = 1;
+    let digit = 1;
+    while (true) {
+        for (let i = 0; i < 9; i++) {
+            un -= step;
+            if (un <= 0) {
+                return [digit, step];
+            }
+        }
+        digit++;
+        step *= 10;
+    }
+}
+
 /**
  *
  * @param {string} prefix
@@ -41,22 +70,6 @@ export function forEach(prefix, start, end, innerStart, innerEnd, regNum, tempRe
     array.push(`${prefix}FOR_BODY_2; NZ; ${prefix}${innerStart}; NOP`);
     array.push(`${prefix}${innerEnd}; *; ${prefix}FOR_BODY_1; NOP`);
     return array;
-}
-
-function largestUnit(un) {
-    let step = 1;
-    let frag = true;
-    while (frag) {
-        for (let i = 0; i < 9; i++) {
-            un -= step;
-            if (un <= 0) {
-                console.log(step);
-                frag = false;
-                break;
-            }
-        }
-        step *= 10;
-    }
 }
 
 /**

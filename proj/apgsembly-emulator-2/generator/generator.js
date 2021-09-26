@@ -8,8 +8,8 @@ if (!(rule instanceof HTMLInputElement)) {
 }
 
 const generateButton = document.querySelector("#generate");
-if (generateButton === null) {
-    throw Error('generateButton is null');
+if (!(generateButton instanceof HTMLButtonElement)) {
+    throw Error('generateButton is not a HTMLButtonElement');
 }
 
 const code = document.querySelector("#output");
@@ -55,3 +55,6 @@ copy.addEventListener('click', () => {
         }, 1000);
     });
 });
+
+// 有効化
+generateButton.disabled = false;

@@ -140,6 +140,15 @@ export class Program {
     }
 
     /**
+     * @returns {number[]}
+     */
+    extractLegacyTRegisterNumbers() {
+        const array = this.commands.flatMap(command => command.actions)
+            .flatMap(action => action.extractLegacyTRegisterNumbers());
+        return sortNub(array);
+    }
+
+    /**
      * 文字列化する
      * @returns {string}
      */

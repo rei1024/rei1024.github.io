@@ -33,6 +33,14 @@ export class Action {
     }
 
     /**
+     * アクションに含まれるTレジスタのレジスタ番号を返す。
+     * @returns {number[]}
+     */
+    extractLegacyTRegisterNumbers() {
+        return [];
+    }
+
+    /**
      * Does this action return a value?
      * 値を返すかどうか
      * @returns {boolean} 値を返す場合true
