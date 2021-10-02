@@ -32,18 +32,15 @@ INITIAL; NZ; ID0; OUTPUT 3, NOP
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
+    if (program instanceof Program) {
+        throw Error('expect parse error');
     }
-    assertThrows(() => {
-        new Machine(program);
-    });
 });
 
 test('Machine duplicated command * *', () => {
     const str = `
-INITIAL; NZ; ID0; OUTPUT 3, NOP
-INITIAL; NZ; ID0; OUTPUT 3, NOP
+INITIAL; *; ID0; OUTPUT 3, NOP
+INITIAL; *; ID0; OUTPUT 3, NOP
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
@@ -62,12 +59,9 @@ INITIAL; NZ; ID0; OUTPUT 3, NOP
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
+    if (program instanceof Program) {
+        throw Error('expect parse error');
     }
-    assertThrows(() => {
-        new Machine(program);
-    });
 });
 
 test('Machine duplicated command * Z', () => {
@@ -77,12 +71,9 @@ INITIAL; Z; ID0; OUTPUT 3, NOP
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
+    if (program instanceof Program) {
+        throw Error('expect parse error');
     }
-    assertThrows(() => {
-        new Machine(program);
-    });
 });
 
 test('Machine duplicated command ZZ Z', () => {
@@ -92,12 +83,9 @@ INITIAL; Z; ID0; OUTPUT 3, NOP
 ID0; ZZ; ID0; NOP
     `;
     const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
+    if (program instanceof Program) {
+        throw Error('expect parse error');
     }
-    assertThrows(() => {
-        new Machine(program);
-    });
 });
 
 test('Machine INITIAL is not exist', () => {

@@ -6,7 +6,8 @@ import {
     validateActionReturnOnce,
     validateNoDuplicatedAction,
     validateNoSameComponent,
-    validateNextStateIsNotINITIAL
+    validateNextStateIsNotINITIAL,
+    validateZAndNZ
 } from "./validate.js";
 
 /**
@@ -99,6 +100,11 @@ export class Program {
         const nextStateIsNotInitialError = validateNextStateIsNotINITIAL(commands);
         if (typeof nextStateIsNotInitialError === 'string') {
             return nextStateIsNotInitialError;
+        }
+
+        const zAndNZError = validateZAndNZ(commands);
+        if (typeof zAndNZError === 'string') {
+            return zAndNZError;
         }
 
         return new Program({

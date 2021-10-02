@@ -4,6 +4,13 @@ import { HaltOutAction } from "./actions/HaltOutAction.js";
 import { Command, INITIAL_STATE } from "./Command.js";
 
 /**
+ * @returns {never}
+ */
+function internalError() {
+    throw Error('internal error');
+}
+
+/**
  *
  * @param {Command} command
  * @returns {string | undefined}
@@ -116,11 +123,9 @@ function validateNoSameComponentCommand(command) {
             // if (i === j) {
             //     continue;
             // }
-            const a = actions[i];
-            const b = actions[j] ?? (() => {
-                throw Error('internal error');
-            })();
-            if (a?.isSameComponent(b)) {
+            const a = actions[i] ?? internalError();
+            const b = actions[j] ?? internalError();
+            if (a.isSameComponent(b)) {
                 return `Actions "${
                     a.pretty()
                 }" and "${
@@ -161,5 +166,35 @@ export function validateNextStateIsNotINITIAL(commands) {
             return err;
         }
     }
+    return undefined;
+}
+
+/**
+ * ZとNZがペアになっていることを検査する
+ * エラーメッセージを返却する
+ * @param {Command[]} commands
+ * @returns {string | undefined}
+ */
+export function validateZAndNZ(commands) {
+    for (let i = 0; i < commands.length - 1; i++) {
+        const a = commands[i] ?? internalError();
+        const b = commands[i + 1] ?? internalError();
+
+        if (a.input === "Z" && b.input !== 'NZ') {
+            return `Need Z line followed by NZ line at "${a.pretty()}"`;
+        }
+
+        if (b.input === "NZ" && a.input !== 'Z') {
+            return `Need Z line followed by NZ line at "${b.pretty()}"`;
+        }
+    }
+
+    const lastLine = commands[commands.length - 1];
+    if (lastLine !== undefined) {
+        if (lastLine.input === 'Z') {
+            return `Need Z line followed by NZ line at "${lastLine.pretty()}"`;
+        }
+    }
+
     return undefined;
 }

@@ -190,7 +190,7 @@ export class B2D {
             throw Error('B2D: internal error');
         }
         if (arrayY[this.x] === 1) {
-            throw Error('B2D SET: Tried to set when it was already 1');
+            throw Error('SET B2D: Tried to set when it was already 1');
         }
         arrayY[this.x] = 1;
     }

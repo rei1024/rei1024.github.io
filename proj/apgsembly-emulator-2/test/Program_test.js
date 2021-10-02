@@ -197,6 +197,38 @@ test('Program same component actions OUTPUT', () => {
     }
 });
 
+test('Program Z and NZ', () => {
+    const program = Program.parse(`
+INITIAL; ZZ; ID1; TDEC U0
+ID1; Z; ID1; HALT_OUT
+# ID1; NZ; ID1; TDEC U1`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');
+    } else {
+        console.log(program);
+        assertEquals(
+            program,
+            `Need Z line followed by NZ line at "ID1; Z; ID1; HALT_OUT"`
+        );
+    }
+});
+
+test('Program Z and NZ 2', () => {
+    const program = Program.parse(`
+INITIAL; ZZ; ID1; TDEC U0
+# ID1; Z; ID1; HALT_OUT
+ID1; NZ; ID1; TDEC U1`);
+    if (program instanceof Program) {
+        throw Error('expected parse error');
+    } else {
+        console.log(program);
+        assertEquals(
+            program,
+            `Need Z line followed by NZ line at "ID1; NZ; ID1; TDEC U1"`
+        );
+    }
+});
+
 test('Program pretty program9_1', () => {
     const program = Program.parse(program9_1);
     if (program instanceof Program) {
