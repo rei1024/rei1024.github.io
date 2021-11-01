@@ -7,13 +7,18 @@ on:
       - "src/**"
       - "apgc/**"
       - "test/**"
+      - "apgdsl/**"
+      - "tm_to_apg/**"
+      - "turmites/**"
   pull_request:
     branches: [main]
     paths:
       - "src/**"
       - "apgc/**"
       - "test/**"
-
+      - "apgdsl/**"
+      - "tm_to_apg/**"
+      - "turmites/**"
 jobs:
   test:
     runs-on: ubuntu-latest

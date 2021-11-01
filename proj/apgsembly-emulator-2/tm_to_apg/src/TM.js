@@ -8,6 +8,10 @@ export class TM {
      * @param {Line[]} lines
      */
     constructor(lines) {
+        /**
+         * @type {Line[]}
+         * @readonly
+         */
         this.lines = lines;
     }
 

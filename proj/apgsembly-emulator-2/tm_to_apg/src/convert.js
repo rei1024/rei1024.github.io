@@ -26,7 +26,7 @@ function direction(array, zOrNZ, state, direction) {
             array.push(`${prefix}_MOVE_1; *; ${prefix}_MOVE_2; TDEC U0`);
 
             array.push(`${prefix}_MOVE_2; Z; ${prefix}_MOVE_POS_1; TDEC ${POS_TAPE}`); // チェックを入れる
-            array.push(`${prefix}_MOVE_2; NZ; ${prefix}_FINISH_1; INC ${NEG_TAPE}, NOP`); // 負で左に移動する場合はチェックなし
+            array.push(`${prefix}_MOVE_2; NZ; ${prefix}_FINISH_1; INC U0, INC ${NEG_TAPE}, NOP`); // 負で左に移動する場合はチェックなし U0を1とする
             array.push(`${prefix}_MOVE_POS_1; Z; ${prefix}_FINISH_1; INC U0, NOP`); // 負に変化させる
             array.push(`${prefix}_MOVE_POS_1; NZ; ${prefix}_FINISH_1; NOP`); // 左に移動できたので終了
             break;
@@ -34,7 +34,7 @@ function direction(array, zOrNZ, state, direction) {
         case "r": {
             array.push(`${prefix}_MOVE_1; *; ${prefix}_MOVE_2; TDEC U0`);
 
-            array.push(`${prefix}_MOVE_2; Z; ${prefix}_FINISH_1; INC ${POS_TAPE}, NOP`); // 正で右に移動する場合はチェックなし
+            array.push(`${prefix}_MOVE_2; Z; ${prefix}_FINISH_1; INC ${POS_TAPE}, NOP`); // 正で右に移動する場合はチェックなし U0は0のまま
             array.push(`${prefix}_MOVE_2; NZ; ${prefix}_MOVE_NEG_1; TDEC ${NEG_TAPE}`); // チェックを入れる
             array.push(`${prefix}_MOVE_NEG_1; Z; ${prefix}_FINISH_1; NOP`); // TDEC U0を動かしているので0のまま
             array.push(`${prefix}_MOVE_NEG_1; NZ; ${prefix}_FINISH_1; INC U0, NOP`); // U0のフラグを立てたままにする
@@ -46,7 +46,7 @@ function direction(array, zOrNZ, state, direction) {
 /**
  *
  * @param {TMMap} tmMap
- * @returns {string | Error}
+ * @returns {string | Error} APGsembly
  */
  export function convert(tmMap) {
     /**

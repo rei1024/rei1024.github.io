@@ -20,8 +20,10 @@ export class UReg {
      */
     action(act) {
         switch (act.op) {
-            case U_INC: return this.inc();
+            // INC  12414041
+            // TDEC 12437599
             case U_TDEC: return this.tdec();
+            case U_INC: return this.inc();
         }
     }
 

@@ -2,10 +2,6 @@
 
 import { AddAction, ADD_A1, ADD_B0, ADD_B1 } from "../actions/AddAction.js";
 
-export const addLookupA1 = [5, 4, 7, 6, 1, 0, 3, 2, 13, 12, 15, 14, 9, 8, 11, 10];
-export const addLookupB0 = [0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9, 9, 9];
-export const addLookupB1 = [0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9];
-
 /**
  * ADD
  */
@@ -25,9 +21,12 @@ export class ADD {
      */
     action(act) {
         switch (act.op) {
-            case ADD_A1: return this.a1();
+            // A1 479061
+            // B1 535537
+            // B0 4135003
             case ADD_B0: return this.b0();
             case ADD_B1: return this.b1();
+            case ADD_A1: return this.a1();
             default: throw Error('ADD action: internal');
         }
     }
@@ -45,7 +44,7 @@ export class ADD {
      * @returns {void}
      */
     a1() {
-        this.value = addLookupA1[this.value] ?? this.error();
+        this.value = [5, 4, 7, 6, 1, 0, 3, 2, 13, 12, 15, 14, 9, 8, 11, 10][this.value] ?? this.error();
         return undefined;
     }
 
@@ -55,7 +54,7 @@ export class ADD {
      */
     b0() {
         const t = this.value % 2;
-        this.value = addLookupB0[this.value] ?? this.error();
+        this.value = [0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9, 9, 9][this.value] ?? this.error();
         // @ts-ignore
         return t;
     }
@@ -66,7 +65,7 @@ export class ADD {
      */
     b1() {
         const t = 1 - this.value % 2;
-        this.value = addLookupB1[this.value] ?? this.error();
+        this.value = [0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9][this.value] ?? this.error();
         // @ts-ignore
         return t;
     }

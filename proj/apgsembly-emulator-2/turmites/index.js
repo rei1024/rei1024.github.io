@@ -1,11 +1,10 @@
 // @ts-check
-// @ts-check
 
-import { generate } from './generate_apg.js';
-import { generate as absGenerate } from './abs_generate_apg.js';
+import { generate } from './src/generate_apg.js';
+import { generate as absGenerate } from './src/abs_generate_apg.js';
 
-import { Turmites } from './turmites.js';
-import { AbsTurmites } from './abs_turmites.js';
+import { Turmites } from './src/turmites.js';
+import { AbsTurmites } from './src/abs_turmites.js';
 
 import { peggLibrary, timLibrary, absLibrary } from './lib.js';
 
@@ -54,6 +53,12 @@ if ($sampleList === null) {
     throw TypeError('$sampleList is null');
 }
 
+const $ruleInvalid = document.querySelector('#rule_invalid');
+
+if (!($ruleInvalid instanceof HTMLElement)) {
+    throw TypeError('$ruleInvalid is not a HTMLElement');
+}
+
 // https://sourceforge.net/p/golly/code/ci/57e0b46e117c8bfa605f0d61d22307ca5c5383d9/tree/Scripts/Python/Rule-Generators/Turmite-gen.py
 
 /**
@@ -82,9 +87,18 @@ for (const lib of libraries) {
 }
 
 generateButton.addEventListener("click", () => {
+    rule.classList.remove('is-invalid');
     copy.disabled = true;
-    const x = Number($x.value);
-    const y = Number($y.value);
+    let x = Number($x.value);
+    if (isNaN(x) || x < 0 || !Number.isInteger(x)) {
+        $x.value = "0";
+        x = 0;
+    }
+    let y = Number($y.value);
+    if (isNaN(y) || y < 0 || !Number.isInteger(y)) {
+        $y.value = "0";
+        y = 0;
+    }
     try {
         const tur = Turmites.fromObjectString(rule.value);
         code.value = `# Turmite ${rule.value}\n` + generate(tur, x, y);
@@ -97,6 +111,12 @@ generateButton.addEventListener("click", () => {
         } catch (e) {
             console.log(e);
             code.value = "";
+            rule.classList.add('is-invalid');
+            if (e instanceof Error) {
+                $ruleInvalid.textContent = e.message;
+            } else {
+                $ruleInvalid.textContent = "Invalid specification.";
+            }
         }
     }
 });

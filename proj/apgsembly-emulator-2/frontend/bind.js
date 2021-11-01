@@ -127,3 +127,5 @@ export const $b2dFlipUpsideDown =
 export const $statsModal = $type('#stats_modal', HTMLElement);
 
 export const $statsBody = $type('#stats_body', HTMLTableSectionElement);
+
+export const $statsNumberOfStates = $type('#stats_number_of_states', HTMLElement);

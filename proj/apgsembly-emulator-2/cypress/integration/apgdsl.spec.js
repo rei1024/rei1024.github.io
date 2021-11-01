@@ -1,3 +1,4 @@
+// @ts-check
 /// <reference types="cypress" />
 
 import { APGsemblyEmulatorURL, setStep, dslURL } from "../common/common.js";
@@ -15,6 +16,10 @@ describe('APGDSL Integration', () => {
     });
     it('should run', () => {
         cy.get('#output').then(x => {
+            /**
+             * @type {string}
+             */
+            // @ts-ignore
             const prog = x.val();
             cy.visit(APGsemblyEmulatorURL);
             cy.get('#input').type(prog, { delay: 1 });

@@ -163,7 +163,7 @@ export class Turmites {
      * @returns {Turmites}
      */
     static fromObject(array) {
-        const error = Error('failed to parse');
+        const error = Error('Failed to parse');
 
         /**
          * @type {unknown[]}
@@ -215,10 +215,10 @@ export class Turmites {
             if (Array.isArray(obj)) {
                 return Turmites.fromObject(obj);
             } else {
-                throw Error('failed to parse');
+                throw Error('Failed to parse');
             }
         } catch (e) {
-            throw Error(`failed to parse "${str}"`);
+            throw Error(`Failed to parse "${str}"`);
         }
     }
 

@@ -21,6 +21,8 @@ export class MUL {
      */
     action(act) {
         switch (act.op) {
+            // MUL0 200740
+            // MUL1  21110
             case MUL_0: return this.mul0();
             case MUL_1: return this.mul1();
             default: throw Error('MUL: action');

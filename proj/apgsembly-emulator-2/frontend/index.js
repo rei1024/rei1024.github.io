@@ -6,10 +6,12 @@ import {} from "./util/selector.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
+import { getSaveData } from "./util/save_data.js";
+import { idle } from "./util/idle.js";
+import { Frequency } from "./util/frequency.js";
 
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
-import { Frequency } from "./util/frequency.js";
 
 import { renderB2D } from "./renderB2D.js";
 import {
@@ -59,6 +61,7 @@ import {
     $b2dFlipUpsideDown,
     $statsModal,
     $statsBody,
+    $statsNumberOfStates,
     $samples,
 } from "./bind.js";
 
@@ -198,8 +201,7 @@ export class App {
         none.value = "-1";
         none.selected = true;
         $breakpointSelect.append(none);
-        const stateMap = machine.getStateMap();
-        for (const [state, stateIndex] of stateMap.entries()) {
+        for (const [state, stateIndex] of machine.getStateMap().entries()) {
             const option = document.createElement('option');
             option.textContent = state;
             option.value = stateIndex.toString();
@@ -300,14 +302,21 @@ export class App {
             return;
         }
         const b2d = machine.actionExecutor.b2d;
+        $b2dx.textContent = b2d.x.toString();
+        $b2dy.textContent = b2d.y.toString();
+
+        const start = performance.now();
         renderB2D(
             context,
             b2d,
             $b2dHidePointer.checked,
             $b2dFlipUpsideDown.checked
         );
-        $b2dx.textContent = b2d.x.toString();
-        $b2dy.textContent = b2d.y.toString();
+
+        // 描画に時間がかかっている場合閉じる
+        if (this.appState === 'Running' && performance.now() - start >= 200) {
+            $b2dDetail.open = false;
+        }
     }
 
     /**
@@ -345,7 +354,6 @@ export class App {
             return;
         }
         renderBinary(
-            $binaryRegister,
             this.machine.actionExecutor.bRegMap,
             $hideBinary.checked,
             $reverseBinary.checked
@@ -369,6 +377,15 @@ export class App {
         const output = this.machine?.actionExecutor.output.getString();
         if (output !== undefined) {
             $output.value = output;
+            if (output.length >= 36 * 3) {
+                $output.rows = 4;
+            } else if (output.length >= 36 * 2) {
+                $output.rows = 3;
+            } else if (output.length >= 36) {
+                $output.rows = 2;
+            } else {
+                $output.rows = 1;
+            }
         } else {
             $output.value = "";
         }
@@ -379,6 +396,7 @@ export class App {
             $statsBody.innerHTML = "";
             return;
         }
+        $statsNumberOfStates.textContent = this.machine.states.length.toString();
         setUpStats($statsBody, this.machine.stateStats, this.machine.states);
     }
 
@@ -426,21 +444,21 @@ export class App {
                 break;
             }
         }
-        this.renderCommand();
         this.renderErrorMessage();
         this.renderFrequencyOutput();
-        this.renderB2D();
-        this.renderUnary();
-        this.renderBinary();
-        this.renderAddSubMul();
-        this.renderOutput();
-        this.renderStats();
 
         $steps.textContent = this.steps.toString();
-
         // current state
         $currentState.textContent = this.machine?.currentState ?? "";
         $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
+
+        this.renderCommand();
+        this.renderOutput();
+        this.renderUnary();
+        this.renderBinary();
+        this.renderAddSubMul();
+        this.renderStats();
+        this.renderB2D();
     }
 
     /**
@@ -464,6 +482,8 @@ export class App {
             return;
         }
 
+        const isRunning = this.appState === "Running";
+
         // ブレークポイントの処理
         let breakpointIndex = -1;
         const tempN = parseInt($breakpointSelect.value, 10);
@@ -478,6 +498,7 @@ export class App {
             return;
         }
         let i = 0;
+        const start = performance.now();
         try {
             for (i = 0; i < steps; i++) {
                 const res = machine.execCommand();
@@ -493,6 +514,12 @@ export class App {
                     (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
                 ) {
                     this.appState = "Stop";
+                    this.steps += i + 1;
+                    this.render();
+                    return;
+                }
+                // 1フレームに100ms以上時間が掛かっていたら、残りはスキップする
+                if (isRunning && i % 500000 === 0 && (performance.now() - start >= 100)) {
                     this.steps += i + 1;
                     this.render();
                     return;
@@ -559,15 +586,17 @@ $step.addEventListener('click', () => {
     }
 });
 
+const SRC_KEY = 'src';
+
 // サンプル
 $sampleCodes.forEach(e => {
     if (!(e instanceof HTMLElement)) {
         throw Error('is not HTMLElement');
     }
-    const SRC = 'src';
+
     e.addEventListener('click', () => {
         $samples.disabled = true;
-        const src = e.dataset[SRC];
+        const src = e.dataset[SRC_KEY];
         fetch(DATA_DIR + src).then(res => res.text()).then(text => {
             $input.value = text;
             app.reset();
@@ -714,26 +743,6 @@ document.addEventListener('keydown', e => {
     }
 });
 
-// 実行時間が掛かる処理をまとめる
-// bodyタグ直下でも設定する
-if (localStorage.getItem(DARK_MODE_KEY) === "on") {
-    document.body.setAttribute('apge_dark_mode', "on");
-    $darkMode.checked = true;
-    $darkModeLabel.textContent = "On";
-}
-
-if (localStorage.getItem(B2D_FLIP_UPSIDE_DOWN_KEY) === "true") {
-    $b2dFlipUpsideDown.checked = true;
-}
-
-if (localStorage.getItem(REVERSE_BINARY_KEY) === "true") {
-    $reverseBinary.checked = true;
-}
-
-if (localStorage.getItem(HIDE_BINARY_KEY) === "true") {
-    $hideBinary.checked = true;
-}
-
 // ボタンの有効化
 $samples.disabled = false;
 $configButton.disabled = false;
@@ -748,3 +757,48 @@ try {
     console.error('first render failed');
     console.log(e);
 }
+
+idle(() => {
+    // 実行時間が掛かる処理をまとめる
+    if (localStorage.getItem(B2D_FLIP_UPSIDE_DOWN_KEY) === "true") {
+        $b2dFlipUpsideDown.checked = true;
+    }
+
+    if (localStorage.getItem(REVERSE_BINARY_KEY) === "true") {
+        $reverseBinary.checked = true;
+    }
+
+    if (localStorage.getItem(HIDE_BINARY_KEY) === "true") {
+        $hideBinary.checked = true;
+    }
+    // ダークモードについてはbodyタグ直下でも設定する
+    if (localStorage.getItem(DARK_MODE_KEY) === "on") {
+        document.body.setAttribute('apge_dark_mode', "on");
+        $darkMode.checked = true;
+        $darkModeLabel.textContent = "On";
+    }
+});
+
+// サンプルコードをプレフェッチ
+idle(() => {
+    try {
+        const saveData = getSaveData();
+        if (saveData === false || saveData === undefined) {
+            // <link rel="prefetch" href="second.html">
+            $sampleCodes.forEach(e => {
+                if (!(e instanceof HTMLElement)) {
+                    throw Error('is not HTMLElement');
+                }
+                const src = e.dataset[SRC_KEY];
+                if (src !== undefined) {
+                    const link = document.createElement('link');
+                    link.rel = "prefetch";
+                    link.href = DATA_DIR + src;
+                    document.head.append(link);
+                }
+            });
+        }
+    } catch (e) {
+        console.error(e);
+    }
+});

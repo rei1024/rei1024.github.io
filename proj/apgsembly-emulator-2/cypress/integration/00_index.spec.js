@@ -1,6 +1,9 @@
+// @ts-check
 /// <reference types="cypress" />
 
-import { APGsemblyEmulatorURL, loadProgram, setStep } from "../common/common.js";
+import { APGsemblyEmulatorURL, loadProgram, setStep, setProgramSlow } from "../common/common.js";
+
+const outputSelector = '#output';
 
 describe('Load', () => {
     it('should load', () => {
@@ -9,26 +12,25 @@ describe('Load', () => {
     });
 });
 
-describe('Error', () => {
-    it('Error', () => {
+describe('Error: empty program', () => {
+    it('should show error', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         cy.get('#start').click();
-        cy.contains('Program is empty');
+        cy.get('#error').should('have.text', 'Program is empty');
     });
 });
 
-const outputSelector = '#output';
-
 describe('unary_multiply.apg', () => {
-    it('unary_multiply.apg', () => {
+    it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('unary_multiply.apg');
 
         cy.get(`[data-test="U0"]`).should('have.text', '7');
         cy.get(`[data-test="U1"]`).should('have.text', '5');
-
+    });
+    it('should execute unary_multiply.apg', () => {
         setStep(100);
         cy.get('#step').click();
 
@@ -39,11 +41,12 @@ describe('unary_multiply.apg', () => {
 });
 
 describe('Integers', () => {
-    it('should print integers', () => {
+    it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('integers.apg');
-
+    });
+    it('should print integers', () => {
         setStep(1050);
         cy.get('#step').click();
         cy.get(outputSelector).should('have.value', '1.2.3.4.5.6.7.8.9.10');
@@ -52,8 +55,8 @@ describe('Integers', () => {
     });
 });
 
-describe('Pi calculator', () => {
-    it('should print pi', () => {
+describe('π calculator', () => {
+    it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         loadProgram('pi_calc.apg');
@@ -62,7 +65,8 @@ describe('Pi calculator', () => {
         cy.contains('U9');
         cy.contains('B0');
         cy.contains('B3');
-
+    });
+    it('should print pi', () => {
         setStep(1000000);
         cy.get('#step').click();
         cy.get(outputSelector).should('have.value', '3.141');
@@ -104,5 +108,21 @@ describe('Start Stop Reset', () => {
     it('Reset', () => {
         cy.get('#reset').click();
         cy.get('#steps').should('have.text', '0');
+    });
+});
+
+describe('Error Steps', () => {
+    it('should load', () => {
+        cy.visit(APGsemblyEmulatorURL);
+        cy.contains('APGsembly');
+    });
+    it('Run', () => {
+        setProgramSlow(`
+    INITIAL; ZZ; A0; NOP
+    A0; ZZ; A1; SET B0, NOP
+    A1; ZZ; A1; SET B0, NOP`);
+        setStep(100);
+        cy.get('#step').click();
+        cy.get('#steps').should('have.text', '3');
     });
 });

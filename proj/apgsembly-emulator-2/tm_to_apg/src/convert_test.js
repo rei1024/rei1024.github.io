@@ -1,11 +1,11 @@
 import { assertEquals, test } from "../../test/deps.js";
 import { TM } from "./TM.js";
+import { Line } from "./Line.js";
 import { TMMap } from "./TMMap.js";
 import { palindrome } from "./test_data_test.js";
 import { convert } from "./convert.js";
 
-test('convert', () => {
-    let tm = TM.parse(`
+const test1 = `
 0 _ * r 7
 0 1 _ r 1
 1 1 * r 1
@@ -38,7 +38,14 @@ test('convert', () => {
 14 1 _ l 15
 15 _ * l halt
 15 1 * r 5
-    `);
+`;
+
+test('convert', () => {
+    let tm = TM.parse(test1);
+
+    if (tm instanceof Error) {
+        throw tm;
+    }
 
     tm = TM.parse(`
     0 _ * r 5
@@ -107,48 +114,6 @@ test('convert', () => {
 33 _ * r 5
 `);
 
-tm = TM.parse(`0 _ * r halt
-0 1 _ r 1
-1 1 * r 1
-1 _ * r 2
-2 _ * r 3
-3 _ 1 l 4
-3 1 * r 3
-4 _ * l 5
-4 1 * l 4
-5 _ * l 6
-6 _ 1 r 7
-6 1 * l 6
-7 1 _ r 1
-7 _ * l 15
-8 _ * l 13
-8 1 _ r 9
-9 1 * r 9
-9 _ * r 10
-10 _ 1 l 11
-10 1 1 r 10
-11 _ * l 12
-11 1 * l 11
-12 1 * l 12
-12 _ 1 r 8
-13 1 * l 13
-13 _ * l 14
-14 _ * l 15
-14 1 * l 13
-15 _ * l 15
-15 1 _ l 16
-16 _ * l halt
-16 1 * r 17
-17 _ * r 17
-17 1 * r 18
-18 1 * r 18
-18 _ * r 19
-19 1 * r 18
-19 _ * l 20
-20 _ * l 21
-21 1 * l 21
-21 _ * r 8`);
-
     if (tm instanceof Error) {
         throw tm;
     }
@@ -159,5 +124,8 @@ tm = TM.parse(`0 _ * r halt
         throw tmMap;
     }
 
-    // console.log(convert(tmMap));
+    const str = convert(tmMap);
+    if (str instanceof Error) {
+        throw str;
+    }
 });

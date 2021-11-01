@@ -11,12 +11,12 @@ if (!($input instanceof HTMLTextAreaElement)) {
 
 const $output = document.querySelector('#output');
 if (!($output instanceof HTMLTextAreaElement)) {
-    throw Error('input is not a HTMLTextAreaElement');
+    throw Error('output is not a HTMLTextAreaElement');
 }
 
 const $transpile = document.querySelector('#transpile');
 if (!($transpile instanceof HTMLElement)) {
-    throw Error('input is not a HTMLTextAreaElement');
+    throw Error('transpile is not a HTMLElement');
 }
 
 const $copy = document.querySelector('#copy');

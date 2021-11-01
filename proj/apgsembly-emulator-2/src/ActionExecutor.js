@@ -26,7 +26,7 @@ import { LegacyTReg } from "./components/LegacyTReg.js";
  * #REGISTERSのJSON
  * Uの場合はnumberのみ
  * Bのときはポインタとバイナリの文字列の配列である場合はそのまま設定する。
- * 数字である場合は二進数に変換してそれを逆さまにして配列へ設定する。ポインタは0とする。
+ * 数字である場合は二進数に変換してそれを逆さまにして配列へ設定する。ポインタは0とする。TODO コンパイラを確認
  * @typedef {{ [reg: string]: number | [number, string] }} RegistersInit
  */
 
@@ -145,20 +145,27 @@ export class ActionExecutor {
      * @throws
      */
     execAction(action) {
+        // pi calculator
+        // B   316273800
+        // U   311341639
+        // ADD  49761893
+        // MUL    407820
+        // SUB   2251968
+        // NOP   3771596
         if (action instanceof BRegAction) {
             return this.bRegMap.get(action.regNumber)?.action(action);
         } else if (action instanceof URegAction) {
             return this.uRegMap.get(action.regNumber)?.action(action);
-        } else if (action instanceof NopAction) {
-            return this.nop.action();
-        } else if (action instanceof B2DAction) {
-            return this.b2d.action(action);
         } else if (action instanceof AddAction) {
             return this.add.action(action);
-        } else if (action instanceof MulAction) {
-            return this.mul.action(action);
+        } else if (action instanceof NopAction) {
+            return this.nop.action();
         } else if (action instanceof SubAction) {
             return this.sub.action(action);
+        } else if (action instanceof MulAction) {
+            return this.mul.action(action);
+        } else if (action instanceof B2DAction) {
+            return this.b2d.action(action);
         } else if (action instanceof OutputAction) {
             return this.output.action(action);
         } else if (action instanceof HaltOutAction) {

@@ -4,6 +4,7 @@
 # State Input Next state Actions
 # ---------------------------------------
 INITIAL; ZZ; DIR0; TDEC U2
+
 # Update U0 and U1, based on U2, so that we walk in the correct
 # direction. Also set U3 = U2 and then U2 = 0.
 DIR0; Z; RESETU2; TDEC U3, INC U0
@@ -23,10 +24,12 @@ DIR6; NZ; DIRY; INC U0, INC U1, INC U3, NOP
 DIRX; ZZ; RESETU2; TDEC U3, INC U0
 DIRY; ZZ; RESETU2; TDEC U3, INC U1
 DIRXY; ZZ; RESETU2; TDEC U3, INC U0, INC U1
+
 # Restore U2 from value in temporary register U3, and then draw
 # the pixel (boat) at the current bit.
 RESETU2; Z; DRAWX1; TDEC U0, SET B2D
 RESETU2; NZ; RESETU2; TDEC U3, INC U2
+
 # Update the B2D read head location based on U0 and U1.
 DRAWX1; Z; DRAWY1; TDEC U1
 DRAWX1; NZ; DRAWX2; TDEC U0
@@ -42,6 +45,7 @@ DRAWY3; *; RESETB0; TDEC B0
 # Move B0 read head to least significant bit.
 RESETB0; Z; INCB0A; READ B0
 RESETB0; NZ; RESETB0; TDEC B0
+
 # Add 1 to B0. If we introduce a new "2" in its base-4
 # representation, go to INCU2A, otherwise add 1 to U2.
 INCB0A; Z; INCB0B; SET B0, NOP
@@ -53,16 +57,19 @@ INCB0D; NZ; MOD8A; TDEC U5, INC U2, SET B0
 INCB0E; ZZ; INCB0F; READ B0
 INCB0F; Z; INCU2A; TDEC U4, SET B0
 INCB0F; NZ; RESETB0; INC B0, NOP
+
 # Add U4 (= 6) to U2 with the help of U0, without clearing U4.
 INCU2A; Z; INCU2B; TDEC U0
 INCU2A; NZ; INCU2A; TDEC U4, INC U0, INC U2
 INCU2B; Z; MOD8A; TDEC U5
 INCU2B; NZ; INCU2B; TDEC U0, INC U4
+
 # Set U2 = U2 mod (U5 = 8), with the help of U0 and U1.
 MOD8A; Z; RESET3; TDEC U1
 MOD8A; NZ; MOD8B; TDEC U2, INC U0
 MOD8B; Z; RESET1; TDEC U0
 MOD8B; NZ; MOD8A; TDEC U5, INC U1
+
 # Reset registers and restart.
 RESET1; *; RESET2; TDEC U0
 RESET2; Z; RESET3; TDEC U1, INC U5

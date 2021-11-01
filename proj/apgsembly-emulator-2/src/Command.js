@@ -187,6 +187,12 @@ export class Command extends ProgramLine {
          * @readonly
          */
         this.actions = actions;
+
+        /**
+         * @readonly
+         * @private
+         */
+        this._string = `${this.state}; ${this.input}; ${this.nextState}; ${this.actions.map(a => a.pretty()).join(", ")}`;
     }
 
     /**
@@ -266,6 +272,6 @@ export class Command extends ProgramLine {
      * @returns {string}
      */
     pretty() {
-        return `${this.state}; ${this.input}; ${this.nextState}; ${this.actions.map(a => a.pretty()).join(", ")}`;
+        return this._string; // `${this.state}; ${this.input}; ${this.nextState}; ${this.actions.map(a => a.pretty()).join(", ")}`;
     }
 }

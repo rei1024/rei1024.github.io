@@ -30,9 +30,38 @@ export class TMMap {
      * @param {string[]} symbols
      */
     constructor(map, states, symbols) {
+        /**
+         * @type {Map<string, Map<string, Line | undefined>>}
+         * @readonly
+         */
         this.map = map;
+
+        /**
+         * @type {string[]}
+         * @readonly
+         */
         this.states = states;
+
+        /**
+         * @type {string[]}
+         * @readonly
+         */
         this.symbols = symbols;
+    }
+
+    /**
+     * @returns {Generator<{ currentState: string, currentSymbol: string, line: Line | undefined }>}
+     */
+    *entries() {
+        for (const [state, m] of this.map) {
+            for (const [symbol, line] of m) {
+                yield {
+                    currentState: state,
+                    currentSymbol: symbol,
+                    line: line,
+                };
+            }
+        }
     }
 
     /**
@@ -122,10 +151,7 @@ export class TMMap {
                     new Map(symbols.map(
                         symbol => {
                             const line = getLineBy(state, symbol);
-                            if (line instanceof Error) {
-                                return [symbol, undefined];
-                            }
-                            return [symbol, line];
+                            return [symbol, (line instanceof Error) ? undefined : line];
                         }
                     ))
                 ]

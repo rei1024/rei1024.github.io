@@ -12,6 +12,7 @@ import {} from "./actions/OutputAction.js";
 import {} from "./actions/parse.js";
 import {} from "./actions/SubAction.js";
 import {} from "./actions/URegAction.js";
+import {} from "./actions/LegacyTRegAction.js";
 
 import {} from "./components/ADD.js";
 import {} from "./components/B2D.js";
@@ -22,6 +23,7 @@ import {} from "./components/NOP.js";
 import {} from "./components/OUTPUT.js";
 import {} from "./components/SUB.js";
 import {} from "./components/UReg.js";
+import {} from "./components/LegacyTReg.js";
 
 import {} from "./ActionExecutor.js";
 import {} from "./Command.js";

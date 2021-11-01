@@ -4,12 +4,14 @@
 # State Input Next state Actions
 # ---------------------------------------
 INITIAL; ZZ; CHECK1; READ B0
+
 ## Determine whether the current bit equals 0 or 1.
 # If it equals 0, set it to 1 and go to the least significant bit.
 # If it equals 1, set it to 0 and go to the next most significant bit.
 CHECK1; Z; LSB1; SET B0, NOP
 CHECK1; NZ; CHECK2; INC B0, NOP
 CHECK2; ZZ; CHECK1; READ B0
+
 # Move B0’s read head back to its least significant bit.
 LSB1; ZZ; LSB2; TDEC B0
 LSB2; Z; CHECK1; READ B0

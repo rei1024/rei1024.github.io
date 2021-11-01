@@ -48,9 +48,13 @@ export class BReg {
      */
     action(act) {
         switch (act.op) {
+            // INC  3207502
+            // TDEC 3217502
+            // READ 3175344
+            // SET   406844
+            case B_TDEC: return this.tdec();
             case B_INC: return this.inc();
             case B_READ: return this.read();
-            case B_TDEC: return this.tdec();
             case B_SET: return this.set();
             default: throw Error('BReg action: ' + act.op);
         }
