@@ -30,10 +30,9 @@ export function setUpBinary($binaryRegister, regs) {
 
         // start meta
         const metaDataCode = document.createElement('code');
-        metaDataCode.style.color = "black";
         // 長い場合は改行を入れる
         metaDataCode.style.wordBreak = "break-all";
-
+        metaDataCode.classList.add('binary_info'); // style.cssで設定
         const decimal = document.createElement('span');
         decimal.classList.add('decimal');
         const hex = document.createElement('span');

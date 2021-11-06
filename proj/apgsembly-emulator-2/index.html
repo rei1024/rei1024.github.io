@@ -19,7 +19,8 @@
     <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="./dark_mode.css">
+    <!-- Bootstrapの下で読み込む -->
+    <link rel="stylesheet" href="./style.css">
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 
@@ -37,31 +38,6 @@
 
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:creator" content="@rei_1729" />
-
-    <style>
-        #state td, #state th {
-            padding: 4px;
-        }
-        #state {
-            /* 幅が変化しないようにする */
-            table-layout: fixed;
-        }
-        #steps {
-            color: black;
-        }
-        body[apge_dark_mode=on] #steps {
-            color: var(--dark-mode-color);
-        }
-        .code-mono {
-            font-family: var(--bs-font-monospace);
-            font-size: .875em;
-            word-wrap: break-word;
-        }
-
-        #stats_table td, #stats_table th {
-            padding: 2px;
-        }
-    </style>
 </head>
 <body>
     <script>
@@ -366,6 +342,12 @@
                 <a href="https://github.com/rei1024/rei1024.github.io/tree/main/proj/apgsembly-emulator-2">
                     Source code for APGsembly 2.0 Emulator - GitHub
                 </a>
+            </li>
+            <li>
+                <a href="https://conwaylife.com/book/">
+                    Conway's Game of Life: Mathematics and Construction
+                </a>
+                (Chapter 9: Universal Computation)
             </li>
             <li>
                 <a href="https://www.conwaylife.com/wiki/APGsembly">

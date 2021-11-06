@@ -51,10 +51,11 @@ export function renderStats(stateStats, currentIndex) {
     const len = cache.length;
     for (let i = 0; i < len; i++) {
         const item = cache[i] ?? error();
+        const cls = 'stats_current_state'; /* style.cssで設定 */
         if (currentIndex === i) {
-            item.tr.style.backgroundColor = '#e1f5fe';
+            item.tr.classList.add(cls);
         } else {
-            item.tr.style.backgroundColor = '';
+            item.tr.classList.remove(cls);
         }
         const stat = stats[i] ?? error();
         item.sum.textContent = (stat.z + stat.nz).toString();

@@ -7,7 +7,7 @@ An emulator for APGsembly 2.0
 * `deno`
     * https://deno.land/#installation
     * `file_server`
-        * https://deno.land/manual@v1.14.0/examples/file_server
+        * https://deno.land/manual@v1.15.3/examples/file_server
 * `npm`
     * Run `$ npm install`
 
