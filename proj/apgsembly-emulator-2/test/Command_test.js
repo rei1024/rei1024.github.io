@@ -1,3 +1,5 @@
+// @ts-check
+
 import { URegAction } from "../src/actions/URegAction.js";
 import {
     Command,

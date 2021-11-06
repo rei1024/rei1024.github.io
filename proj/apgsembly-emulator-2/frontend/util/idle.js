@@ -3,7 +3,7 @@
 /**
  * アイドル状態の場合に実行
  */
-export const idle = requestIdleCallback ?? (c => {
+export const idle = window.requestIdleCallback ?? (c => {
     setTimeout(() => {
         c({
             didTimeout: false,

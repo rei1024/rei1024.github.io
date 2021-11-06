@@ -1,3 +1,5 @@
+// @ts-check
+
 import {
     BRegAction,
     B_INC,

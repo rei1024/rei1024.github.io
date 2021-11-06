@@ -48,10 +48,10 @@ export class LegacyTReg {
     inc() {
         if (this.pointer === this.bits.length - 1) {
             this.bits.push(0);
-            this.pointer += 1;
+            this.pointer++;
             return 0;
         } else {
-            this.pointer += 1;
+            this.pointer++;
             return 1;
         }
     }
@@ -65,7 +65,7 @@ export class LegacyTReg {
         if (this.pointer === 0) {
             return 0;
         } else {
-            this.pointer -= 1;
+            this.pointer--;
             return 1;
         }
     }

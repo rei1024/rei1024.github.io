@@ -1,3 +1,5 @@
+// @ts-check
+
 import {
     BRegAction,
     B_INC,
@@ -10,7 +12,21 @@ import { assertEquals, assertThrows, test } from "../deps.js";
 
 test("BReg read initial", () => {
     const x = new BReg();
+    assertEquals(x.pointer, 0);
+    assertEquals(x.getBits(), [0]);
     assertEquals(x.read(), 0);
+});
+
+test('BReg set inc', () => {
+    const x = new BReg();
+    assertEquals(x.getBits(), [0]);
+    assertEquals(x.pointer, 0);
+    x.set();
+    assertEquals(x.getBits(), [1]);
+    assertEquals(x.pointer, 0);
+    x.inc();
+    assertEquals(x.getBits(), [1, 0]);
+    assertEquals(x.pointer, 1);
 });
 
 test("BReg extend", () => {
@@ -40,9 +56,15 @@ test("BReg read twice", () => {
 test("BReg inc and set", () => {
     const x = new BReg();
     x.inc();
+    assertEquals(x.pointer, 1);
     assertEquals(x.read(), 0);
+
     x.set();
     assertEquals(x.getBits(), [0, 1]);
+
+    x.inc();
+    assertEquals(x.pointer, 2);
+    assertEquals(x.getBits(), [0, 1, 0]);
 });
 
 test("BReg inc twice and set", () => {

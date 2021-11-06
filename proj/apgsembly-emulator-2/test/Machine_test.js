@@ -1,3 +1,5 @@
+// @ts-check
+
 /* eslint-disable camelcase */
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
@@ -121,9 +123,9 @@ ID0; ZZ; ID0; NOP
     const program = Program.parse(str);
     assertEquals(
         program,
-        'Does not contain exactly one action that produces a return value ' +
+        'Does not contain exactly one action that produces a return value in ' +
         '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
-        'Actions that produce value are NOP, TDEC U0'
+        'Actions that produce value are "NOP", "TDEC U0"'
         // 'The return value is returned more than once in ' +
         // '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
         // 'Actions that return a return value more than once are NOP, TDEC U0'

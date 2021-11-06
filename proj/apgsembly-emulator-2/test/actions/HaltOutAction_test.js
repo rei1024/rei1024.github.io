@@ -1,3 +1,5 @@
+// @ts-check
+
 import { HaltOutAction } from "../../src/actions/HaltOutAction.js";
 import { assertEquals, test } from "../deps.js";
 

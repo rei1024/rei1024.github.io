@@ -1,3 +1,5 @@
+// @ts-check
+
 import { MulAction } from "../../src/actions/MulAction.js";
 import { assertEquals, test } from "../deps.js";
 

@@ -43,7 +43,7 @@ export class B2D {
          * @type {(0 | 1)[][]}
          */
         this.array = Array(this.maxY + 1).fill(0).map(_ => {
-            return Array(this.maxX + 1).fill(0);
+            return Array(this.maxX + 1).fill(0).map(() => 0);
         });
     }
 
@@ -116,7 +116,7 @@ export class B2D {
      * @returns {void}
      */
     incB2DX() {
-        this.x += 1;
+        this.x++;
         if (this.maxX < this.x) {
             this.array.forEach(a => {
                 a.push(0);
@@ -130,7 +130,7 @@ export class B2D {
      * @returns {void}
      */
     incB2DY() {
-        this.y += 1;
+        this.y++;
         if (this.maxY < this.y) {
             this.array.push(Array(this.maxX + 1).fill(0));
             this.maxY = this.y;
@@ -145,7 +145,7 @@ export class B2D {
         if (this.x === 0) {
             return 0;
         } else {
-            this.x -= 1;
+            this.x--;
             return 1;
         }
     }
@@ -158,7 +158,7 @@ export class B2D {
         if (this.y === 0) {
             return 0;
         } else {
-            this.y -= 1;
+            this.y--;
             return 1;
         }
     }

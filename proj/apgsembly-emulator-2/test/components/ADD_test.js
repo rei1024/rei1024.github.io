@@ -1,3 +1,5 @@
+// @ts-check
+
 import { AddAction, ADD_A1 } from "../../src/actions/AddAction.js";
 import {
     ADD

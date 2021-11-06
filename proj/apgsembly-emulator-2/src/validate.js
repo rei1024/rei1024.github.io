@@ -4,6 +4,36 @@ import { HaltOutAction } from "./actions/HaltOutAction.js";
 import { Command, INITIAL_STATE } from "./Command.js";
 
 /**
+ * 全てのバリデーションを通す
+ * @param {Command[]} commands
+ * @returns {undefined | string} string is error
+ */
+export function validateAll(commands) {
+    /**
+     * @type {((_: Command[]) => string[] | undefined)[]}
+     */
+    const validators = [
+        validateNoDuplicatedAction,
+        validateActionReturnOnce,
+        validateNoSameComponent,
+        validateNextStateIsNotINITIAL,
+        validateZAndNZ
+    ];
+    /** @type {string[]} */
+    let errors = [];
+    for (const validator of validators) {
+        const errorsOrUndefined = validator(commands);
+        if (Array.isArray(errorsOrUndefined)) {
+            errors = errors.concat(errorsOrUndefined);
+        }
+    }
+    if (errors.length > 0) {
+        return errors.join('\n');
+    }
+    return undefined;
+}
+
+/**
  * @returns {never}
  */
 function internalError() {
@@ -47,14 +77,19 @@ function validateNoDuplicatedActionCommand(command) {
  * 同じアクションが複数含まれていないか検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
- * @returns {string | undefined}
+ * @returns {string[] | undefined}
  */
 export function validateNoDuplicatedAction(commands) {
+    /** @type {string[]} */
+    const errors = [];
     for (const command of commands) {
         const err = validateNoDuplicatedActionCommand(command);
         if (typeof err === 'string') {
-            return err;
+            errors.push(err);
         }
+    }
+    if (errors.length > 0) {
+        return errors;
     }
     return undefined;
 }
@@ -76,10 +111,10 @@ function validateActionReturnOnceCommand(command) {
     } else if (valueReturnActions.length === 0) {
         return `Does not produce the return value in "${command.pretty()}"`;
     } else {
-        return `Does not contain exactly one action that produces a return value "${
+        return `Does not contain exactly one action that produces a return value in "${
             command.pretty()
         }": Actions that produce value are ${
-            valueReturnActions.map(x => x.pretty()).join(', ')
+            valueReturnActions.map(x => `"${x.pretty()}"`).join(', ')
         }`;
     }
 }
@@ -88,14 +123,19 @@ function validateActionReturnOnceCommand(command) {
  * アクションが値を一度だけ返すか検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
- * @returns {string | undefined}
+ * @returns {string[] | undefined}
  */
 export function validateActionReturnOnce(commands) {
+    /** @type {string[]} */
+    const errors = [];
     for (const command of commands) {
         const err = validateActionReturnOnceCommand(command);
         if (typeof err === 'string') {
-            return err;
+            errors.push(err);
         }
+    }
+    if (errors.length > 0) {
+        return errors;
     }
     return undefined;
 }
@@ -141,14 +181,19 @@ function validateNoSameComponentCommand(command) {
  * アクションが同じコンポーネントを使用していないか検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
- * @returns {string | undefined}
+ * @returns {string[] | undefined}
  */
 export function validateNoSameComponent(commands) {
+    /** @type {string[]} */
+    const errors = [];
     for (const command of commands) {
         const err = validateNoSameComponentCommand(command);
         if (typeof err === 'string') {
-            return err;
+            errors.push(err);
         }
+    }
+    if (errors.length > 0) {
+        return errors;
     }
     return undefined;
 }
@@ -157,14 +202,19 @@ export function validateNoSameComponent(commands) {
  * 次の状態が初期状態でないか検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
- * @returns {string | undefined}
+ * @returns {string[] | undefined}
  */
 export function validateNextStateIsNotINITIAL(commands) {
+        /** @type {string[]} */
+        const errors = [];
     for (const command of commands) {
         const err = validateNextStateIsNotINITIALCommand(command);
         if (typeof err === 'string') {
-            return err;
+            errors.push(err);
         }
+    }
+    if (errors.length > 0) {
+        return errors;
     }
     return undefined;
 }
@@ -173,7 +223,7 @@ export function validateNextStateIsNotINITIAL(commands) {
  * ZとNZがペアになっていることを検査する
  * エラーメッセージを返却する
  * @param {Command[]} commands
- * @returns {string | undefined}
+ * @returns {string[] | undefined}
  */
 export function validateZAndNZ(commands) {
     for (let i = 0; i < commands.length - 1; i++) {
@@ -181,18 +231,18 @@ export function validateZAndNZ(commands) {
         const b = commands[i + 1] ?? internalError();
 
         if (a.input === "Z" && b.input !== 'NZ') {
-            return `Need Z line followed by NZ line at "${a.pretty()}"`;
+            return [`Need Z line followed by NZ line at "${a.pretty()}"`];
         }
 
         if (b.input === "NZ" && a.input !== 'Z') {
-            return `Need Z line followed by NZ line at "${b.pretty()}"`;
+            return [`Need Z line followed by NZ line at "${b.pretty()}"`];
         }
     }
 
     const lastLine = commands[commands.length - 1];
     if (lastLine !== undefined) {
         if (lastLine.input === 'Z') {
-            return `Need Z line followed by NZ line at "${lastLine.pretty()}"`;
+            return [`Need Z line followed by NZ line at "${lastLine.pretty()}"`];
         }
     }
 

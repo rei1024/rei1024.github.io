@@ -1,10 +1,11 @@
 // @ts-check
 
-import { BReg } from "../src/components/BReg.js";
+import { BReg } from "../../src/components/BReg.js";
 
 /**
  * @type {{
  * decimal: HTMLElement,
+ * hex: HTMLElement,
  * pointer: HTMLElement,
  * prefix: HTMLElement,
  * head: HTMLElement,
@@ -35,9 +36,11 @@ export function setUpBinary($binaryRegister, regs) {
 
         const decimal = document.createElement('span');
         decimal.classList.add('decimal');
+        const hex = document.createElement('span');
+        hex.classList.add('hex');
         const pointer = document.createElement('span');
         pointer.classList.add('pointer');
-        metaDataCode.append(decimal, pointer);
+        metaDataCode.append(decimal, hex, pointer);
         const br = document.createElement('br');
         td.append(metaDataCode, br);
         // end meta
@@ -62,6 +65,7 @@ export function setUpBinary($binaryRegister, regs) {
         table.append(tr);
         binaryCache.push({
             decimal: decimal,
+            hex: hex,
             pointer: pointer,
             prefix: $prefix,
             head: $head,
@@ -84,8 +88,16 @@ function error() {
  * @param {Map<number, BReg>} regs
  * @param {boolean} hideBinary
  * @param {boolean} reverseBinary
+ * @param {boolean} showBinaryValueInDecimal
+ * @param {boolean} showBinaryValueInHex
  */
-export function renderBinary(regs, hideBinary, reverseBinary) {
+export function renderBinary(
+    regs,
+    hideBinary,
+    reverseBinary,
+    showBinaryValueInDecimal,
+    showBinaryValueInHex
+) {
     let i = 0;
     for (const reg of regs.values()) {
         const binaryCacheElem = binaryCache[i] ?? error();
@@ -94,6 +106,7 @@ export function renderBinary(regs, hideBinary, reverseBinary) {
         const $suffix = binaryCacheElem.suffix;
         const $decimal = binaryCacheElem.decimal;
         const $pointer = binaryCacheElem.pointer;
+        const $hex = binaryCacheElem.hex;
         if (hideBinary) {
             $prefix.textContent = '';
             $head.textContent = '';
@@ -110,8 +123,18 @@ export function renderBinary(regs, hideBinary, reverseBinary) {
             $head.textContent = obj.head.toString();
             $suffix.textContent = obj.suffix.join('');
         }
-        $decimal.textContent = "value = " + reg.toDecimalString();
-        $pointer.textContent = ", pointer = " + reg.pointer.toString();
+        if (showBinaryValueInDecimal) {
+            $decimal.textContent = "value = " + reg.toDecimalString() + ", ";
+        } else {
+            $decimal.textContent = "";
+        }
+        if (showBinaryValueInHex) {
+            $hex.textContent = "hex = " + reg.toHexString() + ", ";
+        } else {
+            $hex.textContent = "";
+        }
+
+        $pointer.textContent = "pointer = " + reg.pointer.toString();
         i++;
     }
 }

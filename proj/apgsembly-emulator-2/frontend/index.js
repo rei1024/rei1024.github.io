@@ -8,19 +8,20 @@ import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
 import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
+import { prefetch } from "./util/prefetch.js";
 import { Frequency } from "./util/frequency.js";
 
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 
-import { renderB2D } from "./renderB2D.js";
+import { renderB2D } from "./render_component/renderB2D.js";
 import {
     renderUnary,
     setUpUnary,
     UNARY_REG_ITEMS_CLASS
-} from "./renderUnary.js";
-import { setUpBinary, renderBinary } from "./renderBinary.js";
-import { setUpStats, renderStats } from "./renderStats.js";
+} from "./render_component/renderUnary.js";
+import { setUpBinary, renderBinary } from "./render_component/renderBinary.js";
+import { setUpStats, renderStats } from "./render_component/renderStats.js";
 
 import {
     $error,
@@ -50,19 +51,25 @@ import {
     $addSubMul,
     $fileImport,
     $sampleCodes,
+    $samples,
+
+    // Modal
     $stepInput,
     $hideBinary,
     $reverseBinary,
+    $showBinaryValueInDecimal,
+    $showBinaryValueInHex,
     $breakpointSelect,
     $breakpointInputSelect,
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
     $b2dFlipUpsideDown,
+
+    // Stats
     $statsModal,
     $statsBody,
     $statsNumberOfStates,
-    $samples,
 } from "./bind.js";
 
 // データ
@@ -267,7 +274,14 @@ export class App {
     renderErrorMessage() {
         if (this.appState === "RuntimeError" ||
             this.appState === "ParseError") {
-            $error.textContent = this.errorMessage;
+            const messages = this.errorMessage.split('\n');
+            $error.innerHTML = "";
+            for (const message of messages) {
+                const span = document.createElement('span');
+                span.textContent = "- " + message;
+                const br = document.createElement('br');
+                $error.append(span, br);
+            }
             $error.style.display = "block";
             console.error("RENDER: " + this.errorMessage);
         } else {
@@ -280,7 +294,7 @@ export class App {
      */
     renderCommand() {
         try {
-            const next = this.machine?.getNextCompiledCommandWithNextState();
+            const next = this.machine?.getNextCompiledCommandWithNextState(false);
             $command.textContent = next?.command.pretty() ?? "";
         } catch (e) {
             $command.textContent = "";
@@ -356,7 +370,9 @@ export class App {
         renderBinary(
             this.machine.actionExecutor.bRegMap,
             $hideBinary.checked,
-            $reverseBinary.checked
+            $reverseBinary.checked,
+            $showBinaryValueInDecimal.checked,
+            $showBinaryValueInHex.checked
         );
     }
 
@@ -676,6 +692,20 @@ $reverseBinary.addEventListener('change', () => {
     localStorage.setItem(REVERSE_BINARY_KEY, $reverseBinary.checked.toString());
 });
 
+const SHOW_BINARY_IN_DECIMAL_KEY = 'show_binary_in_decimal';
+
+$showBinaryValueInDecimal.addEventListener('change', () => {
+    app.renderBinary();
+    localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, $showBinaryValueInDecimal.checked.toString());
+});
+
+const SHOW_BINARY_IN_HEX_KEY = 'show_binary_in_hex';
+
+$showBinaryValueInHex.addEventListener('change', () => {
+    app.renderBinary();
+    localStorage.setItem(SHOW_BINARY_IN_HEX_KEY, $showBinaryValueInHex.checked.toString());
+});
+
 // ダークモード
 // bodyタグ直下で設定してDark mode flashingを防ぐ
 const DARK_MODE_KEY = 'dark_mode';
@@ -771,12 +801,27 @@ idle(() => {
     if (localStorage.getItem(HIDE_BINARY_KEY) === "true") {
         $hideBinary.checked = true;
     }
+
+    // デフォルトはtrue
+    if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
+        localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, 'true');
+    }
+
+    if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === "true") {
+        $showBinaryValueInDecimal.checked = true;
+    }
+
+    if (localStorage.getItem(SHOW_BINARY_IN_HEX_KEY) === "true") {
+        $showBinaryValueInHex.checked = true;
+    }
+
     // ダークモードについてはbodyタグ直下でも設定する
     if (localStorage.getItem(DARK_MODE_KEY) === "on") {
         document.body.setAttribute('apge_dark_mode', "on");
         $darkMode.checked = true;
         $darkModeLabel.textContent = "On";
     }
+    app.render();
 });
 
 // サンプルコードをプレフェッチ
@@ -784,17 +829,13 @@ idle(() => {
     try {
         const saveData = getSaveData();
         if (saveData === false || saveData === undefined) {
-            // <link rel="prefetch" href="second.html">
             $sampleCodes.forEach(e => {
                 if (!(e instanceof HTMLElement)) {
                     throw Error('is not HTMLElement');
                 }
                 const src = e.dataset[SRC_KEY];
                 if (src !== undefined) {
-                    const link = document.createElement('link');
-                    link.rel = "prefetch";
-                    link.href = DATA_DIR + src;
-                    document.head.append(link);
+                    prefetch(DATA_DIR + src);
                 }
             });
         }

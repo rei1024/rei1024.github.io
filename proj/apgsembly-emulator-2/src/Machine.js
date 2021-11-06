@@ -162,7 +162,7 @@ export class Machine {
                 if (stat === undefined) {
                     throw Error('Internal error');
                 }
-                stat.z += 1;
+                stat.z++;
             }
             const z = compiledCommand.z;
             if (z !== undefined) {
@@ -174,7 +174,7 @@ export class Machine {
                 if (stat === undefined) {
                     throw Error('Internal error');
                 }
-                stat.nz += 1;
+                stat.nz++;
             }
             const nz = compiledCommand.nz;
             if (nz !== undefined) {
@@ -195,17 +195,20 @@ export class Machine {
     execCommand() {
         const compiledCommand = this.getNextCompiledCommandWithNextState(true);
 
-        /** @type {0 | 1 | undefined} */
-        let result = undefined;
+        /**
+         * -1は返り値無し
+         * @type {0 | 1 | -1}
+         */
+        let result = -1;
 
         const actionExecutor = this.actionExecutor;
         for (const action of compiledCommand.command.actions) {
             const actionResult = actionExecutor.execAction(action);
-            if (actionResult === -1) {
+            if (actionResult === -1) { // HALT_OUT
                 return -1;
             }
             if (actionResult !== undefined) { // res === 1 || res ==== 0
-                if (result === undefined) {
+                if (result === -1) {
                     result = actionResult;
                 } else {
                     throw Error(`Return value twice: line = ${
@@ -214,7 +217,8 @@ export class Machine {
                 }
             }
         }
-        if (result === undefined) {
+
+        if (result === -1) {
             throw Error(`No return value: line = ${
                 compiledCommand.command.pretty()
             }`);

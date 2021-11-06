@@ -103,6 +103,12 @@ export const $hideBinary = $type('#hide_binary', HTMLInputElement);
 // 二進数を逆順にする
 export const $reverseBinary = $type('#reverse_binary', HTMLInputElement);
 
+// 10進数に変換して表示
+export const $showBinaryValueInDecimal = $type('#show_binary_value_in_decimal', HTMLInputElement);
+
+// 16進数に変換して表示
+export const $showBinaryValueInHex = $type('#show_binary_value_in_hex', HTMLInputElement);
+
 // ブレークポイント
 export const $breakpointSelect = $type('#breakpoint_select', HTMLSelectElement);
 

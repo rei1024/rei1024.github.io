@@ -63,7 +63,7 @@ $copy.addEventListener('click', () => {
 });
 
 for (const { name, prog } of list) {
-     // <button class="dropdown-item js_sample" data-src="pi_calc.apg">π Calculator</button>
+     // <button class="dropdown-item" data-src="pi_calc.apg">π Calculator</button>
     const button = document.createElement('button');
     button.classList.add('dropdown-item');
     button.textContent = name;

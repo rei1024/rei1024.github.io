@@ -1,3 +1,5 @@
+// @ts-check
+
 import { ActionExecutor } from '../src/ActionExecutor.js';
 import { assertEquals, test, assertThrows } from './deps.js';
 
@@ -81,6 +83,7 @@ test('ActionExecutor setByRegistersInit error', () => {
     });
 
     assertThrows(() => {
+        // @ts-ignore
         x.setByRegistersInit({ U0: true });
     });
 
@@ -89,14 +92,17 @@ test('ActionExecutor setByRegistersInit error', () => {
     });
 
     assertThrows(() => {
+        // @ts-ignore
         x.setByRegistersInit({ U0: "11" });
     });
 
     assertThrows(() => {
+        // @ts-ignore
         x.setByRegistersInit({ B0: [0, 5] });
     });
 
     assertThrows(() => {
+        // @ts-ignore
         x.setByRegistersInit({ B0: ['3', '11'] });
     });
 });

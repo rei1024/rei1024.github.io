@@ -1,6 +1,6 @@
 // @ts-check
 
-import { UReg } from "../src/components/UReg.js";
+import { UReg } from "../../src/components/UReg.js";
 
 /**
  * キャッシュ用のキー

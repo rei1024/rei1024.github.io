@@ -17,7 +17,7 @@ describe('Error: empty program', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         cy.get('#start').click();
-        cy.get('#error').should('have.text', 'Program is empty');
+        cy.get('#error').should('have.text', '- Program is empty');
     });
 });
 

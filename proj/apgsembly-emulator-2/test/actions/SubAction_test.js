@@ -1,3 +1,5 @@
+// @ts-check
+
 import { SubAction } from "../../src/actions/SubAction.js";
 import { assertEquals, test } from "../deps.js";
 

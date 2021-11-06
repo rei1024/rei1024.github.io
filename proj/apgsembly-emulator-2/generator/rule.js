@@ -8,7 +8,7 @@
  * @param {number} y
  * @param {(_: number) => void} f
  */
- function rangeForEach(x, y, f) {
+function rangeForEach(x, y, f) {
     for (let i = x; i <= y; i++) {
         f(i);
     }

@@ -4,11 +4,13 @@
 # State Input Next state Actions
 # ---------------------------------------
 INITIAL; ZZ; CHECK; READ B2D
+
 ## Determine whether the current bit equals 0 or 1.
 # If it equals 0, set it to 1 and go to the least significant bit.
 # If it equals 1, set it to 0 and go to the next most significant bit.
 CHECK; Z; LSB1; SET B2D, NOP
 CHECK; NZ; NSB1; TDEC U0
+
 ## The LSB states move the B2D read head to (0,0) and set U0 = U1 = 0.
 LSB1; ZZ; LSB2; TDEC B2DX
 LSB2; Z; LSB3; TDEC B2DY
@@ -19,15 +21,18 @@ LSB4; Z; LSB5; TDEC U1
 LSB4; NZ; LSB4; TDEC U0
 LSB5; Z; CHECK; READ B2D
 LSB5; NZ; LSB5; TDEC U1
+
 ## The NSB states move the B2D read head to the next most significant bit.
 # If U0 = 0 then we are at the end of the current X row, so start the next one.
 # If U0 > 0 then go to the next position in this X row and read the bit.
 NSB1; Z; NSB3; TDEC B2DX
 NSB1; NZ; NSB2; INC B2DX, NOP
 NSB2; ZZ; CHECK; READ B2D
+
 # When going to the next X row, increase U1 (the length of the current X row).
 NSB3; Z; NSB4; INC B2DY, INC U1, NOP
 NSB3; NZ; NSB3; TDEC B2DX
+
 # Copy U1 into U0, with the help of U2. Then read the current bit.
 NSB4; ZZ; NSB5; TDEC U1
 NSB5; Z; NSB6; TDEC U2

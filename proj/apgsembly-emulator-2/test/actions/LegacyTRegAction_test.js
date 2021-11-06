@@ -1,3 +1,5 @@
+// @ts-check
+
 import {
     LegacyTRegAction,
     T_INC,

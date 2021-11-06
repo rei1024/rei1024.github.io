@@ -25,22 +25,19 @@ if (!(copy instanceof HTMLButtonElement)) {
 }
 
 generateButton.addEventListener("click", () => {
+    code.value = "";
     copy.disabled = true;
     const n = parseInt(rule.value, 10);
     if (isNaN(n)) {
-        code.value = "";
         return;
     }
     if (!Number.isInteger(n)) {
-        code.value = "";
         return;
     }
     if (n < 0) {
-        code.value = "";
         return;
     }
     if (n > 255) {
-        code.value = "";
         return;
     }
     code.value = generate(n);

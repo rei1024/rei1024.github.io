@@ -1,14 +1,9 @@
 // @ts-check
 
 import { Command, ComponentsHeader, RegistersHeader } from "./Command.js";
+import { Action } from "./actions/Action.js";
 import { ProgramLines } from "./ProgramLines.js";
-import {
-    validateActionReturnOnce,
-    validateNoDuplicatedAction,
-    validateNoSameComponent,
-    validateNextStateIsNotINITIAL,
-    validateZAndNZ
-} from "./validate.js";
+import { validateAll } from "./validate.js";
 
 /**
  * APGsembly program
@@ -84,27 +79,10 @@ export class Program {
         if (commands.length === 0) {
             return 'Program is empty';
         }
-        const duplicateError = validateNoDuplicatedAction(commands);
-        if (typeof duplicateError === 'string') {
-            return duplicateError;
-        }
-        const returnOnceError = validateActionReturnOnce(commands);
-        if (typeof returnOnceError === 'string') {
-            return returnOnceError;
-        }
-        const noSameComponentError = validateNoSameComponent(commands);
-        if (typeof noSameComponentError === 'string') {
-            return noSameComponentError;
-        }
 
-        const nextStateIsNotInitialError = validateNextStateIsNotINITIAL(commands);
-        if (typeof nextStateIsNotInitialError === 'string') {
-            return nextStateIsNotInitialError;
-        }
-
-        const zAndNZError = validateZAndNZ(commands);
-        if (typeof zAndNZError === 'string') {
-            return zAndNZError;
+        const errorOrUndefined = validateAll(commands);
+        if (typeof errorOrUndefined === 'string') {
+            return errorOrUndefined;
         }
 
         return new Program({
@@ -128,30 +106,32 @@ export class Program {
     }
 
     /**
+     * @private
+     * @returns {Action[]}
+     */
+    _actions() {
+        return this.commands.flatMap(command => command.actions);
+    }
+
+    /**
      * @returns {number[]}
      */
     extractUnaryRegisterNumbers() {
-        const array = this.commands.flatMap(command => command.actions)
-            .flatMap(action => action.extractUnaryRegisterNumbers());
-        return sortNub(array);
+        return sortNub(this._actions().flatMap(a => a.extractUnaryRegisterNumbers()));
     }
 
     /**
      * @returns {number[]}
      */
     extractBinaryRegisterNumbers() {
-        const array = this.commands.flatMap(command => command.actions)
-            .flatMap(action => action.extractBinaryRegisterNumbers());
-        return sortNub(array);
+        return sortNub(this._actions().flatMap(a => a.extractBinaryRegisterNumbers()));
     }
 
     /**
      * @returns {number[]}
      */
     extractLegacyTRegisterNumbers() {
-        const array = this.commands.flatMap(command => command.actions)
-            .flatMap(action => action.extractLegacyTRegisterNumbers());
-        return sortNub(array);
+        return sortNub(this._actions().flatMap(a => a.extractLegacyTRegisterNumbers()));
     }
 
     /**

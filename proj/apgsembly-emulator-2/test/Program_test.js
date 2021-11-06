@@ -1,3 +1,5 @@
+// @ts-check
+
 /* eslint-disable camelcase */
 import { Program } from '../src/Program.js';
 import { assertEquals, test } from "./deps.js";
@@ -103,7 +105,9 @@ test('Program duplicated actions', () => {
     } else {
         assertEquals(
             program,
-            `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`
+            `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"
+Does not contain exactly one action that produces a return value in "INITIAL; ZZ; A0; NOP, NOP": Actions that produce value are "NOP", "NOP"
+Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`
         );
     }
 });
@@ -131,8 +135,8 @@ test('Program return one value', () => {
     } else {
         assertEquals(
             program,
-            'Does not contain exactly one action that produces a return value' +
-            ' "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that produce value are NOP, TDEC U0'
+            'Does not contain exactly one action that produces a return value in' +
+            ' "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that produce value are "NOP", "TDEC U0"'
         );
     }
 });

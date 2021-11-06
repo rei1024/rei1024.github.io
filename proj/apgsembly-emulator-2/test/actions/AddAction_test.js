@@ -1,3 +1,5 @@
+// @ts-check
+
 import { AddAction } from "../../src/actions/AddAction.js";
 import { assertEquals, test } from "../deps.js";
 

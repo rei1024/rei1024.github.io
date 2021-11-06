@@ -1,3 +1,5 @@
+// @ts-check
+
 import { OutputAction } from "../../src/actions/OutputAction.js";
 import { assertEquals, test } from "../deps.js";
 

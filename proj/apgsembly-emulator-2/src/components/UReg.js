@@ -22,8 +22,18 @@ export class UReg {
         switch (act.op) {
             // INC  12414041
             // TDEC 12437599
-            case U_TDEC: return this.tdec();
-            case U_INC: return this.inc();
+            case U_TDEC: {
+                // dec()と合わせること
+                if (this.value === 0) {
+                    return 0;
+                } else {
+                    this.value--;
+                    return 1;
+                }
+            }
+            case U_INC: {
+                this.value++; // inc()と合わせること
+            }
         }
     }
 
@@ -47,7 +57,7 @@ export class UReg {
      * @returns {void}
      */
     inc() {
-        this.value += 1;
+        this.value++; // actionにも同じ処理を書く
     }
 
     /**
@@ -58,7 +68,7 @@ export class UReg {
         if (this.value === 0) {
             return 0;
         } else {
-            this.value -= 1;
+            this.value--;
             return 1;
         }
     }

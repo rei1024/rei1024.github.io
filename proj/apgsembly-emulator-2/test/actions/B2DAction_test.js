@@ -1,3 +1,5 @@
+// @ts-check
+
 import { B2DAction, B2D_INC, B2D_B2DX } from "../../src/actions/B2DAction.js";
 import { assertEquals, test } from "../deps.js";
 

@@ -1,6 +1,6 @@
 // @ts-check
 
-import { B2D } from "../src/components/B2D.js";
+import { B2D } from "../../src/components/B2D.js";
 
 /**
  * B2Dをcanvasに描画する

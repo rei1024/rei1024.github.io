@@ -1,3 +1,5 @@
+// @ts-check
+
 import { NopAction } from "../../src/actions/NopAction.js";
 import { NOP } from "../../src/components/NOP.js";
 import { assertEquals, test } from "../deps.js";
