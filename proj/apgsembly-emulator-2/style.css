@@ -21,6 +21,35 @@
     padding: 2px;
 }
 
+@media screen and (max-width: 480px) {
+    .command_prefix {
+        display: none;
+    }
+    #previous_output {
+        text-align: right;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .btn-group {
+        display: grid;
+        gap: 4px 0px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media screen and (max-width: 330px) {
+    .btn-group {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 255px) {
+    .btn-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 /**** Dark mode ****/
 :root {
     --dark-mode-color: #dddddd;

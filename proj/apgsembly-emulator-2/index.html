@@ -107,18 +107,19 @@
                 <tbody>
                     <tr class="pb-0">
                         <!-- CLSを防ぐため、レンダリングされた後の値と同じにする -->
-                        <td class="code-mono" id="current_state">
+                        <td style="vertical-align: middle; white-space: nowrap;" class="code-mono" id="current_state">
                             <!-- INITIAL -->
                         </td>
-                        <td class="code-mono" id="previous_output">
+                        <td style="vertical-align: middle;" class="code-mono" id="previous_output">
                             <!-- Z -->
                         </td>
                         <td><code id="steps">0</code></td>
                     </tr>
                 </tbody>
             </table>
-            <p class="mb-1">
-                Line: <code id="command"></code>
+            <!-- mobileでLayout shiftを避けるため一行に収める -->
+            <p class="mb-1" style="white-space: nowrap;">
+                <span class="command_prefix">Line: </span><code id="command"></code>
             </p>
         </div>
         <div class="mb-2">
