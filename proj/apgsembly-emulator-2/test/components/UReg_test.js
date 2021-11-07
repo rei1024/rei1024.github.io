@@ -86,6 +86,14 @@ test("UReg setBy", () => {
     });
 
     assertThrows(() => {
+        x.setByRegistersInit('1', 3.3);
+    });
+
+    assertThrows(() => {
+        x.setByRegistersInit('1', NaN);
+    });
+
+    assertThrows(() => {
         x.setByRegistersInit('1', true);
     });
 

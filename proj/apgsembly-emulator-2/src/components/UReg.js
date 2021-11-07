@@ -83,7 +83,7 @@ export class UReg {
             const debugStr = `"${key}": ${JSON.stringify(value)}`;
             throw Error(`Invalid #REGISTERS ${debugStr}`);
         }
-        if (value < 0) {
+        if (value < 0 || !Number.isInteger(value)) {
             const debugStr = `"${key}": ${JSON.stringify(value)}`;
             throw Error(`Invalid #REGISTERS ${debugStr}`);
         }
