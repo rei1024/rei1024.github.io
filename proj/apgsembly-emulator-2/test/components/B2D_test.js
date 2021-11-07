@@ -4,6 +4,11 @@ import { B2DAction } from "../../src/actions/B2DAction.js";
 import { B2D } from "../../src/components/B2D.js";
 import { assertEquals, assertThrows, test } from "../deps.js";
 
+test('B2D constructor', () => {
+    const x = new B2D(1, 2);
+    assertEquals(x.getArray(), [[0, 0], [0, 0], [0, 0]]);
+});
+
 test("B2D read initial", () => {
     const x = new B2D();
     assertEquals(x.read(), 0);
@@ -27,6 +32,8 @@ test("B2D incB2DX", () => {
     assertEquals(x.incB2DX(), undefined);
     assertEquals(x.x, 1);
     assertEquals(x.y, 0);
+
+    assertEquals(x.getArray(), [[0, 0]]);
 });
 
 test("B2D incB2DY", () => {
@@ -34,6 +41,8 @@ test("B2D incB2DY", () => {
     assertEquals(x.incB2DY(), undefined);
     assertEquals(x.x, 0);
     assertEquals(x.y, 1);
+
+    assertEquals(x.getArray(), [[0], [0]]);
 });
 
 test("B2D tdec X", () => {
@@ -98,8 +107,8 @@ test("B2D incB2DX read set", () => {
     assertEquals(x.read(), 0);
     x.set();
     assertEquals(x.read(), 1);
+    assertEquals(x.read(), 0);
 });
-
 
 test("B2D set Error", () => {
     const x = new B2D();

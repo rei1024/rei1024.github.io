@@ -12,6 +12,24 @@ import {
 } from "../actions/B2DAction.js";
 
 /**
+ * @template A
+ * @param {number} n
+ * @param {(_: number) => A} f
+ * @returns {A[]}
+ */
+function generateArray(n, f) {
+    /**
+     * @type {A[]}
+     */
+    const array = [];
+    for (let i = 0; i < n; i++) {
+        array.push(f(i));
+    }
+
+    return array;
+}
+
+/**
  * B2D
  * binary 2-dimensional
  */
@@ -42,8 +60,8 @@ export class B2D {
          * @private
          * @type {(0 | 1)[][]}
          */
-        this.array = Array(this.maxY + 1).fill(0).map(_ => {
-            return Array(this.maxX + 1).fill(0).map(() => 0);
+        this.array = generateArray(this.maxY + 1, () => {
+            return generateArray(this.maxX + 1, () => 0);
         });
     }
 
@@ -118,9 +136,9 @@ export class B2D {
     incB2DX() {
         this.x++;
         if (this.maxX < this.x) {
-            this.array.forEach(a => {
+            for (const a of this.array) {
                 a.push(0);
-            });
+            }
             this.maxX = this.x;
         }
     }
@@ -132,7 +150,7 @@ export class B2D {
     incB2DY() {
         this.y++;
         if (this.maxY < this.y) {
-            this.array.push(Array(this.maxX + 1).fill(0));
+            this.array.push(generateArray(this.maxX + 1, () => 0));
             this.maxY = this.y;
         }
     }
@@ -190,7 +208,7 @@ export class B2D {
             throw Error('B2D: internal error');
         }
         if (arrayY[this.x] === 1) {
-            throw Error('SET B2D: Tried to set when it was already 1');
+            throw Error(`SET B2D: Tried to set when it was already 1. x = ${this.x}, y = ${this.y}}`);
         }
         arrayY[this.x] = 1;
     }
