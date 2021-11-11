@@ -158,7 +158,7 @@ A0; *; A0; NOP
         throw Error('parse error ' + str);
     }
     const machine = new Machine(program);
-    assertEquals(machine.actionExecutor.uRegMap.get(3).getValue(), 2);
+    assertEquals(machine.actionExecutor.getUReg(3).getValue(), 2);
 });
 
 test('Machine register header: single quotation support for binary', () => {
@@ -172,7 +172,7 @@ A0; *; A0; NOP
         throw Error('parse error ' + str);
     }
     const machine = new Machine(program);
-    assertEquals(machine.actionExecutor.bRegMap.get(0).getBits(), [1, 1, 0]);
+    assertEquals(machine.actionExecutor.getBReg(0).getBits(), [1, 1, 0]);
 });
 
 test('Machine register header error: register is not exist', () => {
@@ -243,18 +243,18 @@ test('Machine program9_2', () => {
     }
     const machine = new Machine(program);
     assertEquals([...machine.actionExecutor.uRegMap.keys()], [0, 1]);
-    assertEquals(machine.actionExecutor.uRegMap.get(0)?.getValue(), 7);
-    assertEquals(machine.actionExecutor.uRegMap.get(1)?.getValue(), 5);
+    assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 7);
+    assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 5);
 
     machine.execCommand();
 
-    assertEquals(machine.actionExecutor.uRegMap.get(0)?.getValue(), 6);
-    assertEquals(machine.actionExecutor.uRegMap.get(1)?.getValue(), 5);
+    assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 6);
+    assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 5);
 
     machine.execCommand();
 
-    assertEquals(machine.actionExecutor.uRegMap.get(0)?.getValue(), 5);
-    assertEquals(machine.actionExecutor.uRegMap.get(1)?.getValue(), 6);
+    assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 5);
+    assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 6);
 
     for (let i = 0; i < 100; i++) {
         const res = machine.execCommand();
@@ -262,8 +262,8 @@ test('Machine program9_2', () => {
             break;
         }
     }
-    assertEquals(machine.actionExecutor.uRegMap.get(0).getValue(), 0);
-    assertEquals(machine.actionExecutor.uRegMap.get(1).getValue(), 12);
+    assertEquals(machine.actionExecutor.getUReg(0).getValue(), 0);
+    assertEquals(machine.actionExecutor.getUReg(1).getValue(), 12);
 });
 
 test('Machine program9_3', () => {
@@ -273,18 +273,18 @@ test('Machine program9_3', () => {
     }
     const machine = new Machine(program);
     assertEquals([...machine.actionExecutor.uRegMap.keys()], [0, 1, 2, 3]);
-    assertEquals(machine.actionExecutor.uRegMap.get(0)?.getValue(), 7);
-    assertEquals(machine.actionExecutor.uRegMap.get(1)?.getValue(), 5);
+    assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 7);
+    assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 5);
     for (let i = 0; i < 100; i++) {
         const res = machine.execCommand();
         if (res === -1) {
             break;
         }
     }
-    assertEquals(machine.actionExecutor.uRegMap.get(0)?.getValue(), 0);
-    assertEquals(machine.actionExecutor.uRegMap.get(1)?.getValue(), 5);
-    assertEquals(machine.actionExecutor.uRegMap.get(2)?.getValue(), 35);
-    assertEquals(machine.actionExecutor.uRegMap.get(3)?.getValue(), 0);
+    assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 0);
+    assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 5);
+    assertEquals(machine.actionExecutor.getUReg(2)?.getValue(), 35);
+    assertEquals(machine.actionExecutor.getUReg(3)?.getValue(), 0);
 });
 
 test('Machine program9_4', () => {
@@ -293,7 +293,7 @@ test('Machine program9_4', () => {
         throw Error('parse error program9_4');
     }
     const machine = new Machine(program);
-    assertEquals(machine.actionExecutor.bRegMap.get(0)?.toBinaryString(), "0");
+    assertEquals(machine.actionExecutor.getBReg(0)?.toBinaryString(), "0");
 
     for (let i = 0; i < 100; i++) {
         const res = machine.execCommand();
@@ -302,7 +302,7 @@ test('Machine program9_4', () => {
         }
     }
     assertEquals(
-        machine.actionExecutor.bRegMap.get(0).toBinaryString(),
+        machine.actionExecutor.getBReg(0).toBinaryString(),
         "10001011"
     );
 });
@@ -313,8 +313,8 @@ test('Machine PI Calculator', () => {
         throw Error('parse error PI Calculator');
     }
     const machine = new Machine(program);
-    // machine.actionExecutor.bRegMap.get(0)?.setBits([0, 1]);
-    // machine.actionExecutor.bRegMap.get(2)?.setBits([1]);
+    // machine.actionExecutor.getBReg(0)?.setBits([0, 1]);
+    // machine.actionExecutor.getBReg(2)?.setBits([1]);
     // console.log(machine);
     // console.log(machine.actionExecutor);
     for (let i = 0; i < 250000; i++) {

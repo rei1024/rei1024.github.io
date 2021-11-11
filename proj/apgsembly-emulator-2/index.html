@@ -53,7 +53,7 @@
         <!-- インラインスタイルで指定 -->
         <div id="error" style="display: none;" class="alert alert-danger" role="alert"></div>
         <div class="mb-3">
-            <label for="input" class="form-label">Input</label>
+            <label for="input" class="visually-hidden form-label">Input</label>
             <textarea class="code-mono form-control" name="input" id="input" cols="50" rows="8" placeholder="# Write APGsembly here!"></textarea>
         </div>
         <!-- Buttons -->
@@ -127,6 +127,7 @@
                 <summary>
                     Output
                 </summary>
+                <label for="output" class="visually-hidden">Output</label>
                 <textarea class="code-mono form-control" name="output" id="output" cols="50" rows="1"></textarea>
             </details>
         </div>
@@ -327,6 +328,11 @@
                 </a>
             </li>
             <li>
+                <a href="../apgm/">
+                    APGM - APGsembly macro language
+                </a>
+            </li>
+            <!-- <li>
                 <a href="./apgc.html">
                     APGC - Structured programming for APGsembly
                 </a>
@@ -335,7 +341,7 @@
                 <a href="./apgdsl/index.html">
                     APGDSL - EDSL for APGsembly
                 </a>
-            </li>
+            </li> -->
         </ul>
         <h2 class="fs-4 mt-3">Links</h2>
         <ul>

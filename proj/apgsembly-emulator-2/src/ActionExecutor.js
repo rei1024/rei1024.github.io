@@ -27,7 +27,7 @@ import { LegacyTReg } from "./components/LegacyTReg.js";
  * Uの場合はnumberのみ
  * Bのときはポインタとバイナリの文字列の配列である場合はそのまま設定する。
  * 数字である場合は二進数に変換してそれを逆さまにして配列へ設定する。ポインタは0とする。TODO コンパイラを確認
- * @typedef {{ [reg: string]: number | [number, string] }} RegistersInit
+ * @typedef {{ [reg: string]: unknown }} RegistersInit
  */
 
 /**
@@ -108,32 +108,42 @@ export class ActionExecutor {
      */
     setByRegistersInit(regInit) {
         for (const [key, value] of Object.entries(regInit)) {
-            if (key.startsWith('U')) {
-                const n = parseInt(key.slice(1), 10);
-                if (isNaN(n)) {
-                    const debugStr = `"${key}": ${JSON.stringify(value)}`;
-                    throw Error(`Invalid #REGISTERS ${debugStr}`);
-                }
-                const reg = this.uRegMap.get(n);
-                if (reg === undefined) {
-                    throw Error(`Invalid #REGISTERS: U${n} isn't used in the program`);
-                }
-                reg.setByRegistersInit(key, value);
-            } else if (key.startsWith('B')) {
-               const n = parseInt(key.slice(1), 10);
-                if (isNaN(n)) {
-                    const debugStr = `"${key}": ${JSON.stringify(value)}`;
-                    throw Error(`Invalid #REGISTERS ${debugStr}`);
-                }
-                const reg = this.bRegMap.get(n);
-                if (reg === undefined) {
-                    throw Error(`Invalid #REGISTERS: B${n} isn't used in the program`);
-                }
-                reg.setByRegistersInit(key, value);
-            } else {
+            this.setKeyValue(key, value);
+        }
+    }
+
+    /**
+     * @private
+     * @param {string} key
+     * @param {unknown} value
+     * @throws
+     */
+    setKeyValue(key, value) {
+        if (key.startsWith('U')) {
+            const n = parseInt(key.slice(1), 10);
+            if (isNaN(n)) {
                 const debugStr = `"${key}": ${JSON.stringify(value)}`;
                 throw Error(`Invalid #REGISTERS ${debugStr}`);
             }
+            const reg = this.uRegMap.get(n);
+            if (reg === undefined) {
+                throw Error(`Invalid #REGISTERS: U${n} isn't used in the program`);
+            }
+            reg.setByRegistersInit(key, value);
+        } else if (key.startsWith('B')) {
+           const n = parseInt(key.slice(1), 10);
+            if (isNaN(n)) {
+                const debugStr = `"${key}": ${JSON.stringify(value)}`;
+                throw Error(`Invalid #REGISTERS ${debugStr}`);
+            }
+            const reg = this.bRegMap.get(n);
+            if (reg === undefined) {
+                throw Error(`Invalid #REGISTERS: B${n} isn't used in the program`);
+            }
+            reg.setByRegistersInit(key, value);
+        } else {
+            const debugStr = `"${key}": ${JSON.stringify(value)}`;
+            throw Error(`Invalid #REGISTERS ${debugStr}`);
         }
     }
 
@@ -174,5 +184,23 @@ export class ActionExecutor {
             return this.legecyTRegMap.get(action.regNumber)?.action(action);
         }
         throw Error(`execAction: unknown action ${action.pretty()}`);
+    }
+
+    /**
+     *
+     * @param {number} n
+     * @returns {UReg | undefined}
+     */
+    getUReg(n) {
+        return this.uRegMap.get(n);
+    }
+
+    /**
+     *
+     * @param {number} n
+     * @returns {BReg | undefined}
+     */
+    getBReg(n) {
+        return this.bRegMap.get(n);
     }
 }

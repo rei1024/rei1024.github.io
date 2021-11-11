@@ -8,27 +8,38 @@
 // # t = 1とする
 // # t < Unの間tを10倍する
 
-function print(un) {
-    const [digit, step] = largestUnit(un);
+function print(n) {
+    let [digit, step] = largestUnit(n);
     while (true) {
         let x = 0;
         while (true) {
-            if (un > step) {
-                un -= step;
+            if (n >= step) {
+                n -= step;
+                x++;
             } else {
+                // console.log(x);
+                if (step === 1) {
+                    return;
+                }
+                step = Math.floor(step / 10);
+                break;
             }
-
         }
     }
 }
 
-function largestUnit(un) {
+/**
+ *
+ * @param {number} n
+ * @returns {[number_of_digits: number, largestUnit: number]}
+ */
+function largestUnit(n) {
     let step = 1;
     let digit = 1;
     while (true) {
         for (let i = 0; i < 9; i++) {
-            un -= step;
-            if (un <= 0) {
+            n -= step;
+            if (n <= 0) {
                 return [digit, step];
             }
         }
@@ -36,6 +47,84 @@ function largestUnit(un) {
         step *= 10;
     }
 }
+
+// expand
+function print2(n) {
+    let step = largestUnit2(n);
+    while (true) {
+        let x = 0;
+        while (true) {
+            if (n >= step) {
+                n -= step;
+                x++;
+            } else {
+                console.log("digit:", x);
+                if (step === 1) {
+                    return;
+                }
+                step = Math.floor(step / 10);
+                break;
+            }
+        }
+    }
+}
+
+print2(123)
+
+/**
+ *
+ * @param {number} n
+ * @returns {number}
+ */
+function largestUnit2(n) {
+    let step = 1;
+    while (true) {
+        n -= step;
+        if (n <= 0) {
+            return step;
+        }
+        n -= step;
+        if (n <= 0) {
+            return step;
+        }
+        n -= step;
+        if (n <= 0) {
+            return step;
+        }
+        n -= step;
+        if (n <= 0) {
+            return step;
+        }
+        n -= step;
+        if (n <= 0) {
+            return step;
+        }
+        n -= step;
+        if (n <= 0) {
+            return step;
+        }
+        n -= step;
+        if (n <= 0) {
+            return step;
+        }
+        n -= step;
+        if (n <= 0) {
+            return step;
+        }
+        n -= step;
+        if (n <= 0) {
+            return step;
+        }
+        step *= 10;
+    }
+}
+
+// console.log(largestUnit2(0))
+
+// console.log(largestUnit2(1))
+
+// console.log(largestUnit2(100))
+// print2(123);
 
 /**
  *

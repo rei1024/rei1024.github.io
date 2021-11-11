@@ -8,7 +8,6 @@ import {} from "./actions/HaltOutAction.js";
 import {} from "./actions/MulAction.js";
 import {} from "./actions/NopAction.js";
 import {} from "./actions/OutputAction.js";
-import {} from "./actions/OutputAction.js";
 import {} from "./actions/parse.js";
 import {} from "./actions/SubAction.js";
 import {} from "./actions/URegAction.js";
