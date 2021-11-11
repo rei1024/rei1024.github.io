@@ -1,0 +1,9 @@
+/*
+  print "123"
+*/
+
+/* this is a comment */
+
+output("1"); /* OUTPUT 1 */
+output("2"); /* OUTPUT 2 */
+output("3"); /* OUTPUT 3 */

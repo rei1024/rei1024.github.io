@@ -1,0 +1,22 @@
+/*
+    infinite loop
+*/
+
+loop {
+    output("2");
+    break(); /* break from loop */
+}
+
+/* break level */
+loop {
+    loop {
+        break(2);
+    }
+}
+
+output("3");
+
+/* infinite loop */
+loop {
+    output(".");
+}

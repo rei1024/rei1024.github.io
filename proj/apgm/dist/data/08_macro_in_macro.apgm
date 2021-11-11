@@ -1,0 +1,16 @@
+/*
+    macro
+*/
+
+macro macro_in_macro!() {
+    twice!({
+        output("1");
+    });
+}
+
+macro twice!(x) {
+    x;
+    x;
+}
+
+macro_in_macro!();

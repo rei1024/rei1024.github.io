@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "isolatedModules": true,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "strict": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "allowJs": true,
+        "target": "ES2020",
+        "lib": ["ES2020", "dom"],
+        "module": "umd",
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        // "exactOptionalPropertyTypes": true,
+        "useUnknownInCatchVariables": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "paths": {}
+    },
+    "include": [
+        "**/*.ts"
+    ]
+}

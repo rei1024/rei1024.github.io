@@ -1,0 +1,15 @@
+/*
+    macro
+*/
+
+macro my_output!(x) {
+    output(x);
+}
+
+macro twice!(x) {
+    x;
+    x;
+}
+
+/* using macro */
+twice!(my_output!("1"));

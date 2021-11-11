@@ -1,0 +1,12 @@
+/*
+    macro
+*/
+
+/* macro declaration */
+/* name of macro must end with "!" */
+macro my_output!(x) {
+    output(x);
+}
+
+/* using macro */
+my_output!("0");

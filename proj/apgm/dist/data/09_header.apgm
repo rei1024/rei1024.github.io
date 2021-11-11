@@ -1,0 +1,7 @@
+/*
+    header
+*/
+
+#REGISTERS { "U0": 5 }
+
+inc_u(0);

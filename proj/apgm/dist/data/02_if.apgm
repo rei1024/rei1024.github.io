@@ -1,0 +1,34 @@
+/*
+    if_z and if_nz
+*/
+
+inc_u(0); /* INC U0 */
+
+if_z(tdec_u(0)) { /* TDEC U0 */
+    /* if tdec_u(0) returns Z */
+    output("0");
+} else {
+    /* if tdec_u(0) returns NZ */
+    output("1");
+}
+
+if_nz(tdec_u(1)) {
+    /* if tdec_u(1) returns NZ */
+    output("2");
+} else {
+    /* if tdec_u(1) returns Z */
+    output("3");
+}
+
+if_z(tdec_u(2)) {
+    /* if tdec_u(2) returns Z */
+    output("4");
+} /* else can be omitted */
+
+/* else if_z */
+if_z(tdec_u(3)) {
+    /* if tdec_u(3) returns Z */
+    output("5");
+} else if_z(tdec_u(4)) {
+    output("6");
+}
