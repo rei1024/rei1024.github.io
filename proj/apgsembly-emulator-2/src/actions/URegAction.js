@@ -8,6 +8,9 @@ export const U_TDEC = 1;
 const U_INC_STRING = "INC";
 const U_TDEC_STRING = "TDEC";
 
+const U_STRING = "U";
+const R_STRING = "R";
+
 /**
  * @typedef {U_INC | U_TDEC} UOp
  */
@@ -51,11 +54,13 @@ export class URegAction extends Action {
      */
     constructor(op, regNumber) {
         super();
+
         /**
          * @type {UOp}
          * @readonly
          */
         this.op = op;
+
         /**
          * @readonly
          */
@@ -74,7 +79,7 @@ export class URegAction extends Action {
      * @override
      */
     pretty() {
-        return `${prettyOp(this.op)} U${this.regNumber}`;
+        return `${prettyOp(this.op)} ${U_STRING}${this.regNumber}`;
     }
 
     /**
@@ -93,7 +98,7 @@ export class URegAction extends Action {
         }
         if (op === U_INC_STRING || op === U_TDEC_STRING) {
             // R for APGsembly 1.0
-            if (reg.startsWith("U") || reg.startsWith('R')) {
+            if (reg.startsWith(U_STRING) || reg.startsWith(R_STRING)) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/u.test(str)) {
                     return new URegAction(parseOp(op), parseInt(str, 10));

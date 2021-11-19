@@ -21,3 +21,4 @@ APGsembly macro language
 - `$ make t` Unit tests
 - `$ make w` Unit tests with file watcher
 - `$ make fmt` Formatting
+- `$ make bundle` Bundling

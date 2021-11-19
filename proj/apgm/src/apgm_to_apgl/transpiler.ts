@@ -128,6 +128,18 @@ export function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
                 return n((x) => new BreakAPGLExpr(x));
             }
         }
+        case "repeat": {
+            if (funcExpr.args.length !== 2) {
+                throw Error('"repeat" takes two argments');
+            }
+            const n = funcExpr.args[0];
+            if (!(n instanceof NumberAPGMExpr)) {
+                throw Error('first argment of "repeat" must be a number');
+            }
+            const expr = funcExpr.args[1];
+            const apgl = transpileAPGMExpr(expr);
+            return new SeqAPGLExpr(Array(n.value).fill(0).map(() => apgl));
+        }
     }
 
     throw Error(`Unknown function: "${funcExpr.name}"`);

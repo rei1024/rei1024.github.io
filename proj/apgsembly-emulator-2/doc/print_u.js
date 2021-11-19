@@ -17,7 +17,7 @@ function print(n) {
                 n -= step;
                 x++;
             } else {
-                // console.log(x);
+                console.log(x);
                 if (step === 1) {
                     return;
                 }

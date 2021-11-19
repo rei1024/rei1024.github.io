@@ -50,6 +50,7 @@ export class MulAction extends Action {
      */
     constructor(op) {
         super();
+
         /**
          * @type {MulOp}
          * @readonly

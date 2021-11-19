@@ -1,6 +1,13 @@
 // @ts-check
 
-import { LegacyTRegAction, T_INC, T_DEC, T_READ, T_SET, T_RESET } from "../actions/LegacyTRegAction.js";
+import {
+    LegacyTRegAction,
+    T_INC,
+    T_DEC,
+    T_READ,
+    T_SET,
+    T_RESET
+} from "../actions/LegacyTRegAction.js";
 
 export class LegacyTReg {
     constructor() {
@@ -29,7 +36,7 @@ export class LegacyTReg {
             case T_DEC: return this.dec();
             case T_SET: return this.set();
             case T_RESET: return this.reset();
-            default: throw Error('LegacyTReg action: ' + act.op);
+            default: throw Error(`LegacyTReg action: ${act.op}`);
         }
     }
 
@@ -91,7 +98,6 @@ export class LegacyTReg {
             throw Error('internal error');
         }
     }
-
 
     /**
      * `SET`

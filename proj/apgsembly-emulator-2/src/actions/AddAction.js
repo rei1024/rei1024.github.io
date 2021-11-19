@@ -54,6 +54,7 @@ export class AddAction extends Action {
      */
     constructor(op) {
         super();
+
         /**
          * @type {AddOp}
          * @readonly

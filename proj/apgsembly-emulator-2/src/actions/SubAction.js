@@ -54,6 +54,7 @@ export class SubAction extends Action {
      */
     constructor(op) {
         super();
+
         /**
          * @type {SubOp}
          * @readonly

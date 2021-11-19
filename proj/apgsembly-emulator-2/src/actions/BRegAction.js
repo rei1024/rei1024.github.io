@@ -12,6 +12,8 @@ const B_TDEC_STRING = "TDEC";
 const B_READ_STRING = "READ";
 const B_SET_STRING = "SET";
 
+const B_STRING = "B";
+
 /**
  * @typedef {B_INC | B_TDEC | B_READ | B_SET} BOp
  */
@@ -85,7 +87,7 @@ export class BRegAction extends Action {
      * @override
      */
     pretty() {
-        return `${prettyOp(this.op)} B${this.regNumber}`;
+        return `${prettyOp(this.op)} ${B_STRING}${this.regNumber}`;
     }
 
     /**
@@ -103,7 +105,7 @@ export class BRegAction extends Action {
         }
         if (op === B_INC_STRING || op === B_TDEC_STRING ||
             op === B_READ_STRING || op === B_SET_STRING) {
-            if (reg.startsWith("B")) {
+            if (reg.startsWith(B_STRING)) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/u.test(str)) {
                     return new BRegAction(parseOp(op), parseInt(str, 10));

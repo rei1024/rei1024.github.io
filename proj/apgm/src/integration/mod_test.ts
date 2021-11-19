@@ -131,6 +131,7 @@ macro f!() {}
     `;
 
     const res = integration(src);
+    assertEquals(res[0], '#REGISTERS {}');
 });
 
 test("integration header fail", () => {
