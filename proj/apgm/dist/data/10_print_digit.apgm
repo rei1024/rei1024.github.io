@@ -1,5 +1,3 @@
-#REGISTERS { "U0": 5 }
-
 macro print_digit_u!(x) {
     if_z(tdec_u(x)) {
         output("0");
@@ -23,5 +21,7 @@ macro print_digit_u!(x) {
         output("9");
     }
 }
+
+#REGISTERS { "U0": 5 }
 
 print_digit_u!(0);

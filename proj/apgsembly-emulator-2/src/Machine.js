@@ -153,7 +153,7 @@ export class Machine {
 
         if (compiledCommand === undefined) {
             throw Error(`Internal Error: Next command is not found: ` +
-                        `Current state: ${this.currentStateIndex}`);
+                        `Current state index: ${this.currentStateIndex}`);
         }
 
         if (this.prevOutput === 0) {
@@ -207,7 +207,7 @@ export class Machine {
             if (actionResult === -1) { // HALT_OUT
                 return -1;
             }
-            if (actionResult !== undefined) { // res === 1 || res ==== 0
+            if (actionResult !== undefined) { // actionResult === 1 || actionResult ==== 0
                 if (result === -1) {
                     result = actionResult;
                 } else {

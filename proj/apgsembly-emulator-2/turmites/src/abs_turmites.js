@@ -46,6 +46,7 @@ export class Next {
      */
     constructor(nextColor, nextDir, nextState) {
         this.nextColor = nextColor;
+
         /**
          * @type {Dir}
          */

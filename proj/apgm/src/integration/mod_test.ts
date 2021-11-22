@@ -121,8 +121,8 @@ test("integration break(2)", () => {
 
 test("integration header", () => {
     const src = `
-#REGISTERS {}
 macro f!() {}
+#REGISTERS {}
         loop {
             loop {
                 break(2);
@@ -131,7 +131,7 @@ macro f!() {}
     `;
 
     const res = integration(src);
-    assertEquals(res[0], '#REGISTERS {}');
+    assertEquals(res[0], "#REGISTERS {}");
 });
 
 test("integration header fail", () => {

@@ -1,5 +1,8 @@
 import { ActionAPGLExpr } from "./ast/mod.ts";
 
+/**
+ * Actions
+ */
 export class A {
     static incU(n: number) {
         return A.nonReturn(`INC U${n}`);

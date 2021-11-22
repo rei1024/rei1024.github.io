@@ -98,6 +98,7 @@ export class Next {
      */
     constructor(nextColor, nextOp, nextState) {
         this.nextColor = nextColor;
+
         /**
          * @type {Op}
          */

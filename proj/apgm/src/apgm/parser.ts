@@ -147,10 +147,10 @@ export const header = bnb.text("#").next(bnb.match(/REGISTERS|COMPONENTS/))
 export const headers = _.next(header).skip(_).repeat();
 
 export function main() {
-    return headers.chain((h) => {
-        return macro().repeat().chain((macros) => {
+    return macro().repeat().chain((macros) => {
+        return headers.chain((h) => {
             return _.next(seqAPGMExprRaw()).skip(_).map((x) => {
-                return new Main(h, macros, new SeqAPGMExpr(x));
+                return new Main(macros, h, new SeqAPGMExpr(x));
             });
         });
     });

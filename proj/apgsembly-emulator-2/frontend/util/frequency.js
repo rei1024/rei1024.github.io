@@ -12,10 +12,12 @@ export class Frequency {
          * @private
          */
         this.isOn = isOn;
+
         /**
          * @private
          */
         this.getFrequency = getFrequency;
+
         /**
          * @private
          */

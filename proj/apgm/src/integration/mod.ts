@@ -5,14 +5,17 @@ import { expand } from "../apgm/macro/expander.ts";
 
 export function integration(str: string, log: boolean = false): string[] {
     const apgm = tryParseMain(str);
-
-    const expanded = expand(apgm);
-
-    const apgl = transpileAPGMExpr(expanded);
-
     if (log) {
         console.log("apgm", JSON.stringify(apgm, null, "  "));
+    }
+
+    const expanded = expand(apgm);
+    if (log) {
         console.log("apgm expaned", JSON.stringify(expanded, null, "  "));
+    }
+
+    const apgl = transpileAPGMExpr(expanded);
+    if (log) {
         console.log("apgl", JSON.stringify(apgl, null, "  "));
     }
 

@@ -232,9 +232,9 @@ export class App {
     reset() {
         this.steps = 0;
         this.errorMessage = "";
-        const program = Program.parse($input.value);
         this.machine = undefined;
         this.frequencyManager.reset();
+        const program = Program.parse($input.value);
         if (typeof program === "string") {
             this.appState = "ParseError";
             this.errorMessage = program;
@@ -596,7 +596,7 @@ $step.addEventListener('click', () => {
             // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
             $step.removeChild(spinner);
-        }, 33); // 走らせるタミングを遅らせることでスピナーの表示を確定させる
+        }, 33); // 走らせるタイミングを遅らせることでスピナーの表示を確定させる
     } else {
         app.run(app.stepConfig);
     }
@@ -641,7 +641,12 @@ $frequencyInput.max = (frequencyArray.length - 1).toString();
 
 $frequencyInput.addEventListener('input', () => {
     const value = parseInt($frequencyInput.value, 10);
-    app.frequency = frequencyArray[value] ?? DEFUALT_FREQUENCY;
+    if (!isNaN(value)) {
+        app.frequency = frequencyArray[value] ?? DEFUALT_FREQUENCY;
+    } else {
+        app.frequency = DEFUALT_FREQUENCY;
+    }
+
     app.renderFrequencyOutput();
 });
 
@@ -831,7 +836,7 @@ idle(() => {
         if (saveData === false || saveData === undefined) {
             $sampleCodes.forEach(e => {
                 if (!(e instanceof HTMLElement)) {
-                    throw Error('is not HTMLElement');
+                    return;
                 }
                 const src = e.dataset[SRC_KEY];
                 if (src !== undefined) {

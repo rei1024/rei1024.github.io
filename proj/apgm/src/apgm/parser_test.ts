@@ -185,4 +185,17 @@ test("parser: main", () => {
             g(3);
         });
     `);
+    main().tryParse(`
+macro f!() {
+    output("1");
+}
+#REGISTERS {}
+f(2);
+    `);
+    main().tryParse(`
+    macro my_output!(x) {
+    output(x);
+}
+#REGISTERS { "U0": 5 }
+inc_u(0);`);
 });

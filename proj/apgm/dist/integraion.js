@@ -408,13 +408,18 @@ class Macro {
     }
 }
 class Main {
-    headers;
     macros;
+    headers;
     seqExpr;
-    constructor(headers, macros, seqExpr){
-        this.headers = headers;
+    constructor(macros, headers, seqExpr){
         this.macros = macros;
+        this.headers = headers;
         this.seqExpr = seqExpr;
+        if (macros.length >= 1) {
+            if (!(macros[0] instanceof Macro)) {
+                throw TypeError("internal error");
+            }
+        }
     }
 }
 class Header {
@@ -425,7 +430,7 @@ class Header {
         this.content = content;
     }
     toString() {
-        if (this.content.startsWith(' ')) {
+        if (this.content.startsWith(" ")) {
             return `#${this.name}${this.content}`;
         } else {
             return `#${this.name} ${this.content}`;
@@ -590,10 +595,10 @@ const header = mod1.text("#").next(mod1.match(/REGISTERS|COMPONENTS/)).desc([
 );
 const headers1 = _.next(header).skip(_).repeat();
 function main1() {
-    return headers1.chain((h)=>{
-        return macro().repeat().chain((macros)=>{
+    return macro().repeat().chain((macros)=>{
+        return headers1.chain((h)=>{
             return _.next(seqAPGMExprRaw()).skip(_).map((x)=>{
-                return new Main(h, macros, new SeqAPGMExpr(x));
+                return new Main(macros, h, new SeqAPGMExpr(x));
             });
         });
     });
@@ -1189,11 +1194,15 @@ function expand(main) {
 }
 function integration1(str, log = false) {
     const apgm = tryParseMain(str);
-    const expanded = expand(apgm);
-    const apgl = transpileAPGMExpr(expanded);
     if (log) {
         console.log("apgm", JSON.stringify(apgm, null, "  "));
+    }
+    const expanded = expand(apgm);
+    if (log) {
         console.log("apgm expaned", JSON.stringify(expanded, null, "  "));
+    }
+    const apgl = transpileAPGMExpr(expanded);
+    if (log) {
         console.log("apgl", JSON.stringify(apgl, null, "  "));
     }
     const apgs = transpileAPGL(apgl);
@@ -1201,7 +1210,7 @@ function integration1(str, log = false) {
         "# State    Input    Next state    Actions",
         "# ---------------------------------------", 
     ];
-    const head = apgm.headers.map((x)=>`#${x.name} ${x.content}`
+    const head = apgm.headers.map((x)=>x.toString()
     );
     return head.concat(comment, apgs);
 }

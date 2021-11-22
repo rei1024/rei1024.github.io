@@ -25,5 +25,5 @@ test("expand", () => {
     const body = new SeqAPGMExpr([
         new FuncAPGMExpr("f!", [new StringAPGMExpr("3")]),
     ]);
-    const result = expand(new Main([], macros, body));
+    const result = expand(new Main(macros, [], body));
 });
