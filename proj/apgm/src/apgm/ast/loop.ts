@@ -2,7 +2,7 @@ import { APGMExpr } from "./core.ts";
 
 export class LoopAPGMExpr extends APGMExpr {
     constructor(
-        public body: APGMExpr,
+        public readonly body: APGMExpr,
     ) {
         super();
     }

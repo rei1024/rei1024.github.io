@@ -2,7 +2,7 @@ import { APGMExpr } from "./core.ts";
 
 export class SeqAPGMExpr extends APGMExpr {
     constructor(
-        public exprs: APGMExpr[],
+        public readonly exprs: APGMExpr[],
     ) {
         super();
     }

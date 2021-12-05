@@ -101,12 +101,12 @@ generateButton.addEventListener("click", () => {
     }
     try {
         const tur = Turmites.fromObjectString(rule.value);
-        code.value = `# Turmite ${rule.value}\n` + generate(tur, x, y);
+        code.value = `# Turmite ${rule.value}\n${generate(tur, x, y)}`;
         copy.disabled = false;
     } catch (e) {
         try {
             const tur = AbsTurmites.fromObjectString(rule.value);
-            code.value = `# Turmite ${rule.value}\n` + absGenerate(tur, x, y);
+            code.value = `# Turmite ${rule.value}\n${absGenerate(tur, x, y)}`;
             copy.disabled = false;
         } catch (e) {
             console.log(e);

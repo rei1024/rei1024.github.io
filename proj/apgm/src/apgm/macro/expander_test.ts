@@ -12,7 +12,7 @@ import {
     VarAPGMExpr,
     WhileAPGMExpr,
 } from "../ast/mod.ts";
-import { test } from "../../deps_test.ts";
+import { assertEquals, test } from "../../deps_test.ts";
 
 test("expand", () => {
     const macros: Macro[] = [
@@ -26,4 +26,11 @@ test("expand", () => {
         new FuncAPGMExpr("f!", [new StringAPGMExpr("3")]),
     ]);
     const result = expand(new Main(macros, [], body));
+
+    assertEquals(
+        result,
+        new SeqAPGMExpr([
+            new FuncAPGMExpr("output", [new StringAPGMExpr("3")]),
+        ]),
+    );
 });

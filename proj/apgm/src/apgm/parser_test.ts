@@ -5,6 +5,7 @@ import {
     identifierOnly,
     ifAPGMExpr,
     main,
+    naturalNumberParser,
     stringLit,
 } from "./parser.ts";
 import { assertEquals, assertThrows, test } from "../deps_test.ts";
@@ -35,6 +36,13 @@ test("parser: identifier whitespace", () => {
     assertThrows(() => {
         identifier.tryParse("abc def");
     });
+});
+
+test("parser: number", () => {
+    const x = naturalNumberParser.tryParse("123");
+    assertEquals(x, 123);
+    const y = naturalNumberParser.tryParse("0x10");
+    assertEquals(y, 16);
 });
 
 test("parser: comment", () => {
@@ -198,4 +206,10 @@ f(2);
 }
 #REGISTERS { "U0": 5 }
 inc_u(0);`);
+});
+
+test("parser: main hex", () => {
+    const res = main().tryParse(`f(0x10);`);
+    // @ts-ignore
+    assertEquals(res.seqExpr.exprs[0].args[0].value, 16);
 });

@@ -7,10 +7,10 @@ import {
 } from "../ast/mod.ts";
 
 export class MacroExpander {
-    private macroMap: Map<string, Macro>;
+    private readonly macroMap: Map<string, Macro>;
     private count: number = 0;
-    private maxCount: number = 100000;
-    public main: Main;
+    private readonly maxCount: number = 100000;
+    public readonly main: Main;
     constructor(main: Main) {
         this.main = main;
         this.macroMap = new Map(main.macros.map((m) => [m.name, m]));
@@ -25,12 +25,7 @@ export class MacroExpander {
             throw Error("too many macro expansion");
         }
         this.count++;
-
-        try {
-            return expr.transform((x) => this.expandOnce(x));
-        } catch (e) {
-            throw e;
-        }
+        return expr.transform((x) => this.expandOnce(x));
     }
 
     expandOnce(x: APGMExpr): APGMExpr {
@@ -66,10 +61,10 @@ export class MacroExpander {
         return macro.body.transform((x) => {
             if (x instanceof VarAPGMExpr) {
                 const expr = map.get(x.name);
-                if (expr !== undefined) {
-                    return expr;
+                if (expr === undefined) {
+                    throw Error(`scope error: "${x.name}"`);
                 }
-                throw Error(`scope error "${x.name}"`);
+                return expr;
             } else {
                 return x;
             }

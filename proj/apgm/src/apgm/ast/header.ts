@@ -1,5 +1,8 @@
 export class Header {
-    constructor(public name: string, public content: string) {}
+    constructor(
+        public readonly name: string,
+        public readonly content: string,
+    ) {}
 
     toString(): string {
         if (this.content.startsWith(" ")) {

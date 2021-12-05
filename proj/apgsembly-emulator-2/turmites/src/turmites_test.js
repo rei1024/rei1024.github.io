@@ -1,3 +1,5 @@
+// @ts-check
+
 import { Turmites } from "./turmites.js";
 import { test, assertEquals } from "../../test/deps.js";
 

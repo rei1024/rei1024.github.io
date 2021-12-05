@@ -3,9 +3,9 @@ import { VarAPGMExpr } from "./var.ts";
 
 export class Macro {
     constructor(
-        public name: string,
-        public args: VarAPGMExpr[],
-        public body: APGMExpr,
+        public readonly name: string,
+        public readonly args: VarAPGMExpr[],
+        public readonly body: APGMExpr,
     ) {
     }
 }

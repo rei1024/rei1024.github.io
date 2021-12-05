@@ -2,10 +2,10 @@ import { APGMExpr } from "./core.ts";
 
 export class IfAPGMExpr extends APGMExpr {
     constructor(
-        public modifier: "Z" | "NZ",
-        public cond: APGMExpr,
-        public thenBody: APGMExpr,
-        public elseBody: APGMExpr | undefined,
+        public readonly modifier: "Z" | "NZ",
+        public readonly cond: APGMExpr,
+        public readonly thenBody: APGMExpr,
+        public readonly elseBody: APGMExpr | undefined,
     ) {
         super();
     }

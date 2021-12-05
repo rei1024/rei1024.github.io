@@ -2,9 +2,9 @@ import { APGMExpr } from "./core.ts";
 
 export class WhileAPGMExpr extends APGMExpr {
     constructor(
-        public modifier: "Z" | "NZ",
-        public cond: APGMExpr,
-        public body: APGMExpr,
+        public readonly modifier: "Z" | "NZ",
+        public readonly cond: APGMExpr,
+        public readonly body: APGMExpr,
     ) {
         super();
     }

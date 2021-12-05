@@ -354,6 +354,17 @@ const mod1 = function() {
         text
     };
 }();
+const decimalNaturalParser = mod1.match(/[0-9]+/).desc([
+    "number"
+]).map((x)=>parseInt(x, 10)
+);
+const hexadecimalNaturalParser = mod1.match(/0x[0-9]+/).desc([
+    "hexadecimal number", 
+]).map((x)=>parseInt(x, 16)
+);
+const naturalNumberParser = hexadecimalNaturalParser.or(decimalNaturalParser).desc([
+    "number"
+]);
 class APGMExpr {
     constructor(){
     }
@@ -444,7 +455,7 @@ class NumberAPGMExpr extends APGMExpr {
         this.value = value;
     }
     transform(f) {
-        return f(new NumberAPGMExpr(this.value));
+        return f(this);
     }
 }
 class StringAPGMExpr extends APGMExpr {
@@ -454,7 +465,7 @@ class StringAPGMExpr extends APGMExpr {
         this.value = value;
     }
     transform(f) {
-        return f(new StringAPGMExpr(this.value));
+        return f(this);
     }
 }
 class SeqAPGMExpr extends APGMExpr {
@@ -475,7 +486,7 @@ class VarAPGMExpr extends APGMExpr {
         this.name = name;
     }
     transform(f) {
-        return f(new VarAPGMExpr(this.name));
+        return f(this);
     }
 }
 class WhileAPGMExpr extends APGMExpr {
@@ -497,7 +508,7 @@ const comment = mod1.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([
 ]);
 const _ = mod1.match(/\s*/).desc([
     "space"
-]).sepBy(comment).map((x)=>undefined
+]).sepBy(comment).map(()=>undefined
 );
 const someSpaces = mod1.match(/\s+/).desc([
     "space"
@@ -527,10 +538,8 @@ function funcAPGMExpr() {
         });
     });
 }
-const numberAPGMExpr = mod1.match(/[0-9]+/).desc([
-    "number"
-]).map((x)=>new NumberAPGMExpr(Number(x))
-);
+const numberAPGMExpr = _.next(naturalNumberParser.map((x)=>new NumberAPGMExpr(x)
+)).skip(_);
 const stringLit = _.next(mod1.text(`"`)).next(mod1.match(/[^"]*/)).skip(mod1.text(`"`)).skip(_).desc([
     "string"
 ]);
@@ -546,10 +555,11 @@ function seqAPGMExpr() {
 }
 const whileKeyword = mod1.choice(token("while_z"), token("while_nz")).map((x)=>x === "while_z" ? "Z" : "NZ"
 );
+const exprWithParen = token("(").next(mod1.lazy(()=>apgmExpr()
+)).skip(token(")"));
 function whileAPGMExpr() {
     return whileKeyword.chain((mod)=>{
-        return token("(").next(mod1.lazy(()=>apgmExpr()
-        )).skip(token(")")).chain((cond)=>{
+        return exprWithParen.chain((cond)=>{
             return mod1.lazy(()=>apgmExpr()
             ).map((body)=>new WhileAPGMExpr(mod, cond, body)
             );
@@ -565,13 +575,12 @@ const ifKeyword = mod1.choice(token("if_z"), token("if_nz")).map((x)=>x === "if_
 );
 function ifAPGMExpr() {
     return ifKeyword.chain((mod)=>{
-        return token("(").next(mod1.lazy(()=>apgmExpr()
-        )).skip(token(")")).chain((cond)=>{
+        return exprWithParen.chain((cond)=>{
             return mod1.lazy(()=>apgmExpr()
             ).chain((body)=>{
                 return mod1.choice(token("else").next(mod1.lazy(()=>apgmExpr()
-                )), mod1.ok(undefined)).map((eleBody)=>{
-                    return new IfAPGMExpr(mod, cond, body, eleBody);
+                )), mod1.ok(undefined)).map((elseBody)=>{
+                    return new IfAPGMExpr(mod, cond, body, elseBody);
                 });
             });
         });
@@ -1140,12 +1149,8 @@ class MacroExpander {
             throw Error("too many macro expansion");
         }
         this.count++;
-        try {
-            return expr.transform((x)=>this.expandOnce(x)
-            );
-        } catch (e) {
-            throw e;
-        }
+        return expr.transform((x)=>this.expandOnce(x)
+        );
     }
     expandOnce(x) {
         if (x instanceof FuncAPGMExpr) {
@@ -1179,10 +1184,10 @@ class MacroExpander {
         return macro.body.transform((x)=>{
             if (x instanceof VarAPGMExpr) {
                 const expr = map.get(x.name);
-                if (expr !== undefined) {
-                    return expr;
+                if (expr === undefined) {
+                    throw Error(`scope error: "${x.name}"`);
                 }
-                throw Error(`scope error "${x.name}"`);
+                return expr;
             } else {
                 return x;
             }

@@ -7,7 +7,10 @@ export class FuncAPGMExpr extends APGMExpr {
         );
     }
 
-    constructor(public name: string, public args: APGMExpr[]) {
+    constructor(
+        public readonly name: string,
+        public readonly args: APGMExpr[],
+    ) {
         super();
     }
 }

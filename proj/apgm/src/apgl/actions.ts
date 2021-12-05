@@ -4,6 +4,7 @@ import { ActionAPGLExpr } from "./ast/mod.ts";
  * Actions
  */
 export class A {
+    // U
     static incU(n: number) {
         return A.nonReturn(`INC U${n}`);
     }
@@ -89,10 +90,12 @@ export class A {
         return A.single("NOP");
     }
 
+    // OUTPUT
     static output(c: string) {
         return A.nonReturn(`OUTPUT ${c}`);
     }
 
+    // SUB
     static subA1() {
         return A.nonReturn(`SUB A1`);
     }

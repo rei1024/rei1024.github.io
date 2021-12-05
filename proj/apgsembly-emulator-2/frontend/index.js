@@ -460,6 +460,14 @@ export class App {
                 break;
             }
         }
+
+        // ParseErrorのときにエラー表示
+        if (app.appState === "ParseError") {
+            $input.classList.add('is-invalid');
+        } else {
+            $input.classList.remove('is-invalid');
+        }
+
         this.renderErrorMessage();
         this.renderFrequencyOutput();
 

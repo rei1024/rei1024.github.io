@@ -30,6 +30,7 @@ function intenalError() {
  * @param {Turmites} turmites
  * @param {number} x
  * @param {number} y
+ * @returns {string} APGsembly
  */
 export function generate(turmites, x, y) {
     /**
