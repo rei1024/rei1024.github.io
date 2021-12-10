@@ -42,12 +42,17 @@ test('pretty Line', () => {
         }
         assertEquals(line.pretty(), str);
     }
-    v('1 0 _ r 1o');
-    v('1 a b r 2');
-    v('* * b r 2');
-    v('* _ b r 2');
-    v('_ * b r 2');
-    v('* * * * *');
+    const data = [
+        '1 0 _ r 1o',
+        '1 a b r 2',
+        '* * b r 2',
+        '* _ b r 2',
+        '_ * b r 2',
+        '* * * * *',
+    ];
+    for (const x of data) {
+        v(x);
+    }
 });
 
 test('isHaltState', () => {

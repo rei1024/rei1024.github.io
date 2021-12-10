@@ -43,6 +43,18 @@ $compile.addEventListener("click", () => {
         $error.style.display = "none";
         $output.value = result;
     } catch (e) {
+        if (!(e instanceof Error)) {
+            throw e;
+        }
+        console.log(e);
+        const messages = e.message.split("\n");
+        $error.innerHTML = "";
+        for (const message of messages) {
+            const span = document.createElement("span");
+            span.textContent = message;
+            const br = document.createElement("br");
+            $error.append(span, br);
+        }
         $error.textContent = e.message;
         $error.style.display = "block";
         $copy.disabled = true;

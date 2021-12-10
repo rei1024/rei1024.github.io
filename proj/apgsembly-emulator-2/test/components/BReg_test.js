@@ -111,7 +111,7 @@ test('BReg toObject', () => {
     });
 });
 
-test('BReg error', () => {
+test('BReg set error', () => {
     const x = new BReg();
     x.set();
     assertThrows(() => {

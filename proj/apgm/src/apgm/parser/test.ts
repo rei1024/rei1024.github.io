@@ -7,8 +7,8 @@ import {
     main,
     naturalNumberParser,
     stringLit,
-} from "./parser.ts";
-import { assertEquals, assertThrows, test } from "../deps_test.ts";
+} from "./mod.ts";
+import { assertEquals, assertThrows, test } from "../../deps_test.ts";
 
 test("parser: identifier", () => {
     const value = identifier.tryParse("abc");

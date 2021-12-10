@@ -1,6 +1,6 @@
 // @ts-check
 
-import { Program } from "../src/Program.js";
+import { transpile } from "./transpile.js";
 
 // Transpiler
 
@@ -25,13 +25,15 @@ if (!($copy instanceof HTMLButtonElement)) {
 }
 
 $transpile.addEventListener('click', () => {
-    const program = Program.parse($input.value);
-    if (program instanceof Program) {
+    const result = transpile($input.value);
+    if (typeof result === 'string') {
+        $input.classList.remove('is-invalid');
         $copy.disabled = false;
-        $output.value = program.pretty();
+        $output.value = result;
     } else {
+        $input.classList.add('is-invalid');
         $copy.disabled = true;
-        $output.value = program;
+        $output.value = result.message;
     }
 });
 

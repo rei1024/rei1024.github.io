@@ -1,6 +1,7 @@
-import { bnb } from "../deps.ts";
+import { bnb } from "../../deps.ts";
 
-import { naturalNumberParser } from "./parser/number.ts";
+import { naturalNumberParser } from "./number.ts";
+import { parsePretty } from "./parsePretty.ts";
 
 import {
     APGMExpr,
@@ -15,7 +16,7 @@ import {
     StringAPGMExpr,
     VarAPGMExpr,
     WhileAPGMExpr,
-} from "./ast/mod.ts";
+} from "../ast/mod.ts";
 
 // https://stackoverflow.com/questions/16160190/regular-expression-to-find-c-style-block-comments#:~:text=35-,Try%20using,-%5C/%5C*(%5C*(%3F!%5C/)%7C%5B%5E*%5D)*%5C*%5C/
 export const comment = bnb.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc(["comment"]);
@@ -46,9 +47,14 @@ export function token(s: string): bnb.Parser<string> {
     return _.next(bnb.text(s)).skip(_);
 }
 
-export const comma = token(",");
-export const leftParen = token("(");
-export const rightParen = token(")");
+/** `.` */
+export const comma = token(",").desc(["`,`"]);
+/** `(` */
+export const leftParen = token("(").desc(["`(`"]);
+/** `)` */
+export const rightParen = token(")").desc(["`)`"]);
+/** `;` */
+export const semicolon = token(";").desc(["`;`"]);
 
 export const varAPGMExpr = identifier.map((x) => new VarAPGMExpr(x));
 
@@ -88,9 +94,9 @@ export const whileKeyword = bnb.choice(token("while_z"), token("while_nz")).map(
     (x) => x === "while_z" ? "Z" : "NZ",
 );
 
-const exprWithParen: bnb.Parser<APGMExpr> = token("(").next(
+const exprWithParen: bnb.Parser<APGMExpr> = leftParen.next(
     bnb.lazy(() => apgmExpr()),
-).skip(token(")"));
+).skip(rightParen);
 
 export function whileAPGMExpr() {
     return whileKeyword.chain((mod) => {
@@ -162,8 +168,8 @@ export function main() {
     });
 }
 
-export function tryParseMain(str: string): Main {
-    return main().tryParse(str);
+export function parseMain(str: string): Main {
+    return parsePretty(main(), str);
 }
 
 export function apgmExpr(): bnb.Parser<APGMExpr> {
@@ -190,6 +196,6 @@ export function statement(): bnb.Parser<APGMExpr> {
         loopAPGMExpr(),
         whileAPGMExpr(),
         ifAPGMExpr(),
-        apgmExpr().skip(token(";")),
+        apgmExpr().skip(semicolon),
     );
 }

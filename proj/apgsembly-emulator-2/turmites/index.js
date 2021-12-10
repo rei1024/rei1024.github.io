@@ -59,6 +59,9 @@ if (!($ruleInvalid instanceof HTMLElement)) {
     throw TypeError('$ruleInvalid is not a HTMLElement');
 }
 
+// サンプルの名前を保持する
+let comment = '';
+
 // https://sourceforge.net/p/golly/code/ci/57e0b46e117c8bfa605f0d61d22307ca5c5383d9/tree/Scripts/Python/Rule-Generators/Turmite-gen.py
 
 /**
@@ -74,9 +77,14 @@ const addSample = (ruleString, desc) => {
     button.addEventListener('click', () => {
         code.value = "";
         rule.value = ruleString;
+        comment = desc;
     });
     $sampleList.append(button);
 };
+
+rule.addEventListener('input', () => {
+    comment = '';
+});
 
 const libraries = [peggLibrary, timLibrary, absLibrary];
 
@@ -101,15 +109,14 @@ generateButton.addEventListener("click", () => {
     }
     try {
         const tur = Turmites.fromObjectString(rule.value);
-        code.value = `# Turmite ${rule.value}\n${generate(tur, x, y)}`;
+        code.value = `${comment === '' ? '' : `# ${comment}\n`}# Turmite ${rule.value}\n${generate(tur, x, y)}`;
         copy.disabled = false;
     } catch (e) {
         try {
             const tur = AbsTurmites.fromObjectString(rule.value);
-            code.value = `# Turmite ${rule.value}\n${absGenerate(tur, x, y)}`;
+            code.value = `${comment === '' ? '' : `# ${comment}\n`}# Turmite ${rule.value}\n${absGenerate(tur, x, y)}`;
             copy.disabled = false;
         } catch (e) {
-            console.log(e);
             code.value = "";
             rule.classList.add('is-invalid');
             if (e instanceof Error) {

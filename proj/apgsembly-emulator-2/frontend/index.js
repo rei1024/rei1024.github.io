@@ -18,7 +18,6 @@ import { renderB2D } from "./render_component/renderB2D.js";
 import {
     renderUnary,
     setUpUnary,
-    UNARY_REG_ITEMS_CLASS
 } from "./render_component/renderUnary.js";
 import { setUpBinary, renderBinary } from "./render_component/renderBinary.js";
 import { setUpStats, renderStats } from "./render_component/renderStats.js";
@@ -124,12 +123,6 @@ export class App {
             () => this.frequency,
             n => this.run(n)
         );
-
-        /**
-         * キャッシュ
-         * @type {undefined | NodeListOf<ChildNode>}
-         */
-        this.unaryRegisterItems = undefined;
     }
 
     /**
@@ -174,13 +167,11 @@ export class App {
     setUpUnary() {
         if (this.machine === undefined) {
             // GC
-            this.unaryRegisterItems = undefined;
             $unaryRegister.innerHTML = "";
             return;
         }
         const regs = this.machine.actionExecutor.uRegMap;
         setUpUnary($unaryRegister, regs);
-        this.unaryRegisterItems = $unaryRegister.querySelector(`.${UNARY_REG_ITEMS_CLASS}`)?.childNodes;
     }
 
     /**
@@ -343,11 +334,7 @@ export class App {
         if (!$unaryRegisterDetail.open) {
             return;
         }
-        const items = this.unaryRegisterItems;
-        if (items === undefined) {
-            return;
-        }
-        renderUnary(items, this.machine.actionExecutor.uRegMap);
+        renderUnary(this.machine.actionExecutor.uRegMap);
     }
 
     /**
@@ -471,7 +458,8 @@ export class App {
         this.renderErrorMessage();
         this.renderFrequencyOutput();
 
-        $steps.textContent = this.steps.toString();
+        $steps.textContent = hasToLocaleString ? this.steps.toLocaleString() : this.steps.toString();
+
         // current state
         $currentState.textContent = this.machine?.currentState ?? "";
         $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";

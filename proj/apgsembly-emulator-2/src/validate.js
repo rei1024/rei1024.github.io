@@ -226,23 +226,33 @@ export function validateNextStateIsNotINITIAL(commands) {
  * @returns {string[] | undefined}
  */
 export function validateZAndNZ(commands) {
+    /**
+     *
+     * @param {Command} line
+     */
+    const errMsg = line => `Need Z line followed by NZ line at "${line.pretty()}"`;
+
     for (let i = 0; i < commands.length - 1; i++) {
         const a = commands[i] ?? internalError();
         const b = commands[i + 1] ?? internalError();
 
         if (a.input === "Z" && b.input !== 'NZ') {
-            return [`Need Z line followed by NZ line at "${a.pretty()}"`];
+            return [errMsg(a)];
         }
 
         if (b.input === "NZ" && a.input !== 'Z') {
-            return [`Need Z line followed by NZ line at "${b.pretty()}"`];
+            return [errMsg(b)];
+        }
+
+        if (a.input === "Z" && b.input === "NZ" && a.state !== b.state) {
+            return [errMsg(a)];
         }
     }
 
     const lastLine = commands[commands.length - 1];
     if (lastLine !== undefined) {
         if (lastLine.input === 'Z') {
-            return [`Need Z line followed by NZ line at "${lastLine.pretty()}"`];
+            return [errMsg(lastLine)];
         }
     }
 

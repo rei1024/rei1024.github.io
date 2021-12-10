@@ -365,6 +365,37 @@ const hexadecimalNaturalParser = mod1.match(/0x[0-9]+/).desc([
 const naturalNumberParser = hexadecimalNaturalParser.or(decimalNaturalParser).desc([
     "number"
 ]);
+function prettyError(fail, source) {
+    const lines = source.split(/\n|\r\n/);
+    const above = lines[fail.location.line - 2];
+    const errorLine = lines[fail.location.line - 1];
+    const below = lines[fail.location.line];
+    const arrowLine = " ".repeat(Math.max(0, fail.location.column - 1)) + "^";
+    const errorLines = [
+        ...above === undefined ? [] : [
+            above
+        ],
+        errorLine,
+        arrowLine,
+        ...below === undefined ? [] : [
+            below
+        ], 
+    ].map((x)=>"| " + x
+    );
+    return [
+        `parse error at line ${fail.location.line} column ${fail.location.column}:`,
+        `  expected ${fail.expected.join(", ")}`,
+        ``,
+        ...errorLines, 
+    ].join("\n");
+}
+function parsePretty(parser, source) {
+    const res = parser.parse(source);
+    if (res.type === "ParseOK") {
+        return res.value;
+    }
+    throw Error(prettyError(res, source));
+}
 class APGMExpr {
     constructor(){
     }
@@ -525,9 +556,18 @@ const macroIdentifier = _.next(mod1.match(macroIdentifierRegExp)).skip(_).desc([
 function token(s) {
     return _.next(mod1.text(s)).skip(_);
 }
-const comma = token(",");
-const leftParen = token("(");
-const rightParen = token(")");
+const comma = token(",").desc([
+    "`,`"
+]);
+const leftParen = token("(").desc([
+    "`(`"
+]);
+const rightParen = token(")").desc([
+    "`)`"
+]);
+const semicolon = token(";").desc([
+    "`;`"
+]);
 const varAPGMExpr = identifier.map((x)=>new VarAPGMExpr(x)
 );
 function funcAPGMExpr() {
@@ -555,8 +595,8 @@ function seqAPGMExpr() {
 }
 const whileKeyword = mod1.choice(token("while_z"), token("while_nz")).map((x)=>x === "while_z" ? "Z" : "NZ"
 );
-const exprWithParen = token("(").next(mod1.lazy(()=>apgmExpr()
-)).skip(token(")"));
+const exprWithParen = leftParen.next(mod1.lazy(()=>apgmExpr()
+)).skip(rightParen);
 function whileAPGMExpr() {
     return whileKeyword.chain((mod)=>{
         return exprWithParen.chain((cond)=>{
@@ -612,14 +652,14 @@ function main1() {
         });
     });
 }
-function tryParseMain(str) {
-    return main1().tryParse(str);
+function parseMain(str) {
+    return parsePretty(main1(), str);
 }
 function apgmExpr() {
     return mod1.choice(loopAPGMExpr(), whileAPGMExpr(), ifAPGMExpr(), funcAPGMExpr(), seqAPGMExpr(), varAPGMExpr, numberAPGMExpr, stringAPGMExpr);
 }
 function statement() {
-    return mod1.choice(loopAPGMExpr(), whileAPGMExpr(), ifAPGMExpr(), apgmExpr().skip(token(";")));
+    return mod1.choice(loopAPGMExpr(), whileAPGMExpr(), ifAPGMExpr(), apgmExpr().skip(semicolon));
 }
 class APGLExpr {
     constructor(){
@@ -1198,7 +1238,7 @@ function expand(main) {
     return new MacroExpander(main).expand();
 }
 function integration1(str, log = false) {
-    const apgm = tryParseMain(str);
+    const apgm = parseMain(str);
     if (log) {
         console.log("apgm", JSON.stringify(apgm, null, "  "));
     }

@@ -3,9 +3,9 @@
 import { UReg } from "../../src/components/UReg.js";
 
 /**
- * キャッシュ用のキー
+ * @type {HTMLElement[]}
  */
-export const UNARY_REG_ITEMS_CLASS = 'js_unary_data';
+let unaryCache = [];
 
 /**
  *
@@ -13,20 +13,24 @@ export const UNARY_REG_ITEMS_CLASS = 'js_unary_data';
  * @param {Map<number, UReg>} regs
  */
 export function setUpUnary($unaryRegister, regs) {
+    unaryCache = [];
+
     const unaryHeader = document.createElement('tr');
     for (const key of regs.keys()) {
         const th = document.createElement('th');
         th.textContent = `U${key}`;
         unaryHeader.appendChild(th);
     }
+
     const unaryData = document.createElement('tr');
-    unaryData.classList.add(UNARY_REG_ITEMS_CLASS);
     for (const [key, value] of regs.entries()) {
         const td = document.createElement('td');
         td.textContent = value.getValue().toString();
         td.dataset['test'] = `U${key}`;
+        unaryCache.push(td);
         unaryData.appendChild(td);
     }
+
     const unaryTable = document.createElement('table');
     unaryTable.appendChild(unaryHeader);
     unaryTable.appendChild(unaryData);
@@ -42,13 +46,12 @@ export function setUpUnary($unaryRegister, regs) {
 
 /**
  *
- * @param {NodeListOf<ChildNode>} items setUpUnaryのunaryDataのchildNodes
  * @param {Map<number, UReg>} regs
  */
-export function renderUnary(items, regs) {
+export function renderUnary(regs) {
     let i = 0;
     for (const reg of regs.values()) {
-        const item = items[i];
+        const item = unaryCache[i];
         if (item === undefined) {
             throw Error('renderUnary: internal error');
         }

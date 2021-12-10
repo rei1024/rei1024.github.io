@@ -90,6 +90,18 @@ ID0; ZZ; ID0; NOP
     }
 });
 
+test('Machine command Z NZ different state', () => {
+    const str = `
+INITIAL; ZZ; ID0; OUTPUT 3, NOP
+ID0; Z; ID0; NOP
+ID1; NZ; ID0; NOP
+    `;
+    const program = Program.parse(str);
+    if (program instanceof Program) {
+        throw Error('expect parse error');
+    }
+});
+
 test('Machine INITIAL is not exist', () => {
     const str = `
     ID0; ZZ; ID0; NOP

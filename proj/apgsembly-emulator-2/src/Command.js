@@ -219,13 +219,13 @@ export class Command extends ProgramLine {
         }
         const array = trimmedStr.split(/\s*;\s*/u);
         if (array.length < 4) {
-            return `Invalid command "${str}"`;
+            return `Invalid line "${str}"`;
         }
         if (array.length > 4) {
             if (array[4] === "") {
                 return `Extraneous semicolon "${str}"`;
             }
-            return `Invalid command "${str}"`;
+            return `Invalid line "${str}"`;
         }
         // arrayの長さは4
         const state = array[0] ?? this.error();

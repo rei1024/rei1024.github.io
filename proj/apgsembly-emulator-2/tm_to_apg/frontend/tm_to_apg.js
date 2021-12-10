@@ -30,26 +30,37 @@ if (!($list instanceof HTMLElement)) {
     throw Error('list is not a HTMLElement');
 }
 
+// 入力が行われなかったらコメントとして追加
+let comment = '';
+
 $generate.addEventListener('click', () => {
     const tm = TM.parse($input.value);
+    $input.classList.remove('is-invalid');
     if (tm instanceof Error) {
         $copy.disabled = true;
         $output.value = tm.message;
+        $input.classList.add('is-invalid');
         return;
     }
     const tmMap = TMMap.fromTM(tm);
     if (tmMap instanceof Error) {
         $copy.disabled = true;
         $output.value = tmMap.message;
+        $input.classList.add('is-invalid');
         return;
     }
     const apg = convert(tmMap);
     if (apg instanceof Error) {
         $copy.disabled = true;
         $output.value = apg.message;
+        $input.classList.add('is-invalid');
     } else {
         $copy.disabled = false;
-        $output.value = apg;
+        if (comment !== '') {
+            $output.value = [`# ${comment}`, apg].join('\n');
+        } else {
+            $output.value = [apg].join('\n');
+        }
     }
 });
 
@@ -62,6 +73,10 @@ $copy.addEventListener('click', () => {
     });
 });
 
+$input.addEventListener('input', () => {
+    comment = '';
+});
+
 for (const { name, prog } of list) {
      // <button class="dropdown-item" data-src="pi_calc.apg">π Calculator</button>
     const button = document.createElement('button');
@@ -69,6 +84,7 @@ for (const { name, prog } of list) {
     button.textContent = name;
     button.addEventListener('click', () => {
         $input.value = prog;
+        comment = name;
     });
     $list.append(button);
 }

@@ -51,7 +51,7 @@ describe('Integers', () => {
         cy.get('#step').click();
         cy.get(outputSelector).should('have.value', '1.2.3.4.5.6.7.8.9.10');
 
-        cy.get('#steps').should('have.text', '1050');
+        cy.get('#steps').should('have.text', '1,050');
     });
 });
 
@@ -71,7 +71,7 @@ describe('π calculator', () => {
         cy.get('#step').click();
         cy.get(outputSelector).should('have.value', '3.141');
 
-        cy.get('#steps').should('have.text', '1000000');
+        cy.get('#steps').should('have.text', '1,000,000');
 
         cy.get(`[data-test="B0"]`).should('have.text', 'value = 243290200817664000, pointer = 1340000000000000000010010001011000001100100111010100000011011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
     });
@@ -87,7 +87,7 @@ describe('Rule 110', () => {
         setStep(1000);
         cy.get('#step').click();
 
-        cy.get('#steps').should('have.text', '1000');
+        cy.get('#steps').should('have.text', '1,000');
 
         cy.get('#command').should('have.text', 'NEXT_S000_WRITE_1; *; NEXT_S00_CHECK0_1; INC B2DX, NOP');
     });
