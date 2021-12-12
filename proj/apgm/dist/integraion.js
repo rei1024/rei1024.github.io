@@ -534,9 +534,7 @@ class WhileAPGMExpr extends APGMExpr {
         return f(new WhileAPGMExpr(this.modifier, this.cond.transform(f), this.body.transform(f)));
     }
 }
-const comment = mod1.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([
-    "comment"
-]);
+const comment = mod1.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([]);
 const _ = mod1.match(/\s*/).desc([
     "space"
 ]).sepBy(comment).map(()=>undefined
@@ -572,8 +570,8 @@ const varAPGMExpr = identifier.map((x)=>new VarAPGMExpr(x)
 );
 function funcAPGMExpr() {
     return mod1.choice(macroIdentifier, identifier).chain((ident)=>{
-        return leftParen.next(mod1.lazy(()=>apgmExpr()
-        ).sepBy(comma).skip(rightParen)).map((args)=>{
+        return mod1.lazy(()=>apgmExpr()
+        ).sepBy(comma).wrap(leftParen, rightParen).map((args)=>{
             return new FuncAPGMExpr(ident, args);
         });
     });
@@ -590,13 +588,13 @@ function seqAPGMExprRaw() {
     ).repeat();
 }
 function seqAPGMExpr() {
-    return token("{").next(seqAPGMExprRaw()).skip(token("}")).map((x)=>new SeqAPGMExpr(x)
+    return seqAPGMExprRaw().wrap(token("{"), token("}")).map((x)=>new SeqAPGMExpr(x)
     );
 }
 const whileKeyword = mod1.choice(token("while_z"), token("while_nz")).map((x)=>x === "while_z" ? "Z" : "NZ"
 );
-const exprWithParen = leftParen.next(mod1.lazy(()=>apgmExpr()
-)).skip(rightParen);
+const exprWithParen = mod1.lazy(()=>apgmExpr()
+).wrap(leftParen, rightParen);
 function whileAPGMExpr() {
     return whileKeyword.chain((mod)=>{
         return exprWithParen.chain((cond)=>{
@@ -919,29 +917,29 @@ function transpileFuncAPGMExpr(funcExpr) {
     }
     throw Error(`Unknown function: "${funcExpr.name}"`);
 }
-function transpileAPGMExpr(expr) {
+function transpileAPGMExpr(e) {
     const t = transpileAPGMExpr;
-    if (expr instanceof FuncAPGMExpr) {
-        return transpileFuncAPGMExpr(expr);
-    } else if (expr instanceof IfAPGMExpr) {
-        if (expr.modifier === "Z") {
-            return new IfAPGLExpr(t(expr.cond), t(expr.thenBody), expr.elseBody === undefined ? new SeqAPGLExpr([]) : t(expr.elseBody));
+    if (e instanceof FuncAPGMExpr) {
+        return transpileFuncAPGMExpr(e);
+    } else if (e instanceof IfAPGMExpr) {
+        if (e.modifier === "Z") {
+            return new IfAPGLExpr(t(e.cond), t(e.thenBody), e.elseBody === undefined ? new SeqAPGLExpr([]) : t(e.elseBody));
         } else {
-            return new IfAPGLExpr(t(expr.cond), expr.elseBody === undefined ? new SeqAPGLExpr([]) : t(expr.elseBody), t(expr.thenBody));
+            return new IfAPGLExpr(t(e.cond), e.elseBody === undefined ? new SeqAPGLExpr([]) : t(e.elseBody), t(e.thenBody));
         }
-    } else if (expr instanceof LoopAPGMExpr) {
-        return new LoopAPGLExpr(t(expr.body));
-    } else if (expr instanceof NumberAPGMExpr) {
-        throw Error(`number is not allowed: ${expr.value}`);
-    } else if (expr instanceof SeqAPGMExpr) {
-        return new SeqAPGLExpr(expr.exprs.map((x)=>t(x)
+    } else if (e instanceof LoopAPGMExpr) {
+        return new LoopAPGLExpr(t(e.body));
+    } else if (e instanceof NumberAPGMExpr) {
+        throw Error(`number is not allowed: ${e.value}`);
+    } else if (e instanceof SeqAPGMExpr) {
+        return new SeqAPGLExpr(e.exprs.map((x)=>t(x)
         ));
-    } else if (expr instanceof StringAPGMExpr) {
-        throw Error(`string is not allowed: ${expr.value}`);
-    } else if (expr instanceof VarAPGMExpr) {
-        throw Error(`macro variable is not allowed: ${expr.name}`);
-    } else if (expr instanceof WhileAPGMExpr) {
-        return new WhileAPGLExpr(expr.modifier, t(expr.cond), t(expr.body));
+    } else if (e instanceof StringAPGMExpr) {
+        throw Error(`string is not allowed: ${e.value}`);
+    } else if (e instanceof VarAPGMExpr) {
+        throw Error(`macro variable is not allowed: ${e.name}`);
+    } else if (e instanceof WhileAPGMExpr) {
+        return new WhileAPGLExpr(e.modifier, t(e.cond), t(e.body));
     }
     throw Error("internal error");
 }

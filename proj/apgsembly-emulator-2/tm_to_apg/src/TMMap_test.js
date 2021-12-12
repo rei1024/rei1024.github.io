@@ -16,6 +16,7 @@ test('TMMap', () => {
     if (tmMap instanceof Error) {
         throw tmMap;
     }
+    assertEquals(tmMap.map.size, 13);
 });
 
 test('TMMap fromTM tm21', () => {
@@ -66,6 +67,7 @@ test('TMMap fromTM 2', () => {
         throw tmMap;
     }
 
+    assertEquals(tmMap.map.size, 2);
     assertEquals(tmMap.map.get('0')?.get("0")?.direction, "l");
     assertEquals(tmMap.map.get('0')?.has("1"), true);
     assertEquals(tmMap.map.get('0')?.get("1"), undefined);

@@ -1,5 +1,8 @@
 export class Header {
     constructor(
+        /**
+         * name without `#`
+         */
         public readonly name: string,
         public readonly content: string,
     ) {}

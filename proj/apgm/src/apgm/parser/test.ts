@@ -1,6 +1,7 @@
 import {
     _,
     funcAPGMExpr,
+    header,
     identifier,
     identifierOnly,
     ifAPGMExpr,
@@ -75,6 +76,14 @@ test("parser: comment", () => {
     }
 });
 
+test("parser: header", () => {
+    assertEquals(header.tryParse("#REGISTERS {}").toString(), "#REGISTERS {}");
+    assertEquals(
+        header.tryParse("#COMPONENTS OUTPUT").toString(),
+        "#COMPONENTS OUTPUT",
+    );
+});
+
 test("parser: func", () => {
     const array = [
         "f(a,b,c)",
@@ -112,6 +121,9 @@ test("parser: main", () => {
             x;
         }
         macro h!( y ) {
+            y;
+        }
+        macro   g!( y ) {
             y;
         }
         f!(2);
@@ -177,6 +189,11 @@ test("parser: main", () => {
     main().tryParse(`
         loop {
             g(3);
+        }
+    `);
+    main().tryParse(`
+        loop {
+            g (  3 ) ;
         }
     `);
     main().tryParse(`

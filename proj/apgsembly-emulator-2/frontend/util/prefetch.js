@@ -1,6 +1,7 @@
 // @ts-check
 
 /**
+ * prefetch resource
  * <link rel="prefetch" href="second.html">
  * @param {string | URL} url
  */

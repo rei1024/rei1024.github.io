@@ -34,6 +34,7 @@ if (!($error instanceof HTMLElement)) {
 
 $compile.addEventListener("click", () => {
     $output.value = "";
+    $input.classList.remove("is-invalid");
     try {
         /**
          * @type {string}
@@ -44,20 +45,12 @@ $compile.addEventListener("click", () => {
         $output.value = result;
     } catch (e) {
         if (!(e instanceof Error)) {
-            throw e;
-        }
-        console.log(e);
-        const messages = e.message.split("\n");
-        $error.innerHTML = "";
-        for (const message of messages) {
-            const span = document.createElement("span");
-            span.textContent = message;
-            const br = document.createElement("br");
-            $error.append(span, br);
+            e = new Error("unkown error");
         }
         $error.textContent = e.message;
         $error.style.display = "block";
         $copy.disabled = true;
+        $input.classList.add("is-invalid");
     }
 });
 

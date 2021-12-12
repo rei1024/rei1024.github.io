@@ -46,3 +46,15 @@ for (let k = 0; k < 10; k++) {
     // console.log(machine.actionExecutor.output.getString());
     console.log((end - start) + "ms");
 }
+
+// /**
+//  *
+//  * @param {string} name
+//  * @param {() => void} fn
+//  */
+//  function bench(name, fn) {
+//     const start = performance.now();
+//     fn();
+//     const end = performance.now();
+//     console.log(name + " : " + (end - start) + "ms");
+// }

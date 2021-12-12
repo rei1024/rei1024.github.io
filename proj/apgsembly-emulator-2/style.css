@@ -103,7 +103,7 @@ body[apge_dark_mode="on"] #error {
     background-color: #CF6679;
 }
 
-/* Statsの現在の状態 */
+/* Statsの現在の状態 renderStats.jsで使用 */
 .stats_current_state {
     background-color: #e1f5fe;
 }

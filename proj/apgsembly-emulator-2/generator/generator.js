@@ -24,20 +24,38 @@ if (!(copy instanceof HTMLButtonElement)) {
     throw TypeError('copy is not a HTMLButtonElement');
 }
 
+/**
+ *
+ * @param {string} str
+ * @returns {number | undefined}
+ */
+function parseNum(str) {
+    const n = parseInt(str, 10);
+    if (isNaN(n)) {
+        return undefined;
+    }
+    if (!Number.isInteger(n)) {
+        return undefined;
+    }
+    if (n < 0) {
+        return undefined;
+    }
+    if (n > 255) {
+        return undefined;
+    }
+
+    return n;
+}
+
+rule.addEventListener('input', () => {
+    generateButton.disabled = parseNum(rule.value) === undefined;
+});
+
 generateButton.addEventListener("click", () => {
     code.value = "";
     copy.disabled = true;
-    const n = parseInt(rule.value, 10);
-    if (isNaN(n)) {
-        return;
-    }
-    if (!Number.isInteger(n)) {
-        return;
-    }
-    if (n < 0) {
-        return;
-    }
-    if (n > 255) {
+    const n = parseNum(rule.value);
+    if (n === undefined) {
         return;
     }
     code.value = generate(n);
@@ -52,6 +70,3 @@ copy.addEventListener('click', () => {
         }, 1000);
     });
 });
-
-// 有効化
-generateButton.disabled = false;

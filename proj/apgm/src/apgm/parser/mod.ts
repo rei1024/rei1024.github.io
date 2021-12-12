@@ -19,7 +19,7 @@ import {
 } from "../ast/mod.ts";
 
 // https://stackoverflow.com/questions/16160190/regular-expression-to-find-c-style-block-comments#:~:text=35-,Try%20using,-%5C/%5C*(%5C*(%3F!%5C/)%7C%5B%5E*%5D)*%5C*%5C/
-export const comment = bnb.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc(["comment"]);
+export const comment = bnb.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([] /* 無し */);
 
 /** 空白 */
 export const _: bnb.Parser<undefined> = bnb.match(/\s*/).desc(["space"]).sepBy(
@@ -60,8 +60,9 @@ export const varAPGMExpr = identifier.map((x) => new VarAPGMExpr(x));
 
 export function funcAPGMExpr(): bnb.Parser<FuncAPGMExpr> {
     return bnb.choice(macroIdentifier, identifier).chain((ident) => {
-        return leftParen.next(
-            bnb.lazy(() => apgmExpr()).sepBy(comma).skip(rightParen),
+        return bnb.lazy(() => apgmExpr()).sepBy(comma).wrap(
+            leftParen,
+            rightParen,
         ).map(
             (args) => {
                 return new FuncAPGMExpr(ident, args);
@@ -75,17 +76,19 @@ export const numberAPGMExpr: bnb.Parser<NumberAPGMExpr> = _.next(
     naturalNumberParser.map((x) => new NumberAPGMExpr(x)),
 ).skip(_);
 
-export const stringLit = _.next(bnb.text(`"`)).next(bnb.match(/[^"]*/)).skip(
+export const stringLit: bnb.Parser<string> = _.next(bnb.text(`"`)).next(
+    bnb.match(/[^"]*/),
+).skip(
     bnb.text(`"`),
 ).skip(_).desc(["string"]);
 export const stringAPGMExpr = stringLit.map((x) => new StringAPGMExpr(x));
 
-export function seqAPGMExprRaw() {
+export function seqAPGMExprRaw(): bnb.Parser<APGMExpr[]> {
     return bnb.lazy(() => statement()).repeat();
 }
 
 export function seqAPGMExpr() {
-    return token("{").next(seqAPGMExprRaw()).skip(token("}")).map((x) =>
+    return seqAPGMExprRaw().wrap(token("{"), token("}")).map((x) =>
         new SeqAPGMExpr(x)
     );
 }
@@ -94,9 +97,10 @@ export const whileKeyword = bnb.choice(token("while_z"), token("while_nz")).map(
     (x) => x === "while_z" ? "Z" : "NZ",
 );
 
-const exprWithParen: bnb.Parser<APGMExpr> = leftParen.next(
-    bnb.lazy(() => apgmExpr()),
-).skip(rightParen);
+const exprWithParen: bnb.Parser<APGMExpr> = bnb.lazy(() => apgmExpr()).wrap(
+    leftParen,
+    rightParen,
+);
 
 export function whileAPGMExpr() {
     return whileKeyword.chain((mod) => {

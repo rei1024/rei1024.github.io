@@ -40,7 +40,7 @@ const test1 = `
 15 1 * r 5
 `;
 
-test('convert', () => {
+test('tm_to_apg convert', () => {
     let tm = TM.parse(test1);
 
     if (tm instanceof Error) {
