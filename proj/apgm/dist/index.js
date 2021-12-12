@@ -45,7 +45,7 @@ $compile.addEventListener("click", () => {
         $output.value = result;
     } catch (e) {
         if (!(e instanceof Error)) {
-            e = new Error("unkown error");
+            e = new Error("unknown error");
         }
         $error.textContent = e.message;
         $error.style.display = "block";
