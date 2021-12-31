@@ -1,5 +1,8 @@
 /*
-  print "123"
+    # print "123"
+
+    ## syntax
+    output(<string>);
 */
 
 /* this is a comment */

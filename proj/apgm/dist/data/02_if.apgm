@@ -1,5 +1,11 @@
 /*
-    if_z and if_nz
+    # if_z and if_nz
+
+    ## syntax
+    if_z(<expression>) expression
+    if_z(<expression>) <expression> else <expression>
+    if_nz(<expression>) <expression>
+    if_nz(<expression>) <expression> else <expression>
 */
 
 inc_u(0); /* INC U0 */

@@ -1,6 +1,7 @@
 /*
-    repeat
+    # repeat
 
+    ## syntax
     repeat(<number>, <expression>);
 */
 

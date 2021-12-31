@@ -15,12 +15,9 @@ import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 
 import { renderB2D } from "./render_component/renderB2D.js";
-import {
-    renderUnary,
-    setUpUnary,
-} from "./render_component/renderUnary.js";
-import { setUpBinary, renderBinary } from "./render_component/renderBinary.js";
-import { setUpStats, renderStats } from "./render_component/renderStats.js";
+import { UnaryUI } from "./components/unary_ui.js";
+import { BinaryUI } from "./components/binary_ui.js";
+import { StatsUI } from "./components/stats_ui.js";
 
 import {
     $error,
@@ -123,6 +120,12 @@ export class App {
             () => this.frequency,
             n => this.run(n)
         );
+
+        this.unaryUI = new UnaryUI($unaryRegister);
+
+        this.binaryUI = new BinaryUI($binaryRegister);
+
+        this.statsUI = new StatsUI($statsBody);
     }
 
     /**
@@ -166,12 +169,11 @@ export class App {
      */
     setUpUnary() {
         if (this.machine === undefined) {
-            // GC
-            $unaryRegister.innerHTML = "";
+            this.unaryUI.clear();
             return;
         }
         const regs = this.machine.actionExecutor.uRegMap;
-        setUpUnary($unaryRegister, regs);
+        this.unaryUI.initialize(regs);
     }
 
     /**
@@ -179,10 +181,10 @@ export class App {
      */
     setUpBinary() {
         if (this.machine === undefined) {
-            $binaryRegister.innerHTML = "";
+            this.binaryUI.clear();
             return;
         }
-        setUpBinary($binaryRegister, this.machine.actionExecutor.bRegMap);
+        this.binaryUI.initialize(this.machine.actionExecutor.bRegMap);
     }
 
     /**
@@ -334,7 +336,7 @@ export class App {
         if (!$unaryRegisterDetail.open) {
             return;
         }
-        renderUnary(this.machine.actionExecutor.uRegMap);
+        this.unaryUI.render(this.machine.actionExecutor.uRegMap);
     }
 
     /**
@@ -354,7 +356,7 @@ export class App {
         if (!$binaryRegisterDetail.open) {
             return;
         }
-        renderBinary(
+        this.binaryUI.render(
             this.machine.actionExecutor.bRegMap,
             $hideBinary.checked,
             $reverseBinary.checked,
@@ -396,11 +398,11 @@ export class App {
 
     setUpStats() {
         if (this.machine === undefined) {
-            $statsBody.innerHTML = "";
+            this.statsUI.clear();
             return;
         }
         $statsNumberOfStates.textContent = this.machine.states.length.toString();
-        setUpStats($statsBody, this.machine.stateStats, this.machine.states);
+        this.statsUI.initialize(this.machine.stateStats, this.machine.states);
     }
 
     renderStats() {
@@ -410,7 +412,7 @@ export class App {
         if (this.machine === undefined) {
             return;
         }
-        renderStats(
+        this.statsUI.render(
             this.machine.stateStats,
             this.machine.getCurrentStateIndex()
         );

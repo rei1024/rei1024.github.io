@@ -1,4 +1,0 @@
-label("x");
-output("1");
-output("2");
-goto("x"); // jump to `label("x");`

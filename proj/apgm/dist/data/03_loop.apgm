@@ -1,5 +1,10 @@
 /*
-    infinite loop
+    # infinite loop
+
+    ## syntax
+    loop <expression>
+
+    break(<number>)
 */
 
 loop {
@@ -8,9 +13,9 @@ loop {
 }
 
 /* break level */
-loop {
-    loop {
-        break(2);
+loop { /* outer loop */
+    loop { /* inner loop */
+        break(2); /* break from outer loop */
     }
 }
 

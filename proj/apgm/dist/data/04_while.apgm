@@ -1,5 +1,9 @@
 /*
-    while
+    # while_z and while_nz
+
+    ## syntax
+    while_z(<expression>) <expression>
+    while_nz(<expression>) <expression>
 */
 
 while_z(tdec_u(0)) { /* TDEC U0 */

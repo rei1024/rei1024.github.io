@@ -1,7 +1,7 @@
 // @ts-check
 /// <reference types="cypress" />
 
-import { APGsemblyEmulatorURL, setStep, dslURL } from "../common/common.js";
+import { APGsemblyEmulatorURL, setStep, dslURL } from "./common.js";
 
 describe('APGDSL Integration', () => {
     it('should load', () => {

@@ -22,6 +22,7 @@ macro print_digit_u!(x) {
     }
 }
 
-#REGISTERS { "U0": 5 }
+#REGISTERS { "U0": 4, "U1": 2 }
 
 print_digit_u!(0);
+print_digit_u!(1);

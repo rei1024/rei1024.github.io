@@ -1,6 +1,0 @@
-// double slash indicate comment line
-
-// output "123"
-output("1"); // OUTPUT 1
-output("2"); // OUTPUT 2
-output("3"); // OUTPUT 3
