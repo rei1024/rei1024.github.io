@@ -189,7 +189,8 @@ export class Machine {
      * 次のコマンドを実行する
      * エラーが発生した場合は例外を投げる
      * -1はHALT_OUT
-     * @returns {-1 | undefined}
+     * voidは正常
+     * @returns {-1 | void}
      * @throws
      */
     execCommand() {
@@ -233,6 +234,6 @@ export class Machine {
         }
         this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;
-        return undefined;
+        return;
     }
 }

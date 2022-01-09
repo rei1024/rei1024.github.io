@@ -34,16 +34,16 @@ test('ActionExecutor setByRegistersInit', () => {
 
     x.setByRegistersInit({ B0: [0, '11010001'], B1: [2, '110'], U0: 8 });
     assertEquals(
-        [...x.bRegMap.get(0).toBinaryString()].reverse().join(''),
+        [...x.getBReg(0).toBinaryString()].reverse().join(''),
         '11010001'
     );
-    assertEquals(x.bRegMap.get(0).pointer, 0);
+    assertEquals(x.getBReg(0).pointer, 0);
     assertEquals(
-        [...x.bRegMap.get(1).toBinaryString()].reverse().join(''),
+        [...x.getBReg(1).toBinaryString()].reverse().join(''),
         '110'
     );
-    assertEquals(x.bRegMap.get(1).pointer, 2);
-    assertEquals(x.uRegMap.get(0).getValue(), 8);
+    assertEquals(x.getBReg(1).pointer, 2);
+    assertEquals(x.getUReg(0).getValue(), 8);
 });
 
 test('ActionExecutor setByRegistersInit', () => {
@@ -58,10 +58,10 @@ test('ActionExecutor setByRegistersInit', () => {
 
     x.setByRegistersInit({ B0: 11 });
     assertEquals(
-        [...x.bRegMap.get(0).toBinaryString()].reverse().join(''),
+        [...x.getBReg(0).toBinaryString()].reverse().join(''),
         '1101'
     );
-    assertEquals(x.bRegMap.get(0).pointer, 0);
+    assertEquals(x.getBReg(0).pointer, 0);
 });
 
 test('ActionExecutor setByRegistersInit error', () => {

@@ -28,8 +28,6 @@ async function init() {
         requestAnimationFrame(update);
     };
     requestAnimationFrame(update);
-
-    await app.run(10);
 }
 
 init();

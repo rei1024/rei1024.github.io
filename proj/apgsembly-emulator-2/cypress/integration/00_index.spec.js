@@ -1,7 +1,7 @@
 // @ts-check
 /// <reference types="cypress" />
 
-import { APGsemblyEmulatorURL, loadProgram, setStep, setProgramSlow } from "../common/common.js";
+import { APGsemblyEmulatorURL, loadProgram, setProgram, setStep, setProgramSlow } from "../common/common.js";
 
 const outputSelector = '#output';
 
@@ -9,6 +9,29 @@ describe('Load', () => {
     it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.get('#start').should('not.be.disabled');
+    });
+});
+
+describe('Run APGsembly', () => {
+    it('should load', () => {
+        setProgram(`
+        INITIAL; ZZ; A0; INC U0, NOP
+        A0; ZZ; A0; HALT_OUT
+        `)
+        cy.get('#start').should('not.be.disabled');
+        cy.get('#step').should('not.be.disabled');
+        cy.get('#stop').should('be.disabled');
+        cy.get('#current_state').should('have.text', 'INITIAL');
+        cy.get(`[data-test="U0"]`).should('have.text', '0');
+        cy.get('#error').should('have.text', '');
+    });
+    it('shold run', () => {
+        cy.get('#start').click();
+        cy.get('#start').should('be.disabled');
+        cy.get('#step').should('be.disabled');
+        cy.get('#stop').should('not.be.disabled');
+        cy.get('#current_state').should('have.text', 'A0');
+        cy.get(`[data-test="U0"]`).should('have.text', '1');
     });
 });
 
@@ -37,6 +60,8 @@ describe('unary_multiply.apg', () => {
         cy.get('#steps').should('have.text', '93');
 
         cy.get(`[data-test="U2"]`).should('have.text', '35');
+
+        cy.get('#error').should('have.text', '');
     });
 });
 
@@ -52,6 +77,8 @@ describe('Integers', () => {
         cy.get(outputSelector).should('have.value', '1.2.3.4.5.6.7.8.9.10');
 
         cy.get('#steps').should('have.text', '1,050');
+
+        cy.get('#error').should('have.text', '');
     });
 });
 
@@ -74,6 +101,8 @@ describe('π calculator', () => {
         cy.get('#steps').should('have.text', '1,000,000');
 
         cy.get(`[data-test="B0"]`).should('have.text', 'value = 243290200817664000, pointer = 1340000000000000000010010001011000001100100111010100000011011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
+
+        cy.get('#error').should('have.text', '');
     });
 });
 
@@ -90,6 +119,8 @@ describe('Rule 110', () => {
         cy.get('#steps').should('have.text', '1,000');
 
         cy.get('#command').should('have.text', 'NEXT_S000_WRITE_1; *; NEXT_S00_CHECK0_1; INC B2DX, NOP');
+
+        cy.get('#error').should('have.text', '');
     });
 });
 
@@ -104,10 +135,14 @@ describe('Start Stop Reset', () => {
         cy.wait(400);
         cy.get('#stop').click();
         cy.get('#steps').should('not.have.text', '0');
+
+        cy.get('#error').should('have.text', '');
     });
     it('Reset', () => {
         cy.get('#reset').click();
         cy.get('#steps').should('have.text', '0');
+
+        cy.get('#error').should('have.text', '');
     });
 });
 
@@ -124,5 +159,7 @@ describe('Error Steps', () => {
         setStep(100);
         cy.get('#step').click();
         cy.get('#steps').should('have.text', '3');
+
+        cy.get('#error').should('have.text', `- The bit of binary register is already 1: bits = 1, pointer = 0`);
     });
 });
