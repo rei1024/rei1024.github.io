@@ -5,8 +5,9 @@ import * as Comlink from "https://unpkg.com/comlink/dist/esm/comlink.mjs";
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 
-const App = {
+export const App = {
     /**
+     * @private
      * @type {undefined | Machine}
      */
     _machine: undefined,

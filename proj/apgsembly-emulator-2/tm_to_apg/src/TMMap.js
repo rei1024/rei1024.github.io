@@ -2,25 +2,7 @@
 
 import { Line } from "./Line.js";
 import { TM } from "./TM.js";
-import { group, mapValueMaybe, MapValueMaybeError } from "./util.js";
-
-/**
- * @template T
- * @param {T[]} arr
- * @returns {T | undefined}
- */
-function extractSingle(arr) {
-    if (arr.length !== 1) {
-        return undefined;
-    }
-
-    const x = arr[0];
-    if (x === undefined) {
-        return undefined;
-    }
-
-    return x;
-}
+import { extractSingle, group, mapValueMaybe, MapValueMaybeError } from "./util.js";
 
 export class TMMap {
     /**

@@ -1,7 +1,8 @@
 export {
     assertEquals,
-    assertThrows
-} from "https://deno.land/std@0.120.0/testing/asserts.ts";
+    assertThrows,
+    assertIsError
+} from "https://deno.land/std@0.125.0/testing/asserts.ts";
 
 /**
  *

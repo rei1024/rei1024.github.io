@@ -71,7 +71,6 @@ export function funcAPGMExpr(): bnb.Parser<FuncAPGMExpr> {
     });
 }
 
-export { naturalNumberParser };
 export const numberAPGMExpr: bnb.Parser<NumberAPGMExpr> = _.next(
     naturalNumberParser.map((x) => new NumberAPGMExpr(x)),
 ).skip(_);

@@ -64,12 +64,12 @@ export class Program {
                 commands.push(programLine);
             } else if (programLine instanceof ComponentsHeader) {
                 if (componentsHeader !== undefined) {
-                    return 'Multiple #COMPONENTS';
+                    return `Multiple ${ComponentsHeader.key}`;
                 }
                 componentsHeader = programLine;
             } else if (programLine instanceof RegistersHeader) {
                 if (registersHeader !== undefined) {
-                    return 'Multiple #REGISTER';
+                    return `Multiple ${RegistersHeader.key}`;
                 }
                 registersHeader = programLine;
             }

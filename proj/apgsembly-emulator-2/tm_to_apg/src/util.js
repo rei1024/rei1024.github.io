@@ -1,6 +1,21 @@
 // @ts-check
 
 /**
+ * @template T
+ * @param {T[]} arr
+ * @returns {T | undefined}
+ */
+export function extractSingle(arr) {
+    if (arr.length !== 1) {
+        return undefined;
+    }
+
+    const x = arr[0];
+
+    return x;
+}
+
+/**
  * @template T, U
  * @param {T[]} array
  * @param {(_: T) => U} func

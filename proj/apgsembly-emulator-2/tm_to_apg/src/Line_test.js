@@ -1,18 +1,21 @@
-import { assertEquals, test } from "../../test/deps.js";
+import { assertEquals, assertIsError, test } from "../../test/deps.js";
 import { Line, isHaltState } from "./Line.js";
 
 test('parse Line', () => {
     assertEquals(Line.parse('0 0 _ r 1o'), Line.make('0', '0', '_', 'r', '1o'));
+    assertEquals(Line.parse('0 0 _ r 1o'), Line.make('0', '0', '_', 'r', '1o', false));
+    assertEquals(Line.parse('0 0 _ r 1o'), Line.make('0', '0', '_', 'r', '1o', undefined));
 
     assertEquals(Line.parse('0 0 _ R 1o'), Line.make('0', '0', '_', 'r', '1o'));
 
     assertEquals(Line.parse('0 0 _ L 1o'), Line.make('0', '0', '_', 'l', '1o'));
 
-    assertEquals(Line.parse('1 a b r 2 !'), Line.make('1', 'a', 'b', 'r', '2'));
+    assertEquals(Line.parse('1 a b r 2 !'), Line.make('1', 'a', 'b', 'r', '2', true));
+    assertIsError(Line.parse('1 a b r 2 ?'), Error, `breakpoint is "!" but it is "?" at "1 a b r 2 ?".`);
 
     assertEquals(Line.parse('0 0 _ r 1o; abc def'), Line.make('0', '0', '_', 'r', '1o'));
 
-    assertEquals(Line.parse('0 0 _ r 1o !; abc def'), Line.make('0', '0', '_', 'r', '1o'));
+    assertEquals(Line.parse('0 0 _ r 1o !; abc def'), Line.make('0', '0', '_', 'r', '1o', true));
 
     assertEquals(Line.parse(''), undefined);
 
@@ -20,11 +23,12 @@ test('parse Line', () => {
 
     assertEquals(Line.parse('; a'), undefined);
 
-    assertEquals(Line.parse('a b ; a'), new Error('must have 5 components but it has 2 at "a b ; a".'));
+    assertIsError(Line.parse('a b ; a'), Error, 'must have 5 components but it has 2 at "a b ; a".');
 
-    assertEquals(Line.parse('0 0 _ x 1o'), new Error(`direction should be 'l', 'r' or '*'`));
+    assertIsError(Line.parse('0 0 _ x 1o'), Error, `direction should be 'l', 'r' or '*'`);
 
     assertEquals(Line.parse('  0   0 _   r  1o '), Line.make('0', '0', '_', 'r', '1o'));
+    assertEquals(Line.parse('  0   0 _   r  1o   !'), Line.make('0', '0', '_', 'r', '1o', true));
 });
 
 test('pretty Line', () => {

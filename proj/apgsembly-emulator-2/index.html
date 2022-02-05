@@ -6,7 +6,7 @@
 
     <!-- CSP -->
     <!-- `data://*` is close button for modal -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' cdn.jsdelivr.net 'unsafe-inline'; script-src 'self' cdn.jsdelivr.net 'sha256-xYJ0eyX805nvgf5HIKl5CyP65vauWTNQ90lkobGlIOA='; img-src 'self' data://*; ">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net 'sha256-xYJ0eyX805nvgf5HIKl5CyP65vauWTNQ90lkobGlIOA='; img-src 'self' data://*; ">
 
     <title>APGsembly 2.0 Emulator</title>
 
@@ -25,8 +25,6 @@
     <link rel="stylesheet" href="./style.css">
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-
-    <meta name="google-site-verification" content="ir3djIfaKW69SrzmpPxIrDGFt_-CQeOjE6H5ZO4bcY0" />
 
     <meta name="description" content="An emulator for APGsembly 2.0. APGsembly is a programming language for general purpose calculator (GPC).">
     <meta name="keywords" content="Conway's Game of Life,Game of Life,GoL,APGsembly,General purpose calculator,GPC">
@@ -55,8 +53,8 @@
         <h1>APGsembly 2.0 Emulator</h1>
     </header>
     <main class="container">
-        <!-- インラインスタイルで指定 -->
-        <div id="error" style="display: none;" class="alert alert-danger" role="alert"></div>
+        <!-- 初期は非表示 -->
+        <div id="error" class="d-none alert alert-danger" role="alert"></div>
         <div class="mb-3">
             <label for="input" class="visually-hidden form-label">Input</label>
             <textarea class="code-mono form-control" name="input" id="input" cols="50" rows="8" placeholder="# Write APGsembly here!"></textarea>
@@ -112,10 +110,10 @@
                 <tbody>
                     <tr class="pb-0">
                         <!-- CLSを防ぐため、レンダリングされた後の値と同じにする -->
-                        <td style="vertical-align: middle; white-space: nowrap;" class="code-mono" id="current_state">
+                        <td class="vertical-align-middle white-space-nowrap code-mono" id="current_state">
                             <!-- INITIAL -->
                         </td>
-                        <td style="vertical-align: middle;" class="code-mono" id="previous_output">
+                        <td class="vertical-align-middle code-mono" id="previous_output">
                             <!-- Z -->
                         </td>
                         <td><code id="steps">0</code></td>
@@ -123,7 +121,7 @@
                 </tbody>
             </table>
             <!-- mobileでLayout shiftを避けるため一行に収める -->
-            <p class="mb-1" style="white-space: nowrap;">
+            <p class="mb-1 white-space-nowrap">
                 <span class="command_prefix">Line: </span><code id="command"></code>
             </p>
         </div>
@@ -264,7 +262,7 @@
     <!-- End Config Modal -->
     <!-- Stats Modal -->
     <div class="modal fade" id="stats_modal" tabindex="-1" aria-labelledby="stats_modal_label" aria-hidden="true">
-        <div style="max-width: 550px;" class="modal-dialog">
+        <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="stats_modal_label">Stats</h5>
@@ -274,7 +272,7 @@
                 <p>
                     Number of states: <span id="stats_number_of_states"></span>
                 </p>
-                <table id="stats_table" style="table-layout: fixed;" class="table">
+                <table id="stats_table" class="table table-layout-fixed">
                     <thead>
                         <tr>
                             <th colspan="2">State</th>

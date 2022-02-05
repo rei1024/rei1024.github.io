@@ -6,7 +6,6 @@ import {
     identifierOnly,
     ifAPGMExpr,
     main,
-    naturalNumberParser,
     stringLit,
 } from "./mod.ts";
 import { assertEquals, assertThrows, test } from "../../deps_test.ts";
@@ -37,13 +36,6 @@ test("parser: identifier whitespace", () => {
     assertThrows(() => {
         identifier.tryParse("abc def");
     });
-});
-
-test("parser: number", () => {
-    const x = naturalNumberParser.tryParse("123");
-    assertEquals(x, 123);
-    const y = naturalNumberParser.tryParse("0x10");
-    assertEquals(y, 16);
 });
 
 test("parser: comment", () => {
@@ -104,8 +96,8 @@ test("parser: stringLit", () => {
     const value = stringLit.tryParse(`"abc"`);
     assertEquals(value, "abc");
 
-    const value2 = stringLit.tryParse(`  "abc"`);
-    assertEquals(value2, "abc");
+    const value2 = stringLit.tryParse(`  "def"`);
+    assertEquals(value2, "def");
 });
 
 test("parser: main", () => {

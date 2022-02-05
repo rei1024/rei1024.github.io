@@ -1,3 +1,7 @@
+// deno-fmt-ignore-file
+// deno-lint-ignore-file
+// This code was bundled using `deno bundle` and it's not recommended to edit it manually
+
 class Parser {
     constructor(action){
         this.action = action;
@@ -339,7 +343,7 @@ class Context {
         };
     }
 }
-const mod1 = function() {
+const mod = function() {
     return {
         default: null,
         Parser,
@@ -354,23 +358,23 @@ const mod1 = function() {
         text
     };
 }();
-const decimalNaturalParser = mod1.match(/[0-9]+/).desc([
+const decimalNaturalParser = mod.match(/[0-9]+/).desc([
     "number"
 ]).map((x)=>parseInt(x, 10)
 );
-const hexadecimalNaturalParser = mod1.match(/0x[0-9]+/).desc([
+const hexadecimalNaturalParser = mod.match(/0x[0-9]+/).desc([
     "hexadecimal number", 
 ]).map((x)=>parseInt(x, 16)
 );
 const naturalNumberParser = hexadecimalNaturalParser.or(decimalNaturalParser).desc([
     "number"
 ]);
-function prettyError(fail, source) {
+function prettyError(fail1, source) {
     const lines = source.split(/\n|\r\n/);
-    const above = lines[fail.location.line - 2];
-    const errorLine = lines[fail.location.line - 1];
-    const below = lines[fail.location.line];
-    const arrowLine = " ".repeat(Math.max(0, fail.location.column - 1)) + "^";
+    const above = lines[fail1.location.line - 2];
+    const errorLine = lines[fail1.location.line - 1];
+    const below = lines[fail1.location.line];
+    const arrowLine = " ".repeat(Math.max(0, fail1.location.column - 1)) + "^";
     const errorLines = [
         ...above === undefined ? [] : [
             above
@@ -383,8 +387,8 @@ function prettyError(fail, source) {
     ].map((x)=>"| " + x
     );
     return [
-        `parse error at line ${fail.location.line} column ${fail.location.column}:`,
-        `  expected ${fail.expected.join(", ")}`,
+        `parse error at line ${fail1.location.line} column ${fail1.location.column}:`,
+        `  expected ${fail1.expected.join(", ")}`,
         ``,
         ...errorLines, 
     ].join("\n");
@@ -397,8 +401,7 @@ function parsePretty(parser, source) {
     throw Error(prettyError(res, source));
 }
 class APGMExpr {
-    constructor(){
-    }
+    constructor(){}
 }
 class FuncAPGMExpr extends APGMExpr {
     name;
@@ -453,9 +456,9 @@ class Main {
     macros;
     headers;
     seqExpr;
-    constructor(macros, headers, seqExpr){
+    constructor(macros, headers1, seqExpr){
         this.macros = macros;
-        this.headers = headers;
+        this.headers = headers1;
         this.seqExpr = seqExpr;
         if (macros.length >= 1) {
             if (!(macros[0] instanceof Macro)) {
@@ -534,25 +537,25 @@ class WhileAPGMExpr extends APGMExpr {
         return f(new WhileAPGMExpr(this.modifier, this.cond.transform(f), this.body.transform(f)));
     }
 }
-const comment = mod1.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([]);
-const _ = mod1.match(/\s*/).desc([
+const comment = mod.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([]);
+const _ = mod.match(/\s*/).desc([
     "space"
 ]).sepBy(comment).map(()=>undefined
 );
-const someSpaces = mod1.match(/\s+/).desc([
+const someSpaces = mod.match(/\s+/).desc([
     "space"
 ]);
 const identifierRexExp = /[a-zA-Z_][a-zA-Z_0-9]*/u;
-const identifierOnly = mod1.match(identifierRexExp).desc([
+const identifierOnly = mod.match(identifierRexExp).desc([
     "identifier"
 ]);
 const identifier = _.next(identifierOnly).skip(_);
 const macroIdentifierRegExp = /[a-zA-Z_][a-zA-Z_0-9]*!/u;
-const macroIdentifier = _.next(mod1.match(macroIdentifierRegExp)).skip(_).desc([
+const macroIdentifier = _.next(mod.match(macroIdentifierRegExp)).skip(_).desc([
     "macro name"
 ]);
 function token(s) {
-    return _.next(mod1.text(s)).skip(_);
+    return _.next(mod.text(s)).skip(_);
 }
 const comma = token(",").desc([
     "`,`"
@@ -569,8 +572,8 @@ const semicolon = token(";").desc([
 const varAPGMExpr = identifier.map((x)=>new VarAPGMExpr(x)
 );
 function funcAPGMExpr() {
-    return mod1.choice(macroIdentifier, identifier).chain((ident)=>{
-        return mod1.lazy(()=>apgmExpr()
+    return mod.choice(macroIdentifier, identifier).chain((ident)=>{
+        return mod.lazy(()=>apgmExpr()
         ).sepBy(comma).wrap(leftParen, rightParen).map((args)=>{
             return new FuncAPGMExpr(ident, args);
         });
@@ -578,72 +581,72 @@ function funcAPGMExpr() {
 }
 const numberAPGMExpr = _.next(naturalNumberParser.map((x)=>new NumberAPGMExpr(x)
 )).skip(_);
-const stringLit = _.next(mod1.text(`"`)).next(mod1.match(/[^"]*/)).skip(mod1.text(`"`)).skip(_).desc([
+const stringLit = _.next(mod.text(`"`)).next(mod.match(/[^"]*/)).skip(mod.text(`"`)).skip(_).desc([
     "string"
 ]);
 const stringAPGMExpr = stringLit.map((x)=>new StringAPGMExpr(x)
 );
 function seqAPGMExprRaw() {
-    return mod1.lazy(()=>statement()
+    return mod.lazy(()=>statement()
     ).repeat();
 }
 function seqAPGMExpr() {
     return seqAPGMExprRaw().wrap(token("{"), token("}")).map((x)=>new SeqAPGMExpr(x)
     );
 }
-const whileKeyword = mod1.choice(token("while_z"), token("while_nz")).map((x)=>x === "while_z" ? "Z" : "NZ"
+const whileKeyword = mod.choice(token("while_z"), token("while_nz")).map((x)=>x === "while_z" ? "Z" : "NZ"
 );
-const exprWithParen = mod1.lazy(()=>apgmExpr()
+const exprWithParen = mod.lazy(()=>apgmExpr()
 ).wrap(leftParen, rightParen);
 function whileAPGMExpr() {
-    return whileKeyword.chain((mod)=>{
+    return whileKeyword.chain((mod1)=>{
         return exprWithParen.chain((cond)=>{
-            return mod1.lazy(()=>apgmExpr()
-            ).map((body)=>new WhileAPGMExpr(mod, cond, body)
+            return mod.lazy(()=>apgmExpr()
+            ).map((body)=>new WhileAPGMExpr(mod1, cond, body)
             );
         });
     });
 }
 function loopAPGMExpr() {
-    return token("loop").next(mod1.lazy(()=>apgmExpr()
+    return token("loop").next(mod.lazy(()=>apgmExpr()
     )).map((x)=>new LoopAPGMExpr(x)
     );
 }
-const ifKeyword = mod1.choice(token("if_z"), token("if_nz")).map((x)=>x === "if_z" ? "Z" : "NZ"
+const ifKeyword = mod.choice(token("if_z"), token("if_nz")).map((x)=>x === "if_z" ? "Z" : "NZ"
 );
 function ifAPGMExpr() {
-    return ifKeyword.chain((mod)=>{
+    return ifKeyword.chain((mod2)=>{
         return exprWithParen.chain((cond)=>{
-            return mod1.lazy(()=>apgmExpr()
+            return mod.lazy(()=>apgmExpr()
             ).chain((body)=>{
-                return mod1.choice(token("else").next(mod1.lazy(()=>apgmExpr()
-                )), mod1.ok(undefined)).map((elseBody)=>{
-                    return new IfAPGMExpr(mod, cond, body, elseBody);
+                return mod.choice(token("else").next(mod.lazy(()=>apgmExpr()
+                )), mod.ok(undefined)).map((elseBody)=>{
+                    return new IfAPGMExpr(mod2, cond, body, elseBody);
                 });
             });
         });
     });
 }
 function macro() {
-    return _.next(mod1.text("macro")).skip(someSpaces).next(macroIdentifier).chain((ident)=>{
+    return _.next(mod.text("macro")).skip(someSpaces).next(macroIdentifier).chain((ident)=>{
         return leftParen.next(varAPGMExpr.sepBy(comma).skip(rightParen)).chain((args)=>{
-            return mod1.lazy(()=>apgmExpr()
+            return mod.lazy(()=>apgmExpr()
             ).map((body)=>{
                 return new Macro(ident, args, body);
             });
         });
     });
 }
-const header = mod1.text("#").next(mod1.match(/REGISTERS|COMPONENTS/)).desc([
+const header = mod.text("#").next(mod.match(/REGISTERS|COMPONENTS/)).desc([
     "#REGISTERS",
     "#COMPONENT"
-]).chain((x)=>mod1.match(/.*/).map((c)=>new Header(x, c)
+]).chain((x)=>mod.match(/.*/).map((c)=>new Header(x, c)
     )
 );
-const headers1 = _.next(header).skip(_).repeat();
-function main1() {
+const headers = _.next(header).skip(_).repeat();
+function main() {
     return macro().repeat().chain((macros)=>{
-        return headers1.chain((h)=>{
+        return headers.chain((h)=>{
             return _.next(seqAPGMExprRaw()).skip(_).map((x)=>{
                 return new Main(macros, h, new SeqAPGMExpr(x));
             });
@@ -651,17 +654,16 @@ function main1() {
     });
 }
 function parseMain(str) {
-    return parsePretty(main1(), str);
+    return parsePretty(main(), str);
 }
 function apgmExpr() {
-    return mod1.choice(loopAPGMExpr(), whileAPGMExpr(), ifAPGMExpr(), funcAPGMExpr(), seqAPGMExpr(), varAPGMExpr, numberAPGMExpr, stringAPGMExpr);
+    return mod.choice(loopAPGMExpr(), whileAPGMExpr(), ifAPGMExpr(), funcAPGMExpr(), seqAPGMExpr(), varAPGMExpr, numberAPGMExpr, stringAPGMExpr);
 }
 function statement() {
-    return mod1.choice(loopAPGMExpr(), whileAPGMExpr(), ifAPGMExpr(), apgmExpr().skip(semicolon));
+    return mod.choice(loopAPGMExpr(), whileAPGMExpr(), ifAPGMExpr(), apgmExpr().skip(semicolon));
 }
 class APGLExpr {
-    constructor(){
-    }
+    constructor(){}
 }
 class ActionAPGLExpr extends APGLExpr {
     actions;
@@ -951,8 +953,7 @@ class Transpiler {
     id = 0;
     loopFinalStates = [];
     prefix = "STATE";
-    constructor(){
-    }
+    constructor(){}
     getFreshName() {
         this.id++;
         return `${this.prefix}_${this.id}`;
@@ -1171,9 +1172,9 @@ class MacroExpander {
     count = 0;
     maxCount = 100000;
     main;
-    constructor(main){
-        this.main = main;
-        this.macroMap = new Map(main.macros.map((m)=>[
+    constructor(main1){
+        this.main = main1;
+        this.macroMap = new Map(main1.macros.map((m)=>[
                 m.name,
                 m
             ]
@@ -1199,9 +1200,9 @@ class MacroExpander {
     }
     expandFuncAPGMExpr(funcExpr) {
         if (this.macroMap.has(funcExpr.name)) {
-            const macro = this.macroMap.get(funcExpr.name);
-            if (macro === undefined) throw Error("internal error");
-            const expanded = this.replaceVarInBoby(macro, funcExpr.args);
+            const macro1 = this.macroMap.get(funcExpr.name);
+            if (macro1 === undefined) throw Error("internal error");
+            const expanded = this.replaceVarInBoby(macro1, funcExpr.args);
             return this.expandExpr(expanded);
         } else {
             return funcExpr;
@@ -1210,16 +1211,16 @@ class MacroExpander {
     error() {
         throw Error("Internal error");
     }
-    replaceVarInBoby(macro, exprs) {
-        if (exprs.length !== macro.args.length) {
-            throw Error(`argment length mismatch: "${macro.name}"`);
+    replaceVarInBoby(macro2, exprs) {
+        if (exprs.length !== macro2.args.length) {
+            throw Error(`argment length mismatch: "${macro2.name}"`);
         }
-        const map = new Map(macro.args.map((a, i)=>[
+        const map = new Map(macro2.args.map((a, i)=>[
                 a.name,
                 exprs[i] ?? this.error()
             ]
         ));
-        return macro.body.transform((x)=>{
+        return macro2.body.transform((x)=>{
             if (x instanceof VarAPGMExpr) {
                 const expr = map.get(x.name);
                 if (expr === undefined) {
@@ -1232,10 +1233,10 @@ class MacroExpander {
         });
     }
 }
-function expand(main) {
-    return new MacroExpander(main).expand();
+function expand(main2) {
+    return new MacroExpander(main2).expand();
 }
-function integration1(str, log = false) {
+function integration(str, log = false) {
     const apgm = parseMain(str);
     if (log) {
         console.log("apgm", JSON.stringify(apgm, null, "  "));
@@ -1249,12 +1250,12 @@ function integration1(str, log = false) {
         console.log("apgl", JSON.stringify(apgl, null, "  "));
     }
     const apgs = transpileAPGL(apgl);
-    const comment = [
+    const comment1 = [
         "# State    Input    Next state    Actions",
         "# ---------------------------------------", 
     ];
     const head = apgm.headers.map((x)=>x.toString()
     );
-    return head.concat(comment, apgs);
+    return head.concat(comment1, apgs);
 }
-export { integration1 as integration };
+export { integration as integration };

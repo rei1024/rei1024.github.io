@@ -61,176 +61,145 @@ LSB2; Z; LSB2; HALT_OUT
 LSB2; NZ; LSB2; TDEC B0
 `;
 
-test('Program empty', () => {
-    const program = Program.parse('');
+/**
+ * @param {string} str
+ * @returns {string} error message
+ */
+function parseProgramExpectError(str) {
+    const program = Program.parse(str);
     if (program instanceof Program) {
-        throw Error('expected parse error');
+        throw Error('expected parse error: ' + str.slice(0, 80));
     } else {
-        assertEquals(program, 'Program is empty');
+        return program;
     }
+}
+
+test('Program empty', () => {
+    const src = '';
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(errorMessage, 'Program is empty');
 });
 
 test('Program multiple $REGISTERS', () => {
-    const program = Program.parse(`
+    const src = `
 #COMPONENTS U0-1,HALT_OUT
 #REGISTERS {"U0":7, "U1":5}
 #REGISTERS {"U0":7, "U1":5}
-INITIAL; ZZ; ID1; TDEC U0`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        assertEquals(program, 'Multiple #REGISTER');
-    }
+INITIAL; ZZ; ID1; TDEC U0`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(errorMessage, 'Multiple #REGISTERS');
 });
 
 test('Program multiple $COMPONENTS', () => {
-    const program = Program.parse(`
+    const src = `
 #COMPONENTS U0-1,HALT_OUT
 #COMPONENTS U0-1,HALT_OUT
 #REGISTERS {"U0":7, "U1":5}
-INITIAL; ZZ; ID1; TDEC U0`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        assertEquals(program, 'Multiple #COMPONENTS');
-    }
+INITIAL; ZZ; ID1; TDEC U0`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(errorMessage, 'Multiple #COMPONENTS');
 });
 
 test('Program duplicated actions', () => {
-    const program = Program.parse(`
+    const src = `
     INITIAL; ZZ; A0; NOP, NOP
-    A0; *; A0; NOP`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        assertEquals(
-            program,
-            `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"
+    A0; *; A0; NOP`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(errorMessage, `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"
 Does not contain exactly one action that produces a return value in "INITIAL; ZZ; A0; NOP, NOP": Actions that produce value are "NOP", "NOP"
-Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`
-        );
-    }
+Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`);
 });
 
 test('Program return one value: no return', () => {
-    const program = Program.parse(`
+    const src = `
     INITIAL; ZZ; A0; OUTPUT 1
-    A0; *; A0; NOP`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        assertEquals(
-            program,
-            'Does not produce the return value in "INITIAL; ZZ; A0; OUTPUT 1"'
-        );
-    }
+    A0; *; A0; NOP`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(errorMessage, `Does not produce the return value in "INITIAL; ZZ; A0; OUTPUT 1"`);
 });
 
 test('Program return one value', () => {
-    const program = Program.parse(`
+    const src = `
     INITIAL; ZZ; A0; NOP, TDEC U0
-    A0; *; A0; NOP`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        assertEquals(
-            program,
-            'Does not contain exactly one action that produces a return value in' +
-            ' "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that produce value are "NOP", "TDEC U0"'
-        );
-    }
+    A0; *; A0; NOP`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(
+        errorMessage,
+        'Does not contain exactly one action that produces a return value in' +
+        ' "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that produce value are "NOP", "TDEC U0"'
+    );
 });
 
 test('Program same component actions U', () => {
-    const program = Program.parse(`
+    const src = `
     INITIAL; ZZ; A0; INC U0, TDEC U0
-    A0; *; A0; NOP`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        assertEquals(
-            program,
-            `Actions "INC U0" and "TDEC U0" use same component in ` +
-            `"INITIAL; ZZ; A0; INC U0, TDEC U0"`
-        );
-    }
+    A0; *; A0; NOP`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(
+        errorMessage,
+        `Actions "INC U0" and "TDEC U0" use same component in ` +
+        `"INITIAL; ZZ; A0; INC U0, TDEC U0"`
+    );
 });
 
 test('Program same component actions SUB', () => {
-    const program = Program.parse(`
+    const src = `
     INITIAL; ZZ; A0; SUB A1, SUB B0
-    A0; *; A0; NOP`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        assertEquals(
-            program,
-            `Actions "SUB A1" and "SUB B0" use same component in ` +
-            `"INITIAL; ZZ; A0; SUB A1, SUB B0"`
-        );
-    }
+    A0; *; A0; NOP`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(
+        errorMessage,
+        `Actions "SUB A1" and "SUB B0" use same component in ` +
+        `"INITIAL; ZZ; A0; SUB A1, SUB B0"`
+    );
 });
 
 test('Program same component actions B', () => {
-    const program = Program.parse(`
+    const src = `
     INITIAL; ZZ; A0; INC B0, TDEC B0
-    A0; *; A0; NOP`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        assertEquals(
-            program,
-            `Actions "INC B0" and "TDEC B0"` +
-            ` use same component in "INITIAL; ZZ; A0; INC B0, TDEC B0"`
-        );
-    }
+    A0; *; A0; NOP`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(
+        errorMessage,
+        `Actions "INC B0" and "TDEC B0"` +
+        ` use same component in "INITIAL; ZZ; A0; INC B0, TDEC B0"`
+    );
 });
 
 test('Program same component actions OUTPUT', () => {
-    const program = Program.parse(`
+    const src = `
     INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2
-    A0; *; A0; NOP`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        assertEquals(
-            program,
-            `Actions "OUTPUT 1" and "OUTPUT 2" use same component in ` +
-            `"INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2"`
-        );
-    }
+    A0; *; A0; NOP`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(
+        errorMessage,
+        `Actions "OUTPUT 1" and "OUTPUT 2" use same component in ` +
+        `"INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2"`
+    );
 });
 
 test('Program Z and NZ', () => {
-    const program = Program.parse(`
-INITIAL; ZZ; ID1; TDEC U0
-ID1; Z; ID1; HALT_OUT
-# ID1; NZ; ID1; TDEC U1`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        console.log(program);
-        assertEquals(
-            program,
-            `Need Z line followed by NZ line at "ID1; Z; ID1; HALT_OUT"`
-        );
-    }
+    const src = `
+    INITIAL; ZZ; ID1; TDEC U0
+    ID1; Z; ID1; HALT_OUT
+    # ID1; NZ; ID1; TDEC U1`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(
+        errorMessage,
+        `Need Z line followed by NZ line at "ID1; Z; ID1; HALT_OUT"`
+    );
 });
 
 test('Program Z and NZ 2', () => {
-    const program = Program.parse(`
-INITIAL; ZZ; ID1; TDEC U0
-# ID1; Z; ID1; HALT_OUT
-ID1; NZ; ID1; TDEC U1`);
-    if (program instanceof Program) {
-        throw Error('expected parse error');
-    } else {
-        console.log(program);
-        assertEquals(
-            program,
-            `Need Z line followed by NZ line at "ID1; NZ; ID1; TDEC U1"`
-        );
-    }
+    const src = `
+    INITIAL; ZZ; ID1; TDEC U0
+    # ID1; Z; ID1; HALT_OUT
+    ID1; NZ; ID1; TDEC U1`;
+    const errorMessage = parseProgramExpectError(src);
+    assertEquals(
+        errorMessage,
+        `Need Z line followed by NZ line at "ID1; NZ; ID1; TDEC U1"`
+    );
 });
 
 test('Program pretty program9_1', () => {

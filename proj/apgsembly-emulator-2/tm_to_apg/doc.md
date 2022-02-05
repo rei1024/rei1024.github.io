@@ -1,6 +1,6 @@
 ## Turing machine simulators
 * https://turingmachinesimulator.com/
-* http://morphett.info/turing/turing.html
+* https://morphett.info/turing/turing.html
    * 巨大数Wikiもこの記法をよく使っているのでこれをinputとする
 
 * https://googology.wikia.org/wiki/User_blog:Ikosarakt1/My_Turing_machine_programs

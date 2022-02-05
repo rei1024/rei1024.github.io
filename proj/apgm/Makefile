@@ -3,7 +3,7 @@ t:
 w:
 	deno test --watch
 fmt:
-	deno fmt --options-indent-width=4 --ignore=dist/integraion.js
+	deno fmt --options-indent-width=4
 reload:
 	deno test --reload
 up:

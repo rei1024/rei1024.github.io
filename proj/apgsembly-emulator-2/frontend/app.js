@@ -289,10 +289,10 @@ export class App {
                 const br = document.createElement('br');
                 $error.append(span, br);
             }
-            $error.style.display = "block";
+            $error.classList.remove('d-none');
             console.error("RENDER: " + this.errorMessage);
         } else {
-            $error.style.display = "none";
+            $error.classList.add('d-none');
         }
     }
 

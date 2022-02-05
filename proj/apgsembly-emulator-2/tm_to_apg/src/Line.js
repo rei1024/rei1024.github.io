@@ -47,9 +47,10 @@ export class Line {
      *  newSymbol: string | undefined // undefined for no change
      *  direction: Direction
      *  newState: string | undefined // undefined for no change
+     *  breakpoint?: boolean | undefined // default is false
      * }} param0
      */
-    constructor({ currentState, currentSymbol, newSymbol, direction, newState }) {
+    constructor({ currentState, currentSymbol, newSymbol, direction, newState, breakpoint }) {
         /**
          * @type {string | undefined}
          * @readonly
@@ -79,6 +80,12 @@ export class Line {
          * @readonly
          */
         this.newState = newState;
+
+        /**
+         * @type {boolean}
+         * @readonly
+         */
+        this.breakpoint = breakpoint ?? false;
     }
 
     /**
@@ -88,10 +95,11 @@ export class Line {
      * @param {string | undefined} newSymbol
      * @param {Direction} direction
      * @param {string | undefined} newState
+     * @param {boolean | undefined} breakpoint
      * @returns {Line}
      */
-    static make(currentState, currentSymbol, newSymbol, direction, newState) {
-        return new Line({ currentState, currentSymbol, newSymbol, direction, newState });
+    static make(currentState, currentSymbol, newSymbol, direction, newState, breakpoint = undefined) {
+        return new Line({ currentState, currentSymbol, newSymbol, direction, newState, breakpoint });
     }
 
     /**
@@ -119,7 +127,9 @@ export class Line {
             newSymbol,
             // eslint-disable-next-line prefer-const
             dirStr,
-            newState
+            newState,
+            // eslint-disable-next-line prefer-const
+            breakpoint,
         ] = array;
 
         if (dirStr === undefined) {
@@ -148,7 +158,23 @@ export class Line {
             newState = undefined;
         }
 
-        return new Line({ currentState, currentSymbol, newSymbol, direction, newState });
+        let breakpointBoolean = undefined;
+        if (breakpoint !== undefined) {
+            if (breakpoint === "!") {
+                breakpointBoolean = true;
+            } else {
+                return Error(`breakpoint is "!" but it is "${breakpoint}" at "${str}".`);
+            }
+        }
+
+        return new Line({
+            currentState,
+            currentSymbol,
+            newSymbol,
+            direction,
+            newState,
+            breakpoint: breakpointBoolean
+        });
     }
 
     /**
