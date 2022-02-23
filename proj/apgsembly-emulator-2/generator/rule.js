@@ -93,6 +93,8 @@ export function generate(rule) {
     /** @type {Array<string>} */
     const array = [];
     array.push(`# Rule ${rule}`);
+    array.push(`# State    Input    Next state    Actions`);
+    array.push(`# ---------------------------------------`);
     // Set ON cell at (0, 0)
     array.push(`INITIAL; ZZ; NEXT_S${boundary}${boundary}_READ_1; SET B2D, NOP`);
     // Current cursor is on the cell that will be read

@@ -16,7 +16,8 @@ test("UReg tdec", () => {
 test("UReg inc", () => {
     const x = new UReg();
     assertEquals(x.getValue(), 0);
-    x.inc();
+    const res = x.inc();
+    assertEquals(res, undefined);
     assertEquals(x.getValue(), 1);
     assertEquals(x.tdec(), 1);
     assertEquals(x.getValue(), 0);

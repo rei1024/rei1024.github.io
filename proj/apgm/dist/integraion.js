@@ -475,11 +475,8 @@ class Header {
         this.content = content;
     }
     toString() {
-        if (this.content.startsWith(" ")) {
-            return `#${this.name}${this.content}`;
-        } else {
-            return `#${this.name} ${this.content}`;
-        }
+        const space = this.content.startsWith(" ") ? "" : " ";
+        return `#${this.name}${space}${this.content}`;
     }
 }
 class NumberAPGMExpr extends APGMExpr {

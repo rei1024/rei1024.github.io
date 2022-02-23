@@ -1,5 +1,8 @@
 import { APGMExpr } from "./core.ts";
 
+/**
+ * Function call
+ */
 export class FuncAPGMExpr extends APGMExpr {
     transform(f: (_: APGMExpr) => APGMExpr): APGMExpr {
         return f(

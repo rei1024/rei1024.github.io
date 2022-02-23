@@ -26,6 +26,7 @@ export class Machine {
         if (!(program instanceof Program)) {
             throw TypeError('program is not a Program');
         }
+
         /**
          * @readonly
          */

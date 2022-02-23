@@ -3,6 +3,9 @@
 # U0: Initial x coordinate
 # U1: Initial y coordinate
 #REGISTERS { "U0": 30, "U1": 30 }
+
+# State    Input    Next state    Actions
+# ---------------------------------------
 INITIAL; ZZ; SET_X_1; NOP
 
 # Move to (30, 30)

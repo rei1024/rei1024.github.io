@@ -2,6 +2,7 @@
     vertical-align: middle;
 }
 
+/* 改行なし */
 .white-space-nowrap {
     white-space: nowrap;
 }

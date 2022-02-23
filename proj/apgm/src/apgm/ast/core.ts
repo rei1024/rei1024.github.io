@@ -1,3 +1,6 @@
+/**
+ * Expression of APGM language
+ */
 export abstract class APGMExpr {
     constructor() {
     }

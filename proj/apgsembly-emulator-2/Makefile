@@ -1,9 +1,9 @@
 up:
 	file_server . -p 1123
 t:
-	deno test --no-check src/ test/ apgdsl/ turmites/ tm_to_apg/ transpiler/ fast_emulator/
+	deno test --no-check src/ test/ apgdsl/ turmites/ tm_to_apg/ transpiler/ fast_emulator/ generator/
 w:
-	deno test --watch --no-check src/ test/ apgdsl/ turmites/ tm_to_apg/ transpiler/ fast_emulator/
+	deno test --watch --no-check src/ test/ apgdsl/ turmites/ tm_to_apg/ transpiler/ fast_emulator/ generator/
 cy:
 	npm run cypress:open
 lint:

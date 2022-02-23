@@ -10,6 +10,7 @@ on:
       - "apgdsl/**"
       - "tm_to_apg/**"
       - "turmites/**"
+      - "fast_emulator/**"
   pull_request:
     branches: [main]
     paths:
@@ -19,6 +20,7 @@ on:
       - "apgdsl/**"
       - "tm_to_apg/**"
       - "turmites/**"
+      - "fast_emulator/**"
 jobs:
   test:
     runs-on: ubuntu-latest

@@ -177,7 +177,7 @@ export class BReg {
     }
 
     /**
-     * @param {number} [base]
+     * @param {number} [base] default is 10
      * @private
      */
     toString(base = 10) {

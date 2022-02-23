@@ -93,7 +93,7 @@ export class RegistersHeader extends ProgramLine {
 export class Comment extends ProgramLine {
     /**
      *
-     * @param {string} str
+     * @param {string} str with #
      */
     constructor(str) {
         super();

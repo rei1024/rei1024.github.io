@@ -18,4 +18,10 @@ test('OutputAction isSameComponent', () => {
         ),
         true
     );
+    assertEquals(
+        OutputAction.parse('OUTPUT A')?.isSameComponent(
+            OutputAction.parse('OUTPUT B')
+        ),
+        true
+    );
 });

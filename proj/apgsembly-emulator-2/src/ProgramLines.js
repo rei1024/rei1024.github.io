@@ -1,6 +1,9 @@
 // @ts-check
 
-import { Command, Comment, ComponentsHeader, EmptyLine, ProgramLine, RegistersHeader } from "./Command.js";
+import {
+    Command,
+    ProgramLine,
+} from "./Command.js";
 
 /**
  * プログラムの行の配列
@@ -34,6 +37,7 @@ export class ProgramLines {
     }
 
     /**
+     * 1行をパース
      * stringはエラーメッセージ
      * string is an error
      * @param {string} str
@@ -41,28 +45,19 @@ export class ProgramLines {
      */
     static parse(str) {
         const lines = str.split(/\r\n|\n|\r/u);
-        /** @type {ProgramLine[]} */
-        const array = [];
-        for (const line of lines) {
-            const res = Command.parse(line);
-            if (typeof res === 'string') {
-                // エラーメッセージ
-                return res;
-            } else if (res instanceof Command) {
-                array.push(res);
-            } else if (res instanceof Comment) {
-                array.push(res);
-            } else if (res instanceof RegistersHeader) {
-                array.push(res);
-            } else if (res instanceof ComponentsHeader) {
-                array.push(res);
-            } else if (res instanceof EmptyLine) {
-                array.push(res);
-            } else {
-                throw Error('ProgramLines.parse: internal error ' + line);
-            }
+
+        const programLineWithErrorArray = lines.map(line => Command.parse(line));
+
+        const errors = programLineWithErrorArray
+            .flatMap(x => typeof x === 'string' ? [x] : []);
+
+        if (errors.length > 0) {
+            return errors.join('\n');
         }
 
-        return new ProgramLines(array);
+        const programLines = programLineWithErrorArray
+            .flatMap(x => typeof x !== 'string' ? [x] : []);
+
+        return new ProgramLines(programLines);
     }
 }

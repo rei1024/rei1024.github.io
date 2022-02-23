@@ -31,7 +31,7 @@ import { LegacyTReg } from "./components/LegacyTReg.js";
  */
 
 /**
- * Execute action
+ * Execute an action
  */
 export class ActionExecutor {
     /**

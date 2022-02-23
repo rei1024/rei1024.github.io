@@ -57,7 +57,12 @@ $generate.addEventListener('click', () => {
     } else {
         $copy.disabled = false;
         if (comment !== '') {
-            $output.value = [`# ${comment}`, apg].join('\n');
+            $output.value = [
+                `# ${comment}`,
+                `# State    Input    Next state    Actions`,
+                `# ---------------------------------------`,
+                apg
+            ].join('\n');
         } else {
             $output.value = [apg].join('\n');
         }

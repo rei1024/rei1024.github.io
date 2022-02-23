@@ -23,7 +23,6 @@ export class UReg {
             // INC  12414041
             // TDEC 12437599
             case U_TDEC: {
-                // dec()と合わせること
                 if (this.value === 0) {
                     return 0;
                 } else {
@@ -32,7 +31,7 @@ export class UReg {
                 }
             }
             case U_INC: {
-                this.value++; // inc()と合わせること
+                this.value++;
             }
         }
     }
@@ -57,7 +56,7 @@ export class UReg {
      * @returns {void}
      */
     inc() {
-        this.value++; // actionにも同じ処理を書く
+        this.action(new URegAction(U_INC, 0)); // regNumberは仮
     }
 
     /**
@@ -65,12 +64,11 @@ export class UReg {
      * @returns {0 | 1}
      */
     tdec() {
-        if (this.value === 0) {
-            return 0;
-        } else {
-            this.value--;
-            return 1;
+        const res = this.action(new URegAction(U_TDEC, 0)); // regNumberは仮
+        if (res === undefined) {
+            throw Error('internal error');
         }
+        return res;
     }
 
     /**

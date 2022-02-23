@@ -21,10 +21,12 @@ test('BReg set inc', () => {
     const x = new BReg();
     assertEquals(x.getBits(), [0]);
     assertEquals(x.pointer, 0);
-    x.set();
+    const setRes = x.set();
+    assertEquals(setRes, undefined);
     assertEquals(x.getBits(), [1]);
     assertEquals(x.pointer, 0);
-    x.inc();
+    const res = x.inc();
+    assertEquals(res, undefined);
     assertEquals(x.getBits(), [1, 0]);
     assertEquals(x.pointer, 1);
 });

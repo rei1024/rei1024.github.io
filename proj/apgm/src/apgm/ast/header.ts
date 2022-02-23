@@ -8,10 +8,7 @@ export class Header {
     ) {}
 
     toString(): string {
-        if (this.content.startsWith(" ")) {
-            return `#${this.name}${this.content}`;
-        } else {
-            return `#${this.name} ${this.content}`;
-        }
+        const space = this.content.startsWith(" ") ? "" : " ";
+        return `#${this.name}${space}${this.content}`;
     }
 }

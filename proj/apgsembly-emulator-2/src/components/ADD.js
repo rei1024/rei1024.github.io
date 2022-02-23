@@ -92,6 +92,6 @@ export class ADD {
      */
     toStringDetail() {
         const str = this.toString();
-        return `${str.slice(0, 3)} bit${ str.slice(3)}`;
+        return `${str.slice(0, 3)} bit${str.slice(3)}`;
     }
 }
