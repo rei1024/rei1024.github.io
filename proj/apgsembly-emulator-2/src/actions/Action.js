@@ -23,7 +23,6 @@ export class Action {
         return [];
     }
 
-
     /**
      * アクションに含まれるバイナリレジスタのレジスタ番号を返す。
      * @returns {number[]}

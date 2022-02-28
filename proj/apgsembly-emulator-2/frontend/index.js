@@ -3,7 +3,7 @@
 // critical path
 import {} from "./util/selector.js";
 import {} from "./util/frequency.js";
-import {} from "./render_component/renderB2D.js";
+import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
 import {} from "./components/stats_ui.js";

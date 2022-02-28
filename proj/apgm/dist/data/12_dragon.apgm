@@ -128,12 +128,11 @@ macro b2dx_minus_y!() {
   });
 }
 
-/* B0: FX */
 #REGISTERS { "U0": 7, "U1": 40, "U2": 40, "B0": [0, "101111"] }
 
 /* generate next symbols */
 while_nz(tdec_u(NUMBER!())) {
-  /* write to B1 */
+  /* write next symbols */
   loop {
     if_z(read_b(CURR!())) {
       break();

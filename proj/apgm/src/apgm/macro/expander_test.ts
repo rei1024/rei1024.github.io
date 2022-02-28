@@ -12,7 +12,7 @@ import {
     VarAPGMExpr,
     WhileAPGMExpr,
 } from "../ast/mod.ts";
-import { assertEquals, test } from "../../deps_test.ts";
+import { assertEquals, assertThrows, test } from "../../deps_test.ts";
 
 test("expand", () => {
     const macros: Macro[] = [
@@ -32,5 +32,30 @@ test("expand", () => {
         new SeqAPGMExpr([
             new FuncAPGMExpr("output", [new StringAPGMExpr("3")]),
         ]),
+    );
+});
+
+test("duplicate macro", () => {
+    const macros: Macro[] = [
+        new Macro(
+            "f!",
+            [new VarAPGMExpr("x")],
+            new FuncAPGMExpr("output", [new VarAPGMExpr("x")]),
+        ),
+        new Macro(
+            "f!",
+            [new VarAPGMExpr("x")],
+            new FuncAPGMExpr("output", [new VarAPGMExpr("x")]),
+        ),
+    ];
+    const body = new SeqAPGMExpr([
+        new FuncAPGMExpr("f!", [new StringAPGMExpr("3")]),
+    ]);
+    assertThrows(
+        () => {
+            expand(new Main(macros, [], body));
+        },
+        Error,
+        'duplicate definition of macro: "f!"',
     );
 });

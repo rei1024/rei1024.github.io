@@ -2,8 +2,8 @@
 
 // @ts-ignore
 import * as Comlink from "https://unpkg.com/comlink/dist/esm/comlink.mjs";
-import { Machine } from "../src/Machine.js";
-import { Program } from "../src/Program.js";
+import { Machine } from "../../src/Machine.js";
+import { Program } from "../../src/Program.js";
 
 export const App = {
     /**

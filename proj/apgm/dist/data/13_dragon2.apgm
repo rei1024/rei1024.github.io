@@ -1,0 +1,90 @@
+/*
+  WIP
+*/
+macro CURR!() 0
+macro NEXT!() 1
+macro NUMBER!() 0
+
+/*
+L R
+1 2
+*/
+
+macro go_to_last!(i) {
+  loop {
+    if_z(read_b(i)) {
+      inc_b(i);
+      if_z(read_b(i)) {
+        break();
+      } else {
+        set_b(i);
+        inc_b(i);
+      }
+    } else {
+      set_b(i);
+      inc_b(i);
+    }
+  }
+}
+
+macro back_to_zero_b!(n) {
+  while_nz(tdec_b(n)) {}
+}
+
+macro next_to_curr!() {
+  back_to_zero_b!(CURR!());
+  back_to_zero_b!(NEXT!());
+
+  /* break if 0 is appeared twice */
+  loop {
+    if_z (read_b(NEXT!())) {
+      inc_b(CURR!());
+      inc_b(NEXT!());
+      if_z (read_b(NEXT!())) {
+        break();
+      } else {
+        set_b(CURR!());
+        inc_b(CURR!());
+        inc_b(NEXT!());
+      }
+    } else {
+      set_b(CURR!());
+      inc_b(CURR!());
+      inc_b(NEXT!());
+    }
+  }
+
+  back_to_zero_b!(CURR!());
+  back_to_zero_b!(NEXT!());
+}
+
+macro check!() {
+  inc_b(CURR!());
+  read_b(CURR!());
+}
+
+/* generate next symbols */
+while_nz(tdec_u(NUMBER!())) {
+  loop {
+    if_z(read_b(CURR!())) {
+      break();
+    } else if_z(check!()) {
+      set_b(CURR!());
+      /* L */
+      set_b(NEXT!());
+      inc_b(NEXT!());
+    } else if_z(check!()) {
+      set_b(CURR!());
+      /* R */
+      set_b(NEXT!());
+      inc_b(NEXT!());
+      set_b(NEXT!());
+      inc_b(NEXT!());
+    }
+    inc_b(CURR!()); /* read next */
+    inc_b(NEXT!());
+  }
+
+  /* move content of next symbols to current symbols */
+  next_to_curr!();
+}

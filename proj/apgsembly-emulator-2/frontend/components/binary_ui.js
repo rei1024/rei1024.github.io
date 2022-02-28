@@ -9,6 +9,9 @@ function error() {
     throw Error('error');
 }
 
+/**
+ * UI for binary registers
+ */
 export class BinaryUI {
     /**
      *
@@ -35,7 +38,7 @@ export class BinaryUI {
     }
 
     /**
-     *
+     * initialize DOM
      * @param {Map<number, BReg>} regs
      */
     initialize(regs) {

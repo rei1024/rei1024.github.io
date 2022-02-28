@@ -1,6 +1,7 @@
 // @ts-check
 
 /**
+ * Asserts that the element found by `selector` is a instance of `klass`
  * @type {<T extends Element>(selector: string, klass: new () => T) => T}
  * @throws {Error}
  */

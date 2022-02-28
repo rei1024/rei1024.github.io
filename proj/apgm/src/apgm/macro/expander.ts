@@ -5,6 +5,7 @@ import {
     Main,
     VarAPGMExpr,
 } from "../ast/mod.ts";
+import { dups } from "./_dups.ts";
 
 export class MacroExpander {
     private readonly macroMap: Map<string, Macro>;
@@ -14,6 +15,11 @@ export class MacroExpander {
     constructor(main: Main) {
         this.main = main;
         this.macroMap = new Map(main.macros.map((m) => [m.name, m]));
+        if (this.macroMap.size < main.macros.length) {
+            const ds = dups(main.macros.map((x) => x.name));
+            const d = ds[0];
+            throw Error('duplicate definition of macro: "' + d + '"');
+        }
     }
 
     expand(): APGMExpr {

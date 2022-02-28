@@ -1,5 +1,8 @@
 // @ts-check
 
+/**
+ * UI for statistics
+ */
 export class StatsUI {
     /**
      *

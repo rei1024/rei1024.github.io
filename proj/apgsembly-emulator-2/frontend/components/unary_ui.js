@@ -4,6 +4,7 @@ import { UReg } from "../../src/components/UReg.js";
 
 /**
  * 1進数レジスタのUI
+ * UI for unary registers
  */
 export class UnaryUI {
     /**
@@ -25,6 +26,7 @@ export class UnaryUI {
     }
 
     /**
+     * initialize DOM
      * @param {Map<number, UReg>} regs
      */
     initialize(regs) {

@@ -1164,6 +1164,18 @@ class Transpiler {
 function transpileAPGL(expr) {
     return new Transpiler().transpile(expr);
 }
+function dups(as) {
+    const set = new Set();
+    const ds = [];
+    for (const a of as){
+        if (set.has(a)) {
+            ds.push(a);
+        } else {
+            set.add(a);
+        }
+    }
+    return ds;
+}
 class MacroExpander {
     macroMap;
     count = 0;
@@ -1176,6 +1188,12 @@ class MacroExpander {
                 m
             ]
         ));
+        if (this.macroMap.size < main1.macros.length) {
+            const ds = dups(main1.macros.map((x)=>x.name
+            ));
+            const d = ds[0];
+            throw Error('duplicate definition of macro: "' + d + '"');
+        }
     }
     expand() {
         return this.expandExpr(this.main.seqExpr);

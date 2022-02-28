@@ -5,7 +5,8 @@ import { Frequency } from "./util/frequency.js";
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 
-import { renderB2D } from "./render_component/renderB2D.js";
+// Components
+import { renderB2D } from "./components/renderB2D.js";
 import { UnaryUI } from "./components/unary_ui.js";
 import { BinaryUI } from "./components/binary_ui.js";
 import { StatsUI } from "./components/stats_ui.js";
