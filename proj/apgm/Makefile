@@ -1,9 +1,9 @@
 t:
-	deno test
+	deno test --config=deno.jsonc
 w:
-	deno test --watch
+	deno test --watch --config=deno.jsonc
 fmt:
-	deno fmt --options-indent-width=4
+	deno fmt --config=deno.jsonc
 reload:
 	deno test --reload
 up:

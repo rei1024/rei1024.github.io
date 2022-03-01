@@ -59,15 +59,17 @@ export const semicolon = token(";").desc(["`;`"]);
 export const varAPGMExpr = identifier.map((x) => new VarAPGMExpr(x));
 
 export function funcAPGMExpr(): bnb.Parser<FuncAPGMExpr> {
-    return bnb.choice(macroIdentifier, identifier).chain((ident) => {
-        return bnb.lazy(() => apgmExpr()).sepBy(comma).wrap(
-            leftParen,
-            rightParen,
-        ).map(
-            (args) => {
-                return new FuncAPGMExpr(ident, args);
-            },
-        );
+    return bnb.location.chain((location) => {
+        return bnb.choice(macroIdentifier, identifier).chain((ident) => {
+            return bnb.lazy(() => apgmExpr()).sepBy(comma).wrap(
+                leftParen,
+                rightParen,
+            ).map(
+                (args) => {
+                    return new FuncAPGMExpr(ident, args, location);
+                },
+            );
+        });
     });
 }
 
@@ -141,16 +143,21 @@ export function ifAPGMExpr() {
  *   x;
  * }
  */
-export function macro() {
-    return _.next(bnb.text("macro")).skip(someSpaces).next(macroIdentifier)
-        .chain((ident) => {
-            return leftParen.next(varAPGMExpr.sepBy(comma).skip(rightParen))
-                .chain((args) => {
-                    return bnb.lazy(() => apgmExpr()).map((body) => {
-                        return new Macro(ident, args, body);
+export function macro(): bnb.Parser<Macro> {
+    return _.chain((_) => {
+        return bnb.location.chain((location) => {
+            return bnb.text("macro").skip(someSpaces).next(macroIdentifier)
+                .chain((ident) => {
+                    return leftParen.next(
+                        varAPGMExpr.sepBy(comma).skip(rightParen),
+                    ).chain((args) => {
+                        return bnb.lazy(() => apgmExpr()).map((body) => {
+                            return new Macro(ident, args, body, location);
+                        });
                     });
                 });
         });
+    });
 }
 
 /* 改行を含まない */

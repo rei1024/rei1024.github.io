@@ -1,5 +1,7 @@
 import {
     APGMExpr,
+    formatLocation,
+    formatLocationAt,
     FuncAPGMExpr,
     Macro,
     Main,
@@ -18,7 +20,13 @@ export class MacroExpander {
         if (this.macroMap.size < main.macros.length) {
             const ds = dups(main.macros.map((x) => x.name));
             const d = ds[0];
-            throw Error('duplicate definition of macro: "' + d + '"');
+            const location = main.macros.slice().reverse().find((x) =>
+                x.name === d
+            )?.location;
+            throw Error(
+                'duplicate definition of macro: "' + d + '"' +
+                    formatLocationAt(location),
+            );
         }
     }
 
@@ -46,7 +54,7 @@ export class MacroExpander {
         if (this.macroMap.has(funcExpr.name)) {
             const macro = this.macroMap.get(funcExpr.name);
             if (macro === undefined) throw Error("internal error");
-            const expanded = this.replaceVarInBoby(macro, funcExpr.args);
+            const expanded = this.replaceVarInBoby(macro, funcExpr);
             return this.expandExpr(expanded);
         } else {
             return funcExpr;
@@ -57,9 +65,14 @@ export class MacroExpander {
         throw Error("Internal error");
     }
 
-    replaceVarInBoby(macro: Macro, exprs: APGMExpr[]): APGMExpr {
+    replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
+        const exprs = funcExpr.args;
         if (exprs.length !== macro.args.length) {
-            throw Error(`argment length mismatch: "${macro.name}"`);
+            throw Error(
+                `argument length mismatch: "${macro.name}"${
+                    formatLocationAt(funcExpr.location)
+                }`,
+            );
         }
         const map = new Map(
             macro.args.map((a, i) => [a.name, exprs[i] ?? this.error()]),
@@ -68,7 +81,11 @@ export class MacroExpander {
             if (x instanceof VarAPGMExpr) {
                 const expr = map.get(x.name);
                 if (expr === undefined) {
-                    throw Error(`scope error: "${x.name}"`);
+                    throw Error(
+                        `scope error: "${x.name}"${
+                            formatLocationAt(funcExpr.location)
+                        }`,
+                    );
                 }
                 return expr;
             } else {

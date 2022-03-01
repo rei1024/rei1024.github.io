@@ -19,18 +19,19 @@ test("expand", () => {
         new Macro(
             "f!",
             [new VarAPGMExpr("x")],
-            new FuncAPGMExpr("output", [new VarAPGMExpr("x")]),
+            new FuncAPGMExpr("output", [new VarAPGMExpr("x")], undefined),
+            undefined,
         ),
     ];
     const body = new SeqAPGMExpr([
-        new FuncAPGMExpr("f!", [new StringAPGMExpr("3")]),
+        new FuncAPGMExpr("f!", [new StringAPGMExpr("3")], undefined),
     ]);
     const result = expand(new Main(macros, [], body));
 
     assertEquals(
         result,
         new SeqAPGMExpr([
-            new FuncAPGMExpr("output", [new StringAPGMExpr("3")]),
+            new FuncAPGMExpr("output", [new StringAPGMExpr("3")], undefined),
         ]),
     );
 });
@@ -40,16 +41,18 @@ test("duplicate macro", () => {
         new Macro(
             "f!",
             [new VarAPGMExpr("x")],
-            new FuncAPGMExpr("output", [new VarAPGMExpr("x")]),
+            new FuncAPGMExpr("output", [new VarAPGMExpr("x")], undefined),
+            undefined,
         ),
         new Macro(
             "f!",
             [new VarAPGMExpr("x")],
-            new FuncAPGMExpr("output", [new VarAPGMExpr("x")]),
+            new FuncAPGMExpr("output", [new VarAPGMExpr("x")], undefined),
+            undefined,
         ),
     ];
     const body = new SeqAPGMExpr([
-        new FuncAPGMExpr("f!", [new StringAPGMExpr("3")]),
+        new FuncAPGMExpr("f!", [new StringAPGMExpr("3")], undefined),
     ]);
     assertThrows(
         () => {

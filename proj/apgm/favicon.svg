@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16"
+   height="16"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg54"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="1.0.1 (c497b03c, 2020-09-10)">
+  <metadata
+     id="metadata60">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs58" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1237"
+     inkscape:window-height="709"
+     id="namedview56"
+     showgrid="false"
+     inkscape:zoom="10.424042"
+     inkscape:cx="1.3505554"
+     inkscape:cy="8.2187274"
+     inkscape:window-x="85"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2">
+    <rect
+       id="rect132"
+       width="97.131226"
+       height="97.131218"
+       x="2.3983018"
+       y="1.1991513"
+       style="fill:#ffffff;stroke-width:6.72938"
+       ry="13.215133" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Layer 1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:58.3333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:6.25"
+       x="10.192783"
+       y="47.966038"
+       id="text64"><tspan
+         sodipodi:role="line"
+         x="10.192783"
+         y="47.966038"
+         style="font-size:58.3333px;stroke-width:6.25"
+         id="tspan66">A</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:58.3333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:6.25"
+       x="56.058361"
+       y="48.155037"
+       id="text64-6"><tspan
+         sodipodi:role="line"
+         x="56.058361"
+         y="48.155037"
+         style="font-size:58.3333px;stroke-width:6.25"
+         id="tspan66-7">P</tspan><tspan
+         sodipodi:role="line"
+         x="56.058361"
+         y="121.07166"
+         style="font-size:58.3333px;stroke-width:6.25"
+         id="tspan88" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:58.3333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:6.25"
+       x="3.6423316"
+       y="93.754272"
+       id="text64-8"><tspan
+         sodipodi:role="line"
+         x="7.6423316"
+         y="93.754272"
+         style="font-size:58.3333px;stroke-width:6.25"
+         id="tspan66-9">G</tspan><tspan
+         sodipodi:role="line"
+         x="7.6423316"
+         y="166.6709"
+         style="font-size:58.3333px;stroke-width:6.25"
+         id="tspan108" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:58.33330000000000126px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:6.25"
+       x="56.207943"
+       y="93.754265"
+       id="text64-3"><tspan
+         sodipodi:role="line"
+         x="46.207943"
+         y="93.754265"
+         style="font-size:58.3333px;stroke-width:6.25"
+         id="tspan66-2">M</tspan></text>
+  </g>
+</svg>

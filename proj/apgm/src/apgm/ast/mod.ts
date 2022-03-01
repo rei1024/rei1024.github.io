@@ -1,4 +1,9 @@
-export { APGMExpr } from "./core.ts";
+export {
+    APGMExpr,
+    type APGMSourceLocation,
+    formatLocation,
+    formatLocationAt,
+} from "./core.ts";
 export { FuncAPGMExpr } from "./func.ts";
 export { IfAPGMExpr } from "./if.ts";
 export { LoopAPGMExpr } from "./loop.ts";

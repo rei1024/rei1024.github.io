@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        // "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "useUnknownInCatchVariables": true
+        // "noPropertyAccessFromIndexSignature": true,
+        // "noUncheckedIndexedAccess": true,
+        // "noUnusedLocals": true
+    },
+    "fmt": {
+        "options": {
+            "indentWidth": 4
+        }
+    }
+}
