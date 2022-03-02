@@ -11,3 +11,12 @@ test("transpileAPGL", () => {
         "STATE_2; *; STATE_2; HALT_OUT",
     ]);
 });
+
+test("transpileAPGL options", () => {
+    const expr = new ActionAPGLExpr(["NOP"]);
+    assertEquals(transpileAPGL(expr, { prefix: "X_" }), [
+        "INITIAL; *; X_1_INITIAL; NOP",
+        "X_1_INITIAL; *; X_2; NOP",
+        "X_2; *; X_2; HALT_OUT",
+    ]);
+});

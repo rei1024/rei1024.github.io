@@ -3,7 +3,8 @@
 import { NopAction } from "../src/actions/NopAction.js";
 import { OutputAction } from "../src/actions/OutputAction.js";
 import { Command } from "../src/Command.js";
-import { validateNoDuplicatedAction, validateNoSameComponent } from "../src/validate.js";
+import { validateNoSameComponent } from "../src/validators/no_same_component.js";
+import { validateNoDuplicatedAction } from "../src/validators/no_dup_action.js";
 import { assertEquals, test } from "./deps.js";
 
 test('validateNoSameComponent NOP NOP', () => {

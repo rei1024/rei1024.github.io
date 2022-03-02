@@ -12,17 +12,23 @@ function isEmptyExpr(expr: APGLExpr) {
     return expr instanceof SeqAPGLExpr && expr.exprs.length === 0;
 }
 
+export interface TranspilerOptions {
+    prefix?: string;
+}
+
 export class Transpiler {
     private lines: string[] = [];
     private id: number = 0;
     private loopFinalStates: string[] = [];
-    private prefix = "STATE";
-    constructor() {
+    private prefix: string;
+
+    constructor(options: TranspilerOptions = {}) {
+        this.prefix = options.prefix ?? "STATE_";
     }
 
-    getFreshName() {
+    getFreshName(): string {
         this.id++;
-        return `${this.prefix}_${this.id}`;
+        return `${this.prefix}${this.id}`;
     }
 
     emitLine(
@@ -43,7 +49,7 @@ export class Transpiler {
         );
     }
 
-    transition(current: string, next: string) {
+    emitTransition(current: string, next: string) {
         this.emitLine({
             currentState: current,
             prevOutput: "*",
@@ -55,7 +61,7 @@ export class Transpiler {
     transpile(expr: APGLExpr): string[] {
         const initialState = "INITIAL";
         const secondState = this.getFreshName() + "_INITIAL";
-        this.transition(initialState, secondState);
+        this.emitTransition(initialState, secondState);
         const endState = this.transpileExpr(secondState, expr);
         this.emitLine({
             currentState: endState,
@@ -143,7 +149,7 @@ export class Transpiler {
         );
 
         // elseにまとめる
-        this.transition(thenEndState, elseEndState);
+        this.emitTransition(thenEndState, elseEndState);
 
         return elseEndState;
     }
@@ -202,16 +208,45 @@ export class Transpiler {
         this.loopFinalStates.push(breakState);
         const nextState = this.transpileExpr(state, loopExpr.body);
         this.loopFinalStates.pop();
-        this.emitLine({
-            currentState: nextState,
-            prevOutput: "*",
-            nextState: state,
-            actions: ["NOP"],
-        });
+        this.emitTransition(nextState, state);
         return breakState;
     }
 
+    /**
+     * 中身が空のwhileについて最適化
+     */
+    transpileWhileAPGLExprBodyEmpty(
+        state: string,
+        cond: APGLExpr,
+        modifier: "Z" | "NZ",
+    ): string {
+        const condEndState = this.transpileExpr(state, cond);
+        const finalState = this.getFreshName() + "_WHILE_END";
+
+        this.emitLine({
+            currentState: condEndState,
+            prevOutput: "Z",
+            nextState: modifier === "Z" ? state : finalState,
+            actions: ["NOP"],
+        });
+        this.emitLine({
+            currentState: condEndState,
+            prevOutput: "NZ",
+            nextState: modifier === "Z" ? finalState : state,
+            actions: ["NOP"],
+        });
+
+        return finalState;
+    }
+
     transpileWhileAPGLExpr(state: string, whileExpr: WhileAPGLExpr): string {
+        if (isEmptyExpr(whileExpr.body)) {
+            return this.transpileWhileAPGLExprBodyEmpty(
+                state,
+                whileExpr.cond,
+                whileExpr.modifier,
+            );
+        }
         const condEndState = this.transpileExpr(state, whileExpr.cond);
         const bodyStartState = this.getFreshName() + "_WHILE_BODY";
 
@@ -233,12 +268,7 @@ export class Transpiler {
         this.loopFinalStates.push(finalState);
         const bodyEndState = this.transpileExpr(bodyStartState, whileExpr.body);
         this.loopFinalStates.pop();
-        this.emitLine({
-            currentState: bodyEndState,
-            prevOutput: "*",
-            nextState: state,
-            actions: ["NOP"],
-        });
+        this.emitTransition(bodyEndState, state);
 
         return finalState;
     }
@@ -253,7 +283,7 @@ export class Transpiler {
             if (breakState === undefined) {
                 throw Error("break outside while or loop");
             }
-            this.transition(state, breakState);
+            this.emitTransition(state, breakState);
         } else {
             const breakState = this.loopFinalStates[
                 this.loopFinalStates.length - breakExpr.level
@@ -263,12 +293,15 @@ export class Transpiler {
                     "break level is greater than number of nest of while or loop",
                 );
             }
-            this.transition(state, breakState);
+            this.emitTransition(state, breakState);
         }
         return this.getFreshName() + "_BREAK_UNUSED";
     }
 }
 
-export function transpileAPGL(expr: APGLExpr): string[] {
-    return new Transpiler().transpile(expr);
+export function transpileAPGL(
+    expr: APGLExpr,
+    options: TranspilerOptions = {},
+): string[] {
+    return new Transpiler(options).transpile(expr);
 }

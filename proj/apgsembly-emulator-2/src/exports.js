@@ -24,6 +24,12 @@ import {} from "./components/SUB.js";
 import {} from "./components/UReg.js";
 import {} from "./components/LegacyTReg.js";
 
+import {} from "./validators/action_return_once.js";
+import {} from "./validators/next_state_is_not_initial.js";
+import {} from "./validators/no_dup_action.js";
+import {} from "./validators/no_same_component.js";
+import {} from "./validators/z_and_nz.js";
+
 import {} from "./ActionExecutor.js";
 import {} from "./Command.js";
 import {} from "./compile.js";

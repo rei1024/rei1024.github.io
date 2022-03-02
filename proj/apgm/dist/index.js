@@ -3,6 +3,7 @@
 // deno.enable = false
 
 import { integration } from "./integraion.js";
+import { downloadBlob } from "./download.js";
 
 const $input = document.querySelector("#input");
 
@@ -24,7 +25,12 @@ if (!($compile instanceof HTMLButtonElement)) {
 
 const $copy = document.querySelector("#copy");
 if (!($copy instanceof HTMLButtonElement)) {
-    throw Error("$compile");
+    throw Error("$copy");
+}
+
+const $download = document.querySelector("#download");
+if (!($download instanceof HTMLButtonElement)) {
+    throw Error("$download");
 }
 
 const $error = document.querySelector("#error");
@@ -32,14 +38,25 @@ if (!($error instanceof HTMLElement)) {
     throw Error("$error");
 }
 
+const $prefix_input = document.querySelector("#prefix_input");
+if (!($prefix_input instanceof HTMLInputElement)) {
+    throw Error("$prefix_input");
+}
+
 $compile.addEventListener("click", () => {
     $output.value = "";
     $input.classList.remove("is-invalid");
     try {
+        const options = {};
+        if ($prefix_input.value.trim() !== "") {
+            options.prefix = $prefix_input.value.trim();
+        }
+
         /**
          * @type {string}
          */
-        const result = integration($input.value).join("\n");
+        const result = integration($input.value, options).join("\n");
+        $download.disabled = false;
         $copy.disabled = false;
         $error.style.display = "none";
         $output.value = result;
@@ -49,6 +66,7 @@ $compile.addEventListener("click", () => {
         }
         $error.textContent = e.message;
         $error.style.display = "block";
+        $download.disabled = true;
         $copy.disabled = true;
         $input.classList.add("is-invalid");
     }
@@ -61,6 +79,10 @@ $copy.addEventListener("click", () => {
             $copy.textContent = "Copy";
         }, 1000);
     });
+});
+
+$download.addEventListener("click", () => {
+    downloadBlob(new Blob([$output.value]), "output.apg");
 });
 
 const DATA_DIR = location.origin.includes("github")

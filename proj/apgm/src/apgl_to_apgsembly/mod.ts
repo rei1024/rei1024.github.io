@@ -1,1 +1,1 @@
-export { transpileAPGL } from "./transpiler.ts";
+export { transpileAPGL, type TranspilerOptions } from "./transpiler.ts";

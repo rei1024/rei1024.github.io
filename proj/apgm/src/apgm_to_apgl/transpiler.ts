@@ -4,7 +4,6 @@ import {
     FuncAPGMExpr,
     IfAPGMExpr,
     LoopAPGMExpr,
-    Main,
     NumberAPGMExpr,
     SeqAPGMExpr,
     StringAPGMExpr,
