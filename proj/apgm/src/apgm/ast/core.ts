@@ -6,6 +6,7 @@ export abstract class APGMExpr {
     }
 
     abstract transform(f: (_: APGMExpr) => APGMExpr): APGMExpr;
+    abstract pretty(): string;
 }
 
 export interface APGMSourceLocation {

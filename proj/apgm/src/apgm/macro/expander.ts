@@ -1,6 +1,5 @@
 import {
     APGMExpr,
-    formatLocation,
     formatLocationAt,
     FuncAPGMExpr,
     Macro,
@@ -8,6 +7,43 @@ import {
     VarAPGMExpr,
 } from "../ast/mod.ts";
 import { dups } from "./_dups.ts";
+
+function argumentsMessage(num: number): string {
+    return `${num} argument${num === 1 ? "" : "s"}`;
+}
+
+/**
+ * macroのbodyに現れる変数を呼び出した引数で置き換え
+ */
+function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
+    const exprs = funcExpr.args;
+    if (exprs.length !== macro.args.length) {
+        throw Error(
+            `argument length mismatch: "${macro.name}"` +
+                ` expect ${argumentsMessage(macro.args.length)} but given ${
+                    argumentsMessage(exprs.length)
+                }${formatLocationAt(funcExpr.location)}`,
+        );
+    }
+
+    const nameToExpr: Map<string, APGMExpr> = new Map(
+        macro.args.map((a, i) => [a.name, exprs[i]]),
+    );
+
+    return macro.body.transform((x) => {
+        if (x instanceof VarAPGMExpr) {
+            const expr = nameToExpr.get(x.name);
+            if (expr === undefined) {
+                throw Error(
+                    `scope error: "${x.name}"${formatLocationAt(x.location)}`,
+                );
+            }
+            return expr;
+        } else {
+            return x;
+        }
+    });
+}
 
 export class MacroExpander {
     private readonly macroMap: Map<string, Macro>;
@@ -24,7 +60,7 @@ export class MacroExpander {
                 x.name === d
             )?.location;
             throw Error(
-                'duplicate definition of macro: "' + d + '"' +
+                `There is a macro with the same name: "${d}"` +
                     formatLocationAt(location),
             );
         }
@@ -34,7 +70,7 @@ export class MacroExpander {
         return this.expandExpr(this.main.seqExpr);
     }
 
-    expandExpr(expr: APGMExpr): APGMExpr {
+    private expandExpr(expr: APGMExpr): APGMExpr {
         if (this.maxCount < this.count) {
             throw Error("too many macro expansion");
         }
@@ -42,7 +78,7 @@ export class MacroExpander {
         return expr.transform((x) => this.expandOnce(x));
     }
 
-    expandOnce(x: APGMExpr): APGMExpr {
+    private expandOnce(x: APGMExpr): APGMExpr {
         if (x instanceof FuncAPGMExpr) {
             return this.expandFuncAPGMExpr(x);
         } else {
@@ -50,48 +86,14 @@ export class MacroExpander {
         }
     }
 
-    expandFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGMExpr {
-        if (this.macroMap.has(funcExpr.name)) {
-            const macro = this.macroMap.get(funcExpr.name);
-            if (macro === undefined) throw Error("internal error");
-            const expanded = this.replaceVarInBoby(macro, funcExpr);
+    private expandFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGMExpr {
+        const macro = this.macroMap.get(funcExpr.name);
+        if (macro !== undefined) {
+            const expanded = replaceVarInBoby(macro, funcExpr);
             return this.expandExpr(expanded);
         } else {
             return funcExpr;
         }
-    }
-
-    error() {
-        throw Error("Internal error");
-    }
-
-    replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
-        const exprs = funcExpr.args;
-        if (exprs.length !== macro.args.length) {
-            throw Error(
-                `argument length mismatch: "${macro.name}"${
-                    formatLocationAt(funcExpr.location)
-                }`,
-            );
-        }
-        const map = new Map(
-            macro.args.map((a, i) => [a.name, exprs[i] ?? this.error()]),
-        );
-        return macro.body.transform((x) => {
-            if (x instanceof VarAPGMExpr) {
-                const expr = map.get(x.name);
-                if (expr === undefined) {
-                    throw Error(
-                        `scope error: "${x.name}"${
-                            formatLocationAt(funcExpr.location)
-                        }`,
-                    );
-                }
-                return expr;
-            } else {
-                return x;
-            }
-        });
     }
 }
 

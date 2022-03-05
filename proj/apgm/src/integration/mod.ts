@@ -5,6 +5,7 @@ import {
     type TranspilerOptions,
 } from "../apgl_to_apgsembly/mod.ts";
 import { expand } from "../apgm/macro/expander.ts";
+import { optimize } from "../apgl/optimizer/mod.ts";
 
 export function integration(
     str: string,
@@ -26,7 +27,15 @@ export function integration(
         console.log("apgl", JSON.stringify(apgl, null, "  "));
     }
 
-    const apgs = transpileAPGL(apgl, options);
+    const optimizedAPGL = optimize(apgl);
+    if (log) {
+        console.log(
+            "optimized apgl",
+            JSON.stringify(optimizedAPGL, null, "  "),
+        );
+    }
+
+    const apgs = transpileAPGL(optimizedAPGL, options);
     const comment = [
         "# State    Input    Next state    Actions",
         "# ---------------------------------------",

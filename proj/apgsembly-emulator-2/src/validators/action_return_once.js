@@ -9,9 +9,8 @@ import { Command } from "../Command.js";
  * @returns {string | undefined}
  */
 function validateActionReturnOnceCommand(command) {
-    // HALT_OUTの場合は一旦無視
-    // FIXME
-    if (command.actions.find(x => x instanceof HaltOutAction) !== undefined) {
+    // FIXME: HALT_OUTの場合は一旦無視
+    if (command.actions.some(x => x instanceof HaltOutAction)) {
         return undefined;
     }
     const valueReturnActions = command.actions.filter(x => x.doesReturnValue());

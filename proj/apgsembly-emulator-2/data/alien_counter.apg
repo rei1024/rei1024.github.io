@@ -1,0 +1,31 @@
+# Alien Counter
+# Turmite {{{0,'N',2},{1,'S',1}},{{0,'E',0},{0,'S',0}},{{1,'W',1},{1,'N',2}}}
+#REGISTERS { "U0": 3, "U1": 3 }
+# State    Input    Next state    Actions
+# ---------------------------------------
+
+INITIAL; ZZ; SET_X_1; NOP
+# Move to (3, 3)
+SET_X_1; *; SET_X_2; TDEC U0
+SET_X_2; Z; SET_Y_1; NOP
+SET_X_2; NZ; SET_X_1; INC B2DX, NOP
+
+SET_Y_1; *; SET_Y_2; TDEC U1
+SET_Y_2; Z; 0_1; NOP
+SET_Y_2; NZ; SET_Y_1; INC B2DY, NOP
+
+0_1; *; 0_2; READ B2D, INC U2
+0_2; Z; 0_Z; NOP
+0_2; NZ; 0_NZ; SET B2D, NOP
+0_Z; *; 2_1; INC B2DY, NOP
+0_NZ; *; 1_1; TDEC B2DY
+1_1; *; 1_2; READ B2D, INC U2
+1_2; Z; 1_Z; NOP
+1_2; NZ; 1_NZ; NOP
+1_Z; *; 0_1; INC B2DX, NOP
+1_NZ; *; 0_1; TDEC B2DY
+2_1; *; 2_2; READ B2D, INC U2
+2_2; Z; 2_Z; SET B2D, NOP
+2_2; NZ; 2_NZ; SET B2D, NOP
+2_Z; *; 1_1; TDEC B2DX
+2_NZ; *; 2_1; INC B2DY, NOP

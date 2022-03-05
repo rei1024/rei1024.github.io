@@ -38,7 +38,7 @@ function transpileNumArgFunc(
 ) {
     if (funcExpr.args.length !== 1) {
         throw Error(
-            `number of argument is not 1: "${funcExpr.name}"${
+            `number of arguments is not 1: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.location)
             }`,
         );
@@ -60,7 +60,7 @@ function transpileStringArgFunc(
 ) {
     if (funcExpr.args.length !== 1) {
         throw Error(
-            `number of argument is not 1: "${funcExpr.name}"${
+            `number of arguments is not 1: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.location)
             }`,
         );
@@ -68,7 +68,7 @@ function transpileStringArgFunc(
     const arg = funcExpr.args[0];
     if (!(arg instanceof StringAPGMExpr)) {
         throw Error(
-            `argument is not a number: "${funcExpr.name}"${
+            `argument is not a string: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.location)
             }`,
         );
@@ -202,7 +202,11 @@ export function transpileAPGMExpr(e: APGMExpr): APGLExpr {
     } else if (e instanceof StringAPGMExpr) {
         throw Error(`string is not allowed: ${e.value}`);
     } else if (e instanceof VarAPGMExpr) {
-        throw Error(`macro variable is not allowed: ${e.name}`);
+        throw Error(
+            `macro variable is not allowed: variable "${e.name}"${
+                formatLocationAt(e.location)
+            }`,
+        );
     } else if (e instanceof WhileAPGMExpr) {
         return new WhileAPGLExpr(e.modifier, t(e.cond), t(e.body));
     }

@@ -2,6 +2,15 @@
 
 APGsembly macro language
 
+## Pipeline
+```mermaid
+graph TD
+    APGM1[APGM] -->|Expand macro| APGM2[APGM]
+    APGM2[APGM] -->|Transpile| APGL1[APGL]
+    APGL1[APGL] -->|Optimize| APGL2[APGL]
+    APGL2[APGL] -->|Transpile| APGsembly[APGsembly]
+```
+
 ## Testing
 
 ### Requirements

@@ -36,6 +36,14 @@ export const identifierOnly: bnb.Parser<string> = bnb.match(identifierRexExp)
     .desc(["identifier"]);
 
 export const identifier: bnb.Parser<string> = _.next(identifierOnly).skip(_);
+export const identifierWithLocation: bnb.Parser<[string, bnb.SourceLocation]> =
+    _.chain(() => {
+        return bnb.location.chain((loc) => {
+            return identifierOnly.skip(_).map((ident) => {
+                return [ident, loc];
+            });
+        });
+    });
 
 const macroIdentifierRegExp = /[a-zA-Z_][a-zA-Z_0-9]*!/u;
 
@@ -56,10 +64,17 @@ export const rightParen = token(")").desc(["`)`"]);
 /** `;` */
 export const semicolon = token(";").desc(["`;`"]);
 
-export const varAPGMExpr = identifier.map((x) => new VarAPGMExpr(x));
+/** `(` */
+export const curlyLeft = token("{").desc(["`{`"]);
+/** `)` */
+export const curlyRight = token("}").desc(["`}`"]);
+
+export const varAPGMExpr = identifierWithLocation.map((x) =>
+    new VarAPGMExpr(x[0], x[1])
+);
 
 export function funcAPGMExpr(): bnb.Parser<FuncAPGMExpr> {
-    return bnb.location.chain((location) => {
+    return _.next(bnb.location).chain((location) => {
         return bnb.choice(macroIdentifier, identifier).chain((ident) => {
             return bnb.lazy(() => apgmExpr()).sepBy(comma).wrap(
                 leftParen,
@@ -88,8 +103,8 @@ export function seqAPGMExprRaw(): bnb.Parser<APGMExpr[]> {
     return bnb.lazy(() => statement()).repeat();
 }
 
-export function seqAPGMExpr() {
-    return seqAPGMExprRaw().wrap(token("{"), token("}")).map((x) =>
+export function seqAPGMExpr(): bnb.Parser<SeqAPGMExpr> {
+    return seqAPGMExprRaw().wrap(curlyLeft, curlyRight).map((x) =>
         new SeqAPGMExpr(x)
     );
 }
@@ -139,23 +154,26 @@ export function ifAPGMExpr() {
 }
 
 /**
- * macro f(x) {
+ * macro f!(x) {
  *   x;
  * }
  */
 export function macro(): bnb.Parser<Macro> {
-    return _.chain((_) => {
+    const macroKeyword: bnb.Parser<bnb.SourceLocation> = _.chain((_) => {
         return bnb.location.chain((location) => {
-            return bnb.text("macro").skip(someSpaces).next(macroIdentifier)
-                .chain((ident) => {
-                    return leftParen.next(
-                        varAPGMExpr.sepBy(comma).skip(rightParen),
-                    ).chain((args) => {
-                        return bnb.lazy(() => apgmExpr()).map((body) => {
-                            return new Macro(ident, args, body, location);
-                        });
+            return bnb.text("macro").next(someSpaces).map((_) => location);
+        });
+    });
+
+    return macroKeyword.chain((location) => {
+        return macroIdentifier.chain((ident) => {
+            return varAPGMExpr.sepBy(comma).wrap(leftParen, rightParen).chain(
+                (args) => {
+                    return bnb.lazy(() => apgmExpr()).map((body) => {
+                        return new Macro(ident, args, body, location);
                     });
-                });
+                },
+            );
         });
     });
 }

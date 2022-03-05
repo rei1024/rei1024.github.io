@@ -18,4 +18,10 @@ export class WhileAPGMExpr extends APGMExpr {
             ),
         );
     }
+
+    pretty(): string {
+        return `while_${
+            this.modifier === "Z" ? "z" : "nz"
+        }(${this.cond.pretty()}) ${this.body.pretty()}`;
+    }
 }

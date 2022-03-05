@@ -8,4 +8,9 @@ export class StringAPGMExpr extends APGMExpr {
     transform(f: (_: APGMExpr) => APGMExpr): APGMExpr {
         return f(this);
     }
+
+    pretty() {
+        // TODO: escape
+        return this.value;
+    }
 }

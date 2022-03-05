@@ -8,4 +8,14 @@ export class IfAPGLExpr extends APGLExpr {
     ) {
         super();
     }
+
+    override transform(f: (_: APGLExpr) => APGLExpr): APGLExpr {
+        return f(
+            new IfAPGLExpr(
+                this.cond.transform(f),
+                this.thenBody.transform(f),
+                this.elseBody.transform(f),
+            ),
+        );
+    }
 }

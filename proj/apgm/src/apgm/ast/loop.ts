@@ -10,4 +10,8 @@ export class LoopAPGMExpr extends APGMExpr {
     transform(f: (_: APGMExpr) => APGMExpr): APGMExpr {
         return f(new LoopAPGMExpr(this.body.transform(f)));
     }
+
+    pretty(): string {
+        return `loop ${this.body.pretty()}`;
+    }
 }

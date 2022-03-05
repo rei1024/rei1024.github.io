@@ -15,6 +15,32 @@ export const SOUTH = "S";
 export const HALT = "";
 
 /**
+ * @param {Dir} dir
+ */
+export function rotateDir(dir) {
+    switch (dir) {
+        case WEST: return NORTH;
+        case EAST: return SOUTH;
+        case NORTH: return EAST;
+        case SOUTH: return WEST;
+        case HALT: return HALT;
+    }
+}
+
+/**
+ * @param {Dir} dir
+ */
+export function flipDir(dir) {
+    switch (dir) {
+        case WEST: return EAST;
+        case EAST: return WEST;
+        case NORTH: return NORTH;
+        case SOUTH: return SOUTH;
+        case HALT: return HALT;
+    }
+}
+
+/**
  * @type {Dir[]}
  */
 export const allDirs = [NORTH, EAST, WEST, SOUTH, HALT];

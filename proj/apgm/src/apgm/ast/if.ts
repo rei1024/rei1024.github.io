@@ -22,4 +22,13 @@ export class IfAPGMExpr extends APGMExpr {
             ),
         );
     }
+
+    pretty(): string {
+        return `if_${
+                        this.modifier === "Z" ? "z" : "nz"
+                    }(${this.cond.pretty()}) ${this.thenBody.pretty()}` +
+                    this.elseBody === undefined
+            ? ``
+            : ` else ${this.elseBody?.pretty()}`;
+    }
 }

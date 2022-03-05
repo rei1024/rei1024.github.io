@@ -2,10 +2,25 @@
 
 import { NopAction } from "../src/actions/NopAction.js";
 import { OutputAction } from "../src/actions/OutputAction.js";
+import { HaltOutAction } from "../src/actions/HaltOutAction.js";
 import { Command } from "../src/Command.js";
 import { validateNoSameComponent } from "../src/validators/no_same_component.js";
+import { validateActionReturnOnce } from "../src/validators/action_return_once.js";
 import { validateNoDuplicatedAction } from "../src/validators/no_dup_action.js";
 import { assertEquals, test } from "./deps.js";
+
+test('validateActionReturnOnce HALT_OUT', () => {
+    const err = validateActionReturnOnce([
+        new Command({
+            state: "INITIAL",
+            input: "ZZ",
+            nextState: "A0",
+            actions: [new HaltOutAction(), new HaltOutAction()]
+        })
+    ]);
+    // FIXME: とりあえず無視
+    assertEquals(err, undefined);
+});
 
 test('validateNoSameComponent NOP NOP', () => {
     const err = validateNoSameComponent([

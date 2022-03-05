@@ -47,6 +47,18 @@ if (!($y instanceof HTMLInputElement)) {
     throw TypeError('$y is not a HTMLInputElement');
 }
 
+const $dir = document.querySelector('#dir');
+
+if (!($dir instanceof HTMLSelectElement)) {
+    throw TypeError('$dir is not a HTMLSelectElement');
+}
+
+const $flip = document.querySelector('#flip');
+
+if (!($flip instanceof HTMLInputElement)) {
+    throw TypeError('$dir is not a HTMLInputElement');
+}
+
 const $sampleList = document.querySelector('#sample_list');
 
 if ($sampleList === null) {
@@ -107,14 +119,18 @@ generateButton.addEventListener("click", () => {
         $y.value = "0";
         y = 0;
     }
+
+    /** @type {0 | 1 | 2 | 3} */
+    // @ts-ignore
+    const dir = parseInt($dir.value, 10);
     try {
         const tur = Turmites.fromObjectString(rule.value);
-        code.value = `${comment === '' ? '' : `# ${comment}\n`}# Turmite ${rule.value}\n${generate(tur, x, y)}`;
+        code.value = `${comment === '' ? '' : `# ${comment}\n`}# Turmite ${rule.value}\n${generate(tur, x, y, dir)}`;
         copy.disabled = false;
     } catch (e) {
         try {
             const tur = AbsTurmites.fromObjectString(rule.value);
-            code.value = `${comment === '' ? '' : `# ${comment}\n`}# Turmite ${rule.value}\n${absGenerate(tur, x, y)}`;
+            code.value = `${comment === '' ? '' : `# ${comment}\n`}# Turmite ${rule.value}\n${absGenerate(tur, x, y, dir, $flip.checked)}`;
             copy.disabled = false;
         } catch (e) {
             code.value = "";

@@ -358,6 +358,1103 @@ const mod = function() {
         text
     };
 }();
+class Action {
+    pretty() {
+        return "unimplemented";
+    }
+    extractUnaryRegisterNumbers() {
+        return [];
+    }
+    extractBinaryRegisterNumbers() {
+        return [];
+    }
+    extractLegacyTRegisterNumbers() {
+        return [];
+    }
+    doesReturnValue() {
+        return false;
+    }
+    isSameComponent(_action) {
+        return true;
+    }
+}
+const ADD_A1_STRING = "A1";
+const ADD_B0_STRING = "B0";
+const ADD_B1_STRING = "B1";
+function prettyOp(op) {
+    switch(op){
+        case 0:
+            return ADD_A1_STRING;
+        case 1:
+            return ADD_B0_STRING;
+        case 2:
+            return ADD_B1_STRING;
+    }
+}
+function parseOp(op) {
+    switch(op){
+        case ADD_A1_STRING:
+            return 0;
+        case ADD_B0_STRING:
+            return 1;
+        case ADD_B1_STRING:
+            return 2;
+    }
+}
+class AddAction extends Action {
+    constructor(op){
+        super();
+        this.op = op;
+    }
+    pretty() {
+        return `ADD ${prettyOp(this.op)}`;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 2) {
+            return undefined;
+        }
+        const [add, reg] = array;
+        if (add !== "ADD") {
+            return undefined;
+        }
+        if (reg === ADD_A1_STRING || reg === ADD_B0_STRING || reg === ADD_B1_STRING) {
+            return new AddAction(parseOp(reg));
+        }
+        return undefined;
+    }
+    doesReturnValue() {
+        switch(this.op){
+            case 0:
+                return false;
+            case 1:
+                return true;
+            case 2:
+                return true;
+        }
+    }
+    isSameComponent(action) {
+        return action instanceof AddAction;
+    }
+}
+const B2D_INC_STRING = "INC";
+const B2D_TDEC_STRING = "TDEC";
+const B2D_READ_STRING = "READ";
+const B2D_SET_STRING = "SET";
+const B2D_B2DX_STRING = "B2DX";
+const B2D_B2DY_STRING = "B2DY";
+const B2D_B2D_STRING = "B2D";
+const B2D_LEGACY_TDEC_STRING = "DEC";
+const B2D_LEGACY_B2DX_STRING = "SQX";
+const B2D_LEGACY_B2DY_STRING = "SQY";
+const B2D_LEGACY_B2D_STRING = "SQ";
+function parseOp1(op) {
+    switch(op){
+        case B2D_INC_STRING:
+            return 0;
+        case B2D_TDEC_STRING:
+            return 1;
+        case B2D_READ_STRING:
+            return 2;
+        case B2D_SET_STRING:
+            return 3;
+    }
+}
+function prettyOp1(op) {
+    switch(op){
+        case 0:
+            return B2D_INC_STRING;
+        case 1:
+            return B2D_TDEC_STRING;
+        case 2:
+            return B2D_READ_STRING;
+        case 3:
+            return B2D_SET_STRING;
+    }
+}
+function parseAxis(op) {
+    switch(op){
+        case B2D_B2DX_STRING:
+            return 4;
+        case B2D_B2DY_STRING:
+            return 5;
+        case B2D_B2D_STRING:
+            return 6;
+    }
+}
+function prettyAxis(op) {
+    switch(op){
+        case 4:
+            return B2D_B2DX_STRING;
+        case 5:
+            return B2D_B2DY_STRING;
+        case 6:
+            return B2D_B2D_STRING;
+    }
+}
+class B2DAction extends Action {
+    constructor(op, axis){
+        super();
+        this.op = op;
+        this.axis = axis;
+    }
+    pretty() {
+        return `${prettyOp1(this.op)} ${prettyAxis(this.axis)}`;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 2) {
+            return undefined;
+        }
+        const [op, axis] = array;
+        if (op === undefined || axis === undefined) {
+            return undefined;
+        }
+        if (op === B2D_INC_STRING || op === B2D_TDEC_STRING) {
+            if (axis === B2D_B2DX_STRING || axis === B2D_B2DY_STRING) {
+                return new B2DAction(parseOp1(op), parseAxis(axis));
+            }
+        } else if (op === B2D_READ_STRING || op === B2D_SET_STRING) {
+            if (axis === B2D_B2D_STRING) {
+                return new B2DAction(parseOp1(op), parseAxis(axis));
+            }
+        }
+        switch(op){
+            case B2D_INC_STRING:
+                {
+                    switch(axis){
+                        case B2D_LEGACY_B2DX_STRING:
+                            return new B2DAction(0, 4);
+                        case B2D_LEGACY_B2DY_STRING:
+                            return new B2DAction(0, 5);
+                        default:
+                            return undefined;
+                    }
+                }
+            case B2D_LEGACY_TDEC_STRING:
+                {
+                    switch(axis){
+                        case B2D_LEGACY_B2DX_STRING:
+                            return new B2DAction(1, 4);
+                        case B2D_LEGACY_B2DY_STRING:
+                            return new B2DAction(1, 5);
+                        default:
+                            return undefined;
+                    }
+                }
+            case B2D_READ_STRING:
+                {
+                    switch(axis){
+                        case B2D_LEGACY_B2D_STRING:
+                            return new B2DAction(2, 6);
+                        default:
+                            return undefined;
+                    }
+                }
+            case B2D_SET_STRING:
+                {
+                    switch(axis){
+                        case B2D_LEGACY_B2D_STRING:
+                            return new B2DAction(3, 6);
+                        default:
+                            return undefined;
+                    }
+                }
+        }
+        return undefined;
+    }
+    doesReturnValue() {
+        switch(this.op){
+            case 0:
+                return false;
+            case 1:
+                return true;
+            case 2:
+                return true;
+            case 3:
+                return false;
+        }
+    }
+    isSameComponent(action) {
+        if (action instanceof B2DAction) {
+            if (this.axis === 4 && action.axis === 5) {
+                return false;
+            } else if (this.axis === 5 && action.axis === 4) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+}
+const B_INC_STRING = "INC";
+const B_TDEC_STRING = "TDEC";
+const B_READ_STRING = "READ";
+const B_SET_STRING = "SET";
+const B_STRING = "B";
+function prettyOp2(op) {
+    switch(op){
+        case 0:
+            return B_INC_STRING;
+        case 1:
+            return B_TDEC_STRING;
+        case 2:
+            return B_READ_STRING;
+        case 3:
+            return B_SET_STRING;
+    }
+}
+function parseOp2(op) {
+    switch(op){
+        case B_INC_STRING:
+            return 0;
+        case B_TDEC_STRING:
+            return 1;
+        case B_READ_STRING:
+            return 2;
+        case B_SET_STRING:
+            return 3;
+    }
+}
+class BRegAction extends Action {
+    constructor(op, regNumber){
+        super();
+        this.op = op;
+        this.regNumber = regNumber;
+    }
+    extractBinaryRegisterNumbers() {
+        return [
+            this.regNumber
+        ];
+    }
+    pretty() {
+        return `${prettyOp2(this.op)} ${B_STRING}${this.regNumber}`;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 2) {
+            return undefined;
+        }
+        const [op, reg] = array;
+        if (op === undefined || reg === undefined) {
+            return undefined;
+        }
+        if (op === B_INC_STRING || op === B_TDEC_STRING || op === B_READ_STRING || op === B_SET_STRING) {
+            if (reg.startsWith(B_STRING)) {
+                const str = reg.slice(1);
+                if (/^[0-9]+$/u.test(str)) {
+                    return new BRegAction(parseOp2(op), parseInt(str, 10));
+                }
+            }
+        }
+        return undefined;
+    }
+    doesReturnValue() {
+        switch(this.op){
+            case 0:
+                return false;
+            case 1:
+                return true;
+            case 2:
+                return true;
+            case 3:
+                return false;
+        }
+    }
+    isSameComponent(action) {
+        if (action instanceof BRegAction) {
+            return this.regNumber === action.regNumber;
+        } else {
+            return false;
+        }
+    }
+}
+const MUL_0_STRING = "0";
+const MUL_1_STRING = "1";
+function parseOp3(op) {
+    switch(op){
+        case MUL_0_STRING:
+            return 0;
+        case MUL_1_STRING:
+            return 1;
+    }
+}
+function prettyOp3(op) {
+    switch(op){
+        case 0:
+            return MUL_0_STRING;
+        case 1:
+            return MUL_1_STRING;
+    }
+}
+class MulAction extends Action {
+    constructor(op){
+        super();
+        this.op = op;
+    }
+    pretty() {
+        return `MUL ${prettyOp3(this.op)}`;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 2) {
+            return undefined;
+        }
+        const [mul, op] = array;
+        if (mul !== "MUL") {
+            return undefined;
+        }
+        if (op === MUL_0_STRING || op === MUL_1_STRING) {
+            return new MulAction(parseOp3(op));
+        }
+        return undefined;
+    }
+    doesReturnValue() {
+        return true;
+    }
+    isSameComponent(action) {
+        return action instanceof MulAction;
+    }
+}
+const OUTPUT_STRING = "OUTPUT";
+class OutputAction extends Action {
+    constructor(digit){
+        super();
+        this.digit = digit;
+    }
+    pretty() {
+        return `${OUTPUT_STRING} ${this.digit}`;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 2) {
+            return undefined;
+        }
+        const [output, digit] = array;
+        if (output !== OUTPUT_STRING) {
+            return undefined;
+        }
+        if (digit === undefined) {
+            return undefined;
+        }
+        return new OutputAction(digit);
+    }
+    doesReturnValue() {
+        return false;
+    }
+    isSameComponent(action) {
+        return action instanceof OutputAction;
+    }
+}
+const SUB_A1_STRING = "A1";
+const SUB_B0_STRING = "B0";
+const SUB_B1_STRING = "B1";
+function prettyOp4(op) {
+    switch(op){
+        case 0:
+            return SUB_A1_STRING;
+        case 1:
+            return SUB_B0_STRING;
+        case 2:
+            return SUB_B1_STRING;
+    }
+}
+function parseOp4(op) {
+    switch(op){
+        case SUB_A1_STRING:
+            return 0;
+        case SUB_B0_STRING:
+            return 1;
+        case SUB_B1_STRING:
+            return 2;
+    }
+}
+class SubAction extends Action {
+    constructor(op){
+        super();
+        this.op = op;
+    }
+    pretty() {
+        return `SUB ${prettyOp4(this.op)}`;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 2) {
+            return undefined;
+        }
+        const [sub, reg] = array;
+        if (sub !== "SUB") {
+            return undefined;
+        }
+        if (reg === SUB_A1_STRING || reg === SUB_B0_STRING || reg === SUB_B1_STRING) {
+            return new SubAction(parseOp4(reg));
+        }
+        return undefined;
+    }
+    doesReturnValue() {
+        switch(this.op){
+            case 0:
+                return false;
+            case 1:
+                return true;
+            case 2:
+                return true;
+        }
+    }
+    isSameComponent(action) {
+        return action instanceof SubAction;
+    }
+}
+const U_INC_STRING = "INC";
+const U_TDEC_STRING = "TDEC";
+const U_STRING = "U";
+const R_STRING = "R";
+function prettyOp5(op) {
+    switch(op){
+        case 0:
+            return U_INC_STRING;
+        case 1:
+            return U_TDEC_STRING;
+    }
+}
+function parseOp5(op) {
+    switch(op){
+        case U_INC_STRING:
+            return 0;
+        case U_TDEC_STRING:
+            return 1;
+    }
+}
+class URegAction extends Action {
+    constructor(op, regNumber){
+        super();
+        this.op = op;
+        this.regNumber = regNumber;
+    }
+    extractUnaryRegisterNumbers() {
+        return [
+            this.regNumber
+        ];
+    }
+    pretty() {
+        return `${prettyOp5(this.op)} ${U_STRING}${this.regNumber}`;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 2) {
+            return undefined;
+        }
+        const [op, reg] = array;
+        if (op === undefined || reg === undefined) {
+            return undefined;
+        }
+        if (op === U_INC_STRING || op === U_TDEC_STRING) {
+            if (reg.startsWith(U_STRING) || reg.startsWith(R_STRING)) {
+                const str = reg.slice(1);
+                if (/^[0-9]+$/u.test(str)) {
+                    return new URegAction(parseOp5(op), parseInt(str, 10));
+                }
+            }
+        }
+        return undefined;
+    }
+    doesReturnValue() {
+        switch(this.op){
+            case 0:
+                return false;
+            case 1:
+                return true;
+        }
+    }
+    isSameComponent(action) {
+        if (action instanceof URegAction) {
+            return this.regNumber === action.regNumber;
+        } else {
+            return false;
+        }
+    }
+}
+const T_INC_STRING = "INC";
+const T_DEC_STRING = "DEC";
+const T_READ_STRING = "READ";
+const T_SET_STRING = "SET";
+const T_RESET_STRING = "RESET";
+function prettyOp6(op) {
+    switch(op){
+        case 0:
+            return T_INC_STRING;
+        case 1:
+            return T_DEC_STRING;
+        case 2:
+            return T_READ_STRING;
+        case 3:
+            return T_SET_STRING;
+        case 4:
+            return T_RESET_STRING;
+    }
+}
+function parseOp6(op) {
+    switch(op){
+        case T_INC_STRING:
+            return 0;
+        case T_DEC_STRING:
+            return 1;
+        case T_READ_STRING:
+            return 2;
+        case T_SET_STRING:
+            return 3;
+        case T_RESET_STRING:
+            return 4;
+    }
+}
+class LegacyTRegAction extends Action {
+    constructor(op, regNumber){
+        super();
+        this.op = op;
+        this.regNumber = regNumber;
+    }
+    extractLegacyTRegisterNumbers() {
+        return [
+            this.regNumber
+        ];
+    }
+    pretty() {
+        return `${prettyOp6(this.op)} T${this.regNumber}`;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 2) {
+            return undefined;
+        }
+        const [op, reg] = array;
+        if (op === undefined || reg === undefined) {
+            return undefined;
+        }
+        if (op === T_INC_STRING || op === T_DEC_STRING || op === T_READ_STRING || op === T_SET_STRING || op === T_RESET_STRING) {
+            if (reg.startsWith("T")) {
+                const str = reg.slice(1);
+                if (/^[0-9]+$/u.test(str)) {
+                    return new LegacyTRegAction(parseOp6(op), parseInt(str, 10));
+                }
+            }
+        }
+        return undefined;
+    }
+    doesReturnValue() {
+        switch(this.op){
+            case 0:
+                return true;
+            case 1:
+                return true;
+            case 2:
+                return true;
+            case 3:
+                return false;
+            case 4:
+                return false;
+        }
+    }
+    isSameComponent(action) {
+        if (action instanceof LegacyTRegAction) {
+            return this.regNumber === action.regNumber;
+        } else {
+            return false;
+        }
+    }
+}
+const HALT_OUT_STRING = `HALT_OUT`;
+class HaltOutAction extends Action {
+    constructor(){
+        super();
+    }
+    pretty() {
+        return HALT_OUT_STRING;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 1) {
+            return undefined;
+        }
+        const [haltOut] = array;
+        if (haltOut !== HALT_OUT_STRING) {
+            return undefined;
+        }
+        return new HaltOutAction();
+    }
+    doesReturnValue() {
+        return false;
+    }
+    isSameComponent(action) {
+        return action instanceof HaltOutAction;
+    }
+}
+function validateActionReturnOnceCommand(command) {
+    if (command.actions.find((x)=>x instanceof HaltOutAction
+    ) !== undefined) {
+        return undefined;
+    }
+    const valueReturnActions = command.actions.filter((x)=>x.doesReturnValue()
+    );
+    if (valueReturnActions.length === 1) {
+        return undefined;
+    } else if (valueReturnActions.length === 0) {
+        return `Does not produce the return value in "${command.pretty()}"`;
+    } else {
+        return `Does not contain exactly one action that produces a return value in "${command.pretty()}": Actions that produce value are ${valueReturnActions.map((x)=>`"${x.pretty()}"`
+        ).join(', ')}`;
+    }
+}
+function validateActionReturnOnce(commands) {
+    const errors = [];
+    for (const command of commands){
+        const err = validateActionReturnOnceCommand(command);
+        if (typeof err === 'string') {
+            errors.push(err);
+        }
+    }
+    if (errors.length > 0) {
+        return errors;
+    }
+    return undefined;
+}
+class NopAction extends Action {
+    constructor(){
+        super();
+    }
+    pretty() {
+        return `NOP`;
+    }
+    static parse(str) {
+        const array = str.trim().split(/\s+/u);
+        if (array.length !== 1) {
+            return undefined;
+        }
+        const [nop] = array;
+        if (nop !== "NOP") {
+            return undefined;
+        }
+        return new NopAction();
+    }
+    doesReturnValue() {
+        return true;
+    }
+    isSameComponent(action) {
+        return action instanceof NopAction;
+    }
+}
+function parseAction(str) {
+    const parsers = [
+        BRegAction.parse,
+        URegAction.parse,
+        B2DAction.parse,
+        AddAction.parse,
+        MulAction.parse,
+        SubAction.parse,
+        NopAction.parse,
+        OutputAction.parse,
+        HaltOutAction.parse,
+        LegacyTRegAction.parse, 
+    ];
+    for (const parser of parsers){
+        const result = parser(str);
+        if (result !== undefined) {
+            return result;
+        }
+    }
+    return undefined;
+}
+const INITIAL_STATE = "INITIAL";
+class ProgramLine {
+    pretty() {
+        return `unimplemented`;
+    }
+}
+class ComponentsHeader extends ProgramLine {
+    constructor(content){
+        super();
+        this.content = content;
+    }
+    static get key() {
+        return "#COMPONENTS";
+    }
+    pretty() {
+        return ComponentsHeader.key + " " + this.content;
+    }
+}
+class RegistersHeader extends ProgramLine {
+    constructor(content){
+        super();
+        this.content = content;
+    }
+    static get key() {
+        return "#REGISTERS";
+    }
+    pretty() {
+        return RegistersHeader.key + " " + this.content;
+    }
+}
+class Comment extends ProgramLine {
+    constructor(str){
+        super();
+        this.str = str;
+    }
+    getString() {
+        return this.str;
+    }
+    pretty() {
+        return this.getString();
+    }
+}
+class EmptyLine extends ProgramLine {
+    constructor(){
+        super();
+    }
+    pretty() {
+        return "";
+    }
+}
+function parseInput(inputStr) {
+    switch(inputStr){
+        case "Z":
+            return inputStr;
+        case "NZ":
+            return inputStr;
+        case "ZZ":
+            return inputStr;
+        case "*":
+            return inputStr;
+        default:
+            return undefined;
+    }
+}
+class Command extends ProgramLine {
+    constructor({ state , input , nextState , actions  }){
+        super();
+        this.state = state;
+        this.input = input;
+        this.nextState = nextState;
+        this.actions = actions;
+        this._string = `${this.state}; ${this.input}; ${this.nextState}; ${this.actions.map((a)=>a.pretty()
+        ).join(", ")}`;
+    }
+    static parse(str) {
+        if (typeof str !== 'string') {
+            throw TypeError('str is not a string');
+        }
+        const trimmedStr = str.trim();
+        if (trimmedStr === "") {
+            return new EmptyLine();
+        }
+        if (trimmedStr.startsWith("#")) {
+            if (trimmedStr.startsWith(ComponentsHeader.key)) {
+                return new ComponentsHeader(trimmedStr.slice(ComponentsHeader.key.length).trim());
+            } else if (trimmedStr.startsWith(RegistersHeader.key)) {
+                return new RegistersHeader(trimmedStr.slice(RegistersHeader.key.length).trim());
+            }
+            return new Comment(str);
+        }
+        const array = trimmedStr.split(/\s*;\s*/u);
+        if (array.length < 4) {
+            return `Invalid line "${str}"`;
+        }
+        if (array.length > 4) {
+            if (array[4] === "") {
+                return `Extraneous semicolon "${str}"`;
+            }
+            return `Invalid line "${str}"`;
+        }
+        const state = array[0] ?? this.error();
+        const inputStr = array[1] ?? this.error();
+        const nextState = array[2] ?? this.error();
+        const actionsStr = array[3] ?? this.error();
+        const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter((x)=>x !== ""
+        );
+        const actions = [];
+        for (const actionsStr1 of actionStrs){
+            const result = parseAction(actionsStr1);
+            if (result === undefined) {
+                return `Unknown action "${actionsStr1}" at "${str}"`;
+            }
+            actions.push(result);
+        }
+        const input = parseInput(inputStr);
+        if (input === undefined) {
+            return `Unknown input "${inputStr}" at "${str}"`;
+        }
+        return new Command({
+            state: state,
+            input: input,
+            nextState: nextState,
+            actions: actions
+        });
+    }
+    static error() {
+        throw Error('internal error');
+    }
+    pretty() {
+        return this._string;
+    }
+}
+function validateNextStateIsNotINITIALCommand(command) {
+    if (command.nextState === INITIAL_STATE) {
+        return `Return to initial state in "${command.pretty()}"`;
+    }
+    return undefined;
+}
+function validateNextStateIsNotINITIAL(commands) {
+    const errors = [];
+    for (const command of commands){
+        const err = validateNextStateIsNotINITIALCommand(command);
+        if (typeof err === 'string') {
+            errors.push(err);
+        }
+    }
+    if (errors.length > 0) {
+        return errors;
+    }
+    return undefined;
+}
+function validateNoDuplicatedActionCommand(command) {
+    if (command.actions.length <= 1) {
+        return undefined;
+    }
+    const actionStrs = command.actions.map((x)=>x.pretty()
+    );
+    actionStrs.sort();
+    for(let i = 0; i < actionStrs.length - 1; i++){
+        const act1 = actionStrs[i];
+        const act2 = actionStrs[i + 1];
+        if (act1 === act2) {
+            return `Duplicated actions "${act1}" in "${command.pretty()}"`;
+        }
+    }
+    return undefined;
+}
+function validateNoDuplicatedAction(commands) {
+    const errors = [];
+    for (const command of commands){
+        const err = validateNoDuplicatedActionCommand(command);
+        if (typeof err === 'string') {
+            errors.push(err);
+        }
+    }
+    if (errors.length > 0) {
+        return errors;
+    }
+    return undefined;
+}
+function internalError() {
+    throw Error('internal error');
+}
+function validateNoSameComponentCommand(command) {
+    if (command.actions.find((x)=>x instanceof HaltOutAction
+    ) !== undefined) {
+        return undefined;
+    }
+    const actions = command.actions;
+    const len = actions.length;
+    if (len <= 1) {
+        return undefined;
+    }
+    for(let i = 0; i < len; i++){
+        for(let j = i + 1; j < len; j++){
+            const a = actions[i] ?? internalError();
+            const b = actions[j] ?? internalError();
+            if (a.isSameComponent(b)) {
+                return `Actions "${a.pretty()}" and "${b.pretty()}" use same component in "${command.pretty()}"`;
+            }
+        }
+    }
+    return undefined;
+}
+function validateNoSameComponent(commands) {
+    const errors = [];
+    for (const command of commands){
+        const err = validateNoSameComponentCommand(command);
+        if (typeof err === 'string') {
+            errors.push(err);
+        }
+    }
+    if (errors.length > 0) {
+        return errors;
+    }
+    return undefined;
+}
+function internalError1() {
+    throw Error('internal error');
+}
+function validateZAndNZ(commands) {
+    const errMsg = (line)=>`Need Z line followed by NZ line at "${line.pretty()}"`
+    ;
+    for(let i = 0; i < commands.length - 1; i++){
+        const a = commands[i] ?? internalError1();
+        const b = commands[i + 1] ?? internalError1();
+        if (a.input === "Z" && b.input !== 'NZ') {
+            return [
+                errMsg(a)
+            ];
+        }
+        if (b.input === "NZ" && a.input !== 'Z') {
+            return [
+                errMsg(b)
+            ];
+        }
+        if (a.input === "Z" && b.input === "NZ" && a.state !== b.state) {
+            return [
+                errMsg(a)
+            ];
+        }
+    }
+    const lastLine = commands[commands.length - 1];
+    if (lastLine !== undefined) {
+        if (lastLine.input === 'Z') {
+            return [
+                errMsg(lastLine)
+            ];
+        }
+    }
+    return undefined;
+}
+class ProgramLines {
+    constructor(array){
+        this.array = array;
+    }
+    getArray() {
+        return this.array;
+    }
+    pretty() {
+        return this.getArray().map((line)=>line.pretty()
+        ).join('\n');
+    }
+    static parse(str) {
+        const lines = str.split(/\r\n|\n|\r/u);
+        const programLineWithErrorArray = lines.map((line)=>Command.parse(line)
+        );
+        const errors = programLineWithErrorArray.flatMap((x)=>typeof x === 'string' ? [
+                x
+            ] : []
+        );
+        if (errors.length > 0) {
+            return errors.join('\n');
+        }
+        const programLines = programLineWithErrorArray.flatMap((x)=>typeof x !== 'string' ? [
+                x
+            ] : []
+        );
+        return new ProgramLines(programLines);
+    }
+}
+function validateAll(commands) {
+    const validators = [
+        validateNoDuplicatedAction,
+        validateActionReturnOnce,
+        validateNoSameComponent,
+        validateNextStateIsNotINITIAL,
+        validateZAndNZ
+    ];
+    let errors = [];
+    for (const validator of validators){
+        const errorsOrUndefined = validator(commands);
+        if (Array.isArray(errorsOrUndefined)) {
+            errors = errors.concat(errorsOrUndefined);
+        }
+    }
+    if (errors.length > 0) {
+        return errors.join('\n');
+    }
+    return undefined;
+}
+class Program {
+    constructor({ commands , componentsHeader , registersHeader , programLines ,  }){
+        this.commands = commands;
+        this.componentsHeader = componentsHeader;
+        this.registersHeader = registersHeader;
+        this.programLines = programLines;
+    }
+    static parse(str) {
+        const programLines = ProgramLines.parse(str);
+        if (typeof programLines === 'string') {
+            return programLines;
+        }
+        const commands = [];
+        let registersHeader = undefined;
+        let componentsHeader = undefined;
+        for (const programLine of programLines.getArray()){
+            if (programLine instanceof Command) {
+                commands.push(programLine);
+            } else if (programLine instanceof ComponentsHeader) {
+                if (componentsHeader !== undefined) {
+                    return `Multiple ${ComponentsHeader.key}`;
+                }
+                componentsHeader = programLine;
+            } else if (programLine instanceof RegistersHeader) {
+                if (registersHeader !== undefined) {
+                    return `Multiple ${RegistersHeader.key}`;
+                }
+                registersHeader = programLine;
+            }
+        }
+        if (commands.length === 0) {
+            return 'Program is empty';
+        }
+        const errorOrUndefined = validateAll(commands);
+        if (typeof errorOrUndefined === 'string') {
+            return errorOrUndefined;
+        }
+        return new Program({
+            commands: commands,
+            registersHeader: registersHeader,
+            componentsHeader: componentsHeader,
+            programLines: programLines
+        });
+    }
+    reconstructProgramLines() {
+        return new Program({
+            commands: this.commands,
+            componentsHeader: this.componentsHeader,
+            registersHeader: this.registersHeader,
+            programLines: new ProgramLines(this.commands.slice())
+        });
+    }
+    _actions() {
+        return this.commands.flatMap((command)=>command.actions
+        );
+    }
+    extractUnaryRegisterNumbers() {
+        return sortNub(this._actions().flatMap((a)=>a.extractUnaryRegisterNumbers()
+        ));
+    }
+    extractBinaryRegisterNumbers() {
+        return sortNub(this._actions().flatMap((a)=>a.extractBinaryRegisterNumbers()
+        ));
+    }
+    extractLegacyTRegisterNumbers() {
+        return sortNub(this._actions().flatMap((a)=>a.extractLegacyTRegisterNumbers()
+        ));
+    }
+    pretty() {
+        if (this.commands.length >= 1 && this.programLines.getArray().length === 0) {
+            let str = "";
+            if (this.componentsHeader !== undefined) {
+                str += this.componentsHeader.pretty() + "\n";
+            }
+            if (this.registersHeader !== undefined) {
+                str += this.registersHeader.pretty() + "\n";
+            }
+            str += this.commands.map((command)=>command.pretty()
+            ).join('\n');
+            return str.trim();
+        } else {
+            return this.programLines.pretty();
+        }
+    }
+}
+function sortNub(array) {
+    return [
+        ...new Set(array)
+    ].sort((a, b)=>a - b
+    );
+}
 const decimalNaturalParser = mod.match(/[0-9]+/).desc([
     "number"
 ]).map((x)=>parseInt(x, 10)
@@ -414,15 +1511,19 @@ class FuncAPGMExpr extends APGMExpr {
     name;
     args;
     location;
-    transform(f) {
-        return f(new FuncAPGMExpr(this.name, this.args.map((x)=>x.transform(f)
-        ), this.location));
-    }
     constructor(name, args, location2){
         super();
         this.name = name;
         this.args = args;
         this.location = location2;
+    }
+    transform(f) {
+        return f(new FuncAPGMExpr(this.name, this.args.map((x)=>x.transform(f)
+        ), this.location));
+    }
+    pretty() {
+        return `${this.name}(${this.args.map((x)=>x.pretty()
+        ).join(", ")})`;
     }
 }
 class IfAPGMExpr extends APGMExpr {
@@ -440,6 +1541,9 @@ class IfAPGMExpr extends APGMExpr {
     transform(f) {
         return f(new IfAPGMExpr(this.modifier, this.cond.transform(f), this.thenBody.transform(f), this.elseBody !== undefined ? this.elseBody.transform(f) : undefined));
     }
+    pretty() {
+        return `if_${this.modifier === "Z" ? "z" : "nz"}(${this.cond.pretty()}) ${this.thenBody.pretty()}` + this.elseBody === undefined ? `` : ` else ${this.elseBody?.pretty()}`;
+    }
 }
 class LoopAPGMExpr extends APGMExpr {
     body;
@@ -449,6 +1553,9 @@ class LoopAPGMExpr extends APGMExpr {
     }
     transform(f) {
         return f(new LoopAPGMExpr(this.body.transform(f)));
+    }
+    pretty() {
+        return `loop ${this.body.pretty()}`;
     }
 }
 class Macro {
@@ -499,6 +1606,9 @@ class NumberAPGMExpr extends APGMExpr {
     transform(f) {
         return f(this);
     }
+    pretty() {
+        return this.value.toString();
+    }
 }
 class StringAPGMExpr extends APGMExpr {
     value;
@@ -508,6 +1618,9 @@ class StringAPGMExpr extends APGMExpr {
     }
     transform(f) {
         return f(this);
+    }
+    pretty() {
+        return this.value;
     }
 }
 class SeqAPGMExpr extends APGMExpr {
@@ -520,15 +1633,24 @@ class SeqAPGMExpr extends APGMExpr {
         return f(new SeqAPGMExpr(this.exprs.map((x)=>x.transform(f)
         )));
     }
+    pretty() {
+        return `{${this.exprs.map((x)=>x.pretty() + "; "
+        ).join("")}}`;
+    }
 }
 class VarAPGMExpr extends APGMExpr {
     name;
-    constructor(name){
+    location;
+    constructor(name, location4){
         super();
         this.name = name;
+        this.location = location4;
     }
     transform(f) {
         return f(this);
+    }
+    pretty() {
+        return this.name;
     }
 }
 class WhileAPGMExpr extends APGMExpr {
@@ -544,6 +1666,9 @@ class WhileAPGMExpr extends APGMExpr {
     transform(f) {
         return f(new WhileAPGMExpr(this.modifier, this.cond.transform(f), this.body.transform(f)));
     }
+    pretty() {
+        return `while_${this.modifier === "Z" ? "z" : "nz"}(${this.cond.pretty()}) ${this.body.pretty()}`;
+    }
 }
 const comment = mod.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([]);
 const _ = mod.match(/\s*/).desc([
@@ -558,6 +1683,16 @@ const identifierOnly = mod.match(identifierRexExp).desc([
     "identifier"
 ]);
 const identifier = _.next(identifierOnly).skip(_);
+const identifierWithLocation = _.chain(()=>{
+    return mod.location.chain((loc)=>{
+        return identifierOnly.skip(_).map((ident)=>{
+            return [
+                ident,
+                loc
+            ];
+        });
+    });
+});
 const macroIdentifierRegExp = /[a-zA-Z_][a-zA-Z_0-9]*!/u;
 const macroIdentifier = _.next(mod.match(macroIdentifierRegExp)).skip(_).desc([
     "macro name"
@@ -577,14 +1712,20 @@ const rightParen = token(")").desc([
 const semicolon = token(";").desc([
     "`;`"
 ]);
-const varAPGMExpr = identifier.map((x)=>new VarAPGMExpr(x)
+const curlyLeft = token("{").desc([
+    "`{`"
+]);
+const curlyRight = token("}").desc([
+    "`}`"
+]);
+const varAPGMExpr = identifierWithLocation.map((x)=>new VarAPGMExpr(x[0], x[1])
 );
 function funcAPGMExpr() {
-    return mod.location.chain((location4)=>{
+    return _.next(mod.location).chain((location5)=>{
         return mod.choice(macroIdentifier, identifier).chain((ident)=>{
             return mod.lazy(()=>apgmExpr()
             ).sepBy(comma).wrap(leftParen, rightParen).map((args)=>{
-                return new FuncAPGMExpr(ident, args, location4);
+                return new FuncAPGMExpr(ident, args, location5);
             });
         });
     });
@@ -601,7 +1742,7 @@ function seqAPGMExprRaw() {
     ).repeat();
 }
 function seqAPGMExpr() {
-    return seqAPGMExprRaw().wrap(token("{"), token("}")).map((x)=>new SeqAPGMExpr(x)
+    return seqAPGMExprRaw().wrap(curlyLeft, curlyRight).map((x)=>new SeqAPGMExpr(x)
     );
 }
 const whileKeyword = mod.choice(token("while_z"), token("while_nz")).map((x)=>x === "while_z" ? "Z" : "NZ"
@@ -638,14 +1779,18 @@ function ifAPGMExpr() {
     });
 }
 function macro() {
-    return _.chain((_)=>{
-        return mod.location.chain((location5)=>{
-            return mod.text("macro").skip(someSpaces).next(macroIdentifier).chain((ident)=>{
-                return leftParen.next(varAPGMExpr.sepBy(comma).skip(rightParen)).chain((args)=>{
-                    return mod.lazy(()=>apgmExpr()
-                    ).map((body)=>{
-                        return new Macro(ident, args, body, location5);
-                    });
+    const macroKeyword = _.chain((_)=>{
+        return mod.location.chain((location6)=>{
+            return mod.text("macro").next(someSpaces).map((_)=>location6
+            );
+        });
+    });
+    return macroKeyword.chain((location7)=>{
+        return macroIdentifier.chain((ident)=>{
+            return varAPGMExpr.sepBy(comma).wrap(leftParen, rightParen).chain((args)=>{
+                return mod.lazy(()=>apgmExpr()
+                ).map((body)=>{
+                    return new Macro(ident, args, body, location7);
                 });
             });
         });
@@ -685,12 +1830,19 @@ class ActionAPGLExpr extends APGLExpr {
         super();
         this.actions = actions;
     }
+    transform(f) {
+        return f(this);
+    }
 }
 class SeqAPGLExpr extends APGLExpr {
     exprs;
     constructor(exprs){
         super();
         this.exprs = exprs;
+    }
+    transform(f) {
+        return f(new SeqAPGLExpr(this.exprs.map((x)=>x.transform(f)
+        )));
     }
 }
 class IfAPGLExpr extends APGLExpr {
@@ -703,6 +1855,9 @@ class IfAPGLExpr extends APGLExpr {
         this.thenBody = thenBody;
         this.elseBody = elseBody;
     }
+    transform(f) {
+        return f(new IfAPGLExpr(this.cond.transform(f), this.thenBody.transform(f), this.elseBody.transform(f)));
+    }
 }
 class LoopAPGLExpr extends APGLExpr {
     body;
@@ -710,6 +1865,9 @@ class LoopAPGLExpr extends APGLExpr {
     constructor(body){
         super();
         this.body = body;
+    }
+    transform(f) {
+        return f(new LoopAPGLExpr(this.body.transform(f)));
     }
 }
 class WhileAPGLExpr extends APGLExpr {
@@ -722,6 +1880,9 @@ class WhileAPGLExpr extends APGLExpr {
         this.cond = cond;
         this.body = body;
     }
+    transform(f) {
+        return f(new WhileAPGLExpr(this.modifier, this.cond.transform(f), this.body.transform(f)));
+    }
 }
 class BreakAPGLExpr extends APGLExpr {
     level;
@@ -732,6 +1893,9 @@ class BreakAPGLExpr extends APGLExpr {
         if (level !== undefined && level < 1) {
             throw Error("break level is less than 1");
         }
+    }
+    transform(f) {
+        return f(this);
     }
 }
 class A {
@@ -831,7 +1995,7 @@ function transpileEmptyArgFunc(funcExpr, expr) {
 }
 function transpileNumArgFunc(funcExpr, expr) {
     if (funcExpr.args.length !== 1) {
-        throw Error(`number of argument is not 1: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
+        throw Error(`number of arguments is not 1: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
     }
     const arg = funcExpr.args[0];
     if (!(arg instanceof NumberAPGMExpr)) {
@@ -841,11 +2005,11 @@ function transpileNumArgFunc(funcExpr, expr) {
 }
 function transpileStringArgFunc(funcExpr, expr) {
     if (funcExpr.args.length !== 1) {
-        throw Error(`number of argument is not 1: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
+        throw Error(`number of arguments is not 1: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
     }
     const arg = funcExpr.args[0];
     if (!(arg instanceof StringAPGMExpr)) {
-        throw Error(`argument is not a number: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
+        throw Error(`argument is not a string: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
     }
     return expr(arg.value);
 }
@@ -956,7 +2120,7 @@ function transpileAPGMExpr(e) {
     } else if (e instanceof StringAPGMExpr) {
         throw Error(`string is not allowed: ${e.value}`);
     } else if (e instanceof VarAPGMExpr) {
-        throw Error(`macro variable is not allowed: ${e.name}`);
+        throw Error(`macro variable is not allowed: variable "${e.name}"${formatLocationAt(e.location)}`);
     } else if (e instanceof WhileAPGMExpr) {
         return new WhileAPGLExpr(e.modifier, t(e.cond), t(e.body));
     }
@@ -964,6 +2128,14 @@ function transpileAPGMExpr(e) {
 }
 function isEmptyExpr(expr) {
     return expr instanceof SeqAPGLExpr && expr.exprs.length === 0;
+}
+class Context1 {
+    input;
+    output;
+    constructor(input, output){
+        this.input = input;
+        this.output = output;
+    }
 }
 class Transpiler {
     lines = [];
@@ -997,7 +2169,8 @@ class Transpiler {
         const initialState = "INITIAL";
         const secondState = this.getFreshName() + "_INITIAL";
         this.emitTransition(initialState, secondState);
-        const endState = this.transpileExpr(secondState, expr);
+        const maybeEndState = this.prefix + "END";
+        const endState = this.transpileExpr(new Context1(secondState, maybeEndState), expr);
         this.emitLine({
             currentState: endState,
             prevOutput: "*",
@@ -1008,46 +2181,61 @@ class Transpiler {
         });
         return this.lines;
     }
-    transpileExpr(state, expr) {
+    transpileExpr(ctx, expr) {
         if (expr instanceof ActionAPGLExpr) {
-            return this.transpileActionAPGLExpr(state, expr);
+            return this.transpileActionAPGLExpr(ctx, expr);
         } else if (expr instanceof SeqAPGLExpr) {
-            return this.transpileSeqAPGLExpr(state, expr);
+            return this.transpileSeqAPGLExpr(ctx, expr);
         } else if (expr instanceof IfAPGLExpr) {
-            return this.transpileIfAPGLExpr(state, expr);
+            return this.transpileIfAPGLExpr(ctx, expr);
         } else if (expr instanceof LoopAPGLExpr) {
-            return this.transpileLoopAPGLExpr(state, expr);
+            return this.transpileLoopAPGLExpr(ctx, expr);
         } else if (expr instanceof WhileAPGLExpr) {
-            return this.transpileWhileAPGLExpr(state, expr);
+            return this.transpileWhileAPGLExpr(ctx, expr);
         } else if (expr instanceof BreakAPGLExpr) {
-            return this.transpileBreakAPGLExpr(state, expr);
+            return this.transpileBreakAPGLExpr(ctx, expr);
         }
         throw Error("error");
     }
-    transpileActionAPGLExpr(state, actionExpr) {
-        const nextState = this.getFreshName();
+    transpileActionAPGLExpr(ctx, actionExpr) {
+        const nextState = ctx.output ?? this.getFreshName();
         this.emitLine({
-            currentState: state,
+            currentState: ctx.input,
             prevOutput: "*",
             nextState: nextState,
             actions: actionExpr.actions
         });
         return nextState;
     }
-    transpileSeqAPGLExpr(state, seqExpr) {
-        for (const expr of seqExpr.exprs){
-            state = this.transpileExpr(state, expr);
+    transpileSeqAPGLExpr(ctx, seqExpr) {
+        if (seqExpr.exprs.length === 0) {
+            if (ctx.output !== undefined) {
+                if (ctx.output !== ctx.input) {
+                    this.emitTransition(ctx.input, ctx.output);
+                }
+                return ctx.output;
+            } else {
+                return ctx.input;
+            }
+        }
+        let state = ctx.input;
+        for (const [i, expr] of seqExpr.exprs.entries()){
+            if (ctx.output && i === seqExpr.exprs.length - 1) {
+                state = this.transpileExpr(new Context1(state, ctx.output), expr);
+            } else {
+                state = this.transpileExpr(new Context1(state), expr);
+            }
         }
         return state;
     }
-    transpileIfAPGLExpr(state, ifExpr) {
+    transpileIfAPGLExpr(ctx, ifExpr) {
         if (isEmptyExpr(ifExpr.elseBody)) {
-            return this.transpileIfAPGLExprOnlyZ(state, ifExpr.cond, ifExpr.thenBody);
+            return this.transpileIfAPGLExprOnlyZ(ctx, ifExpr.cond, ifExpr.thenBody);
         }
         if (isEmptyExpr(ifExpr.thenBody)) {
-            return this.transpileIfAPGLExprOnlyNZ(state, ifExpr.cond, ifExpr.elseBody);
+            return this.transpileIfAPGLExprOnlyNZ(ctx, ifExpr.cond, ifExpr.elseBody);
         }
-        const condEndState = this.transpileExpr(state, ifExpr.cond);
+        const condEndState = this.transpileExpr(new Context1(ctx.input), ifExpr.cond);
         const thenStartState = this.getFreshName() + "_IF_Z";
         const elseStartState = this.getFreshName() + "_IF_NZ";
         this.emitLine({
@@ -1066,15 +2254,17 @@ class Transpiler {
                 "NOP"
             ]
         });
-        const thenEndState = this.transpileExpr(thenStartState, ifExpr.thenBody);
-        const elseEndState = this.transpileExpr(elseStartState, ifExpr.elseBody);
-        this.emitTransition(thenEndState, elseEndState);
+        const thenEndState = this.transpileExpr(new Context1(thenStartState, ctx.output), ifExpr.thenBody);
+        const elseEndState = this.transpileExpr(new Context1(elseStartState, ctx.output), ifExpr.elseBody);
+        if (thenEndState !== elseEndState) {
+            this.emitTransition(thenEndState, elseEndState);
+        }
         return elseEndState;
     }
-    transpileIfAPGLExprOnlyZ(state, cond, body) {
-        const condEndState = this.transpileExpr(state, cond);
+    transpileIfAPGLExprOnlyZ(ctx, cond, body) {
+        const condEndState = this.transpileExpr(new Context1(ctx.input), cond);
         const thenStartState = this.getFreshName() + "_IF_Z";
-        const endState = this.transpileExpr(thenStartState, body);
+        const endState = this.transpileExpr(new Context1(thenStartState, ctx.output), body);
         this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
@@ -1093,10 +2283,10 @@ class Transpiler {
         });
         return endState;
     }
-    transpileIfAPGLExprOnlyNZ(state, cond, body) {
-        const condEndState = this.transpileExpr(state, cond);
+    transpileIfAPGLExprOnlyNZ(ctx, cond, body) {
+        const condEndState = this.transpileExpr(new Context1(ctx.input), cond);
         const bodyStartState = this.getFreshName() + "_IF_NZ";
-        const endState = this.transpileExpr(bodyStartState, body);
+        const endState = this.transpileExpr(new Context1(bodyStartState, ctx.output), body);
         this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
@@ -1115,21 +2305,23 @@ class Transpiler {
         });
         return endState;
     }
-    transpileLoopAPGLExpr(state, loopExpr) {
-        const breakState = this.getFreshName() + "_LOOP_BREAK";
+    transpileLoopAPGLExpr(ctx, loopExpr) {
+        const breakState = ctx.output ?? this.getFreshName() + "_LOOP_BREAK";
         this.loopFinalStates.push(breakState);
-        const nextState = this.transpileExpr(state, loopExpr.body);
+        const nextState = this.transpileExpr(new Context1(ctx.input, ctx.input), loopExpr.body);
         this.loopFinalStates.pop();
-        this.emitTransition(nextState, state);
+        if (nextState !== ctx.input) {
+            this.emitTransition(nextState, ctx.input);
+        }
         return breakState;
     }
-    transpileWhileAPGLExprBodyEmpty(state, cond, modifier) {
-        const condEndState = this.transpileExpr(state, cond);
-        const finalState = this.getFreshName() + "_WHILE_END";
+    transpileWhileAPGLExprBodyEmpty(ctx, cond, modifier) {
+        const condEndState = this.transpileExpr(new Context1(ctx.input), cond);
+        const finalState = ctx.output ?? this.getFreshName() + "_WHILE_END";
         this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
-            nextState: modifier === "Z" ? state : finalState,
+            nextState: modifier === "Z" ? ctx.input : finalState,
             actions: [
                 "NOP"
             ]
@@ -1137,20 +2329,20 @@ class Transpiler {
         this.emitLine({
             currentState: condEndState,
             prevOutput: "NZ",
-            nextState: modifier === "Z" ? finalState : state,
+            nextState: modifier === "Z" ? finalState : ctx.input,
             actions: [
                 "NOP"
             ]
         });
         return finalState;
     }
-    transpileWhileAPGLExpr(state, whileExpr) {
+    transpileWhileAPGLExpr(ctx, whileExpr) {
         if (isEmptyExpr(whileExpr.body)) {
-            return this.transpileWhileAPGLExprBodyEmpty(state, whileExpr.cond, whileExpr.modifier);
+            return this.transpileWhileAPGLExprBodyEmpty(ctx, whileExpr.cond, whileExpr.modifier);
         }
-        const condEndState = this.transpileExpr(state, whileExpr.cond);
+        const condEndState = this.transpileExpr(new Context1(ctx.input), whileExpr.cond);
         const bodyStartState = this.getFreshName() + "_WHILE_BODY";
-        const finalState = this.getFreshName() + "_WHILE_END";
+        const finalState = ctx.output ?? this.getFreshName() + "_WHILE_END";
         this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
@@ -1168,12 +2360,14 @@ class Transpiler {
             ]
         });
         this.loopFinalStates.push(finalState);
-        const bodyEndState = this.transpileExpr(bodyStartState, whileExpr.body);
+        const bodyEndState = this.transpileExpr(new Context1(bodyStartState, ctx.input), whileExpr.body);
         this.loopFinalStates.pop();
-        this.emitTransition(bodyEndState, state);
+        if (bodyEndState !== ctx.input) {
+            this.emitTransition(bodyEndState, ctx.input);
+        }
         return finalState;
     }
-    transpileBreakAPGLExpr(state, breakExpr) {
+    transpileBreakAPGLExpr(ctx, breakExpr) {
         if (breakExpr.level !== undefined && breakExpr.level < 1) {
             throw Error("break level is less than 1");
         }
@@ -1182,15 +2376,19 @@ class Transpiler {
             if (breakState === undefined) {
                 throw Error("break outside while or loop");
             }
-            this.emitTransition(state, breakState);
+            if (ctx.input !== breakState) {
+                this.emitTransition(ctx.input, breakState);
+            }
         } else {
             const breakState = this.loopFinalStates[this.loopFinalStates.length - breakExpr.level];
             if (breakState === undefined) {
-                throw Error("break level is greater than number of nest of while or loop");
+                throw Error("break level is greater than number of nests of while or loop");
             }
-            this.emitTransition(state, breakState);
+            if (ctx.input !== breakState) {
+                this.emitTransition(ctx.input, breakState);
+            }
         }
-        return this.getFreshName() + "_BREAK_UNUSED";
+        return ctx.output ?? this.getFreshName() + "_BREAK_UNUSED";
     }
 }
 function transpileAPGL(expr, options = {}) {
@@ -1208,6 +2406,31 @@ function dups(as) {
     }
     return ds;
 }
+function argumentsMessage(num) {
+    return `${num} argument${num === 1 ? "" : "s"}`;
+}
+function replaceVarInBoby(macro1, funcExpr) {
+    const exprs = funcExpr.args;
+    if (exprs.length !== macro1.args.length) {
+        throw Error(`argument length mismatch: "${macro1.name}"` + ` expect ${argumentsMessage(macro1.args.length)} but given ${argumentsMessage(exprs.length)}${formatLocationAt(funcExpr.location)}`);
+    }
+    const nameToExpr = new Map(macro1.args.map((a, i)=>[
+            a.name,
+            exprs[i]
+        ]
+    ));
+    return macro1.body.transform((x)=>{
+        if (x instanceof VarAPGMExpr) {
+            const expr = nameToExpr.get(x.name);
+            if (expr === undefined) {
+                throw Error(`scope error: "${x.name}"${formatLocationAt(x.location)}`);
+            }
+            return expr;
+        } else {
+            return x;
+        }
+    });
+}
 class MacroExpander {
     macroMap;
     count = 0;
@@ -1224,9 +2447,9 @@ class MacroExpander {
             const ds = dups(main1.macros.map((x)=>x.name
             ));
             const d = ds[0];
-            const location6 = main1.macros.slice().reverse().find((x)=>x.name === d
+            const location8 = main1.macros.slice().reverse().find((x)=>x.name === d
             )?.location;
-            throw Error('duplicate definition of macro: "' + d + '"' + formatLocationAt(location6));
+            throw Error(`There is a macro with the same name: "${d}"` + formatLocationAt(location8));
         }
     }
     expand() {
@@ -1248,43 +2471,97 @@ class MacroExpander {
         }
     }
     expandFuncAPGMExpr(funcExpr) {
-        if (this.macroMap.has(funcExpr.name)) {
-            const macro1 = this.macroMap.get(funcExpr.name);
-            if (macro1 === undefined) throw Error("internal error");
-            const expanded = this.replaceVarInBoby(macro1, funcExpr);
+        const macro2 = this.macroMap.get(funcExpr.name);
+        if (macro2 !== undefined) {
+            const expanded = replaceVarInBoby(macro2, funcExpr);
             return this.expandExpr(expanded);
         } else {
             return funcExpr;
         }
     }
-    error() {
-        throw Error("Internal error");
-    }
-    replaceVarInBoby(macro2, funcExpr) {
-        const exprs = funcExpr.args;
-        if (exprs.length !== macro2.args.length) {
-            throw Error(`argument length mismatch: "${macro2.name}"${formatLocationAt(funcExpr.location)}`);
-        }
-        const map = new Map(macro2.args.map((a, i)=>[
-                a.name,
-                exprs[i] ?? this.error()
-            ]
-        ));
-        return macro2.body.transform((x)=>{
-            if (x instanceof VarAPGMExpr) {
-                const expr = map.get(x.name);
-                if (expr === undefined) {
-                    throw Error(`scope error: "${x.name}"${formatLocationAt(funcExpr.location)}`);
-                }
-                return expr;
-            } else {
-                return x;
-            }
-        });
-    }
 }
 function expand(main2) {
     return new MacroExpander(main2).expand();
+}
+function optimize(expr) {
+    return expr.transform(optimizeOnce);
+}
+function optimizeOnce(expr) {
+    if (expr instanceof SeqAPGLExpr) {
+        return optimizeSeqAPGLExpr(expr);
+    }
+    return expr;
+}
+function merge(as, bs) {
+    if (as.length === 0) {
+        return bs;
+    }
+    if (bs.length === 0) {
+        return as;
+    }
+    if (as.some((x)=>x instanceof HaltOutAction
+    )) {
+        return undefined;
+    }
+    if (bs.some((x)=>x instanceof HaltOutAction
+    )) {
+        return undefined;
+    }
+    const asWithoutNOP = as.filter((x)=>!(x instanceof NopAction)
+    );
+    const bsWithoutNOP = bs.filter((x)=>!(x instanceof NopAction)
+    );
+    if (asWithoutNOP.every((a)=>!a.doesReturnValue()
+    ) && bsWithoutNOP.every((b)=>!b.doesReturnValue()
+    )) {
+        const distinctComponent = asWithoutNOP.every((a)=>{
+            return bsWithoutNOP.every((b)=>{
+                return !a.isSameComponent(b);
+            });
+        });
+        if (distinctComponent) {
+            const merged = asWithoutNOP.concat(bsWithoutNOP);
+            merged.push(new NopAction());
+            return merged;
+        }
+    }
+    return undefined;
+}
+function toActions(actionExpr) {
+    return actionExpr.actions.flatMap((x)=>{
+        const a = parseAction(x);
+        return a !== undefined ? [
+            a
+        ] : [];
+    });
+}
+function optimizeSeqAPGLExpr(seqExpr) {
+    const newExprs = [];
+    let items = [];
+    const putItems = ()=>{
+        if (items.length !== 0) {
+            newExprs.push(new ActionAPGLExpr(items.map((x)=>x.pretty()
+            )));
+            items = [];
+        }
+    };
+    for (const expr of seqExpr.exprs){
+        if (expr instanceof ActionAPGLExpr) {
+            const actions = toActions(expr);
+            const merged = merge(items, actions);
+            if (merged === undefined) {
+                putItems();
+                items = actions;
+            } else {
+                items = merged;
+            }
+        } else {
+            putItems();
+            newExprs.push(expr);
+        }
+    }
+    putItems();
+    return new SeqAPGLExpr(newExprs);
 }
 function integration(str, options = {}, log = false) {
     const apgm = parseMain(str);
@@ -1299,7 +2576,11 @@ function integration(str, options = {}, log = false) {
     if (log) {
         console.log("apgl", JSON.stringify(apgl, null, "  "));
     }
-    const apgs = transpileAPGL(apgl, options);
+    const optimizedAPGL = optimize(apgl);
+    if (log) {
+        console.log("optimized apgl", JSON.stringify(optimizedAPGL, null, "  "));
+    }
+    const apgs = transpileAPGL(optimizedAPGL, options);
     const comment1 = [
         "# State    Input    Next state    Actions",
         "# ---------------------------------------", 

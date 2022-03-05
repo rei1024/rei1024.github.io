@@ -3,13 +3,23 @@
 // https://github.com/GollyGang/ruletablerepository/wiki/UnresolvedTurmites2States2Colors
 // https://github.com/rm-hull/turmites
 
-import { AbsTurmites, NORTH, SOUTH, WEST, EAST, HALT } from "./abs_turmites.js";
+import { AbsTurmites, NORTH, SOUTH, WEST, EAST, HALT, rotateDir, flipDir } from "./abs_turmites.js";
 
 /**
  *
  * @param {import('./abs_turmites').Dir} dir
+ * @param {0 | 1 | 2 | 3} rotate
+ * @param {boolean} flip
  */
-function dirToAction(dir) {
+function dirToAction(dir, rotate, flip = false) {
+    for (let i = 0; i < rotate; i++) {
+        dir = rotateDir(dir);
+    }
+
+    if (flip) {
+        dir = flipDir(dir);
+    }
+
     switch (dir) {
         case WEST: return 'TDEC B2DX';
         case EAST: return 'INC B2DX, NOP';
@@ -31,9 +41,11 @@ function intenalError() {
  * @param {AbsTurmites} turmites
  * @param {number} x
  * @param {number} y
+ * @param {0 | 1 | 2 | 3} rotate
+ * @param {boolean} flip
  * @returns {string} APGsembly
  */
-export function generate(turmites, x, y) {
+export function generate(turmites, x, y, rotate, flip = false) {
     /**
      * @type {string[]}
      */
@@ -64,8 +76,8 @@ SET_Y_2; NZ; SET_Y_1; INC B2DY, NOP`
         const nextDir0 = color0.nextOp;
         const nextDir1 = color1.nextOp;
         array.push(`${state}_2; NZ; ${state}_NZ; ${color1.nextColor === 1 ? "SET B2D, " : ""}NOP`);
-        array.push(`${state}_Z; *; ${color0.nextState}_1; ${dirToAction(nextDir0)}`);
-        array.push(`${state}_NZ; *; ${color1.nextState}_1; ${dirToAction(nextDir1)}`);
+        array.push(`${state}_Z; *; ${color0.nextState}_1; ${dirToAction(nextDir0, rotate, flip)}`);
+        array.push(`${state}_NZ; *; ${color1.nextState}_1; ${dirToAction(nextDir1, rotate, flip)}`);
     }
 
     return array.join('\n');

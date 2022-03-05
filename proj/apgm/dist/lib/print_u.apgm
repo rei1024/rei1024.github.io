@@ -1,5 +1,3 @@
-#REGISTERS { "U0": 123 }
-
 /*
 function print(n) {
     let [digit, step] = largestUnit(n);
@@ -210,5 +208,7 @@ macro print_u!(reg, step /* temp0 */ , x /* temp1 */ , temp2, temp3, temp4) {
         }
     }
 }
+
+#REGISTERS { "U0": 123 }
 
 print_u!(0, 1, 2, 3, 4, 5);

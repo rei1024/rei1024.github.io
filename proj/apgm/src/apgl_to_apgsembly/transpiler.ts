@@ -16,6 +16,13 @@ export interface TranspilerOptions {
     prefix?: string;
 }
 
+class Context {
+    constructor(
+        public readonly input: string,
+        public readonly output?: string | undefined,
+    ) {}
+}
+
 export class Transpiler {
     private lines: string[] = [];
     private id: number = 0;
@@ -62,7 +69,13 @@ export class Transpiler {
         const initialState = "INITIAL";
         const secondState = this.getFreshName() + "_INITIAL";
         this.emitTransition(initialState, secondState);
-        const endState = this.transpileExpr(secondState, expr);
+
+        const maybeEndState = this.prefix + "END";
+
+        const endState = this.transpileExpr(
+            new Context(secondState, maybeEndState),
+            expr,
+        );
         this.emitLine({
             currentState: endState,
             prevOutput: "*",
@@ -73,27 +86,27 @@ export class Transpiler {
         return this.lines;
     }
 
-    transpileExpr(state: string, expr: APGLExpr): string {
+    transpileExpr(ctx: Context, expr: APGLExpr): string {
         if (expr instanceof ActionAPGLExpr) {
-            return this.transpileActionAPGLExpr(state, expr);
+            return this.transpileActionAPGLExpr(ctx, expr);
         } else if (expr instanceof SeqAPGLExpr) {
-            return this.transpileSeqAPGLExpr(state, expr);
+            return this.transpileSeqAPGLExpr(ctx, expr);
         } else if (expr instanceof IfAPGLExpr) {
-            return this.transpileIfAPGLExpr(state, expr);
+            return this.transpileIfAPGLExpr(ctx, expr);
         } else if (expr instanceof LoopAPGLExpr) {
-            return this.transpileLoopAPGLExpr(state, expr);
+            return this.transpileLoopAPGLExpr(ctx, expr);
         } else if (expr instanceof WhileAPGLExpr) {
-            return this.transpileWhileAPGLExpr(state, expr);
+            return this.transpileWhileAPGLExpr(ctx, expr);
         } else if (expr instanceof BreakAPGLExpr) {
-            return this.transpileBreakAPGLExpr(state, expr);
+            return this.transpileBreakAPGLExpr(ctx, expr);
         }
         throw Error("error");
     }
 
-    transpileActionAPGLExpr(state: string, actionExpr: ActionAPGLExpr): string {
-        const nextState = this.getFreshName();
+    transpileActionAPGLExpr(ctx: Context, actionExpr: ActionAPGLExpr): string {
+        const nextState = ctx.output ?? this.getFreshName();
         this.emitLine({
-            currentState: state,
+            currentState: ctx.input,
             prevOutput: "*",
             nextState: nextState,
             actions: actionExpr.actions,
@@ -101,31 +114,56 @@ export class Transpiler {
         return nextState;
     }
 
-    transpileSeqAPGLExpr(state: string, seqExpr: SeqAPGLExpr): string {
-        for (const expr of seqExpr.exprs) {
-            state = this.transpileExpr(state, expr);
+    transpileSeqAPGLExpr(ctx: Context, seqExpr: SeqAPGLExpr): string {
+        if (seqExpr.exprs.length === 0) {
+            if (ctx.output !== undefined) {
+                if (ctx.output !== ctx.input) {
+                    this.emitTransition(ctx.input, ctx.output);
+                }
+                return ctx.output;
+            } else {
+                return ctx.input;
+            }
+        }
+
+        let state = ctx.input;
+        for (const [i, expr] of seqExpr.exprs.entries()) {
+            if (ctx.output && i === seqExpr.exprs.length - 1) {
+                // 最後はoutput
+                state = this.transpileExpr(
+                    new Context(state, ctx.output),
+                    expr,
+                );
+            } else {
+                state = this.transpileExpr(new Context(state), expr);
+            }
         }
         return state;
     }
 
-    transpileIfAPGLExpr(state: string, ifExpr: IfAPGLExpr): string {
+    transpileIfAPGLExpr(ctx: Context, ifExpr: IfAPGLExpr): string {
         if (isEmptyExpr(ifExpr.elseBody)) {
             return this.transpileIfAPGLExprOnlyZ(
-                state,
+                ctx,
                 ifExpr.cond,
                 ifExpr.thenBody,
             );
         }
         if (isEmptyExpr(ifExpr.thenBody)) {
             return this.transpileIfAPGLExprOnlyNZ(
-                state,
+                ctx,
                 ifExpr.cond,
                 ifExpr.elseBody,
             );
         }
-        const condEndState = this.transpileExpr(state, ifExpr.cond);
+
+        const condEndState = this.transpileExpr(
+            new Context(ctx.input),
+            ifExpr.cond,
+        );
         const thenStartState = this.getFreshName() + "_IF_Z";
         const elseStartState = this.getFreshName() + "_IF_NZ";
+
         this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
@@ -140,29 +178,31 @@ export class Transpiler {
         });
 
         const thenEndState = this.transpileExpr(
-            thenStartState,
+            new Context(thenStartState, ctx.output),
             ifExpr.thenBody,
         );
         const elseEndState = this.transpileExpr(
-            elseStartState,
+            new Context(elseStartState, ctx.output),
             ifExpr.elseBody,
         );
 
         // elseにまとめる
-        this.emitTransition(thenEndState, elseEndState);
+        if (thenEndState !== elseEndState) {
+            this.emitTransition(thenEndState, elseEndState);
+        }
 
         return elseEndState;
     }
 
     transpileIfAPGLExprOnlyZ(
-        state: string,
+        ctx: Context,
         cond: APGLExpr,
         body: APGLExpr,
     ): string {
-        const condEndState = this.transpileExpr(state, cond);
+        const condEndState = this.transpileExpr(new Context(ctx.input), cond);
         const thenStartState = this.getFreshName() + "_IF_Z";
         const endState = this.transpileExpr(
-            thenStartState,
+            new Context(thenStartState, ctx.output),
             body,
         );
         this.emitLine({
@@ -181,13 +221,16 @@ export class Transpiler {
     }
 
     transpileIfAPGLExprOnlyNZ(
-        state: string,
+        ctx: Context,
         cond: APGLExpr,
         body: APGLExpr,
     ): string {
-        const condEndState = this.transpileExpr(state, cond);
+        const condEndState = this.transpileExpr(new Context(ctx.input), cond);
         const bodyStartState = this.getFreshName() + "_IF_NZ";
-        const endState = this.transpileExpr(bodyStartState, body);
+        const endState = this.transpileExpr(
+            new Context(bodyStartState, ctx.output),
+            body,
+        );
         this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
@@ -203,12 +246,18 @@ export class Transpiler {
         return endState;
     }
 
-    transpileLoopAPGLExpr(state: string, loopExpr: LoopAPGLExpr): string {
-        const breakState = this.getFreshName() + "_LOOP_BREAK";
+    transpileLoopAPGLExpr(ctx: Context, loopExpr: LoopAPGLExpr): string {
+        const breakState = ctx.output ?? (this.getFreshName() + "_LOOP_BREAK");
         this.loopFinalStates.push(breakState);
-        const nextState = this.transpileExpr(state, loopExpr.body);
+        const nextState = this.transpileExpr(
+            new Context(ctx.input, ctx.input),
+            loopExpr.body,
+        );
         this.loopFinalStates.pop();
-        this.emitTransition(nextState, state);
+
+        if (nextState !== ctx.input) {
+            this.emitTransition(nextState, ctx.input);
+        }
         return breakState;
     }
 
@@ -216,41 +265,44 @@ export class Transpiler {
      * 中身が空のwhileについて最適化
      */
     transpileWhileAPGLExprBodyEmpty(
-        state: string,
+        ctx: Context,
         cond: APGLExpr,
         modifier: "Z" | "NZ",
     ): string {
-        const condEndState = this.transpileExpr(state, cond);
-        const finalState = this.getFreshName() + "_WHILE_END";
+        const condEndState = this.transpileExpr(new Context(ctx.input), cond);
+        const finalState = ctx.output ?? (this.getFreshName() + "_WHILE_END");
 
         this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
-            nextState: modifier === "Z" ? state : finalState,
+            nextState: modifier === "Z" ? ctx.input : finalState,
             actions: ["NOP"],
         });
         this.emitLine({
             currentState: condEndState,
             prevOutput: "NZ",
-            nextState: modifier === "Z" ? finalState : state,
+            nextState: modifier === "Z" ? finalState : ctx.input,
             actions: ["NOP"],
         });
 
         return finalState;
     }
 
-    transpileWhileAPGLExpr(state: string, whileExpr: WhileAPGLExpr): string {
+    transpileWhileAPGLExpr(ctx: Context, whileExpr: WhileAPGLExpr): string {
         if (isEmptyExpr(whileExpr.body)) {
             return this.transpileWhileAPGLExprBodyEmpty(
-                state,
+                ctx,
                 whileExpr.cond,
                 whileExpr.modifier,
             );
         }
-        const condEndState = this.transpileExpr(state, whileExpr.cond);
+        const condEndState = this.transpileExpr(
+            new Context(ctx.input),
+            whileExpr.cond,
+        );
         const bodyStartState = this.getFreshName() + "_WHILE_BODY";
 
-        const finalState = this.getFreshName() + "_WHILE_END";
+        const finalState = ctx.output ?? (this.getFreshName() + "_WHILE_END");
 
         this.emitLine({
             currentState: condEndState,
@@ -266,14 +318,20 @@ export class Transpiler {
         });
 
         this.loopFinalStates.push(finalState);
-        const bodyEndState = this.transpileExpr(bodyStartState, whileExpr.body);
+        const bodyEndState = this.transpileExpr(
+            new Context(bodyStartState, ctx.input),
+            whileExpr.body,
+        );
         this.loopFinalStates.pop();
-        this.emitTransition(bodyEndState, state);
+
+        if (bodyEndState !== ctx.input) {
+            this.emitTransition(bodyEndState, ctx.input);
+        }
 
         return finalState;
     }
 
-    transpileBreakAPGLExpr(state: string, breakExpr: BreakAPGLExpr): string {
+    transpileBreakAPGLExpr(ctx: Context, breakExpr: BreakAPGLExpr): string {
         if (breakExpr.level !== undefined && breakExpr.level < 1) {
             throw Error("break level is less than 1");
         }
@@ -283,19 +341,23 @@ export class Transpiler {
             if (breakState === undefined) {
                 throw Error("break outside while or loop");
             }
-            this.emitTransition(state, breakState);
+            if (ctx.input !== breakState) {
+                this.emitTransition(ctx.input, breakState);
+            }
         } else {
             const breakState = this.loopFinalStates[
                 this.loopFinalStates.length - breakExpr.level
             ];
             if (breakState === undefined) {
                 throw Error(
-                    "break level is greater than number of nest of while or loop",
+                    "break level is greater than number of nests of while or loop",
                 );
             }
-            this.emitTransition(state, breakState);
+            if (ctx.input !== breakState) {
+                this.emitTransition(ctx.input, breakState);
+            }
         }
-        return this.getFreshName() + "_BREAK_UNUSED";
+        return ctx.output ?? (this.getFreshName() + "_BREAK_UNUSED");
     }
 }
 

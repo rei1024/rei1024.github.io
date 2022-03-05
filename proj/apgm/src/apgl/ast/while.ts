@@ -8,4 +8,14 @@ export class WhileAPGLExpr extends APGLExpr {
     ) {
         super();
     }
+
+    override transform(f: (_: APGLExpr) => APGLExpr): APGLExpr {
+        return f(
+            new WhileAPGLExpr(
+                this.modifier,
+                this.cond.transform(f),
+                this.body.transform(f),
+            ),
+        );
+    }
 }

@@ -8,4 +8,8 @@ export class NumberAPGMExpr extends APGMExpr {
     transform(f: (_: APGMExpr) => APGMExpr): APGMExpr {
         return f(this);
     }
+
+    pretty() {
+        return this.value.toString();
+    }
 }

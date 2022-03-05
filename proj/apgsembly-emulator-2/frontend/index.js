@@ -59,6 +59,7 @@ const DATA_DIR = location.origin.includes('github') ?
  *           "RuntimeError" | "Halted"} AppState
  */
 
+/** instance */
 const app = new App();
 
 // Reset button

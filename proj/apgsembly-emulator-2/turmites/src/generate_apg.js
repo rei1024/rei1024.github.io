@@ -30,15 +30,20 @@ function intenalError() {
  * @param {Turmites} turmites
  * @param {number} x
  * @param {number} y
+ * @param {0 | 1 | 2 | 3} rotate
  * @returns {string} APGsembly
  */
-export function generate(turmites, x, y) {
+export function generate(turmites, x, y, rotate) {
     /**
      * @type {string[]}
      */
     const array = [];
 
     array.push(`#REGISTERS { "U0": ${x}, "U1": ${y} }`);
+
+    const initialDir = rotate === 0 ? LEFT :
+        rotate === 1 ? UP :
+        rotate === 2 ? RIGHT : DOWN;
 
     array.push(`INITIAL; ZZ; SET_X_1; NOP`);
     array.push(
@@ -48,7 +53,7 @@ SET_X_2; Z; SET_Y_1; NOP
 SET_X_2; NZ; SET_X_1; INC B2DX, NOP
 
 SET_Y_1; *; SET_Y_2; TDEC U1
-SET_Y_2; Z; LEFT_0_1; NOP
+SET_Y_2; Z; ${initialDir}_0_1; NOP
 SET_Y_2; NZ; SET_Y_1; INC B2DY, NOP`
     );
 

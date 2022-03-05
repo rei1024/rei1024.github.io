@@ -527,7 +527,9 @@ export class App {
             breakpointIndex = tempN;
         }
 
-        // -1: *, 0: Z, 1: NZ
+        // -1: *
+        // 0 : Z
+        // 1 : NZ
         const breakpointInputValue = parseInt($breakpointInputSelect.value, 10);
 
         const machine = this.machine;

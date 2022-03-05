@@ -10,8 +10,40 @@ test("integration 0", () => {
         "# State    Input    Next state    Actions",
         "# ---------------------------------------",
         "INITIAL; *; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_2; OUTPUT 1, NOP",
-        "STATE_2; *; STATE_2; HALT_OUT",
+        "STATE_1_INITIAL; *; STATE_END; OUTPUT 1, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
+    ]);
+});
+
+test("integration optimize", () => {
+    const src = `
+    inc_u(1);
+    inc_u(2);
+    `;
+    const res = integration(src);
+    assertEquals(res, [
+        "# State    Input    Next state    Actions",
+        "# ---------------------------------------",
+        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL; *; STATE_END; INC U1, INC U2, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
+    ]);
+});
+
+test("integration optimize loop", () => {
+    const src = `
+    loop {
+        inc_u(1);
+        inc_u(2);
+    }
+    `;
+    const res = integration(src);
+    assertEquals(res, [
+        "# State    Input    Next state    Actions",
+        "# ---------------------------------------",
+        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL; *; STATE_1_INITIAL; INC U1, INC U2, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -27,8 +59,8 @@ test("integration 1 macro", () => {
         "# State    Input    Next state    Actions",
         "# ---------------------------------------",
         "INITIAL; *; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_2; OUTPUT 1, NOP",
-        "STATE_2; *; STATE_2; HALT_OUT",
+        "STATE_1_INITIAL; *; STATE_END; OUTPUT 1, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -47,8 +79,8 @@ test("integration 2 macro", () => {
         "# State    Input    Next state    Actions",
         "# ---------------------------------------",
         "INITIAL; *; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_2; OUTPUT 1, NOP",
-        "STATE_2; *; STATE_2; HALT_OUT",
+        "STATE_1_INITIAL; *; STATE_END; OUTPUT 1, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -68,8 +100,8 @@ test("integration actions", () => {
         "STATE_1_INITIAL; *; STATE_2; INC U0, NOP",
         "STATE_2; *; STATE_3; TDEC U1",
         "STATE_3; *; STATE_4; INC B2, NOP",
-        "STATE_4; *; STATE_5; TDEC B3",
-        "STATE_5; *; STATE_5; HALT_OUT",
+        "STATE_4; *; STATE_END; TDEC B3",
+        "STATE_END; *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -89,10 +121,9 @@ test("integration if", () => {
         "STATE_1_INITIAL; *; STATE_2; TDEC U0",
         "STATE_2; Z; STATE_3_IF_Z; NOP",
         "STATE_2; NZ; STATE_4_IF_NZ; NOP",
-        "STATE_3_IF_Z; *; STATE_5; OUTPUT 0, NOP",
-        "STATE_4_IF_NZ; *; STATE_6; OUTPUT 1, NOP",
-        "STATE_5; *; STATE_6; NOP",
-        "STATE_6; *; STATE_6; HALT_OUT",
+        "STATE_3_IF_Z; *; STATE_END; OUTPUT 0, NOP",
+        "STATE_4_IF_NZ; *; STATE_END; OUTPUT 1, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -117,6 +148,13 @@ test("integration break(2)", () => {
     `;
 
     const res = integration(src);
+    assertEquals(res, [
+        "# State    Input    Next state    Actions",
+        "# ---------------------------------------",
+        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL; *; STATE_END; NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
+    ]);
 });
 
 test("integration header", () => {

@@ -1,5 +1,6 @@
 import {
     _,
+    apgmExpr,
     funcAPGMExpr,
     header,
     identifier,
@@ -83,6 +84,7 @@ test("parser: func", () => {
         "f ( a, b , c )",
         "f ( a, /* comment */ b , c )",
         "f ( a, \n b , \n c )",
+        "f \n(\n a\n,b,c)",
     ];
     for (const s of array) {
         const value = funcAPGMExpr().tryParse(s);
@@ -101,27 +103,6 @@ test("parser: stringLit", () => {
 });
 
 test("parser: main", () => {
-    main().tryParse(``);
-    main().tryParse(`  `);
-    main().tryParse(`
-        f();
-    `);
-    main().tryParse(`
-        /* macro name must end with "!" */
-        macro f!(x) {
-            x;
-            x;
-        }
-        macro h!( y ) {
-            y;
-        }
-        macro   g!( y ) {
-            y;
-        }
-        f!(2);
-        f!("2");
-        f!({ g(3); });
-    `);
     assertThrows(() => {
         main().tryParse(`
             /* no ! */
@@ -142,83 +123,112 @@ test("parser: main", () => {
             g(3);
         }
     `);
-    main().tryParse(`
-        if_z(f(2)) {
-            g(3);
+
+    const testCases = [
+        ``,
+        `  `,
+        `f();`,
+
+        `/* macro name must end with "!" */
+        macro f!(x) {
+            x;
+            x;
         }
-    `);
-    main().tryParse(`
-        if_z(f(2)) {
+        macro h!( y ) {
+            y;
+        }
+        macro   g!( y ) {
+            y;
+        }
+        f!(2);
+        f!("2");
+        f!({ g(3); });`,
+
+        `if_z(f(2)) {
+            g(3);
+        }`,
+
+        `if_z(f(2)) {
             g(3);
         } else {
             f(4);
-        }
-    `);
-    main().tryParse(`
-        if_z(f(2)) {
+        }`,
+
+        `if_z(f(2)) {
             g(3);
         } else if_z(g(7)) {
             f(4);
-        }
-    `);
-    main().tryParse(`
-        if_z(f(2)) {
+        }`,
+
+        `if_z(f(2)) {
             g(3);
         } else if_z(g(7)) {
             f(4);
         } else {
             h(5);
-        }
-    `);
-    main().tryParse(`
-        while_z(f(2)) {
+        }`,
+
+        `while_z(f(2)) {
             g(3);
         }
         while_nz(g("1")) {
             f(2);
-        }
-    `);
-    main().tryParse(`
-        loop {
+        }`,
+
+        `loop {
             g(3);
-        }
-    `);
-    main().tryParse(`
-        loop {
+        }`,
+
+        `loop {
             g (  3 ) ;
-        }
-    `);
-    main().tryParse(`
-        loop {
+        }`,
+
+        `loop {
             g(3);
         }
         loop {
             g(3);
-        }
-    `);
-    main().tryParse(`
-        f({
+        }`,
+
+        `f({
             g(2);
             g(3);
-        });
-    `);
-    main().tryParse(`
-macro f!() {
-    output("1");
-}
-#REGISTERS {}
-f(2);
-    `);
-    main().tryParse(`
-    macro my_output!(x) {
-    output(x);
-}
-#REGISTERS { "U0": 5 }
-inc_u(0);`);
+        });`,
+
+        `macro f!() {
+            output("1");
+        }
+        #REGISTERS {}
+        f(2);`,
+
+        `macro my_output!(x) {
+            output(x);
+        }
+        #REGISTERS { "U0": 5 }
+        inc_u(0);`,
+    ];
+    for (const c of testCases) {
+        main().tryParse(c);
+    }
 });
 
 test("parser: main hex", () => {
     const res = main().tryParse(`f(0x10);`);
     // @ts-ignore
     assertEquals(res.seqExpr.exprs[0].args[0].value, 16);
+});
+
+test("parser: pretty", () => {
+    const value = apgmExpr().tryParse("f(a,b)");
+    assertEquals(value.pretty(), "f(a, b)");
+});
+
+test("parser: pretty 2", () => {
+    const value = apgmExpr().tryParse(`{ f(1); g("2"); }`);
+    assertEquals(value.pretty(), `{f(1); g(2); }`);
+});
+
+test("parser: pretty loop", () => {
+    const value = apgmExpr().tryParse(`loop { f(1); g("2"); }`);
+    assertEquals(value.pretty(), `loop {f(1); g(2); }`);
 });

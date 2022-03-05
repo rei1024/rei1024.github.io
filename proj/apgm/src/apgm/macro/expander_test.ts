@@ -18,8 +18,12 @@ test("expand", () => {
     const macros: Macro[] = [
         new Macro(
             "f!",
-            [new VarAPGMExpr("x")],
-            new FuncAPGMExpr("output", [new VarAPGMExpr("x")], undefined),
+            [new VarAPGMExpr("x", undefined)],
+            new FuncAPGMExpr(
+                "output",
+                [new VarAPGMExpr("x", undefined)],
+                undefined,
+            ),
             undefined,
         ),
     ];
@@ -40,14 +44,22 @@ test("duplicate macro", () => {
     const macros: Macro[] = [
         new Macro(
             "f!",
-            [new VarAPGMExpr("x")],
-            new FuncAPGMExpr("output", [new VarAPGMExpr("x")], undefined),
+            [new VarAPGMExpr("x", undefined)],
+            new FuncAPGMExpr(
+                "output",
+                [new VarAPGMExpr("x", undefined)],
+                undefined,
+            ),
             undefined,
         ),
         new Macro(
             "f!",
-            [new VarAPGMExpr("x")],
-            new FuncAPGMExpr("output", [new VarAPGMExpr("x")], undefined),
+            [new VarAPGMExpr("x", undefined)],
+            new FuncAPGMExpr(
+                "output",
+                [new VarAPGMExpr("x", undefined)],
+                undefined,
+            ),
             undefined,
         ),
     ];
@@ -59,6 +71,34 @@ test("duplicate macro", () => {
             expand(new Main(macros, [], body));
         },
         Error,
-        'duplicate definition of macro: "f!"',
+        'There is a macro with the same name: "f!"',
+    );
+});
+
+test("arguments length macro", () => {
+    const macros: Macro[] = [
+        new Macro(
+            "f!",
+            [new VarAPGMExpr("x", undefined)],
+            new FuncAPGMExpr(
+                "output",
+                [new VarAPGMExpr("x", undefined)],
+                undefined,
+            ),
+            undefined,
+        ),
+    ];
+    const body = new SeqAPGMExpr([
+        new FuncAPGMExpr("f!", [
+            new StringAPGMExpr("3"),
+            new StringAPGMExpr("3"),
+        ], undefined),
+    ]);
+    assertThrows(
+        () => {
+            expand(new Main(macros, [], body));
+        },
+        Error,
+        `argument length mismatch: "f!" expect 1 argument but given 2 arguments`,
     );
 });

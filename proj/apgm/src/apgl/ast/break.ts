@@ -8,4 +8,8 @@ export class BreakAPGLExpr extends APGLExpr {
             throw Error("break level is less than 1");
         }
     }
+
+    override transform(f: (_: APGLExpr) => APGLExpr): APGLExpr {
+        return f(this);
+    }
 }

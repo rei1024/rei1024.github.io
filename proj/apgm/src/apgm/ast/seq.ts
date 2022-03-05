@@ -10,4 +10,8 @@ export class SeqAPGMExpr extends APGMExpr {
     transform(f: (_: APGMExpr) => APGMExpr): APGMExpr {
         return f(new SeqAPGMExpr(this.exprs.map((x) => x.transform(f))));
     }
+
+    pretty(): string {
+        return `{${this.exprs.map((x) => x.pretty() + "; ").join("")}}`;
+    }
 }
