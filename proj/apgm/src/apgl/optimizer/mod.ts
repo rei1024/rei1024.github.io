@@ -15,13 +15,16 @@ function optimizeOnce(expr: APGLExpr): APGLExpr {
     return expr;
 }
 
-function merge(as: Action[], bs: Action[]): Action[] | undefined {
+function merge(
+    as: readonly Action[],
+    bs: readonly Action[],
+): Action[] | undefined {
     if (as.length === 0) {
-        return bs;
+        return bs.slice();
     }
 
     if (bs.length === 0) {
-        return as;
+        return as.slice();
     }
 
     if (as.some((x) => x instanceof HaltOutAction)) {
@@ -35,24 +38,37 @@ function merge(as: Action[], bs: Action[]): Action[] | undefined {
     const asWithoutNOP = as.filter((x) => !(x instanceof NopAction));
     const bsWithoutNOP = bs.filter((x) => !(x instanceof NopAction));
 
-    if (
-        asWithoutNOP.every((a) => !a.doesReturnValue()) &&
-        bsWithoutNOP.every((b) => !b.doesReturnValue())
-    ) {
-        const distinctComponent = asWithoutNOP.every((a) => {
-            return bsWithoutNOP.every((b) => {
-                return !a.isSameComponent(b);
-            });
-        });
+    const asWithoutNOPNonReturn = asWithoutNOP.every((a) =>
+        !a.doesReturnValue()
+    );
 
-        if (distinctComponent) {
-            const merged = asWithoutNOP.concat(bsWithoutNOP);
-            merged.push(new NopAction());
-            return merged;
-        }
+    const bsWithoutNOPNonReturn = bsWithoutNOP.every((b) =>
+        !b.doesReturnValue()
+    );
+
+    if (!asWithoutNOPNonReturn && !bsWithoutNOPNonReturn) {
+        // 両方とも値を返していればマージ不可
+        return undefined;
     }
 
-    return undefined;
+    const distinctComponent = asWithoutNOP.every((a) => {
+        return bsWithoutNOP.every((b) => {
+            return !a.isSameComponent(b);
+        });
+    });
+
+    if (!distinctComponent) {
+        // 同じコンポーネントがあればマージ不可
+        return undefined;
+    }
+
+    const merged = asWithoutNOP.concat(bsWithoutNOP);
+    if (asWithoutNOPNonReturn && bsWithoutNOPNonReturn) {
+        // 両方とも値を返さなければNOPを追加
+        merged.push(new NopAction());
+    }
+
+    return merged;
 }
 
 function toActions(actionExpr: ActionAPGLExpr): Action[] {

@@ -1,18 +1,31 @@
 import { integration } from "./mod.ts";
 import { assertEquals, assertThrows, test } from "../deps_test.ts";
 
+const comment = [
+    "# State    Input    Next state    Actions",
+    "# ---------------------------------------",
+];
+
 test("integration 0", () => {
     const src = `
     output("1");
     `;
     const res = integration(src);
     assertEquals(res, [
-        "# State    Input    Next state    Actions",
-        "# ---------------------------------------",
+        ...comment,
         "INITIAL; *; STATE_1_INITIAL; NOP",
         "STATE_1_INITIAL; *; STATE_END; OUTPUT 1, NOP",
         "STATE_END; *; STATE_END; HALT_OUT",
     ]);
+});
+
+test("integration output non string", () => {
+    const src = `
+    output(1);
+    `;
+    assertThrows(() => {
+        const res = integration(src);
+    });
 });
 
 test("integration optimize", () => {
@@ -22,8 +35,7 @@ test("integration optimize", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
-        "# State    Input    Next state    Actions",
-        "# ---------------------------------------",
+        ...comment,
         "INITIAL; *; STATE_1_INITIAL; NOP",
         "STATE_1_INITIAL; *; STATE_END; INC U1, INC U2, NOP",
         "STATE_END; *; STATE_END; HALT_OUT",
@@ -39,8 +51,7 @@ test("integration optimize loop", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
-        "# State    Input    Next state    Actions",
-        "# ---------------------------------------",
+        ...comment,
         "INITIAL; *; STATE_1_INITIAL; NOP",
         "STATE_1_INITIAL; *; STATE_1_INITIAL; INC U1, INC U2, NOP",
         "STATE_END; *; STATE_END; HALT_OUT",
@@ -56,8 +67,7 @@ test("integration 1 macro", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
-        "# State    Input    Next state    Actions",
-        "# ---------------------------------------",
+        ...comment,
         "INITIAL; *; STATE_1_INITIAL; NOP",
         "STATE_1_INITIAL; *; STATE_END; OUTPUT 1, NOP",
         "STATE_END; *; STATE_END; HALT_OUT",
@@ -76,8 +86,7 @@ test("integration 2 macro", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
-        "# State    Input    Next state    Actions",
-        "# ---------------------------------------",
+        ...comment,
         "INITIAL; *; STATE_1_INITIAL; NOP",
         "STATE_1_INITIAL; *; STATE_END; OUTPUT 1, NOP",
         "STATE_END; *; STATE_END; HALT_OUT",
@@ -94,13 +103,10 @@ test("integration actions", () => {
     const res = integration(src);
 
     assertEquals(res, [
-        "# State    Input    Next state    Actions",
-        "# ---------------------------------------",
+        ...comment,
         "INITIAL; *; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_2; INC U0, NOP",
-        "STATE_2; *; STATE_3; TDEC U1",
-        "STATE_3; *; STATE_4; INC B2, NOP",
-        "STATE_4; *; STATE_END; TDEC B3",
+        "STATE_1_INITIAL; *; STATE_2; INC U0, TDEC U1, INC B2",
+        "STATE_2; *; STATE_END; TDEC B3",
         "STATE_END; *; STATE_END; HALT_OUT",
     ]);
 });
@@ -115,14 +121,52 @@ test("integration if", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
-        "# State    Input    Next state    Actions",
-        "# ---------------------------------------",
+        ...comment,
         "INITIAL; *; STATE_1_INITIAL; NOP",
         "STATE_1_INITIAL; *; STATE_2; TDEC U0",
-        "STATE_2; Z; STATE_3_IF_Z; NOP",
-        "STATE_2; NZ; STATE_4_IF_NZ; NOP",
-        "STATE_3_IF_Z; *; STATE_END; OUTPUT 0, NOP",
-        "STATE_4_IF_NZ; *; STATE_END; OUTPUT 1, NOP",
+        "STATE_2; Z; STATE_END; OUTPUT 0, NOP",
+        "STATE_2; NZ; STATE_END; OUTPUT 1, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
+    ]);
+});
+
+test("integration if multi", () => {
+    const src = `if_z(nop()) {
+        output("1");
+        output("2");
+    } else {
+        output("3");
+        output("4");
+    }
+      `;
+    const res = integration(src);
+    assertEquals(res, [
+        ...comment,
+        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL; *; STATE_2; NOP",
+        "STATE_2; Z; STATE_3; OUTPUT 1, NOP",
+        "STATE_2; NZ; STATE_4; OUTPUT 3, NOP",
+        "STATE_3; *; STATE_END; OUTPUT 2, NOP",
+        "STATE_4; *; STATE_END; OUTPUT 4, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
+    ]);
+});
+
+test("integration loop if", () => {
+    const src = `
+    if_z(nop()) {
+        loop {}
+    }
+    `;
+    const res = integration(src);
+
+    assertEquals(res, [
+        ...comment,
+        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL; *; STATE_2; NOP",
+        "STATE_2; Z; STATE_3; NOP",
+        "STATE_2; NZ; STATE_END; NOP",
+        "STATE_3; *; STATE_3; NOP",
         "STATE_END; *; STATE_END; HALT_OUT",
     ]);
 });
@@ -149,8 +193,7 @@ test("integration break(2)", () => {
 
     const res = integration(src);
     assertEquals(res, [
-        "# State    Input    Next state    Actions",
-        "# ---------------------------------------",
+        ...comment,
         "INITIAL; *; STATE_1_INITIAL; NOP",
         "STATE_1_INITIAL; *; STATE_END; NOP",
         "STATE_END; *; STATE_END; HALT_OUT",
@@ -184,4 +227,49 @@ test("integration header fail", () => {
     assertThrows(() => {
         const res = integration(src);
     });
+});
+
+test("integration repeat", () => {
+    const src = `
+    repeat(2, output("1"));
+    `;
+    const res = integration(src);
+    assertEquals(res, [
+        ...comment,
+        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL; *; STATE_2; OUTPUT 1, NOP",
+        "STATE_2; *; STATE_END; OUTPUT 1, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
+    ]);
+});
+
+test("integration repeat throws empty args", () => {
+    const src = `
+    repeat();
+    `;
+    assertThrows(() => {
+        integration(src);
+    });
+});
+
+test("integration repeat throws one args", () => {
+    const src = `
+    repeat(4);
+    `;
+    assertThrows(() => {
+        integration(src);
+    });
+});
+
+test("integration unknown function", () => {
+    const src = `
+    unknown_function();
+    `;
+    assertThrows(
+        () => {
+            integration(src);
+        },
+        Error,
+        'Unknown function: "unknown_function" at line 2 column 5',
+    );
 });

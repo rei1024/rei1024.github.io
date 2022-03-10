@@ -9,6 +9,7 @@ import {
     main,
     stringLit,
 } from "./mod.ts";
+import { SeqAPGMExpr } from "../ast/mod.ts";
 import { assertEquals, assertThrows, test } from "../../deps_test.ts";
 
 test("parser: identifier", () => {
@@ -75,6 +76,10 @@ test("parser: header", () => {
         header.tryParse("#COMPONENTS OUTPUT").toString(),
         "#COMPONENTS OUTPUT",
     );
+});
+
+test("parser: header no space", () => {
+    assertEquals(header.tryParse("#REGISTERS{}").toString(), "#REGISTERS {}");
 });
 
 test("parser: func", () => {
@@ -162,7 +167,7 @@ test("parser: main", () => {
 
         `if_z(f(2)) {
             g(3);
-        } else if_z(g(7)) {
+        } else if_nz(g(7)) {
             f(4);
         } else {
             h(5);
@@ -208,7 +213,13 @@ test("parser: main", () => {
         inc_u(0);`,
     ];
     for (const c of testCases) {
-        main().tryParse(c);
+        const m = main().tryParse(c);
+        const seq = m.seqExpr;
+        // @ts-ignore
+        if (typeof seq.pretty === "function") {
+            // @ts-ignore
+            seq.pretty();
+        }
     }
 });
 
@@ -225,10 +236,10 @@ test("parser: pretty", () => {
 
 test("parser: pretty 2", () => {
     const value = apgmExpr().tryParse(`{ f(1); g("2"); }`);
-    assertEquals(value.pretty(), `{f(1); g(2); }`);
+    assertEquals(value.pretty(), `{f(1); g("2"); }`);
 });
 
 test("parser: pretty loop", () => {
     const value = apgmExpr().tryParse(`loop { f(1); g("2"); }`);
-    assertEquals(value.pretty(), `loop {f(1); g(2); }`);
+    assertEquals(value.pretty(), `loop {f(1); g("2"); }`);
 });

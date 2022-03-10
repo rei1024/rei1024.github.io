@@ -9,12 +9,22 @@ export function prettyError(fail: bnb.ParseFail, source: string): string {
     const below = lines[fail.location.line];
     const arrowLine = " ".repeat(Math.max(0, fail.location.column - 1)) + "^";
 
-    const errorLines = [
+    const aboveLines = [
         ...(above === undefined ? [] : [above]),
         errorLine,
-        arrowLine,
+    ];
+
+    const belowLines = [
         ...(below === undefined ? [] : [below]),
-    ].map((x) => "| " + x);
+    ];
+
+    const prefix = "| ";
+
+    const errorLines = [
+        ...aboveLines.map((x) => prefix + x),
+        " ".repeat(prefix.length) + arrowLine,
+        ...belowLines.map((x) => prefix + x),
+    ];
 
     return [
         `parse error at line ${fail.location.line} column ${fail.location.column}:`,

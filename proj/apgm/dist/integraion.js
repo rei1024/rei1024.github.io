@@ -1472,17 +1472,25 @@ function prettyError(fail1, source) {
     const errorLine = lines[fail1.location.line - 1];
     const below = lines[fail1.location.line];
     const arrowLine = " ".repeat(Math.max(0, fail1.location.column - 1)) + "^";
-    const errorLines = [
+    const aboveLines = [
         ...above === undefined ? [] : [
             above
         ],
-        errorLine,
-        arrowLine,
+        errorLine, 
+    ];
+    const belowLines = [
         ...below === undefined ? [] : [
             below
         ], 
-    ].map((x)=>"| " + x
-    );
+    ];
+    const prefix = "| ";
+    const errorLines = [
+        ...aboveLines.map((x)=>prefix + x
+        ),
+        " ".repeat(prefix.length) + arrowLine,
+        ...belowLines.map((x)=>prefix + x
+        ), 
+    ];
     return [
         `parse error at line ${fail1.location.line} column ${fail1.location.column}:`,
         `  expected ${fail1.expected.join(", ")}`,
@@ -1620,7 +1628,7 @@ class StringAPGMExpr extends APGMExpr {
         return f(this);
     }
     pretty() {
-        return this.value;
+        return `"` + this.value + `"`;
     }
 }
 class SeqAPGMExpr extends APGMExpr {
@@ -1890,9 +1898,6 @@ class BreakAPGLExpr extends APGLExpr {
     constructor(level){
         super();
         this.level = level;
-        if (level !== undefined && level < 1) {
-            throw Error("break level is less than 1");
-        }
     }
     transform(f) {
         return f(this);
@@ -2127,18 +2132,20 @@ function transpileAPGMExpr(e) {
     throw Error("internal error");
 }
 function isEmptyExpr(expr) {
-    return expr instanceof SeqAPGLExpr && expr.exprs.length === 0;
+    return expr instanceof SeqAPGLExpr && expr.exprs.every((e)=>isEmptyExpr(e)
+    );
 }
 class Context1 {
     input;
     output;
-    constructor(input, output){
+    inputZNZ;
+    constructor(input, output, inputZNZ){
         this.input = input;
         this.output = output;
+        this.inputZNZ = inputZNZ;
     }
 }
 class Transpiler {
-    lines = [];
     id = 0;
     loopFinalStates = [];
     prefix;
@@ -2153,12 +2160,14 @@ class Transpiler {
         if (actions.length === 0) {
             throw Error("action must be nonempty");
         }
-        this.lines.push(`${currentState}; ${prevOutput}; ${nextState}; ${actions.join(", ")}`);
+        return [
+            `${currentState}; ${prevOutput}; ${nextState}; ${actions.join(", ")}`, 
+        ];
     }
-    emitTransition(current, next) {
-        this.emitLine({
+    emitTransition(current, next, inputZNZ = "*") {
+        return this.emitLine({
             currentState: current,
-            prevOutput: "*",
+            prevOutput: inputZNZ,
             nextState: next,
             actions: [
                 "NOP"
@@ -2168,10 +2177,10 @@ class Transpiler {
     transpile(expr) {
         const initialState = "INITIAL";
         const secondState = this.getFreshName() + "_INITIAL";
-        this.emitTransition(initialState, secondState);
-        const maybeEndState = this.prefix + "END";
-        const endState = this.transpileExpr(new Context1(secondState, maybeEndState), expr);
-        this.emitLine({
+        const initial = this.emitTransition(initialState, secondState);
+        const endState = this.prefix + "END";
+        const body = this.transpileExpr(new Context1(secondState, endState, "*"), expr);
+        const end = this.emitLine({
             currentState: endState,
             prevOutput: "*",
             nextState: endState,
@@ -2179,7 +2188,11 @@ class Transpiler {
                 "HALT_OUT"
             ]
         });
-        return this.lines;
+        return [
+            ...initial,
+            ...body,
+            ...end
+        ];
     }
     transpileExpr(ctx, expr) {
         if (expr instanceof ActionAPGLExpr) {
@@ -2194,201 +2207,150 @@ class Transpiler {
             return this.transpileWhileAPGLExpr(ctx, expr);
         } else if (expr instanceof BreakAPGLExpr) {
             return this.transpileBreakAPGLExpr(ctx, expr);
+        } else {
+            throw Error("unknown expr");
         }
-        throw Error("error");
     }
     transpileActionAPGLExpr(ctx, actionExpr) {
-        const nextState = ctx.output ?? this.getFreshName();
-        this.emitLine({
+        return this.emitLine({
             currentState: ctx.input,
-            prevOutput: "*",
-            nextState: nextState,
+            prevOutput: ctx.inputZNZ,
+            nextState: ctx.output,
             actions: actionExpr.actions
         });
-        return nextState;
     }
     transpileSeqAPGLExpr(ctx, seqExpr) {
-        if (seqExpr.exprs.length === 0) {
-            if (ctx.output !== undefined) {
-                if (ctx.output !== ctx.input) {
-                    this.emitTransition(ctx.input, ctx.output);
-                }
-                return ctx.output;
-            } else {
-                return ctx.input;
-            }
+        if (isEmptyExpr(seqExpr)) {
+            return this.emitTransition(ctx.input, ctx.output, ctx.inputZNZ);
         }
+        if (seqExpr.exprs.length === 1) {
+            const expr = seqExpr.exprs[0];
+            return this.transpileExpr(ctx, expr);
+        }
+        let seq = [];
         let state = ctx.input;
         for (const [i, expr] of seqExpr.exprs.entries()){
-            if (ctx.output && i === seqExpr.exprs.length - 1) {
-                state = this.transpileExpr(new Context1(state, ctx.output), expr);
+            if (i === 0) {
+                const outputState = this.getFreshName();
+                seq = seq.concat(this.transpileExpr(new Context1(state, outputState, ctx.inputZNZ), expr));
+                state = outputState;
+            } else if (i === seqExpr.exprs.length - 1) {
+                seq = seq.concat(this.transpileExpr(new Context1(state, ctx.output, "*"), expr));
             } else {
-                state = this.transpileExpr(new Context1(state), expr);
+                const outputState = this.getFreshName();
+                seq = seq.concat(this.transpileExpr(new Context1(state, outputState, "*"), expr));
+                state = outputState;
             }
         }
-        return state;
+        return seq;
     }
     transpileIfAPGLExpr(ctx, ifExpr) {
-        if (isEmptyExpr(ifExpr.elseBody)) {
-            return this.transpileIfAPGLExprOnlyZ(ctx, ifExpr.cond, ifExpr.thenBody);
+        if (isEmptyExpr(ifExpr.thenBody) && isEmptyExpr(ifExpr.elseBody)) {
+            return this.transpileExpr(ctx, ifExpr.cond);
         }
-        if (isEmptyExpr(ifExpr.thenBody)) {
-            return this.transpileIfAPGLExprOnlyNZ(ctx, ifExpr.cond, ifExpr.elseBody);
-        }
-        const condEndState = this.transpileExpr(new Context1(ctx.input), ifExpr.cond);
-        const thenStartState = this.getFreshName() + "_IF_Z";
-        const elseStartState = this.getFreshName() + "_IF_NZ";
-        this.emitLine({
-            currentState: condEndState,
-            prevOutput: "Z",
-            nextState: thenStartState,
-            actions: [
-                "NOP"
-            ]
-        });
-        this.emitLine({
-            currentState: condEndState,
-            prevOutput: "NZ",
-            nextState: elseStartState,
-            actions: [
-                "NOP"
-            ]
-        });
-        const thenEndState = this.transpileExpr(new Context1(thenStartState, ctx.output), ifExpr.thenBody);
-        const elseEndState = this.transpileExpr(new Context1(elseStartState, ctx.output), ifExpr.elseBody);
-        if (thenEndState !== elseEndState) {
-            this.emitTransition(thenEndState, elseEndState);
-        }
-        return elseEndState;
-    }
-    transpileIfAPGLExprOnlyZ(ctx, cond, body) {
-        const condEndState = this.transpileExpr(new Context1(ctx.input), cond);
-        const thenStartState = this.getFreshName() + "_IF_Z";
-        const endState = this.transpileExpr(new Context1(thenStartState, ctx.output), body);
-        this.emitLine({
-            currentState: condEndState,
-            prevOutput: "Z",
-            nextState: thenStartState,
-            actions: [
-                "NOP"
-            ]
-        });
-        this.emitLine({
-            currentState: condEndState,
-            prevOutput: "NZ",
-            nextState: endState,
-            actions: [
-                "NOP"
-            ]
-        });
-        return endState;
-    }
-    transpileIfAPGLExprOnlyNZ(ctx, cond, body) {
-        const condEndState = this.transpileExpr(new Context1(ctx.input), cond);
-        const bodyStartState = this.getFreshName() + "_IF_NZ";
-        const endState = this.transpileExpr(new Context1(bodyStartState, ctx.output), body);
-        this.emitLine({
-            currentState: condEndState,
-            prevOutput: "Z",
-            nextState: endState,
-            actions: [
-                "NOP"
-            ]
-        });
-        this.emitLine({
-            currentState: condEndState,
-            prevOutput: "NZ",
-            nextState: bodyStartState,
-            actions: [
-                "NOP"
-            ]
-        });
-        return endState;
+        const condEndState = this.getFreshName();
+        const cond = this.transpileExpr(new Context1(ctx.input, condEndState, ctx.inputZNZ), ifExpr.cond);
+        const [z, ...then] = this.transpileExpr(new Context1(condEndState, ctx.output, "Z"), ifExpr.thenBody);
+        const [nz, ...el] = this.transpileExpr(new Context1(condEndState, ctx.output, "NZ"), ifExpr.elseBody);
+        return [
+            ...cond,
+            z,
+            nz,
+            ...then,
+            ...el
+        ];
     }
     transpileLoopAPGLExpr(ctx, loopExpr) {
-        const breakState = ctx.output ?? this.getFreshName() + "_LOOP_BREAK";
-        this.loopFinalStates.push(breakState);
-        const nextState = this.transpileExpr(new Context1(ctx.input, ctx.input), loopExpr.body);
-        this.loopFinalStates.pop();
-        if (nextState !== ctx.input) {
-            this.emitTransition(nextState, ctx.input);
+        const loopState = ctx.inputZNZ === "*" ? ctx.input : this.getFreshName();
+        let trans = [];
+        if (ctx.inputZNZ !== "*") {
+            trans = trans.concat(this.emitTransition(ctx.input, loopState, ctx.inputZNZ));
         }
-        return breakState;
+        this.loopFinalStates.push(ctx.output);
+        const body = this.transpileExpr(new Context1(loopState, loopState, "*"), loopExpr.body);
+        this.loopFinalStates.pop();
+        return [
+            ...trans,
+            ...body
+        ];
     }
     transpileWhileAPGLExprBodyEmpty(ctx, cond, modifier) {
-        const condEndState = this.transpileExpr(new Context1(ctx.input), cond);
-        const finalState = ctx.output ?? this.getFreshName() + "_WHILE_END";
-        this.emitLine({
+        const condEndState = this.getFreshName();
+        const condRes = this.transpileExpr(new Context1(ctx.input, condEndState, ctx.inputZNZ), cond);
+        const zRes = this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
-            nextState: modifier === "Z" ? ctx.input : finalState,
+            nextState: modifier === "Z" ? ctx.input : ctx.output,
             actions: [
                 "NOP"
             ]
         });
-        this.emitLine({
+        const nzRes = this.emitLine({
             currentState: condEndState,
             prevOutput: "NZ",
-            nextState: modifier === "Z" ? finalState : ctx.input,
+            nextState: modifier === "Z" ? ctx.output : ctx.input,
             actions: [
                 "NOP"
             ]
         });
-        return finalState;
+        return [
+            ...condRes,
+            ...zRes,
+            ...nzRes
+        ];
     }
     transpileWhileAPGLExpr(ctx, whileExpr) {
         if (isEmptyExpr(whileExpr.body)) {
             return this.transpileWhileAPGLExprBodyEmpty(ctx, whileExpr.cond, whileExpr.modifier);
         }
-        const condEndState = this.transpileExpr(new Context1(ctx.input), whileExpr.cond);
+        let cond = [];
+        let condStartState = ctx.inputZNZ === "*" ? ctx.input : this.getFreshName();
+        if (ctx.inputZNZ !== "*") {
+            cond = cond.concat(this.emitTransition(ctx.input, condStartState, ctx.inputZNZ));
+        }
+        const condEndState = this.getFreshName();
+        cond = cond.concat(this.transpileExpr(new Context1(condStartState, condEndState, "*"), whileExpr.cond));
         const bodyStartState = this.getFreshName() + "_WHILE_BODY";
-        const finalState = ctx.output ?? this.getFreshName() + "_WHILE_END";
-        this.emitLine({
+        const zRes = this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
-            nextState: whileExpr.modifier === "Z" ? bodyStartState : finalState,
+            nextState: whileExpr.modifier === "Z" ? bodyStartState : ctx.output,
             actions: [
                 "NOP"
             ]
         });
-        this.emitLine({
+        const nzRes = this.emitLine({
             currentState: condEndState,
             prevOutput: "NZ",
-            nextState: whileExpr.modifier === "Z" ? finalState : bodyStartState,
+            nextState: whileExpr.modifier === "Z" ? ctx.output : bodyStartState,
             actions: [
                 "NOP"
             ]
         });
-        this.loopFinalStates.push(finalState);
-        const bodyEndState = this.transpileExpr(new Context1(bodyStartState, ctx.input), whileExpr.body);
+        this.loopFinalStates.push(ctx.output);
+        const body = this.transpileExpr(new Context1(bodyStartState, condStartState, "*"), whileExpr.body);
         this.loopFinalStates.pop();
-        if (bodyEndState !== ctx.input) {
-            this.emitTransition(bodyEndState, ctx.input);
-        }
-        return finalState;
+        return [
+            ...cond,
+            ...zRes,
+            ...nzRes,
+            ...body
+        ];
     }
     transpileBreakAPGLExpr(ctx, breakExpr) {
-        if (breakExpr.level !== undefined && breakExpr.level < 1) {
+        const level = breakExpr.level ?? 1;
+        if (level < 1) {
             throw Error("break level is less than 1");
         }
-        if (breakExpr.level === undefined || breakExpr.level === 1) {
-            const breakState = this.loopFinalStates[this.loopFinalStates.length - 1];
-            if (breakState === undefined) {
+        const finalState = this.loopFinalStates[this.loopFinalStates.length - level];
+        if (finalState === undefined) {
+            if (level === 1) {
                 throw Error("break outside while or loop");
-            }
-            if (ctx.input !== breakState) {
-                this.emitTransition(ctx.input, breakState);
-            }
-        } else {
-            const breakState = this.loopFinalStates[this.loopFinalStates.length - breakExpr.level];
-            if (breakState === undefined) {
+            } else {
                 throw Error("break level is greater than number of nests of while or loop");
             }
-            if (ctx.input !== breakState) {
-                this.emitTransition(ctx.input, breakState);
-            }
         }
-        return ctx.output ?? this.getFreshName() + "_BREAK_UNUSED";
+        return this.emitTransition(ctx.input, finalState, ctx.inputZNZ);
     }
 }
 function transpileAPGL(expr, options = {}) {
@@ -2494,10 +2456,10 @@ function optimizeOnce(expr) {
 }
 function merge(as, bs) {
     if (as.length === 0) {
-        return bs;
+        return bs.slice();
     }
     if (bs.length === 0) {
-        return as;
+        return as.slice();
     }
     if (as.some((x)=>x instanceof HaltOutAction
     )) {
@@ -2511,21 +2473,26 @@ function merge(as, bs) {
     );
     const bsWithoutNOP = bs.filter((x)=>!(x instanceof NopAction)
     );
-    if (asWithoutNOP.every((a)=>!a.doesReturnValue()
-    ) && bsWithoutNOP.every((b)=>!b.doesReturnValue()
-    )) {
-        const distinctComponent = asWithoutNOP.every((a)=>{
-            return bsWithoutNOP.every((b)=>{
-                return !a.isSameComponent(b);
-            });
-        });
-        if (distinctComponent) {
-            const merged = asWithoutNOP.concat(bsWithoutNOP);
-            merged.push(new NopAction());
-            return merged;
-        }
+    const asWithoutNOPNonReturn = asWithoutNOP.every((a)=>!a.doesReturnValue()
+    );
+    const bsWithoutNOPNonReturn = bsWithoutNOP.every((b)=>!b.doesReturnValue()
+    );
+    if (!asWithoutNOPNonReturn && !bsWithoutNOPNonReturn) {
+        return undefined;
     }
-    return undefined;
+    const distinctComponent = asWithoutNOP.every((a)=>{
+        return bsWithoutNOP.every((b)=>{
+            return !a.isSameComponent(b);
+        });
+    });
+    if (!distinctComponent) {
+        return undefined;
+    }
+    const merged = asWithoutNOP.concat(bsWithoutNOP);
+    if (asWithoutNOPNonReturn && bsWithoutNOPNonReturn) {
+        merged.push(new NopAction());
+    }
+    return merged;
 }
 function toActions(actionExpr) {
     return actionExpr.actions.flatMap((x)=>{

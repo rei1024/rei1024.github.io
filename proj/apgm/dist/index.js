@@ -23,6 +23,11 @@ if (!($compile instanceof HTMLButtonElement)) {
     throw Error("$compile");
 }
 
+const $run = document.querySelector("#run");
+if (!($run instanceof HTMLButtonElement)) {
+    throw Error("$run");
+}
+
 const $copy = document.querySelector("#copy");
 if (!($copy instanceof HTMLButtonElement)) {
     throw Error("$copy");
@@ -43,7 +48,7 @@ if (!($prefix_input instanceof HTMLInputElement)) {
     throw Error("$prefix_input");
 }
 
-$compile.addEventListener("click", () => {
+const compile = () => {
     $output.value = "";
     $input.classList.remove("is-invalid");
     try {
@@ -69,6 +74,22 @@ $compile.addEventListener("click", () => {
         $download.disabled = true;
         $copy.disabled = true;
         $input.classList.add("is-invalid");
+    }
+};
+
+$compile.addEventListener("click", () => {
+    compile();
+});
+
+$run.addEventListener("click", () => {
+    compile();
+    // @ts-ignore
+    if (!$copy.disabled) {
+        const url = new URL(
+            "https://rei1024.github.io/proj/apgsembly-emulator-2/",
+        );
+        localStorage.setItem("initial_code", $output.value);
+        open(url);
     }
 });
 

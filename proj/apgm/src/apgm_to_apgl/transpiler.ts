@@ -76,7 +76,7 @@ function transpileStringArgFunc(
     return expr(arg.value);
 }
 
-export function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
+function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
     const e = (a: APGLExpr) => transpileEmptyArgFunc(funcExpr, a);
     const n = (a: (_: number) => APGLExpr) => transpileNumArgFunc(funcExpr, a);
     const s = (a: (_: string) => APGLExpr) =>

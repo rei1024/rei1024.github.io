@@ -11,6 +11,6 @@ export class StringAPGMExpr extends APGMExpr {
 
     pretty() {
         // TODO: escape
-        return this.value;
+        return `"` + this.value + `"`;
     }
 }

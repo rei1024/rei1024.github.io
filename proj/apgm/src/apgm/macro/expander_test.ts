@@ -102,3 +102,33 @@ test("arguments length macro", () => {
         `argument length mismatch: "f!" expect 1 argument but given 2 arguments`,
     );
 });
+
+test("macro while error", () => {
+    const macros: Macro[] = [
+        new Macro(
+            "f!",
+            [new VarAPGMExpr("x", undefined)],
+            new FuncAPGMExpr(
+                "output",
+                [new VarAPGMExpr("x", undefined)],
+                undefined,
+            ),
+            undefined,
+        ),
+    ];
+    const whileExpr = new WhileAPGMExpr(
+        "Z",
+        new FuncAPGMExpr("f!", [
+            new StringAPGMExpr("3"),
+            new StringAPGMExpr("3"),
+        ], undefined),
+        new SeqAPGMExpr([]),
+    );
+    assertThrows(
+        () => {
+            expand(new Main(macros, [], new SeqAPGMExpr([whileExpr])));
+        },
+        Error,
+        `argument length mismatch: "f!" expect 1 argument but given 2 arguments`,
+    );
+});

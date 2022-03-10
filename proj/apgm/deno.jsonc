@@ -11,6 +11,9 @@
     "fmt": {
         "options": {
             "indentWidth": 4
+        },
+        "files": {
+            "exclude": ["coverage"]
         }
     }
 }

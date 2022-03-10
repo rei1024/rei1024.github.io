@@ -1,0 +1,17 @@
+if_z(nop()) {
+
+} else {
+  if_z(nop()) {
+    output("0");
+  } else {
+    output("1");
+  }
+}
+
+if_z(nop()) {
+  output("1");
+  output("2");
+} else {
+  output("3");
+  output("4");
+}
