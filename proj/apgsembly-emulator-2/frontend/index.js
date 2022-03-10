@@ -327,6 +327,17 @@ idle(() => {
     app.render();
 });
 
+// 初期コード
+const url = new URL(location.href);
+const INIT_CODE = "initial_code";
+const codeParam = url.searchParams.get(INIT_CODE);
+if (codeParam !== null && codeParam !== "") {
+    $input.value = codeParam;
+    url.searchParams.delete(INIT_CODE);
+    history.replaceState(null, "", url);
+    app.reset();
+}
+
 // サンプルコードをプレフェッチ
 idle(() => {
     try {
