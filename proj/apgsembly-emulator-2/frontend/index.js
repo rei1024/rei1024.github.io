@@ -328,13 +328,11 @@ idle(() => {
 });
 
 // 初期コード
-const url = new URL(location.href);
 const INIT_CODE = "initial_code";
-const codeParam = url.searchParams.get(INIT_CODE);
-if (codeParam !== null && codeParam !== "") {
-    $input.value = codeParam;
-    url.searchParams.delete(INIT_CODE);
-    history.replaceState(null, "", url);
+const initCode = localStorage.getItem(INIT_CODE);
+if (initCode !== null && initCode !== "") {
+    localStorage.removeItem(INIT_CODE);
+    $input.value = initCode;
     app.reset();
 }
 
