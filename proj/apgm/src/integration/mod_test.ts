@@ -19,6 +19,39 @@ test("integration 0", () => {
     ]);
 });
 
+test("integration optimize", () => {
+    const src = `
+    inc_u(1);
+    inc_u(2);
+    `;
+    const res = integration(src);
+    assertEquals(res, [
+        ...comment,
+        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL; *; STATE_END; INC U1, INC U2, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
+    ]);
+});
+
+test("integration optimize seq", () => {
+    const src = `
+    {
+        inc_u(1);
+    };
+    {};
+    {
+        inc_u(2);
+    };
+    `;
+    const res = integration(src);
+    assertEquals(res, [
+        ...comment,
+        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL; *; STATE_END; INC U1, INC U2, NOP",
+        "STATE_END; *; STATE_END; HALT_OUT",
+    ]);
+});
+
 test("integration output non string", () => {
     const src = `
     output(1);

@@ -280,11 +280,29 @@ test("transpileAPGL loop 2 break 2", () => {
     ]);
 });
 
-test("transpileAPGL break", () => {
+test("transpileAPGL break throws", () => {
     const expr = new SeqAPGLExpr([
         new ActionAPGLExpr(["INC U0", "NOP"]),
         new BreakAPGLExpr(undefined),
     ]);
+    assertThrows(() => {
+        transpileAPGL(expr);
+    });
+});
+
+test("transpileAPGL break throws 2", () => {
+    const expr = new LoopAPGLExpr(
+        new BreakAPGLExpr(2),
+    );
+    assertThrows(() => {
+        transpileAPGL(expr);
+    });
+});
+
+test("transpileAPGL break throws -1", () => {
+    const expr = new LoopAPGLExpr(
+        new BreakAPGLExpr(-1),
+    );
     assertThrows(() => {
         transpileAPGL(expr);
     });
@@ -345,7 +363,7 @@ test("transpileAPGL while z 2", () => {
     ]);
 });
 
-test("transpileAPGL if while ", () => {
+test("transpileAPGL if while", () => {
     const expr = new IfAPGLExpr(
         new ActionAPGLExpr(["TDEC U1"]),
         new WhileAPGLExpr(
@@ -365,6 +383,29 @@ test("transpileAPGL if while ", () => {
         "STATE_4; Z; STATE_5_WHILE_BODY; NOP",
         "STATE_4; NZ; STATE_END; NOP",
         "STATE_5_WHILE_BODY; *; STATE_3; TDEC U2",
+        "STATE_END; *; STATE_END; HALT_OUT",
+    ]);
+});
+
+test("transpileAPGL if while empty", () => {
+    const expr = new IfAPGLExpr(
+        new ActionAPGLExpr(["TDEC U1"]),
+        new WhileAPGLExpr(
+            "Z",
+            new ActionAPGLExpr(["TDEC U0"]),
+            new SeqAPGLExpr([]),
+        ),
+        new SeqAPGLExpr([]),
+    );
+
+    assertEquals(transpileAPGL(expr), [
+        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL; *; STATE_2; TDEC U1",
+        "STATE_2; Z; STATE_3; NOP",
+        "STATE_2; NZ; STATE_END; NOP",
+        "STATE_3; *; STATE_4; TDEC U0",
+        "STATE_4; Z; STATE_3; NOP",
+        "STATE_4; NZ; STATE_END; NOP",
         "STATE_END; *; STATE_END; HALT_OUT",
     ]);
 });

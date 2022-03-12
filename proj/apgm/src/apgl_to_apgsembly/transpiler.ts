@@ -3,15 +3,11 @@ import {
     APGLExpr,
     BreakAPGLExpr,
     IfAPGLExpr,
+    isEmptyExpr,
     LoopAPGLExpr,
     SeqAPGLExpr,
     WhileAPGLExpr,
 } from "../apgl/ast/mod.ts";
-
-function isEmptyExpr(expr: APGLExpr): boolean {
-    return expr instanceof SeqAPGLExpr &&
-        expr.exprs.every((e) => isEmptyExpr(e));
-}
 
 export interface TranspilerOptions {
     prefix?: string;
@@ -233,27 +229,37 @@ export class Transpiler {
         cond: APGLExpr,
         modifier: "Z" | "NZ",
     ): string[] {
+        const condStartState = ctx.inputZNZ === "*"
+            ? ctx.input
+            : this.getFreshName();
+        let trans: string[] = [];
+        if (ctx.inputZNZ !== "*") {
+            trans = trans.concat(
+                this.emitTransition(ctx.input, condStartState, ctx.inputZNZ),
+            );
+        }
+
         const condEndState = this.getFreshName();
         const condRes = this.transpileExpr(
-            new Context(ctx.input, condEndState, ctx.inputZNZ),
+            new Context(condStartState, condEndState, "*"),
             cond,
         );
 
         const zRes = this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
-            nextState: modifier === "Z" ? ctx.input : ctx.output,
+            nextState: modifier === "Z" ? condStartState : ctx.output,
             actions: ["NOP"],
         });
 
         const nzRes = this.emitLine({
             currentState: condEndState,
             prevOutput: "NZ",
-            nextState: modifier === "Z" ? ctx.output : ctx.input,
+            nextState: modifier === "Z" ? ctx.output : condStartState,
             actions: ["NOP"],
         });
 
-        return [...condRes, ...zRes, ...nzRes];
+        return [...trans, ...condRes, ...zRes, ...nzRes];
     }
 
     transpileWhileAPGLExpr(ctx: Context, whileExpr: WhileAPGLExpr): string[] {

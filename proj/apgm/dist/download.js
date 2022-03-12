@@ -1,14 +1,12 @@
+// @ts-check
+
 /**
  * @param {string} url
- * @param {string} fileName
- * @param {number} timeout
- * @param {(url: string) => void} callback
+ * @param {string} [fileName]
  */
 export function downloadURL(
     url,
     fileName = "",
-    timeout = 1000,
-    callback = (url) => {},
 ) {
     const a = document.createElement("a");
     a.style.display = "none";
@@ -16,10 +14,6 @@ export function downloadURL(
     a.download = fileName;
     document.body.appendChild(a);
     a.click();
-    setTimeout(() => {
-        document.body.removeChild(a);
-        callback(url);
-    }, timeout);
 }
 
 /**
@@ -32,7 +26,8 @@ export function downloadBlob(blob, fileName = "", timeout = 1000) {
         return;
     }
     const url = URL.createObjectURL(blob);
-    downloadURL(url, fileName, timeout, (url) => {
+    downloadURL(url, fileName);
+    setTimeout(() => {
         URL.revokeObjectURL(url);
-    });
+    }, timeout);
 }

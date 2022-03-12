@@ -9,3 +9,8 @@ export class SeqAPGLExpr extends APGLExpr {
         return f(new SeqAPGLExpr(this.exprs.map((x) => x.transform(f))));
     }
 }
+
+export function isEmptyExpr(expr: APGLExpr): boolean {
+    return expr instanceof SeqAPGLExpr &&
+        expr.exprs.every((e) => isEmptyExpr(e));
+}

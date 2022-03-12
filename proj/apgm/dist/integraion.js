@@ -1853,6 +1853,10 @@ class SeqAPGLExpr extends APGLExpr {
         )));
     }
 }
+function isEmptyExpr(expr) {
+    return expr instanceof SeqAPGLExpr && expr.exprs.every((e)=>isEmptyExpr(e)
+    );
+}
 class IfAPGLExpr extends APGLExpr {
     cond;
     thenBody;
@@ -2131,10 +2135,6 @@ function transpileAPGMExpr(e) {
     }
     throw Error("internal error");
 }
-function isEmptyExpr(expr) {
-    return expr instanceof SeqAPGLExpr && expr.exprs.every((e)=>isEmptyExpr(e)
-    );
-}
 class Context1 {
     input;
     output;
@@ -2275,12 +2275,17 @@ class Transpiler {
         ];
     }
     transpileWhileAPGLExprBodyEmpty(ctx, cond, modifier) {
+        const condStartState = ctx.inputZNZ === "*" ? ctx.input : this.getFreshName();
+        let trans = [];
+        if (ctx.inputZNZ !== "*") {
+            trans = trans.concat(this.emitTransition(ctx.input, condStartState, ctx.inputZNZ));
+        }
         const condEndState = this.getFreshName();
-        const condRes = this.transpileExpr(new Context1(ctx.input, condEndState, ctx.inputZNZ), cond);
+        const condRes = this.transpileExpr(new Context1(condStartState, condEndState, "*"), cond);
         const zRes = this.emitLine({
             currentState: condEndState,
             prevOutput: "Z",
-            nextState: modifier === "Z" ? ctx.input : ctx.output,
+            nextState: modifier === "Z" ? condStartState : ctx.output,
             actions: [
                 "NOP"
             ]
@@ -2288,12 +2293,13 @@ class Transpiler {
         const nzRes = this.emitLine({
             currentState: condEndState,
             prevOutput: "NZ",
-            nextState: modifier === "Z" ? ctx.output : ctx.input,
+            nextState: modifier === "Z" ? ctx.output : condStartState,
             actions: [
                 "NOP"
             ]
         });
         return [
+            ...trans,
             ...condRes,
             ...zRes,
             ...nzRes
@@ -2530,23 +2536,39 @@ function optimizeSeqAPGLExpr(seqExpr) {
     putItems();
     return new SeqAPGLExpr(newExprs);
 }
+function optimizeSeq(expr) {
+    return expr.transform(optimizeOnce1);
+}
+function optimizeOnce1(expr) {
+    if (expr instanceof SeqAPGLExpr) {
+        return optimizeSeqAPGLExpr1(expr);
+    }
+    return expr;
+}
+function optimizeSeqAPGLExpr1(seqExpr) {
+    let newExprs = [];
+    for (const expr of seqExpr.exprs){
+        if (expr instanceof SeqAPGLExpr) {
+            newExprs = newExprs.concat(expr.exprs);
+        } else {
+            newExprs.push(expr);
+        }
+    }
+    return new SeqAPGLExpr(newExprs);
+}
+function logged(f, x, logMessage = undefined) {
+    const y = f(x);
+    if (logMessage !== undefined) {
+        console.log(logMessage, JSON.stringify(y, null, "  "));
+    }
+    return y;
+}
 function integration(str, options = {}, log = false) {
-    const apgm = parseMain(str);
-    if (log) {
-        console.log("apgm", JSON.stringify(apgm, null, "  "));
-    }
-    const expanded = expand(apgm);
-    if (log) {
-        console.log("apgm expaned", JSON.stringify(expanded, null, "  "));
-    }
-    const apgl = transpileAPGMExpr(expanded);
-    if (log) {
-        console.log("apgl", JSON.stringify(apgl, null, "  "));
-    }
-    const optimizedAPGL = optimize(apgl);
-    if (log) {
-        console.log("optimized apgl", JSON.stringify(optimizedAPGL, null, "  "));
-    }
+    const apgm = logged(parseMain, str, log ? "apgm" : undefined);
+    const expanded = logged(expand, apgm, log ? "apgm expaned" : undefined);
+    const apgl = logged(transpileAPGMExpr, expanded, log ? "apgl" : undefined);
+    const seqOptimizedAPGL = logged(optimizeSeq, apgl, log ? "optimized apgl seq" : undefined);
+    const optimizedAPGL = logged(optimize, seqOptimizedAPGL, log ? "optimized apgl action" : undefined);
     const apgs = transpileAPGL(optimizedAPGL, options);
     const comment1 = [
         "# State    Input    Next state    Actions",
