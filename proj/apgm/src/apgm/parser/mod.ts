@@ -69,17 +69,21 @@ export const curlyLeft = token("{").desc(["`{`"]);
 /** `)` */
 export const curlyRight = token("}").desc(["`}`"]);
 
-export const varAPGMExpr = identifierWithLocation.map((x) =>
-    new VarAPGMExpr(x[0], x[1])
-);
+export const varAPGMExpr: bnb.Parser<VarAPGMExpr> = identifierWithLocation.map((
+    x,
+) => new VarAPGMExpr(x[0], x[1]));
+
+function argExprs<T>(arg: () => bnb.Parser<T>): bnb.Parser<T[]> {
+    return bnb.lazy(() => arg()).sepBy(comma).wrap(
+        leftParen,
+        rightParen,
+    );
+}
 
 export function funcAPGMExpr(): bnb.Parser<FuncAPGMExpr> {
     return _.next(bnb.location).chain((location) => {
         return bnb.choice(macroIdentifier, identifier).chain((ident) => {
-            return bnb.lazy(() => apgmExpr()).sepBy(comma).wrap(
-                leftParen,
-                rightParen,
-            ).map(
+            return argExprs(() => apgmExpr()).map(
                 (args) => {
                     return new FuncAPGMExpr(ident, args, location);
                 },
@@ -165,28 +169,26 @@ export function macro(): bnb.Parser<Macro> {
         });
     });
 
-    return macroKeyword.chain((location) => {
-        return macroIdentifier.chain((ident) => {
-            return varAPGMExpr.sepBy(comma).wrap(leftParen, rightParen).chain(
-                (args) => {
-                    return bnb.lazy(() => apgmExpr()).map((body) => {
-                        return new Macro(ident, args, body, location);
-                    });
-                },
-            );
-        });
+    return macroKeyword.and(macroIdentifier).chain(([location, ident]) => {
+        return argExprs(() => varAPGMExpr).chain(
+            (args) => {
+                return bnb.lazy(() => apgmExpr()).map((body) => {
+                    return new Macro(ident, args, body, location);
+                });
+            },
+        );
     });
 }
 
 /* 改行を含まない */
 export const header = bnb.text("#").next(bnb.match(/REGISTERS|COMPONENTS/))
-    .desc(["#REGISTERS", "#COMPONENT"]).chain((x) =>
+    .desc(["#REGISTERS", "#COMPONENTS"]).chain((x) =>
         bnb.match(/.*/).map((c) => new Header(x, c))
     );
 
 export const headers = _.next(header).skip(_).repeat();
 
-export function main() {
+export function main(): bnb.Parser<Main> {
     return macro().repeat().chain((macros) => {
         return headers.chain((h) => {
             return _.next(seqAPGMExprRaw()).skip(_).map((x) => {

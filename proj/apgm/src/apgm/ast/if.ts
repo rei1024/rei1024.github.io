@@ -24,11 +24,11 @@ export class IfAPGMExpr extends APGMExpr {
     }
 
     pretty(): string {
-        return `if_${
-                        this.modifier === "Z" ? "z" : "nz"
-                    }(${this.cond.pretty()}) ${this.thenBody.pretty()}` +
-                    this.elseBody === undefined
+        const el = this.elseBody === undefined
             ? ``
             : ` else ${this.elseBody?.pretty()}`;
+        const keyword = `if_${this.modifier === "Z" ? "z" : "nz"}`;
+        const cond = this.cond.pretty();
+        return `${keyword} (${cond}) ${this.thenBody.pretty()}` + el;
     }
 }

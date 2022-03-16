@@ -1,5 +1,14 @@
 import { parseMain } from "../apgm/parser/mod.ts";
-import { transpileAPGMExpr } from "../apgm_to_apgl/transpiler.ts";
+import {
+    emptyArgFuncs,
+    numArgFuncs,
+    strArgFuncs,
+    transpileAPGMExpr,
+} from "../apgm_to_apgl/transpiler.ts";
+
+// deno-fmt-ignore
+export { emptyArgFuncs, numArgFuncs, strArgFuncs }
+
 import {
     transpileAPGL,
     type TranspilerOptions,

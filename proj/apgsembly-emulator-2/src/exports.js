@@ -33,7 +33,29 @@ import {} from "./validators/z_and_nz.js";
 import {} from "./ActionExecutor.js";
 import {} from "./Command.js";
 import {} from "./compile.js";
-import {} from "./Machine.js";
-import {} from "./Program.js";
+import { Machine } from "./Machine.js";
+import { Program } from "./Program.js";
 import {} from "./ProgramLines.js";
 import {} from "./validate.js";
+
+/**
+ *
+ * @param {string} src
+ * @returns {Machine}
+ */
+export function runAPGsembly(src) {
+    const program = Program.parse(src);
+    if (typeof program === 'string') {
+        throw new Error(program);
+    }
+
+    const machine = new Machine(program);
+    while (true) {
+        const res = machine.execCommand();
+        if (res === -1) {
+            break;
+        }
+    }
+
+    return machine;
+}

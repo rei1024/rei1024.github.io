@@ -4,12 +4,9 @@
 
 import { integration } from "./integraion.js";
 import { downloadBlob } from "./download.js";
+import { initEditor, initMonaco } from "./apgm_monaco/init.js";
 
-const $input = document.querySelector("#input");
-
-if (!($input instanceof HTMLTextAreaElement)) {
-    throw Error("$input");
-}
+initMonaco();
 
 const $samples = document.querySelectorAll(".js_sample");
 
@@ -48,9 +45,15 @@ if (!($prefix_input instanceof HTMLInputElement)) {
     throw Error("$prefix_input");
 }
 
+const $apgmInput = document.querySelector("#apgm_input");
+if (!($apgmInput instanceof HTMLElement)) {
+    throw Error("$apgmInput");
+}
+
+const editor = initEditor($apgmInput);
+
 const compile = () => {
     $output.value = "";
-    $input.classList.remove("is-invalid");
     try {
         const options = {};
         if ($prefix_input.value.trim() !== "") {
@@ -60,7 +63,7 @@ const compile = () => {
         /**
          * @type {string}
          */
-        const result = integration($input.value, options).join("\n");
+        const result = integration(editor.getValue(), options).join("\n");
         $download.disabled = false;
         $copy.disabled = false;
         $error.style.display = "none";
@@ -73,7 +76,6 @@ const compile = () => {
         $error.style.display = "block";
         $download.disabled = true;
         $copy.disabled = true;
-        $input.classList.add("is-invalid");
     }
 };
 
@@ -117,7 +119,8 @@ $samples.forEach((sample) => {
     sample.addEventListener("click", () => {
         fetch(DATA_DIR + sample.dataset.src).then((x) => x.text()).then(
             (str) => {
-                $input.value = str;
+                editor.setValue(str);
+                editor.scrollToTop();
             },
         );
     });

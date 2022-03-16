@@ -1,5 +1,11 @@
-import { integration } from "./mod.ts";
+import { emptyArgFuncs, integration, numArgFuncs, strArgFuncs } from "./mod.ts";
 import { assertEquals, assertThrows, test } from "../deps_test.ts";
+
+test("exports", () => {
+    assertEquals(emptyArgFuncs instanceof Map, true);
+    assertEquals(numArgFuncs instanceof Map, true);
+    assertEquals(strArgFuncs instanceof Map, true);
+});
 
 const comment = [
     "# State    Input    Next state    Actions",

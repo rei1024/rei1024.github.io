@@ -15,6 +15,6 @@ An emulator for APGsembly 2.0
 * `$ make up` Local server
     * access to `http://localhost:1123/`
 * `$ make t` Unit tests
-* `$ make watch` Unit tests with file watcher
+* `$ make w` Unit tests with file watcher
 * `$ make lint` Linting
 * `$ make cy` E2E tests

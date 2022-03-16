@@ -6,10 +6,11 @@ APGsembly macro language
 
 ```mermaid
 graph TD
-    APGM1[APGM] -->|Expand macro| APGM2[APGM]
+    APGM1[APGM + Macro] -->|Expand macro| APGM2[APGM]
     APGM2[APGM] -->|Transpile| APGL1[APGL]
-    APGL1[APGL] -->|Optimize| APGL2[APGL]
-    APGL2[APGL] -->|Transpile| APGsembly[APGsembly]
+    APGL1[APGL] -->|Optimize sequence| APGL2[APGL]
+    APGL2[APGL] -->|Optimize actions| APGL3[APGL]
+    APGL3[APGL] -->|Transpile| APGsembly[APGsembly]
 ```
 
 ## Testing
@@ -25,7 +26,7 @@ graph TD
 ### Usage
 
 - `$ make up` Local server
-  - access to `http://localhost:1618/`
+  - access to [http://localhost:1618/](http://localhost:1618/)
 - `$ make t` Unit tests
 - `$ make w` Unit tests with file watcher
 - `$ make fmt` Formatting

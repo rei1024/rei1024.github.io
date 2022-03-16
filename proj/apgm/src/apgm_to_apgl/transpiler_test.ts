@@ -4,7 +4,7 @@ import {
     NumberAPGMExpr,
     StringAPGMExpr,
 } from "../apgm/ast/mod.ts";
-import { ActionAPGLExpr } from "../apgl/ast/mod.ts";
+import { ActionAPGLExpr, BreakAPGLExpr } from "../apgl/ast/mod.ts";
 import { assertEquals, assertThrows, test } from "../deps_test.ts";
 
 test("apgm_to_apgl output", () => {
@@ -54,7 +54,7 @@ test("apgm_to_apgl output number throws", () => {
     });
 });
 
-test("apgm_to_apgl inc_u number throws", () => {
+test("apgm_to_apgl inc_u string throws", () => {
     assertThrows(() => {
         transpileAPGMExpr(
             new FuncAPGMExpr("inc_u", [new StringAPGMExpr("5")], undefined),
@@ -82,6 +82,24 @@ test("apgm_to_apgl nop arguments throws", () => {
     assertThrows(() => {
         transpileAPGMExpr(
             new FuncAPGMExpr("nop", [new StringAPGMExpr("5")], undefined),
+        );
+    });
+});
+
+test("apgm_to_apgl break", () => {
+    const res = transpileAPGMExpr(
+        new FuncAPGMExpr("break", [], undefined),
+    );
+    assertEquals(res, new BreakAPGLExpr(undefined));
+});
+
+test("apgm_to_apgl repeat non number", () => {
+    assertThrows(() => {
+        transpileAPGMExpr(
+            new FuncAPGMExpr("repeat", [
+                new StringAPGMExpr("5"),
+                new StringAPGMExpr("5"),
+            ], undefined),
         );
     });
 });

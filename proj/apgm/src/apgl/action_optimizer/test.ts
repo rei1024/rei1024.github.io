@@ -2,6 +2,7 @@ import { optimize } from "./mod.ts";
 import { assertEquals, test } from "../../deps_test.ts";
 import {
     ActionAPGLExpr,
+    IfAPGLExpr,
     LoopAPGLExpr,
     SeqAPGLExpr,
     WhileAPGLExpr,
@@ -243,3 +244,17 @@ test("optimize loop inner", () => {
     );
     assertEquals(optimize(before), after);
 });
+
+// TODO
+// test("not optimize if condition ", () => {
+//     const before = new IfAPGLExpr(
+//         new SeqAPGLExpr([
+//             new ActionAPGLExpr(["INC U1", "NOP"]),
+//             new ActionAPGLExpr(["INC U2", "NOP"]),
+//         ]),
+//         new ActionAPGLExpr(["NOP"]),
+//         new ActionAPGLExpr(["NOP"]),
+//     );
+
+//     assertEquals(optimize(before), before);
+// });
