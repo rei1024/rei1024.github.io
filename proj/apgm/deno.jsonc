@@ -15,5 +15,21 @@
         "files": {
             "exclude": ["coverage"]
         }
+    },
+    "tasks": {
+        // test
+        "t": "deno test --config=deno.jsonc",
+        // test with watcher
+        "w": "deno test --watch --config=deno.jsonc",
+        // formatting
+        "fmt": "deno fmt --config=deno.jsonc",
+        // reload dependency
+        "reload": "deno test --reload",
+        // local server
+        "up": "file_server . -p 1618",
+        // bundle
+        "bundle": "deno bundle src/integration/mod.ts dist/integraion.js",
+        // coverage
+        "cov": "deno test --config=deno.jsonc --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov && genhtml -o coverage/html coverage.lcov && open coverage/html/index.html"
     }
 }

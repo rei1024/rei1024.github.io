@@ -68,6 +68,7 @@ const compile = () => {
         $copy.disabled = false;
         $error.style.display = "none";
         $output.value = result;
+        $apgmInput.style.borderColor = "";
     } catch (e) {
         if (!(e instanceof Error)) {
             e = new Error("unknown error");
@@ -76,6 +77,8 @@ const compile = () => {
         $error.style.display = "block";
         $download.disabled = true;
         $copy.disabled = true;
+        $apgmInput.style.borderColor = "#dc3545";
+        $apgmInput.style.borderWidth = "2px";
     }
 };
 

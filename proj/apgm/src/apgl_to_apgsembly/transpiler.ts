@@ -52,7 +52,7 @@ export class Transpiler {
             currentState: string;
             prevOutput: "Z" | "NZ" | "*" | "ZZ";
             nextState: string;
-            actions: Line[];
+            actions: string[];
         },
     ): Line[] {
         if (actions.length === 0) {

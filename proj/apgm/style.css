@@ -1,0 +1,38 @@
+.mono {
+    font-family: var(--bs-font-monospace);
+    font-size: .875em;
+}
+
+.main_content {
+    display: flex;
+    flex-direction: row;
+}
+
+#apgm_input {
+    width: 60%;
+    height: 475px;
+}
+
+#output {
+    width: 40%;
+}
+
+@media screen and (max-width: 576px) {
+    .main_content {
+        flex-direction: column;
+    }
+
+    #apgm_input {
+        height: 400px;
+    }
+
+    #apgm_input, #output {
+        width: 100%;
+    }
+
+    #buttons {
+        display: grid;
+        gap: 4px 0px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

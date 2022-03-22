@@ -1459,7 +1459,7 @@ const decimalNaturalParser = mod.match(/[0-9]+/).desc([
     "number"
 ]).map((x)=>parseInt(x, 10)
 );
-const hexadecimalNaturalParser = mod.match(/0x[0-9]+/).desc([
+const hexadecimalNaturalParser = mod.match(/0x[a-fA-F0-9]+/).desc([
     "hexadecimal number", 
 ]).map((x)=>parseInt(x, 16)
 );

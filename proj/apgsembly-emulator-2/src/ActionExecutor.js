@@ -125,7 +125,7 @@ export class ActionExecutor {
                 const debugStr = `"${key}": ${JSON.stringify(value)}`;
                 throw Error(`Invalid #REGISTERS ${debugStr}`);
             }
-            const reg = this.uRegMap.get(n);
+            const reg = this.getUReg(n);
             if (reg === undefined) {
                 throw Error(`Invalid #REGISTERS: U${n} isn't used in the program`);
             }
@@ -136,7 +136,7 @@ export class ActionExecutor {
                 const debugStr = `"${key}": ${JSON.stringify(value)}`;
                 throw Error(`Invalid #REGISTERS ${debugStr}`);
             }
-            const reg = this.bRegMap.get(n);
+            const reg = this.getBReg(n);
             if (reg === undefined) {
                 throw Error(`Invalid #REGISTERS: B${n} isn't used in the program`);
             }

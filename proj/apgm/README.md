@@ -17,30 +17,28 @@ graph TD
 
 ### Requirements
 
-- `make`
-- `deno`
+- `deno` above 1.20.1
   - https://deno.land/#installation
   - `file_server`
-    - https://deno.land/manual@v1.15.3/examples/file_server
+    - `deno install --allow-net --allow-read -f https://deno.land/std@0.130.0/http/file_server.ts`
 
 ### Usage
 
-- `$ make up` Local server
+- `$ deno task up` Local server
   - access to [http://localhost:1618/](http://localhost:1618/)
-- `$ make t` Unit tests
-- `$ make w` Unit tests with file watcher
-- `$ make fmt` Formatting
-- `$ make bundle` Bundling
+- `$ deno task t` Unit tests
+- `$ deno task w` Unit tests with file watcher
+- `$ deno task fmt` Formatting
+- `$ deno task bundle` Bundling
 
 ## Coverage
 
 ### Requirements
 
-- `make`
 - `deno`
 - `lcov`
   - https://formulae.brew.sh/formula/lcov
 
 ### Usage
 
-- `$ make cov` open lcov page
+- `$ deno task cov` open lcov page

@@ -217,7 +217,7 @@ test("integration break(2) error", () => {
         }
     `;
     assertThrows(() => {
-        const res = integration(src);
+        integration(src);
     });
 });
 
@@ -264,7 +264,7 @@ test("integration header fail", () => {
         }
     `;
     assertThrows(() => {
-        const res = integration(src);
+        integration(src);
     });
 });
 

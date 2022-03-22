@@ -44,7 +44,7 @@ export class ADD {
      * @returns {void}
      */
     a1() {
-        this.value = [5, 4, 7, 6, 1, 0, 3, 2, 13, 12, 15, 14, 9, 8, 11, 10][this.value] ?? this.error();
+        this.value = [0b0101, 0b0100, 0b0111, 0b0110, 0b0001, 0b0000, 0b0011, 0b0010, 0b1101, 0b1100, 0b1111, 0b1110, 0b1001, 0b1000, 0b1011, 0b1010][this.value] ?? this.error();
         return undefined;
     }
 
@@ -54,7 +54,7 @@ export class ADD {
      */
     b0() {
         const t = this.value % 2;
-        this.value = [0, 0, 0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9, 9, 9][this.value] ?? this.error();
+        this.value = [0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001][this.value] ?? this.error();
         // @ts-ignore
         return t;
     }
@@ -65,7 +65,7 @@ export class ADD {
      */
     b1() {
         const t = 1 - this.value % 2;
-        this.value = [0, 0, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 9, 9][this.value] ?? this.error();
+        this.value = [0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001][this.value] ?? this.error();
         // @ts-ignore
         return t;
     }

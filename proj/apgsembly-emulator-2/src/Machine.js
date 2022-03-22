@@ -235,6 +235,5 @@ export class Machine {
         }
         this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;
-        return;
     }
 }

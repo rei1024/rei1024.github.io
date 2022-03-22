@@ -25,14 +25,15 @@ export function parseAction(str) {
         BRegAction.parse,
         URegAction.parse,
         B2DAction.parse,
+        NopAction.parse,
         AddAction.parse,
         MulAction.parse,
         SubAction.parse,
-        NopAction.parse,
         OutputAction.parse,
         HaltOutAction.parse,
         LegacyTRegAction.parse,
     ];
+
     for (const parser of parsers) {
         const result = parser(str);
         if (result !== undefined) {

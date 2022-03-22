@@ -3,8 +3,14 @@ import {
     FuncAPGMExpr,
     NumberAPGMExpr,
     StringAPGMExpr,
+    VarAPGMExpr,
+    WhileAPGMExpr,
 } from "../apgm/ast/mod.ts";
-import { ActionAPGLExpr, BreakAPGLExpr } from "../apgl/ast/mod.ts";
+import {
+    ActionAPGLExpr,
+    BreakAPGLExpr,
+    WhileAPGLExpr,
+} from "../apgl/ast/mod.ts";
 import { assertEquals, assertThrows, test } from "../deps_test.ts";
 
 test("apgm_to_apgl output", () => {
@@ -93,6 +99,25 @@ test("apgm_to_apgl break", () => {
     assertEquals(res, new BreakAPGLExpr(undefined));
 });
 
+test("apgm_to_apgl while", () => {
+    const res = transpileAPGMExpr(
+        new WhileAPGMExpr(
+            "Z",
+            new FuncAPGMExpr("nop", [], undefined),
+            new FuncAPGMExpr("nop", [], undefined),
+        ),
+    );
+
+    assertEquals(
+        res,
+        new WhileAPGLExpr(
+            "Z",
+            new ActionAPGLExpr(["NOP"]),
+            new ActionAPGLExpr(["NOP"]),
+        ),
+    );
+});
+
 test("apgm_to_apgl repeat non number", () => {
     assertThrows(() => {
         transpileAPGMExpr(
@@ -100,6 +125,30 @@ test("apgm_to_apgl repeat non number", () => {
                 new StringAPGMExpr("5"),
                 new StringAPGMExpr("5"),
             ], undefined),
+        );
+    });
+});
+
+test("apgm_to_apgl number", () => {
+    assertThrows(() => {
+        transpileAPGMExpr(
+            new NumberAPGMExpr(3),
+        );
+    });
+});
+
+test("apgm_to_apgl string", () => {
+    assertThrows(() => {
+        transpileAPGMExpr(
+            new StringAPGMExpr("a"),
+        );
+    });
+});
+
+test("apgm_to_apgl var", () => {
+    assertThrows(() => {
+        transpileAPGMExpr(
+            new VarAPGMExpr("a", undefined),
         );
     });
 });
