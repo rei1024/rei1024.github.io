@@ -52,8 +52,33 @@ if (!($apgmInput instanceof HTMLElement)) {
 
 const editor = initEditor($apgmInput);
 
+/**
+ * @param {string} message
+ */
+export function setMarkerForError(message) {
+    if (!message.includes("at line")) {
+        return;
+    }
+    try {
+        const lineRes = message.match(/line (\d+)/);
+        const columnRes = message.match(/column (\d+)/);
+        const line = Number(lineRes[1]);
+        const column = Number(columnRes[1]);
+        editor.setMarker({
+            message: message,
+            startLineNumber: line,
+            startColumn: column,
+            endLineNumber: line,
+            endColumn: column + 3,
+        });
+    } catch (_e) {
+        // NOP
+    }
+}
+
 const compile = () => {
     $output.value = "";
+    editor.setMarker(undefined);
     try {
         const options = {};
         if ($prefix_input.value.trim() !== "") {
@@ -73,12 +98,17 @@ const compile = () => {
         if (!(e instanceof Error)) {
             e = new Error("unknown error");
         }
+        /**
+         * @type {string}
+         */
+        const message = e.message;
         $error.textContent = e.message;
         $error.style.display = "block";
         $download.disabled = true;
         $copy.disabled = true;
         $apgmInput.style.borderColor = "#dc3545";
         $apgmInput.style.borderWidth = "2px";
+        setMarkerForError(message);
     }
 };
 

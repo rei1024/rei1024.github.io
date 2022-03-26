@@ -1,7 +1,13 @@
 // @ts-check
 /// <reference types="cypress" />
 
-import { tmToAPGURL, APGsemblyEmulatorURL, setStep, setProgram } from "../common/common.js";
+import {
+    tmToAPGURL,
+    APGsemblyEmulatorURL,
+    setStep,
+    setProgram,
+    assertSteps,
+} from "../common/common.js";
 
 describe('TM to APG integration BB3', () => {
     it('should load', () => {
@@ -24,11 +30,11 @@ describe('TM to APG integration BB3', () => {
             const prog = x.val();
             cy.visit(APGsemblyEmulatorURL);
 
-            cy.get('#input').clear().invoke('val', prog)
             setProgram(prog);
             setStep(200);
             cy.get('#step').click();
             cy.get(`[data-test="U1"]`).should('have.text', '14');
+            assertSteps(119);
         });
     });
 });
@@ -54,11 +60,11 @@ describe('TM to APG integration BB4', () => {
             const prog = x.val();
             cy.visit(APGsemblyEmulatorURL);
 
-            cy.get('#input').clear().invoke('val', prog)
             setProgram(prog);
             setStep(1000);
             cy.get('#step').click();
             cy.get(`[data-test="U1"]`).should('have.text', '108');
+            assertSteps(887);
         });
     });
 });

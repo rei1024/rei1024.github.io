@@ -44,6 +44,9 @@ test('ActionExecutor setByRegistersInit', () => {
     );
     assertEquals(x.getBReg(1).pointer, 2);
     assertEquals(x.getUReg(0).getValue(), 8);
+
+    x.getUReg(0).inc();
+    assertEquals(x.getUReg(0).getValue(), 9);
 });
 
 test('ActionExecutor setByRegistersInit', () => {

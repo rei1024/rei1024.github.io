@@ -43,6 +43,8 @@ export function initEditor(container) {
         // wordBasedSuggestions: true
     });
 
+    const model = editor.getModel();
+
     return {
         /**
          * @returns {string}
@@ -58,6 +60,29 @@ export function initEditor(container) {
         },
         scrollToTop() {
             editor.revealLine(1);
+        },
+        /**
+         * @param {undefined | {
+         * startLineNumber: number,
+         * startColumn: number,
+         * endLineNumber: number,
+         * endColumn: number,
+         * message: string
+         * }} marker
+         */
+        setMarker(marker) {
+            if (marker === undefined) {
+                monaco.editor.setModelMarkers(model, "apgm", []);
+            } else {
+                monaco.editor.setModelMarkers(model, "apgm", [{
+                    message: marker.message,
+                    startLineNumber: marker.startLineNumber,
+                    startColumn: marker.startColumn,
+                    endColumn: marker.endColumn,
+                    endLineNumber: marker.endLineNumber,
+                    severity: monaco.MarkerSeverity.Error,
+                }]);
+            }
         },
     };
 }

@@ -1,14 +1,25 @@
 // @ts-check
 /// <reference types="cypress" />
 
-import { APGsemblyEmulatorURL, loadProgram, setProgram, setStep, setProgramSlow } from "../common/common.js";
+import {
+    APGsemblyEmulatorURL,
+    loadProgram,
+    setProgram,
+    setStep,
+    setProgramSlow,
+    assertToggleStart,
+    assertToggleStop,
+    assertSteps,
+    assertStepsNot,
+    toggleSel,
+} from "../common/common.js";
 
 const outputSelector = '#output';
 
 describe('Load', () => {
     it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
-        cy.get('#start').should('not.be.disabled');
+        assertToggleStart();
     });
 });
 
@@ -18,18 +29,16 @@ describe('Run APGsembly', () => {
         INITIAL; ZZ; A0; INC U0, NOP
         A0; ZZ; A0; HALT_OUT
         `)
-        cy.get('#start').should('not.be.disabled');
+        assertToggleStart();
         cy.get('#step').should('not.be.disabled');
-        cy.get('#stop').should('be.disabled');
         cy.get('#current_state').should('have.text', 'INITIAL');
         cy.get(`[data-test="U0"]`).should('have.text', '0');
         cy.get('#error').should('have.text', '');
     });
     it('shold run', () => {
-        cy.get('#start').click();
-        cy.get('#start').should('be.disabled');
+        cy.get(toggleSel).click();
+        assertToggleStop();
         cy.get('#step').should('be.disabled');
-        cy.get('#stop').should('not.be.disabled');
         cy.get('#current_state').should('have.text', 'A0');
         cy.get(`[data-test="U0"]`).should('have.text', '1');
     });
@@ -39,7 +48,8 @@ describe('Error: empty program', () => {
     it('should show error', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
-        cy.get('#start').click();
+        assertToggleStart();
+        cy.get(toggleSel).click();
         cy.get('#error').should('have.text', '- Program is empty');
     });
 });
@@ -56,9 +66,7 @@ describe('unary_multiply.apg', () => {
     it('should execute unary_multiply.apg', () => {
         setStep(100);
         cy.get('#step').click();
-
-        cy.get('#steps').should('have.text', '93');
-
+        assertSteps(93);
         cy.get(`[data-test="U2"]`).should('have.text', '35');
 
         cy.get('#error').should('have.text', '');
@@ -75,8 +83,7 @@ describe('Integers', () => {
         setStep(1050);
         cy.get('#step').click();
         cy.get(outputSelector).should('have.value', '1.2.3.4.5.6.7.8.9.10');
-
-        cy.get('#steps').should('have.text', '1,050');
+        assertSteps(1050);
 
         cy.get('#error').should('have.text', '');
     });
@@ -98,7 +105,7 @@ describe('π calculator', () => {
         cy.get('#step').click();
         cy.get(outputSelector).should('have.value', '3.141');
 
-        cy.get('#steps').should('have.text', '1,000,000');
+        assertSteps(1000000);
 
         cy.get(`[data-test="B0"]`).should('have.text', 'value = 243290200817664000, pointer = 1340000000000000000010010001011000001100100111010100000011011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
 
@@ -116,7 +123,7 @@ describe('Rule 110', () => {
         setStep(1000);
         cy.get('#step').click();
 
-        cy.get('#steps').should('have.text', '1,000');
+        assertSteps(1000);
 
         cy.get('#command').should('have.text', 'NEXT_S000_WRITE_1; *; NEXT_S00_CHECK0_1; INC B2DX, NOP');
 
@@ -131,16 +138,18 @@ describe('Start Stop Reset', () => {
         loadProgram('rule110.apg');
     });
     it('Start and Stop', () => {
-        cy.get('#start').click();
+        assertToggleStart();
+        cy.get(toggleSel).click();
+        assertToggleStop();
         cy.wait(400);
-        cy.get('#stop').click();
-        cy.get('#steps').should('not.have.text', '0');
+        cy.get(toggleSel).click();
+        assertStepsNot(0);
 
         cy.get('#error').should('have.text', '');
     });
     it('Reset', () => {
         cy.get('#reset').click();
-        cy.get('#steps').should('have.text', '0');
+        assertSteps(0);
 
         cy.get('#error').should('have.text', '');
     });
@@ -158,7 +167,7 @@ describe('Error Steps', () => {
     A1; ZZ; A1; SET B0, NOP`);
         setStep(100);
         cy.get('#step').click();
-        cy.get('#steps').should('have.text', '3');
+        assertSteps(3);
 
         cy.get('#error').should('have.text', `- The bit of binary register is already 1: bits = 1, pointer = 0`);
     });

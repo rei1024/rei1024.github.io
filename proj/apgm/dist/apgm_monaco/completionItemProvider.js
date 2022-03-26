@@ -122,20 +122,21 @@ export const completionItemProvider = {
     provideCompletionItems: (model, position, context, token) => {
         /** @type {string} */
         const str = model.getValue();
-        const matches = [...str.matchAll(/macro\s+(.*!)\s*\(.*\)/g)];
 
         /**
          * @type {string[]}
          */
-        const funcNames = matches.flatMap((x) => {
-            const name = x[1];
+        const funcNames = [];
+        for (const match of str.matchAll(/macro\s+(.*!)\s*\(.*\)/g)) {
+            const name = match[1];
             if (typeof name === "string") {
-                return [name];
-            } else {
-                return [];
+                funcNames.push(name);
             }
-        });
+        }
 
+        const FUNC_KIND = monaco.languages.CompletionItemKind.Function;
+        const INSERT_AS_SNIPPET =
+            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
         /**
          * @type {any[]}
          */
@@ -144,11 +145,11 @@ export const completionItemProvider = {
             // TODO: 引数の数に応じて生成
             suggestions.push({
                 label: funcName,
-                kind: monaco.languages.CompletionItemKind.Function,
+                kind: FUNC_KIND,
                 insertText: `${funcName}`,
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule
-                    .InsertAsSnippet,
-                documentation: `${funcName} expression`,
+                insertTextRules: INSERT_AS_SNIPPET,
+                documentation: `macro ${funcName}`,
+                detail: `macro ${funcName}`,
             });
         }
 

@@ -197,7 +197,9 @@ export function transpileAPGMExpr(e: APGMExpr): APGLExpr {
     } else if (e instanceof LoopAPGMExpr) {
         return new LoopAPGLExpr(t(e.body));
     } else if (e instanceof NumberAPGMExpr) {
-        throw Error(`number is not allowed: ${e.value}`);
+        throw Error(
+            `number is not allowed: ${e.value}${formatLocationAt(e.location)}`,
+        );
     } else if (e instanceof SeqAPGMExpr) {
         return new SeqAPGLExpr(e.exprs.map((x) => t(x)));
     } else if (e instanceof StringAPGMExpr) {

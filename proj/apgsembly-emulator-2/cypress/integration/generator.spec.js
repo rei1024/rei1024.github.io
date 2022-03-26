@@ -1,7 +1,13 @@
 // @ts-check
 /// <reference types="cypress" />
 
-import { genURL, APGsemblyEmulatorURL, setStep, setProgram } from "../common/common.js";
+import {
+    genURL,
+    APGsemblyEmulatorURL,
+    setStep,
+    setProgram,
+    assertSteps,
+} from "../common/common.js";
 
 describe('Generator integration', () => {
     it('should load', () => {
@@ -24,11 +30,10 @@ describe('Generator integration', () => {
             const prog = x.val();
             cy.visit(APGsemblyEmulatorURL);
 
-            cy.get('#input').clear().invoke('val', prog)
             setProgram(prog);
             setStep(100);
             cy.get('#step').click();
-            cy.get('#steps').should('contain.text', '100');
+            assertSteps(100);
         });
     });
 });

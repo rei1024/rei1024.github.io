@@ -1,7 +1,10 @@
-import { APGMExpr } from "./core.ts";
+import { APGMExpr, type APGMSourceLocation } from "./core.ts";
 
 export class NumberAPGMExpr extends APGMExpr {
-    constructor(public readonly value: number) {
+    constructor(
+        public readonly value: number,
+        public readonly location?: APGMSourceLocation | undefined,
+    ) {
         super();
     }
 

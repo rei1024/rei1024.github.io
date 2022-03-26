@@ -1516,14 +1516,11 @@ function formatLocationAt(location1) {
     }
 }
 class FuncAPGMExpr extends APGMExpr {
-    name;
-    args;
-    location;
-    constructor(name, args, location2){
+    constructor(name, args, location3){
         super();
         this.name = name;
         this.args = args;
-        this.location = location2;
+        this.location = location3;
     }
     transform(f) {
         return f(new FuncAPGMExpr(this.name, this.args.map((x)=>x.transform(f)
@@ -1533,12 +1530,11 @@ class FuncAPGMExpr extends APGMExpr {
         return `${this.name}(${this.args.map((x)=>x.pretty()
         ).join(", ")})`;
     }
+    name;
+    args;
+    location;
 }
 class IfAPGMExpr extends APGMExpr {
-    modifier;
-    cond;
-    thenBody;
-    elseBody;
     constructor(modifier, cond, thenBody, elseBody){
         super();
         this.modifier = modifier;
@@ -1555,9 +1551,12 @@ class IfAPGMExpr extends APGMExpr {
         const cond = this.cond.pretty();
         return `${keyword} (${cond}) ${this.thenBody.pretty()}` + el;
     }
+    modifier;
+    cond;
+    thenBody;
+    elseBody;
 }
 class LoopAPGMExpr extends APGMExpr {
-    body;
     constructor(body){
         super();
         this.body = body;
@@ -1568,23 +1567,21 @@ class LoopAPGMExpr extends APGMExpr {
     pretty() {
         return `loop ${this.body.pretty()}`;
     }
+    body;
 }
 class Macro {
+    constructor(name, args, body, location4){
+        this.name = name;
+        this.args = args;
+        this.body = body;
+        this.location = location4;
+    }
     name;
     args;
     body;
     location;
-    constructor(name, args, body, location3){
-        this.name = name;
-        this.args = args;
-        this.body = body;
-        this.location = location3;
-    }
 }
 class Main {
-    macros;
-    headers;
-    seqExpr;
     constructor(macros, headers1, seqExpr){
         this.macros = macros;
         this.headers = headers1;
@@ -1595,10 +1592,11 @@ class Main {
             }
         }
     }
+    macros;
+    headers;
+    seqExpr;
 }
 class Header {
-    name;
-    content;
     constructor(name, content){
         this.name = name;
         this.content = content;
@@ -1607,12 +1605,14 @@ class Header {
         const space = this.content.startsWith(" ") ? "" : " ";
         return `#${this.name}${space}${this.content}`;
     }
+    name;
+    content;
 }
 class NumberAPGMExpr extends APGMExpr {
-    value;
-    constructor(value){
+    constructor(value, location5){
         super();
         this.value = value;
+        this.location = location5;
     }
     transform(f) {
         return f(this);
@@ -1620,12 +1620,14 @@ class NumberAPGMExpr extends APGMExpr {
     pretty() {
         return this.value.toString();
     }
+    value;
+    location;
 }
 class StringAPGMExpr extends APGMExpr {
-    value;
-    constructor(value){
+    constructor(value, location6){
         super();
         this.value = value;
+        this.location = location6;
     }
     transform(f) {
         return f(this);
@@ -1633,9 +1635,10 @@ class StringAPGMExpr extends APGMExpr {
     pretty() {
         return `"` + this.value + `"`;
     }
+    value;
+    location;
 }
 class SeqAPGMExpr extends APGMExpr {
-    exprs;
     constructor(exprs){
         super();
         this.exprs = exprs;
@@ -1648,14 +1651,13 @@ class SeqAPGMExpr extends APGMExpr {
         return `{${this.exprs.map((x)=>x.pretty() + "; "
         ).join("")}}`;
     }
+    exprs;
 }
 class VarAPGMExpr extends APGMExpr {
-    name;
-    location;
-    constructor(name, location4){
+    constructor(name, location7){
         super();
         this.name = name;
-        this.location = location4;
+        this.location = location7;
     }
     transform(f) {
         return f(this);
@@ -1663,11 +1665,10 @@ class VarAPGMExpr extends APGMExpr {
     pretty() {
         return this.name;
     }
+    name;
+    location;
 }
 class WhileAPGMExpr extends APGMExpr {
-    modifier;
-    cond;
-    body;
     constructor(modifier, cond, body){
         super();
         this.modifier = modifier;
@@ -1680,6 +1681,9 @@ class WhileAPGMExpr extends APGMExpr {
     pretty() {
         return `while_${this.modifier === "Z" ? "z" : "nz"}(${this.cond.pretty()}) ${this.body.pretty()}`;
     }
+    modifier;
+    cond;
+    body;
 }
 const comment = mod.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([]);
 const _ = mod.match(/\s*/).desc([
@@ -1736,17 +1740,19 @@ function argExprs(arg) {
     ).sepBy(comma).wrap(leftParen, rightParen);
 }
 function funcAPGMExpr() {
-    return _.next(mod.location).chain((location5)=>{
+    return _.next(mod.location).chain((location8)=>{
         return mod.choice(macroIdentifier, identifier).chain((ident)=>{
             return argExprs(()=>apgmExpr()
             ).map((args)=>{
-                return new FuncAPGMExpr(ident, args, location5);
+                return new FuncAPGMExpr(ident, args, location8);
             });
         });
     });
 }
-const numberAPGMExpr = _.next(naturalNumberParser.map((x)=>new NumberAPGMExpr(x)
-)).skip(_);
+const numberAPGMExpr = _.next(mod.location.chain((loc)=>{
+    return naturalNumberParser.map((x)=>new NumberAPGMExpr(x, loc)
+    );
+})).skip(_);
 const stringLit = _.next(mod.text(`"`)).next(mod.match(/[^"]*/)).skip(mod.text(`"`)).skip(_).desc([
     "string"
 ]);
@@ -1795,17 +1801,17 @@ function ifAPGMExpr() {
 }
 function macro() {
     const macroKeyword = _.chain((_)=>{
-        return mod.location.chain((location6)=>{
-            return mod.text("macro").next(someSpaces).map((_)=>location6
+        return mod.location.chain((location9)=>{
+            return mod.text("macro").next(someSpaces).map((_)=>location9
             );
         });
     });
-    return macroKeyword.and(macroIdentifier).chain(([location7, ident])=>{
+    return macroKeyword.and(macroIdentifier).chain(([location10, ident])=>{
         return argExprs(()=>varAPGMExpr
         ).chain((args)=>{
             return mod.lazy(()=>apgmExpr()
             ).map((body)=>{
-                return new Macro(ident, args, body, location7);
+                return new Macro(ident, args, body, location10);
             });
         });
     });
@@ -1839,7 +1845,6 @@ class APGLExpr {
     constructor(){}
 }
 class ActionAPGLExpr extends APGLExpr {
-    actions;
     constructor(actions){
         super();
         this.actions = actions;
@@ -1847,9 +1852,9 @@ class ActionAPGLExpr extends APGLExpr {
     transform(f) {
         return f(this);
     }
+    actions;
 }
 class SeqAPGLExpr extends APGLExpr {
-    exprs;
     constructor(exprs){
         super();
         this.exprs = exprs;
@@ -1858,15 +1863,13 @@ class SeqAPGLExpr extends APGLExpr {
         return f(new SeqAPGLExpr(this.exprs.map((x)=>x.transform(f)
         )));
     }
+    exprs;
 }
 function isEmptyExpr(expr) {
     return expr instanceof SeqAPGLExpr && expr.exprs.every((e)=>isEmptyExpr(e)
     );
 }
 class IfAPGLExpr extends APGLExpr {
-    cond;
-    thenBody;
-    elseBody;
     constructor(cond, thenBody, elseBody){
         super();
         this.cond = cond;
@@ -1876,22 +1879,23 @@ class IfAPGLExpr extends APGLExpr {
     transform(f) {
         return f(new IfAPGLExpr(this.cond.transform(f), this.thenBody.transform(f), this.elseBody.transform(f)));
     }
+    cond;
+    thenBody;
+    elseBody;
 }
 class LoopAPGLExpr extends APGLExpr {
-    body;
-    kind = "loop";
+    kind;
     constructor(body){
         super();
         this.body = body;
+        this.kind = "loop";
     }
     transform(f) {
         return f(new LoopAPGLExpr(this.body.transform(f)));
     }
+    body;
 }
 class WhileAPGLExpr extends APGLExpr {
-    modifier;
-    cond;
-    body;
     constructor(modifier, cond, body){
         super();
         this.modifier = modifier;
@@ -1901,17 +1905,21 @@ class WhileAPGLExpr extends APGLExpr {
     transform(f) {
         return f(new WhileAPGLExpr(this.modifier, this.cond.transform(f), this.body.transform(f)));
     }
+    modifier;
+    cond;
+    body;
 }
 class BreakAPGLExpr extends APGLExpr {
-    level;
-    kind = "break";
+    kind;
     constructor(level){
         super();
         this.level = level;
+        this.kind = "break";
     }
     transform(f) {
         return f(this);
     }
+    level;
 }
 class A {
     static incU(n) {
@@ -2185,7 +2193,7 @@ function transpileAPGMExpr(e) {
     } else if (e instanceof LoopAPGMExpr) {
         return new LoopAPGLExpr(t(e.body));
     } else if (e instanceof NumberAPGMExpr) {
-        throw Error(`number is not allowed: ${e.value}`);
+        throw Error(`number is not allowed: ${e.value}${formatLocationAt(e.location)}`);
     } else if (e instanceof SeqAPGMExpr) {
         return new SeqAPGLExpr(e.exprs.map((x)=>t(x)
         ));
@@ -2199,14 +2207,14 @@ function transpileAPGMExpr(e) {
     throw Error("internal error");
 }
 class Context1 {
-    input;
-    output;
-    inputZNZ;
     constructor(input, output, inputZNZ){
         this.input = input;
         this.output = output;
         this.inputZNZ = inputZNZ;
     }
+    input;
+    output;
+    inputZNZ;
 }
 class Transpiler {
     id = 0;
@@ -2478,9 +2486,9 @@ class MacroExpander {
             const ds = dups(main1.macros.map((x)=>x.name
             ));
             const d = ds[0];
-            const location8 = main1.macros.slice().reverse().find((x)=>x.name === d
+            const location11 = main1.macros.slice().reverse().find((x)=>x.name === d
             )?.location;
-            throw Error(`There is a macro with the same name: "${d}"` + formatLocationAt(location8));
+            throw Error(`There is a macro with the same name: "${d}"` + formatLocationAt(location11));
         }
     }
     expand() {

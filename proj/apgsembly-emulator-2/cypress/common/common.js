@@ -6,13 +6,47 @@ export const baseURL = 'http://localhost:1123';
 
 export const APGsemblyEmulatorURL = baseURL + '/';
 
-export const dslURL = baseURL + '/apgdsl/index.html';
-
 export const genURL = baseURL + '/generator/index.html';
 
 export const turmitesURL = baseURL + '/turmites/index.html';
 
 export const tmToAPGURL = baseURL + '/tm_to_apg/index.html';
+
+export const toggleSel = '#toggle';
+
+export function assertToggleStart() {
+    cy.get(toggleSel).should('not.be.disabled');
+    cy.get(toggleSel).should('have.text', 'Start');
+}
+
+export function assertToggleStop() {
+    cy.get(toggleSel).should('not.be.disabled');
+    cy.get(toggleSel).should('have.text', 'Stop');
+}
+
+/**
+ *
+ * @param {number} n
+ */
+export function assertSteps(n) {
+    cy.get('#steps').should('have.text', n.toLocaleString());
+}
+
+/**
+ *
+ * @param {number} n
+ */
+export function assertStepsNot(n) {
+    cy.get('#steps').should('not.have.text', n.toLocaleString());
+}
+
+/**
+ *
+ * @param {string} msg
+ */
+export function assertError(msg) {
+    cy.get('#error').should('have.text', msg);
+}
 
 /**
  *
@@ -22,7 +56,7 @@ export function loadProgram(src) {
     cy.get('#samples').click();
     cy.get(`[data-src="${src}"]`).click();
     cy.get('#samples').should('not.be.disabled'); // ロードされるまで待つ
-    cy.get('#start').should('not.be.disabled');
+    assertToggleStart();
 }
 
 /**

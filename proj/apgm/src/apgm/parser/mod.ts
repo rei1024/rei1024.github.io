@@ -93,9 +93,12 @@ export function funcAPGMExpr(): bnb.Parser<FuncAPGMExpr> {
 }
 
 export const numberAPGMExpr: bnb.Parser<NumberAPGMExpr> = _.next(
-    naturalNumberParser.map((x) => new NumberAPGMExpr(x)),
+    bnb.location.chain((loc) => {
+        return naturalNumberParser.map((x) => new NumberAPGMExpr(x, loc));
+    }),
 ).skip(_);
 
+// TODO location
 export const stringLit: bnb.Parser<string> = _.next(bnb.text(`"`)).next(
     bnb.match(/[^"]*/),
 ).skip(

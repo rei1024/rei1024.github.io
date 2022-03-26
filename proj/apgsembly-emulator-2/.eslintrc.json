@@ -9,7 +9,7 @@
         "ecmaVersion": 11,
         "sourceType": "module"
     },
-    "ignorePatterns": ["cypress_default/**/*.js", "cypress/**/*.js", "doc/**/*.js", "apgdsl/frontend/data/**/*.js"],
+    "ignorePatterns": ["cypress_default/**/*.js", "cypress/**/*.js", "doc/**/*.js"],
     "rules": {
         "no-unused-vars": "off",
         "no-constant-condition": "off", // デバッグのため

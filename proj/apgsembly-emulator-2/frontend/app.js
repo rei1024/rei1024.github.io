@@ -10,14 +10,20 @@ import { renderB2D } from "./components/renderB2D.js";
 import { UnaryUI } from "./components/unary_ui.js";
 import { BinaryUI } from "./components/binary_ui.js";
 import { StatsUI } from "./components/stats_ui.js";
+import {
+    startButton,
+    startButtonDisabled,
+    stopButton
+} from "./components/toggle.js";
+import { renderOutput } from "./components/output.js";
+
 
 import {
     $error,
     $input,
     $output,
     $steps,
-    $start,
-    $stop,
+    $toggle,
     $reset,
     $step,
     $currentState,
@@ -395,20 +401,7 @@ export class App {
      */
     renderOutput() {
         const output = this.machine?.actionExecutor.output.getString();
-        if (output !== undefined) {
-            $output.value = output;
-            if (output.length >= 36 * 3) {
-                $output.rows = 4;
-            } else if (output.length >= 36 * 2) {
-                $output.rows = 3;
-            } else if (output.length >= 36) {
-                $output.rows = 2;
-            } else {
-                $output.rows = 1;
-            }
-        } else {
-            $output.value = "";
-        }
+        renderOutput($output, output);
     }
 
     /**
@@ -448,15 +441,13 @@ export class App {
         switch (this.appState) {
             case "Stop":
             case "Initial": {
-                $start.disabled = false;
-                $stop.disabled = true;
+                startButton($toggle);
                 $step.disabled = false;
                 $reset.disabled = false;
                 break;
             }
             case "Running": {
-                $start.disabled = true;
-                $stop.disabled = false;
+                stopButton($toggle);
                 $step.disabled = true;
                 $reset.disabled = true;
                 break;
@@ -464,8 +455,7 @@ export class App {
             case "RuntimeError":
             case "ParseError":
             case "Halted": {
-                $start.disabled = true;
-                $stop.disabled = true;
+                startButtonDisabled($toggle);
                 $step.disabled = true;
                 $reset.disabled = false;
                 break;
@@ -513,7 +503,7 @@ export class App {
             }
         }
 
-        if (steps <= 0) {
+        if (steps <= 0 || Number.isNaN(steps)) {
             // no render
             return;
         }

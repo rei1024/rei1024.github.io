@@ -17,11 +17,8 @@ export const $output = $type('#output', HTMLTextAreaElement);
 // ステップ数表示
 export const $steps = $type('#steps', HTMLElement);
 
-// Start execution
-export const $start = $type('#start', HTMLButtonElement);
-
-// Stop execution
-export const $stop = $type('#stop', HTMLButtonElement);
+// Toggle Start and Stop
+export const $toggle = $type('#toggle', HTMLButtonElement);
 
 // Reset machine state and program
 export const $reset = $type('#reset', HTMLButtonElement);
