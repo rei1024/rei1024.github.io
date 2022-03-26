@@ -160,12 +160,10 @@ export function ifAPGMExpr() {
     });
 }
 
-/**
- * macro f!(x) {
- *   x;
- * }
- */
-export function macro(): bnb.Parser<Macro> {
+// macro f!(a, b)
+export function macroHead(): bnb.Parser<
+    { loc: bnb.SourceLocation; name: string; args: VarAPGMExpr[] }
+> {
     const macroKeyword: bnb.Parser<bnb.SourceLocation> = _.chain((_) => {
         return bnb.location.chain((location) => {
             return bnb.text("macro").next(someSpaces).map((_) => location);
@@ -173,13 +171,28 @@ export function macro(): bnb.Parser<Macro> {
     });
 
     return macroKeyword.and(macroIdentifier).chain(([location, ident]) => {
-        return argExprs(() => varAPGMExpr).chain(
+        return argExprs(() => varAPGMExpr).map(
             (args) => {
-                return bnb.lazy(() => apgmExpr()).map((body) => {
-                    return new Macro(ident, args, body, location);
-                });
+                return {
+                    loc: location,
+                    name: ident,
+                    args: args,
+                };
             },
         );
+    });
+}
+
+/**
+ * macro f!(x) {
+ *   x;
+ * }
+ */
+export function macro(): bnb.Parser<Macro> {
+    return macroHead().chain(({ loc, name, args }) => {
+        return bnb.lazy(() => apgmExpr()).map((body) => {
+            return new Macro(name, args, body, loc);
+        });
     });
 }
 

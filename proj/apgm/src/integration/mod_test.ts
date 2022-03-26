@@ -1,4 +1,10 @@
-import { emptyArgFuncs, integration, numArgFuncs, strArgFuncs } from "./mod.ts";
+import {
+    completionParser,
+    emptyArgFuncs,
+    integration,
+    numArgFuncs,
+    strArgFuncs,
+} from "./mod.ts";
 import { assertEquals, assertThrows, test } from "../deps_test.ts";
 
 test("exports", () => {

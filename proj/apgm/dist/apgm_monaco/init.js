@@ -62,6 +62,12 @@ export function initEditor(container) {
             editor.revealLine(1);
         },
         /**
+         * @param {number} line
+         */
+        revealLine(line) {
+            editor.revealLine(line);
+        },
+        /**
          * @param {undefined | {
          * startLineNumber: number,
          * startColumn: number,

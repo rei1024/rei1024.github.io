@@ -1799,7 +1799,7 @@ function ifAPGMExpr() {
         });
     });
 }
-function macro() {
+function macroHead() {
     const macroKeyword = _.chain((_)=>{
         return mod.location.chain((location9)=>{
             return mod.text("macro").next(someSpaces).map((_)=>location9
@@ -1808,11 +1808,20 @@ function macro() {
     });
     return macroKeyword.and(macroIdentifier).chain(([location10, ident])=>{
         return argExprs(()=>varAPGMExpr
-        ).chain((args)=>{
-            return mod.lazy(()=>apgmExpr()
-            ).map((body)=>{
-                return new Macro(ident, args, body, location10);
-            });
+        ).map((args)=>{
+            return {
+                loc: location10,
+                name: ident,
+                args: args
+            };
+        });
+    });
+}
+function macro() {
+    return macroHead().chain(({ loc , name , args  })=>{
+        return mod.lazy(()=>apgmExpr()
+        ).map((body)=>{
+            return new Macro(name, args, body, loc);
         });
     });
 }
@@ -2627,7 +2636,44 @@ function optimizeSeqAPGLExpr1(seqExpr) {
     }
     return new SeqAPGLExpr(newExprs);
 }
+function removeComment(src) {
+    let res = "";
+    let isComment = false;
+    let i = 0;
+    while(i < src.length){
+        const c = src[i];
+        const c2 = src[i + 1];
+        if (c === "/" && c2 === "*") {
+            i += 2;
+            isComment = true;
+        } else if (c === "*" && c2 === "/") {
+            isComment = false;
+            i += 2;
+        } else {
+            if (!isComment) {
+                res += c;
+            }
+            i++;
+        }
+    }
+    return res;
+}
+function completionParser(src) {
+    const array = [];
+    for (const match1 of removeComment(src).matchAll(/(macro\s+(.*?)\s*\(.*?\))/gs)){
+        const result = macroHead().parse(match1[0]);
+        if (result.type === "ParseOK") {
+            array.push({
+                name: result.value.name,
+                args: result.value.args.map((x)=>x.name
+                )
+            });
+        }
+    }
+    return array;
+}
 export { emptyArgFuncs as emptyArgFuncs, numArgFuncs as numArgFuncs, strArgFuncs as strArgFuncs };
+export { completionParser as completionParser };
 function logged(f, x, logMessage = undefined) {
     const y = f(x);
     if (logMessage !== undefined) {

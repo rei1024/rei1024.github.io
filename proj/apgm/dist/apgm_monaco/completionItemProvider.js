@@ -2,7 +2,12 @@
 
 // https://microsoft.github.io/monaco-editor/api/modules/monaco.languages.html#registerCompletionItemProvider
 
-import { emptyArgFuncs, numArgFuncs, strArgFuncs } from "../integraion.js";
+import {
+    completionParser,
+    emptyArgFuncs,
+    numArgFuncs,
+    strArgFuncs,
+} from "../integraion.js";
 
 // 再利用しない
 const fixedSuggestions = () => [
@@ -118,40 +123,44 @@ const fixedSuggestions = () => [
     },
 ];
 
+/**
+ * @param {{name: string, args: string[]}[]} decls
+ * @returns {unknown[]}
+ */
+function generateSuggestion(decls) {
+    const FUNC_KIND = monaco.languages.CompletionItemKind.Function;
+    const INSERT_AS_SNIPPET =
+        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
+    return decls.map((decl) => {
+        const pretty = `macro ${decl.name}(${decl.args.join(", ")})`;
+        const formattedArgs = decl.args.map((x, i) =>
+            "${" + (i + 1) + ":" + x + "}"
+        ).join(", ");
+        const text = `${decl.name}(${formattedArgs})`;
+        return {
+            label: decl.name,
+            kind: FUNC_KIND,
+            insertText: text,
+            insertTextRules: INSERT_AS_SNIPPET,
+            documentation: pretty,
+            detail: pretty,
+        };
+    });
+}
+
 export const completionItemProvider = {
     provideCompletionItems: (model, position, context, token) => {
         /** @type {string} */
         const str = model.getValue();
 
         /**
-         * @type {string[]}
-         */
-        const funcNames = [];
-        for (const match of str.matchAll(/macro\s+(.*!)\s*\(.*\)/g)) {
-            const name = match[1];
-            if (typeof name === "string") {
-                funcNames.push(name);
-            }
-        }
-
-        const FUNC_KIND = monaco.languages.CompletionItemKind.Function;
-        const INSERT_AS_SNIPPET =
-            monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
-        /**
          * @type {any[]}
          */
         let suggestions = [];
-        for (const funcName of funcNames) {
-            // TODO: 引数の数に応じて生成
-            suggestions.push({
-                label: funcName,
-                kind: FUNC_KIND,
-                insertText: `${funcName}`,
-                insertTextRules: INSERT_AS_SNIPPET,
-                documentation: `macro ${funcName}`,
-                detail: `macro ${funcName}`,
-            });
-        }
+
+        suggestions = suggestions.concat(
+            generateSuggestion(completionParser(str)),
+        );
 
         suggestions = suggestions.concat(fixedSuggestions());
 

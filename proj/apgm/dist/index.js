@@ -55,7 +55,7 @@ const editor = initEditor($apgmInput);
 /**
  * @param {string} message
  */
-export function setMarkerForError(message) {
+export function showError(message) {
     if (!message.includes("at line")) {
         return;
     }
@@ -71,6 +71,7 @@ export function setMarkerForError(message) {
             endLineNumber: line,
             endColumn: column + 3,
         });
+        editor.revealLine(line);
     } catch (_e) {
         // NOP
     }
@@ -108,7 +109,7 @@ const compile = () => {
         $copy.disabled = true;
         $apgmInput.style.borderColor = "#dc3545";
         $apgmInput.style.borderWidth = "2px";
-        setMarkerForError(message);
+        showError(message);
     }
 };
 
