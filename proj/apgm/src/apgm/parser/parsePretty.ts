@@ -1,4 +1,5 @@
 import { bnb } from "../../deps.ts";
+import { ErrorWithLocation } from "../ast/mod.ts";
 
 // parse error at line 8 column 9: expected comment, ,, )
 
@@ -46,5 +47,5 @@ export function parsePretty<A>(parser: bnb.Parser<A>, source: string): A {
         return res.value;
     }
 
-    throw Error(prettyError(res, source));
+    throw new ErrorWithLocation(prettyError(res, source), res.location);
 }

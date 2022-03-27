@@ -23,6 +23,16 @@ export interface APGMSourceLocation {
     column: number;
 }
 
+export class ErrorWithLocation extends Error {
+    constructor(
+        message: string,
+        public apgmLocation?: APGMSourceLocation | undefined,
+        options?: ErrorOptions | undefined,
+    ) {
+        super(message, options);
+    }
+}
+
 export function formatLocation(location: APGMSourceLocation): string {
     return `line ${location.line} column ${location.column}`;
 }

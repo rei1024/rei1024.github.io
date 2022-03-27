@@ -1,3 +1,4 @@
+import { ErrorWithLocation } from "../apgm/ast/mod.ts";
 import {
     completionParser,
     emptyArgFuncs,
@@ -294,7 +295,7 @@ test("integration repeat throws empty args", () => {
     `;
     assertThrows(() => {
         integration(src);
-    });
+    }, ErrorWithLocation);
 });
 
 test("integration repeat throws one args", () => {
@@ -303,7 +304,7 @@ test("integration repeat throws one args", () => {
     `;
     assertThrows(() => {
         integration(src);
-    });
+    }, ErrorWithLocation);
 });
 
 test("integration unknown function", () => {
@@ -314,7 +315,19 @@ test("integration unknown function", () => {
         () => {
             integration(src);
         },
-        Error,
+        ErrorWithLocation,
         'Unknown function: "unknown_function" at line 2 column 5',
+    );
+});
+
+test("integration parse error with location", () => {
+    const src = `
+    {
+    `;
+    assertThrows(
+        () => {
+            integration(src);
+        },
+        ErrorWithLocation,
     );
 });

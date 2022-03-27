@@ -63,22 +63,22 @@
             <div id="buttons" class="btn-group">
                 <button id="compile" class="btn btn-primary">Compile</button>
                 <button id="run" class="btn btn-primary">Run</button>
-                <button type="button" class="btn btn-primary dropdown-toggle" id="samples" data-bs-toggle="dropdown" aria-expanded="false">Example</button>
-                <ul class="dropdown-menu" aria-labelledby="samples">
+                <button type="button" class="btn btn-primary dropdown-toggle" id="examples" data-bs-toggle="dropdown" aria-expanded="false">Example</button>
+                <ul class="dropdown-menu" aria-labelledby="examples">
                     <li>
-                        <button class="dropdown-item js_sample" data-src="01_output.apgm">output</button>
-                        <button class="dropdown-item js_sample" data-src="02_if.apgm">if_z and if_nz</button>
-                        <button class="dropdown-item js_sample" data-src="03_loop.apgm">loop</button>
-                        <button class="dropdown-item js_sample" data-src="04_while.apgm">while_z and while_nz</button>
-                        <button class="dropdown-item js_sample" data-src="05_actions.apgm">actions</button>
-                        <button class="dropdown-item js_sample" data-src="06_macro_decl.apgm">macro declaration</button>
-                        <button class="dropdown-item js_sample" data-src="07_macro_args.apgm">arguments of macro</button>
-                        <button class="dropdown-item js_sample" data-src="08_macro_in_macro.apgm">macro in macro</button>
-                        <button class="dropdown-item js_sample" data-src="09_header.apgm">header</button>
-                        <button class="dropdown-item js_sample" data-src="10_print_digit.apgm">print digit</button>
-                        <button class="dropdown-item js_sample" data-src="11_repeat.apgm">repeat</button>
-                        <button class="dropdown-item js_sample" data-src="12_dragon.apgm">Dragon curve</button>
-                        <button class="dropdown-item js_sample" data-src="14_o_sqrt_log_t.apgm">O(sqrt(log(t)))</button>
+                        <button class="dropdown-item js_example" data-src="01_output.apgm">output</button>
+                        <button class="dropdown-item js_example" data-src="02_if.apgm">if_z and if_nz</button>
+                        <button class="dropdown-item js_example" data-src="03_loop.apgm">loop</button>
+                        <button class="dropdown-item js_example" data-src="04_while.apgm">while_z and while_nz</button>
+                        <button class="dropdown-item js_example" data-src="05_actions.apgm">actions</button>
+                        <button class="dropdown-item js_example" data-src="06_macro_decl.apgm">macro declaration</button>
+                        <button class="dropdown-item js_example" data-src="07_macro_args.apgm">arguments of macro</button>
+                        <button class="dropdown-item js_example" data-src="08_macro_in_macro.apgm">macro in macro</button>
+                        <button class="dropdown-item js_example" data-src="09_header.apgm">header</button>
+                        <button class="dropdown-item js_example" data-src="10_print_digit.apgm">print digit</button>
+                        <button class="dropdown-item js_example" data-src="11_repeat.apgm">repeat</button>
+                        <button class="dropdown-item js_example" data-src="12_dragon.apgm">Dragon curve</button>
+                        <button class="dropdown-item js_example" data-src="14_o_sqrt_log_t.apgm">O(sqrt(log(t)))</button>
                     </li>
                 </ul>
                 <button id="config_button" data-test="config_button" type="button" class="btn btn-primary"
@@ -94,7 +94,7 @@
             <textarea placeholder="# APGsembly" id="output" class="form-control mono" cols="30" rows="9"></textarea>
         </div>
         <div class="mt-1">
-            <pre style="white-space: pre-wrap;"><div id="error" style="display: none;" class="alert alert-danger" role="alert"></div></pre>
+            <div id="error" style="display: none;" class="alert alert-danger" role="alert"><pre id="error_msg" style="white-space: pre-wrap;"></pre></div>
         </div>
 
         <!-- <div class="mt-2">

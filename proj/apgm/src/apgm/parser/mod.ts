@@ -45,6 +45,7 @@ export const identifierWithLocation: bnb.Parser<[string, bnb.SourceLocation]> =
         });
     });
 
+// completion_parser.tsと合わせる
 const macroIdentifierRegExp = /[a-zA-Z_][a-zA-Z_0-9]*!/u;
 
 export const macroIdentifier: bnb.Parser<string> = _.next(

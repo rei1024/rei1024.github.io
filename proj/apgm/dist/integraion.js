@@ -1466,47 +1466,15 @@ const hexadecimalNaturalParser = mod.match(/0x[a-fA-F0-9]+/).desc([
 const naturalNumberParser = hexadecimalNaturalParser.or(decimalNaturalParser).desc([
     "number"
 ]);
-function prettyError(fail1, source) {
-    const lines = source.split(/\n|\r\n/);
-    const above = lines[fail1.location.line - 2];
-    const errorLine = lines[fail1.location.line - 1];
-    const below = lines[fail1.location.line];
-    const arrowLine = " ".repeat(Math.max(0, fail1.location.column - 1)) + "^";
-    const aboveLines = [
-        ...above === undefined ? [] : [
-            above
-        ],
-        errorLine, 
-    ];
-    const belowLines = [
-        ...below === undefined ? [] : [
-            below
-        ], 
-    ];
-    const prefix = "| ";
-    const errorLines = [
-        ...aboveLines.map((x)=>prefix + x
-        ),
-        " ".repeat(prefix.length) + arrowLine,
-        ...belowLines.map((x)=>prefix + x
-        ), 
-    ];
-    return [
-        `parse error at line ${fail1.location.line} column ${fail1.location.column}:`,
-        `  expected ${fail1.expected.join(", ")}`,
-        ``,
-        ...errorLines, 
-    ].join("\n");
-}
-function parsePretty(parser, source) {
-    const res = parser.parse(source);
-    if (res.type === "ParseOK") {
-        return res.value;
-    }
-    throw Error(prettyError(res, source));
-}
 class APGMExpr {
     constructor(){}
+}
+class ErrorWithLocation extends Error {
+    constructor(message, apgmLocation, options){
+        super(message, options);
+        this.apgmLocation = apgmLocation;
+    }
+    apgmLocation;
 }
 function formatLocationAt(location1) {
     if (location1 !== undefined) {
@@ -1684,6 +1652,45 @@ class WhileAPGMExpr extends APGMExpr {
     modifier;
     cond;
     body;
+}
+function prettyError(fail1, source) {
+    const lines = source.split(/\n|\r\n/);
+    const above = lines[fail1.location.line - 2];
+    const errorLine = lines[fail1.location.line - 1];
+    const below = lines[fail1.location.line];
+    const arrowLine = " ".repeat(Math.max(0, fail1.location.column - 1)) + "^";
+    const aboveLines = [
+        ...above === undefined ? [] : [
+            above
+        ],
+        errorLine, 
+    ];
+    const belowLines = [
+        ...below === undefined ? [] : [
+            below
+        ], 
+    ];
+    const prefix = "| ";
+    const errorLines = [
+        ...aboveLines.map((x)=>prefix + x
+        ),
+        " ".repeat(prefix.length) + arrowLine,
+        ...belowLines.map((x)=>prefix + x
+        ), 
+    ];
+    return [
+        `parse error at line ${fail1.location.line} column ${fail1.location.column}:`,
+        `  expected ${fail1.expected.join(", ")}`,
+        ``,
+        ...errorLines, 
+    ].join("\n");
+}
+function parsePretty(parser, source) {
+    const res = parser.parse(source);
+    if (res.type === "ParseOK") {
+        return res.value;
+    }
+    throw new ErrorWithLocation(prettyError(res, source), res.location);
 }
 const comment = mod.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([]);
 const _ = mod.match(/\s*/).desc([
@@ -2021,27 +2028,27 @@ class A {
 }
 function transpileEmptyArgFunc(funcExpr, expr) {
     if (funcExpr.args.length !== 0) {
-        throw Error(`argument given to "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
+        throw new ErrorWithLocation(`argument given to "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`, funcExpr.location);
     }
     return expr;
 }
 function transpileNumArgFunc(funcExpr, expr) {
     if (funcExpr.args.length !== 1) {
-        throw Error(`number of arguments is not 1: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
+        throw new ErrorWithLocation(`number of arguments is not 1: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`, funcExpr.location);
     }
     const arg = funcExpr.args[0];
     if (!(arg instanceof NumberAPGMExpr)) {
-        throw Error(`argument is not a number: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
+        throw new ErrorWithLocation(`argument is not a number: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`, funcExpr.location);
     }
     return expr(arg.value);
 }
 function transpileStringArgFunc(funcExpr, expr) {
     if (funcExpr.args.length !== 1) {
-        throw Error(`number of arguments is not 1: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
+        throw new ErrorWithLocation(`number of arguments is not 1: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`, funcExpr.location);
     }
     const arg = funcExpr.args[0];
     if (!(arg instanceof StringAPGMExpr)) {
-        throw Error(`argument is not a string: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
+        throw new ErrorWithLocation(`argument is not a string: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`, funcExpr.location);
     }
     return expr(arg.value);
 }
@@ -2175,11 +2182,11 @@ function transpileFuncAPGMExpr(funcExpr) {
         case "repeat":
             {
                 if (funcExpr.args.length !== 2) {
-                    throw Error(`"repeat" takes two arguments${formatLocationAt(funcExpr.location)}`);
+                    throw new ErrorWithLocation(`"repeat" takes two arguments${formatLocationAt(funcExpr.location)}`, funcExpr.location);
                 }
                 const n = funcExpr.args[0];
                 if (!(n instanceof NumberAPGMExpr)) {
-                    throw Error(`first argument of "repeat" must be a number${formatLocationAt(funcExpr.location)}`);
+                    throw new ErrorWithLocation(`first argument of "repeat" must be a number${formatLocationAt(funcExpr.location)}`, funcExpr.location);
                 }
                 const expr = funcExpr.args[1];
                 const apgl = transpileAPGMExpr(expr);
@@ -2187,7 +2194,7 @@ function transpileFuncAPGMExpr(funcExpr) {
                 ));
             }
     }
-    throw Error(`Unknown function: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`);
+    throw new ErrorWithLocation(`Unknown function: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`, funcExpr.location);
 }
 function transpileAPGMExpr(e) {
     const t = transpileAPGMExpr;
@@ -2202,14 +2209,14 @@ function transpileAPGMExpr(e) {
     } else if (e instanceof LoopAPGMExpr) {
         return new LoopAPGLExpr(t(e.body));
     } else if (e instanceof NumberAPGMExpr) {
-        throw Error(`number is not allowed: ${e.value}${formatLocationAt(e.location)}`);
+        throw new ErrorWithLocation(`number is not allowed: ${e.value}${formatLocationAt(e.location)}`, e.location);
     } else if (e instanceof SeqAPGMExpr) {
         return new SeqAPGLExpr(e.exprs.map((x)=>t(x)
         ));
     } else if (e instanceof StringAPGMExpr) {
         throw Error(`string is not allowed: ${e.value}`);
     } else if (e instanceof VarAPGMExpr) {
-        throw Error(`macro variable is not allowed: variable "${e.name}"${formatLocationAt(e.location)}`);
+        throw new ErrorWithLocation(`macro variable is not allowed: variable "${e.name}"${formatLocationAt(e.location)}`, e.location);
     } else if (e instanceof WhileAPGMExpr) {
         return new WhileAPGLExpr(e.modifier, t(e.cond), t(e.body));
     }
@@ -2460,7 +2467,7 @@ function argumentsMessage(num) {
 function replaceVarInBoby(macro1, funcExpr) {
     const exprs = funcExpr.args;
     if (exprs.length !== macro1.args.length) {
-        throw Error(`argument length mismatch: "${macro1.name}"` + ` expect ${argumentsMessage(macro1.args.length)} but given ${argumentsMessage(exprs.length)}${formatLocationAt(funcExpr.location)}`);
+        throw new ErrorWithLocation(`argument length mismatch: "${macro1.name}"` + ` expect ${argumentsMessage(macro1.args.length)} but given ${argumentsMessage(exprs.length)}${formatLocationAt(funcExpr.location)}`, funcExpr.location);
     }
     const nameToExpr = new Map(macro1.args.map((a, i)=>[
             a.name,
@@ -2471,7 +2478,7 @@ function replaceVarInBoby(macro1, funcExpr) {
         if (x instanceof VarAPGMExpr) {
             const expr = nameToExpr.get(x.name);
             if (expr === undefined) {
-                throw Error(`scope error: "${x.name}"${formatLocationAt(x.location)}`);
+                throw new ErrorWithLocation(`scope error: "${x.name}"${formatLocationAt(x.location)}`, x.location);
             }
             return expr;
         } else {
@@ -2497,7 +2504,7 @@ class MacroExpander {
             const d = ds[0];
             const location11 = main1.macros.slice().reverse().find((x)=>x.name === d
             )?.location;
-            throw Error(`There is a macro with the same name: "${d}"` + formatLocationAt(location11));
+            throw new ErrorWithLocation(`There is a macro with the same name: "${d}"` + formatLocationAt(location11), location11);
         }
     }
     expand() {
@@ -2660,7 +2667,7 @@ function removeComment(src) {
 }
 function completionParser(src) {
     const array = [];
-    for (const match1 of removeComment(src).matchAll(/(macro\s+(.*?)\s*\(.*?\))/gs)){
+    for (const match1 of removeComment(src).matchAll(/(macro\s+([a-zA-Z_][a-zA-Z_0-9]*?!)\s*\(.*?\))/gs)){
         const result = macroHead().parse(match1[0]);
         if (result.type === "ParseOK") {
             array.push({

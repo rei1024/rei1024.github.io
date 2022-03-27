@@ -1,5 +1,6 @@
 import {
     APGMExpr,
+    ErrorWithLocation,
     formatLocationAt,
     FuncAPGMExpr,
     IfAPGMExpr,
@@ -23,10 +24,11 @@ import { A } from "../apgl/actions.ts";
 
 function transpileEmptyArgFunc(funcExpr: FuncAPGMExpr, expr: APGLExpr) {
     if (funcExpr.args.length !== 0) {
-        throw Error(
+        throw new ErrorWithLocation(
             `argument given to "${funcExpr.name}"${
                 formatLocationAt(funcExpr.location)
             }`,
+            funcExpr.location,
         );
     }
     return expr;
@@ -37,18 +39,20 @@ function transpileNumArgFunc(
     expr: (_: number) => APGLExpr,
 ) {
     if (funcExpr.args.length !== 1) {
-        throw Error(
+        throw new ErrorWithLocation(
             `number of arguments is not 1: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.location)
             }`,
+            funcExpr.location,
         );
     }
     const arg = funcExpr.args[0];
     if (!(arg instanceof NumberAPGMExpr)) {
-        throw Error(
+        throw new ErrorWithLocation(
             `argument is not a number: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.location)
             }`,
+            funcExpr.location,
         );
     }
     return expr(arg.value);
@@ -59,18 +63,20 @@ function transpileStringArgFunc(
     expr: (_: string) => APGLExpr,
 ) {
     if (funcExpr.args.length !== 1) {
-        throw Error(
+        throw new ErrorWithLocation(
             `number of arguments is not 1: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.location)
             }`,
+            funcExpr.location,
         );
     }
     const arg = funcExpr.args[0];
     if (!(arg instanceof StringAPGMExpr)) {
-        throw Error(
+        throw new ErrorWithLocation(
             `argument is not a string: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.location)
             }`,
+            funcExpr.location,
         );
     }
     return expr(arg.value);
@@ -149,18 +155,20 @@ function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
         // macro
         case "repeat": {
             if (funcExpr.args.length !== 2) {
-                throw Error(
+                throw new ErrorWithLocation(
                     `"repeat" takes two arguments${
                         formatLocationAt(funcExpr.location)
                     }`,
+                    funcExpr.location,
                 );
             }
             const n = funcExpr.args[0];
             if (!(n instanceof NumberAPGMExpr)) {
-                throw Error(
+                throw new ErrorWithLocation(
                     `first argument of "repeat" must be a number${
                         formatLocationAt(funcExpr.location)
                     }`,
+                    funcExpr.location,
                 );
             }
             const expr = funcExpr.args[1];
@@ -169,10 +177,11 @@ function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
         }
     }
 
-    throw Error(
+    throw new ErrorWithLocation(
         `Unknown function: "${funcExpr.name}"${
             formatLocationAt(funcExpr.location)
         }`,
+        funcExpr.location,
     );
 }
 
@@ -197,18 +206,20 @@ export function transpileAPGMExpr(e: APGMExpr): APGLExpr {
     } else if (e instanceof LoopAPGMExpr) {
         return new LoopAPGLExpr(t(e.body));
     } else if (e instanceof NumberAPGMExpr) {
-        throw Error(
+        throw new ErrorWithLocation(
             `number is not allowed: ${e.value}${formatLocationAt(e.location)}`,
+            e.location,
         );
     } else if (e instanceof SeqAPGMExpr) {
         return new SeqAPGLExpr(e.exprs.map((x) => t(x)));
     } else if (e instanceof StringAPGMExpr) {
         throw Error(`string is not allowed: ${e.value}`);
     } else if (e instanceof VarAPGMExpr) {
-        throw Error(
+        throw new ErrorWithLocation(
             `macro variable is not allowed: variable "${e.name}"${
                 formatLocationAt(e.location)
             }`,
+            e.location,
         );
     } else if (e instanceof WhileAPGMExpr) {
         return new WhileAPGLExpr(e.modifier, t(e.cond), t(e.body));

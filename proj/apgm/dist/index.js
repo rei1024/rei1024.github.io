@@ -8,7 +8,7 @@ import { initEditor, initMonaco } from "./apgm_monaco/init.js";
 
 initMonaco();
 
-const $samples = document.querySelectorAll(".js_sample");
+const $examples = document.querySelectorAll(".js_example");
 
 const $output = document.querySelector("#output");
 if (!($output instanceof HTMLTextAreaElement)) {
@@ -40,6 +40,11 @@ if (!($error instanceof HTMLElement)) {
     throw Error("$error");
 }
 
+const $errorMsg = document.querySelector("#error_msg");
+if (!($errorMsg instanceof HTMLElement)) {
+    throw Error("$errorMsg");
+}
+
 const $prefix_input = document.querySelector("#prefix_input");
 if (!($prefix_input instanceof HTMLInputElement)) {
     throw Error("$prefix_input");
@@ -53,19 +58,17 @@ if (!($apgmInput instanceof HTMLElement)) {
 const editor = initEditor($apgmInput);
 
 /**
- * @param {string} message
+ * @param {{ message: string, apgmLocation: { line: number, column: number } }} e
  */
-export function showError(message) {
-    if (!message.includes("at line")) {
-        return;
-    }
+export function showError(e) {
     try {
-        const lineRes = message.match(/line (\d+)/);
-        const columnRes = message.match(/column (\d+)/);
-        const line = Number(lineRes[1]);
-        const column = Number(columnRes[1]);
+        const line = e.apgmLocation.line;
+        const column = e.apgmLocation.column;
+        if (!Number.isInteger(line)) {
+            return;
+        }
         editor.setMarker({
-            message: message,
+            message: e.message,
             startLineNumber: line,
             startColumn: column,
             endLineNumber: line,
@@ -77,9 +80,15 @@ export function showError(message) {
     }
 }
 
+const resetError = () => {
+    editor.setMarker(undefined);
+    $error.style.display = "none";
+    $apgmInput.style.borderColor = "";
+};
+
 const compile = () => {
     $output.value = "";
-    editor.setMarker(undefined);
+    resetError();
     try {
         const options = {};
         if ($prefix_input.value.trim() !== "") {
@@ -90,26 +99,23 @@ const compile = () => {
          * @type {string}
          */
         const result = integration(editor.getValue(), options).join("\n");
+        $output.value = result;
         $download.disabled = false;
         $copy.disabled = false;
-        $error.style.display = "none";
-        $output.value = result;
-        $apgmInput.style.borderColor = "";
     } catch (e) {
         if (!(e instanceof Error)) {
             e = new Error("unknown error");
         }
-        /**
-         * @type {string}
-         */
-        const message = e.message;
-        $error.textContent = e.message;
+
+        $errorMsg.textContent = e.message;
         $error.style.display = "block";
         $download.disabled = true;
         $copy.disabled = true;
         $apgmInput.style.borderColor = "#dc3545";
         $apgmInput.style.borderWidth = "2px";
-        showError(message);
+        if (typeof e.apgmLocation !== "undefined") {
+            showError(e);
+        }
     }
 };
 
@@ -146,16 +152,19 @@ const DATA_DIR = location.origin.includes("github")
     ? "./dist/data/"
     : "./dist/data/";
 
-$samples.forEach((sample) => {
-    if (!(sample instanceof HTMLElement)) {
-        throw Error("sample is not HTMLElement");
+$examples.forEach((example) => {
+    if (!(example instanceof HTMLElement)) {
+        throw Error("example is not HTMLElement");
     }
-    sample.addEventListener("click", () => {
-        fetch(DATA_DIR + sample.dataset.src).then((x) => x.text()).then(
-            (str) => {
+    example.addEventListener("click", () => {
+        fetch(DATA_DIR + example.dataset.src)
+            .then((x) => x.text())
+            .then((str) => {
                 editor.setValue(str);
                 editor.scrollToTop();
-            },
-        );
+                setTimeout(() => {
+                    compile();
+                }, 0);
+            });
     });
 });

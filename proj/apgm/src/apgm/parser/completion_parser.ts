@@ -35,10 +35,10 @@ export function removeComment(src: string): string {
 export function completionParser(src: string): MacroDecl[] {
     const array: MacroDecl[] = [];
     // non-greedy
-    // ここで!を要求しないようにする
+    // mod.tsとマクロ名の正規表現を合わせること
     for (
         const match of removeComment(src).matchAll(
-            /(macro\s+(.*?)\s*\(.*?\))/gs,
+            /(macro\s+([a-zA-Z_][a-zA-Z_0-9]*?!)\s*\(.*?\))/gs,
         )
     ) {
         const result = macroHead().parse(match[0]);

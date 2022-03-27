@@ -159,4 +159,22 @@ my_output!("0");
             args: ["x"],
         }],
     );
+
+    assertEquals(
+        completionParser(`
+macro f!
+
+macro my_output!(x) {
+    output(x);
+}
+
+/* using macro */
+my_output!("0");
+
+`),
+        [{
+            name: "my_output!",
+            args: ["x"],
+        }],
+    );
 });

@@ -1,5 +1,6 @@
 import {
     APGMExpr,
+    ErrorWithLocation,
     formatLocationAt,
     FuncAPGMExpr,
     Macro,
@@ -18,11 +19,12 @@ function argumentsMessage(num: number): string {
 function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
     const exprs = funcExpr.args;
     if (exprs.length !== macro.args.length) {
-        throw Error(
+        throw new ErrorWithLocation(
             `argument length mismatch: "${macro.name}"` +
                 ` expect ${argumentsMessage(macro.args.length)} but given ${
                     argumentsMessage(exprs.length)
                 }${formatLocationAt(funcExpr.location)}`,
+            funcExpr.location,
         );
     }
 
@@ -34,8 +36,9 @@ function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
         if (x instanceof VarAPGMExpr) {
             const expr = nameToExpr.get(x.name);
             if (expr === undefined) {
-                throw Error(
+                throw new ErrorWithLocation(
                     `scope error: "${x.name}"${formatLocationAt(x.location)}`,
+                    x.location,
                 );
             }
             return expr;
@@ -59,9 +62,10 @@ export class MacroExpander {
             const location = main.macros.slice().reverse().find((x) =>
                 x.name === d
             )?.location;
-            throw Error(
+            throw new ErrorWithLocation(
                 `There is a macro with the same name: "${d}"` +
                     formatLocationAt(location),
+                location,
             );
         }
     }
