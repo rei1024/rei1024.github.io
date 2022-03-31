@@ -142,7 +142,9 @@ $frequencyInput.max = (frequencyArray.length - 1).toString();
 $frequencyInput.addEventListener('input', () => {
     const value = parseInt($frequencyInput.value, 10);
     if (!isNaN(value)) {
-        app.frequency = frequencyArray[value] ?? DEFUALT_FREQUENCY;
+        const freq = frequencyArray[value] ?? DEFUALT_FREQUENCY;
+        $frequencyInput.ariaValueText = "(" + freq.toString() + "Hz" + ")";
+        app.frequency = freq;
     } else {
         app.frequency = DEFUALT_FREQUENCY;
     }

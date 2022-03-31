@@ -1,7 +1,5 @@
 {
     "trailing-spaces.trimOnSave": true,
     "deno.enable": false,
-    "deno.config": "./deno.jsonc",
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "deno.config": "./deno.jsonc"
 }

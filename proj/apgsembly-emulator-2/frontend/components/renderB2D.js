@@ -12,7 +12,16 @@ import { B2D } from "../../src/components/B2D.js";
  */
 export function renderB2D(context, b2d, hidePointer, flipUpsideDown) {
     const width = context.canvas.width;
-    context.canvas.height = width;
+    const prevHeight = context.canvas.height;
+
+    if (width !== prevHeight) {
+        context.canvas.height = width;
+    }
+
+    context.clearRect(0, 0, width, width);
+    context.resetTransform();
+    context.beginPath();
+
     const maxX = b2d.getMaxX();
     const maxY = b2d.getMaxY();
 

@@ -182,7 +182,7 @@
                     x = <span id="b2dx">0</span>,
                     y = <span id="b2dy">0</span>
                 </div>
-                <canvas id="canvas"></canvas>
+                <canvas aria-label="B2D" id="canvas"></canvas>
             </details>
         </div>
     </main>
@@ -207,9 +207,9 @@
                 <div>
                     <label for="breakpoint_input_select" class="form-label">Breakpoint input</label>
                     <select name="breakpoint_input_select" class="form-select" id="breakpoint_input_select">
-                        <option value="-1" selected>*</option>
-                        <option value="0">Z</option>
-                        <option value="1">NZ</option>
+                        <option value="any" selected>*</option>
+                        <option value="zero">Z</option>
+                        <option value="non zero">NZ</option>
                     </select>
                 </div>
                 <div class="mt-3">

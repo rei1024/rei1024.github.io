@@ -55,6 +55,7 @@ import {
     $statsModal,
     $statsBody,
     $statsNumberOfStates,
+    $statsButton,
 } from "./bind.js";
 
 /** index.htmlと同期する */
@@ -425,6 +426,7 @@ export class App {
             return;
         }
         if (this.machine === undefined) {
+            this.statsUI.clear();
             return;
         }
         this.statsUI.render(
@@ -439,25 +441,40 @@ export class App {
     render() {
         // ボタンの有効無効
         switch (this.appState) {
-            case "Stop":
             case "Initial": {
                 startButton($toggle);
                 $step.disabled = false;
                 $reset.disabled = false;
+                $statsButton.disabled = true;
+                break;
+            }
+            case "Stop": {
+                startButton($toggle);
+                $step.disabled = false;
+                $reset.disabled = false;
+                $statsButton.disabled = false;
                 break;
             }
             case "Running": {
                 stopButton($toggle);
                 $step.disabled = true;
                 $reset.disabled = true;
+                $statsButton.disabled = false;
                 break;
             }
             case "RuntimeError":
-            case "ParseError":
+            case "ParseError": {
+                startButtonDisabled($toggle);
+                $step.disabled = true;
+                $reset.disabled = false;
+                $statsButton.disabled = true;
+                break;
+            }
             case "Halted": {
                 startButtonDisabled($toggle);
                 $step.disabled = true;
                 $reset.disabled = false;
+                $statsButton.disabled = false;
                 break;
             }
         }
@@ -495,7 +512,7 @@ export class App {
         switch (this.appState) {
             case "Initial": {
                 this.reset();
-                // エラーでなければ走らせない
+                // エラーであれば走らせない
                 // @ts-ignore
                 if (this.appState !== "Stop") {
                     return;
@@ -520,7 +537,10 @@ export class App {
         // -1: *
         // 0 : Z
         // 1 : NZ
-        const breakpointInputValue = parseInt($breakpointInputSelect.value, 10);
+        const biStr = $breakpointInputSelect.value;
+        const breakpointInputValue =
+            biStr === "any" ? -1 :
+            biStr === "zero" ? 0 : 1;
 
         const machine = this.machine;
         if (machine === undefined) {

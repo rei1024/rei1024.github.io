@@ -100,28 +100,28 @@ macro safe_set_b2d!() {
   set_b2d();
 }
 
-macro b2dx_plus_x!() {
+macro b2d_plus_x!() {
   repeat(LEN!(), {
     safe_set_b2d!();
     inc_b2dx();
   });
 }
 
-macro b2dx_plus_y!() {
+macro b2d_plus_y!() {
   repeat(LEN!(), {
     safe_set_b2d!();
     inc_b2dy();
   });
 }
 
-macro b2dx_minus_x!() {
+macro b2d_minus_x!() {
   repeat(LEN!(), {
     safe_set_b2d!();
     tdec_b2dx();
   });
 }
 
-macro b2dx_minus_y!() {
+macro b2d_minus_y!() {
   repeat(LEN!(), {
     safe_set_b2d!();
     tdec_b2dy();
@@ -190,16 +190,16 @@ loop {
   } else if_z(check!()) {
     /* F */
     if_nz(tdec_u(1)) {
-      b2dx_plus_x!();
+      b2d_plus_x!();
       inc_u(1);
     } else if_nz(tdec_u(2)) {
-      b2dx_plus_y!();
+      b2d_plus_y!();
       inc_u(2);
     } else if_nz(tdec_u(3)) {
-      b2dx_minus_x!();
+      b2d_minus_x!();
       inc_u(3);
     } else if_nz(tdec_u(4)) {
-      b2dx_minus_y!();
+      b2d_minus_y!();
       inc_u(4);
     }
   } else if_z(check!()) {
