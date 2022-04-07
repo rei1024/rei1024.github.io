@@ -93,6 +93,7 @@ export function generate(rule) {
     /** @type {Array<string>} */
     const array = [];
     array.push(`# Rule ${rule}`);
+    array.push(`#COMPONENTS NOP,B2D`);
     array.push(`# State    Input    Next state    Actions`);
     array.push(`# ---------------------------------------`);
     // Set ON cell at (0, 0)

@@ -1,6 +1,7 @@
 import { transpileAPGMExpr } from "./transpiler.ts";
 import {
     FuncAPGMExpr,
+    IfAPGMExpr,
     NumberAPGMExpr,
     StringAPGMExpr,
     VarAPGMExpr,
@@ -9,6 +10,8 @@ import {
 import {
     ActionAPGLExpr,
     BreakAPGLExpr,
+    IfAPGLExpr,
+    SeqAPGLExpr,
     WhileAPGLExpr,
 } from "../apgl/ast/mod.ts";
 import { assertEquals, assertThrows, test } from "../deps_test.ts";
@@ -82,6 +85,66 @@ test("apgm_to_apgl output no arg", () => {
             new FuncAPGMExpr("output", [], undefined),
         );
     });
+});
+
+test("apgm_to_apgl if", () => {
+    const res = transpileAPGMExpr(
+        new IfAPGMExpr(
+            "Z",
+            new FuncAPGMExpr("nop", [], undefined),
+            new FuncAPGMExpr("nop", [], undefined),
+            undefined,
+        ),
+    );
+
+    assertEquals(
+        res,
+        new IfAPGLExpr(
+            new ActionAPGLExpr(["NOP"]),
+            new ActionAPGLExpr(["NOP"]),
+            new SeqAPGLExpr([]),
+        ),
+    );
+});
+
+test("apgm_to_apgl if nz", () => {
+    const res = transpileAPGMExpr(
+        new IfAPGMExpr(
+            "NZ",
+            new FuncAPGMExpr("nop", [], undefined),
+            new FuncAPGMExpr("nop", [], undefined),
+            undefined,
+        ),
+    );
+
+    assertEquals(
+        res,
+        new IfAPGLExpr(
+            new ActionAPGLExpr(["NOP"]),
+            new SeqAPGLExpr([]),
+            new ActionAPGLExpr(["NOP"]),
+        ),
+    );
+});
+
+test("apgm_to_apgl if nz", () => {
+    const res = transpileAPGMExpr(
+        new IfAPGMExpr(
+            "NZ",
+            new FuncAPGMExpr("nop", [], undefined),
+            new FuncAPGMExpr("nop", [], undefined),
+            new FuncAPGMExpr("nop", [], undefined),
+        ),
+    );
+
+    assertEquals(
+        res,
+        new IfAPGLExpr(
+            new ActionAPGLExpr(["NOP"]),
+            new ActionAPGLExpr(["NOP"]),
+            new ActionAPGLExpr(["NOP"]),
+        ),
+    );
 });
 
 test("apgm_to_apgl nop arguments throws", () => {

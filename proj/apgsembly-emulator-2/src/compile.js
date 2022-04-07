@@ -1,4 +1,5 @@
 // @ts-check
+// deno-lint-ignore-file no-unused-vars
 
 import { Command } from "./Command.js";
 

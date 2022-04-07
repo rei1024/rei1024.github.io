@@ -86,7 +86,7 @@ test('ActionExecutor setByRegistersInit error', () => {
     });
 
     assertThrows(() => {
-        // @ts-ignore
+        // @ts-ignore expect type error
         x.setByRegistersInit({ U0: true });
     });
 
@@ -95,17 +95,17 @@ test('ActionExecutor setByRegistersInit error', () => {
     });
 
     assertThrows(() => {
-        // @ts-ignore
+        // @ts-ignore expect type error
         x.setByRegistersInit({ U0: "11" });
     });
 
     assertThrows(() => {
-        // @ts-ignore
+        // @ts-ignore expect type error
         x.setByRegistersInit({ B0: [0, 5] });
     });
 
     assertThrows(() => {
-        // @ts-ignore
+        // @ts-ignore expect type error
         x.setByRegistersInit({ B0: ['3', '11'] });
     });
 });

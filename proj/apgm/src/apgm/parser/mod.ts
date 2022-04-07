@@ -197,10 +197,12 @@ export function macro(): bnb.Parser<Macro> {
     });
 }
 
+const anythingLine: bnb.Parser<string> = bnb.match(/.*/);
+
 /* 改行を含まない */
 export const header = bnb.text("#").next(bnb.match(/REGISTERS|COMPONENTS/))
     .desc(["#REGISTERS", "#COMPONENTS"]).chain((x) =>
-        bnb.match(/.*/).map((c) => new Header(x, c))
+        anythingLine.map((c) => new Header(x, c))
     );
 
 export const headers = _.next(header).skip(_).repeat();

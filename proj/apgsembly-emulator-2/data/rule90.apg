@@ -1,4 +1,5 @@
 # Rule 90
+#COMPONENTS NOP,B2D
 # State    Input    Next state    Actions
 # ---------------------------------------
 INITIAL; ZZ; NEXT_S00_READ_1; SET B2D, NOP

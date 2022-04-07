@@ -12,30 +12,52 @@ export class Program {
     /**
      *
      * @param {{
-     *   commands: Command[];
-     *   componentsHeader: ComponentsHeader | undefined;
-     *   registersHeader: RegistersHeader | undefined;
      *   programLines: ProgramLines
      * }} param0
      */
     constructor({
-        commands,
-        componentsHeader,
-        registersHeader,
         programLines,
     }) {
         /**
          * @readonly
+         * @type {Command[]}
          */
-        this.commands = commands;
+        this.commands = programLines.getArray().flatMap(x => {
+            if (x instanceof Command) {
+                return [x];
+            } else {
+                return [];
+            }
+        });
 
         /**
          * @readonly
+         * @type {ComponentsHeader | undefined}
          */
-        this.componentsHeader = componentsHeader;
+        this.componentsHeader = undefined;
+        for (const x of programLines.getArray()) {
+            if (x instanceof ComponentsHeader) {
+                if (this.componentsHeader !== undefined) {
+                    throw Error(`Multiple ${ComponentsHeader.key}`);
+                }
+                this.componentsHeader = x;
+            }
+        }
 
-        /** @readonly */
-        this.registersHeader = registersHeader;
+        /**
+         * @readonly
+         * @type {RegistersHeader | undefined}
+         */
+        this.registersHeader = undefined;
+
+        for (const x of programLines.getArray()) {
+            if (x instanceof RegistersHeader) {
+                if (this.registersHeader !== undefined) {
+                    throw new Error(`Multiple ${RegistersHeader.key}`);
+                }
+                this.registersHeader = x;
+            }
+        }
 
         /** @readonly */
         this.programLines = programLines;
@@ -55,23 +77,10 @@ export class Program {
 
         /** @type {Command[]} */
         const commands = [];
-        /** @type {undefined | RegistersHeader} */
-        let registersHeader = undefined;
-        /** @type {undefined | ComponentsHeader} */
-        let componentsHeader = undefined;
+
         for (const programLine of programLines.getArray()) {
             if (programLine instanceof Command) {
                 commands.push(programLine);
-            } else if (programLine instanceof ComponentsHeader) {
-                if (componentsHeader !== undefined) {
-                    return `Multiple ${ComponentsHeader.key}`;
-                }
-                componentsHeader = programLine;
-            } else if (programLine instanceof RegistersHeader) {
-                if (registersHeader !== undefined) {
-                    return `Multiple ${RegistersHeader.key}`;
-                }
-                registersHeader = programLine;
             }
         }
 
@@ -85,24 +94,14 @@ export class Program {
             return errorOrUndefined;
         }
 
-        return new Program({
-            commands: commands,
-            registersHeader: registersHeader,
-            componentsHeader: componentsHeader,
-            programLines: programLines
-        });
-    }
-
-    /**
-     * @returns {Program}
-     */
-    reconstructProgramLines() {
-        return new Program({
-            commands: this.commands,
-            componentsHeader: this.componentsHeader,
-            registersHeader: this.registersHeader,
-            programLines: new ProgramLines(this.commands.slice())
-        });
+        try {
+            return new Program({
+                programLines: programLines
+            });
+        } catch (error) {
+            // @ts-expect-error TODO
+            return error.message;
+        }
     }
 
     /**
@@ -139,21 +138,7 @@ export class Program {
      * @returns {string}
      */
     pretty() {
-        if (this.commands.length >= 1 && this.programLines.getArray().length === 0) {
-            // 合成された場合
-            let str = "";
-            if (this.componentsHeader !== undefined) {
-                str += this.componentsHeader.pretty() + "\n";
-            }
-            if (this.registersHeader !== undefined) {
-                str += this.registersHeader.pretty() + "\n";
-            }
-            str += this.commands.map(command => command.pretty()).join('\n');
-
-            return str.trim();
-        } else {
-            return this.programLines.pretty();
-        }
+        return this.programLines.pretty();
     }
 }
 

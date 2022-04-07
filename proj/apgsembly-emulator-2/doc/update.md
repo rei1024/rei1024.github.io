@@ -1,4 +1,4 @@
-* `make chore`を走らせる
+* `deno task chore`を走らせる
 * cypressとeslintを確認してpackage.jsonを更新
    * https://docs.cypress.io/guides/references/changelog
      * `/Users/[your name]/Library/Caches/Cypress`に古いバージョンが残るので削除する
@@ -10,7 +10,7 @@
 * deno_stdの更新を確認してtest/deps.jsを更新する
    * https://deno.land/std
 * file_serverを更新する
-   * `deno install --allow-net --allow-read -f https://deno.land/std@0.105.0/http/file_server.ts`
+   * `deno install --allow-net --allow-read -f https://deno.land/std@0.133.0/http/file_server.ts`
 * typescriptを更新する
    * `npm install -g typescript`
 * VSCodeを更新する
@@ -23,6 +23,6 @@
   * `nodebrew use v16.10.0`
 
 ## プロジェクト追加
-* Makefileに追加
+* deno.jsoncに追加
 * test.ymlに追加
 * tsconfig.jsonに追加

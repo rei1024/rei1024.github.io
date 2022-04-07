@@ -1,5 +1,5 @@
 # Langton's ant
-
+#COMPONENTS NOP,B2D,U0-2
 # U0: Initial x coordinate
 # U1: Initial y coordinate
 #REGISTERS { "U0": 30, "U1": 30 }

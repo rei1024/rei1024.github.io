@@ -59,6 +59,7 @@ $generate.addEventListener('click', () => {
         if (comment !== '') {
             $output.value = [
                 `# ${comment}`,
+                `#COMPONENTS NOP,HALT_OUT,U0-2,B0-2`,
                 `# State    Input    Next state    Actions`,
                 `# ---------------------------------------`,
                 apg

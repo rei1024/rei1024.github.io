@@ -1,1 +1,1 @@
-make lint && make t
+deno task lint && deno task t

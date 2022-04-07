@@ -112,7 +112,7 @@ test('Machine INITIAL is not exist', () => {
     }
     assertThrows(() => {
         new Machine(program);
-    });
+    }, Error, 'INITIAL state is not present');
 });
 
 test('Machine Program no return value', () => {
@@ -244,8 +244,15 @@ INITIAL; ZZ; NON_EXIST; NOP
         throw Error('parse error ' + str);
     }
     assertThrows(() => {
-        const machine = new Machine(program);
+        new Machine(program);
     });
+});
+
+test('Machine program9_1', () => {
+    const program = Program.parse(program9_1);
+    if (!(program instanceof Program)) {
+        throw Error('parse error program9_1');
+    }
 });
 
 test('Machine program9_2', () => {

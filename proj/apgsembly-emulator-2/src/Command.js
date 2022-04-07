@@ -1,4 +1,5 @@
 // @ts-check
+// deno-lint-ignore-file no-unused-vars
 
 import { Action } from "./actions/Action.js";
 import { parseAction } from "./actions/parse.js";

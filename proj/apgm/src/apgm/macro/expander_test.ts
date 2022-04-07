@@ -132,3 +132,28 @@ test("macro while error", () => {
         `argument length mismatch: "f!" expect 1 argument but given 2 arguments`,
     );
 });
+
+test("macro scope error", () => {
+    const macros: Macro[] = [
+        new Macro(
+            "f!",
+            [new VarAPGMExpr("x", undefined)],
+            new FuncAPGMExpr(
+                "output",
+                [new VarAPGMExpr("y", undefined)],
+                undefined,
+            ),
+            undefined,
+        ),
+    ];
+    const whileExpr = new FuncAPGMExpr("f!", [
+        new StringAPGMExpr("3"),
+    ], undefined);
+    assertThrows(
+        () => {
+            expand(new Main(macros, [], new SeqAPGMExpr([whileExpr])));
+        },
+        Error,
+        `scope error: "y"`,
+    );
+});

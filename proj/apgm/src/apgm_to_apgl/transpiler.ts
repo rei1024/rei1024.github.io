@@ -123,36 +123,39 @@ export const strArgFuncs: Map<string, (_: string) => APGLExpr> = new Map([
 ]);
 
 function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
-    const e = (a: APGLExpr) => transpileEmptyArgFunc(funcExpr, a);
-    const n = (a: (_: number) => APGLExpr) => transpileNumArgFunc(funcExpr, a);
-    const s = (a: (_: string) => APGLExpr) =>
-        transpileStringArgFunc(funcExpr, a);
-
     const emptyOrUndefined = emptyArgFuncs.get(funcExpr.name);
     if (emptyOrUndefined !== undefined) {
-        return e(emptyOrUndefined);
+        return transpileEmptyArgFunc(funcExpr, emptyOrUndefined);
     }
 
     const numArgOrUndefined = numArgFuncs.get(funcExpr.name);
     if (numArgOrUndefined !== undefined) {
-        return n(numArgOrUndefined);
+        return transpileNumArgFunc(funcExpr, numArgOrUndefined);
     }
 
     const strArgOrUndefined = strArgFuncs.get(funcExpr.name);
     if (strArgOrUndefined !== undefined) {
-        return s(strArgOrUndefined);
+        return transpileStringArgFunc(funcExpr, strArgOrUndefined);
     }
 
     switch (funcExpr.name) {
         // break
         case "break": {
             if (funcExpr.args.length === 0) {
-                return e(new BreakAPGLExpr(undefined));
+                return transpileEmptyArgFunc(
+                    funcExpr,
+                    new BreakAPGLExpr(undefined),
+                );
             } else {
-                return n((x) => new BreakAPGLExpr(x));
+                return transpileNumArgFunc(
+                    funcExpr,
+                    (x) => new BreakAPGLExpr(x),
+                );
             }
         }
+
         // macro
+
         case "repeat": {
             if (funcExpr.args.length !== 2) {
                 throw new ErrorWithLocation(
@@ -213,7 +216,7 @@ export function transpileAPGMExpr(e: APGMExpr): APGLExpr {
     } else if (e instanceof SeqAPGMExpr) {
         return new SeqAPGLExpr(e.exprs.map((x) => t(x)));
     } else if (e instanceof StringAPGMExpr) {
-        throw Error(`string is not allowed: ${e.value}`);
+        throw Error(`string is not allowed: ${e.pretty()}`);
     } else if (e instanceof VarAPGMExpr) {
         throw new ErrorWithLocation(
             `macro variable is not allowed: variable "${e.name}"${

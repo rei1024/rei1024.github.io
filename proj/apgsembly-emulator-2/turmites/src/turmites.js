@@ -45,7 +45,7 @@ export const LeftTurnOp = 8;
 export function getOp(x) {
     const all = [NoTurnOp, RightTurnOp, UTurnOp, LeftTurnOp];
     if (all.includes(x)) {
-        // @ts-ignore
+        // @ts-ignore TS
         return x;
     }
     return undefined;
@@ -192,8 +192,8 @@ export class Turmites {
                 if (!nextObj.every(x => typeof x === 'number')) {
                     throw error;
                 }
-                // @ts-ignore
-                const next = Next.fromNumbers(...nextObj);
+                const [x, y, z] = nextObj;
+                const next = Next.fromNumbers(x, y, z);
                 if (next === undefined) {
                     throw error;
                 }
@@ -218,7 +218,7 @@ export class Turmites {
             } else {
                 throw Error('Failed to parse');
             }
-        } catch (e) {
+        } catch (_e) {
             throw Error(`Failed to parse "${str}"`);
         }
     }

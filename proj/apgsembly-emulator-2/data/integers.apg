@@ -1,6 +1,8 @@
 # Integers
 # Transpiled from https://conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=25#p92224
 
+#COMPONENTS NOP,HALT_OUT,OUTPUT,U0-10,B0-20,B2D,ADD,SUB,MUL
+
 # U0: the number that is being counted and will be printed
 # U1: number of digits in U0
 # U2: 10^(U1-1)

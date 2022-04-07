@@ -989,8 +989,8 @@ class HaltOutAction extends Action {
     }
 }
 function validateActionReturnOnceCommand(command) {
-    if (command.actions.find((x)=>x instanceof HaltOutAction
-    ) !== undefined) {
+    if (command.actions.some((x)=>x instanceof HaltOutAction
+    )) {
         return undefined;
     }
     const valueReturnActions = command.actions.filter((x)=>x.doesReturnValue()
@@ -1047,10 +1047,10 @@ function parseAction(str) {
         BRegAction.parse,
         URegAction.parse,
         B2DAction.parse,
+        NopAction.parse,
         AddAction.parse,
         MulAction.parse,
         SubAction.parse,
-        NopAction.parse,
         OutputAction.parse,
         HaltOutAction.parse,
         LegacyTRegAction.parse, 
@@ -1832,10 +1832,11 @@ function macro() {
         });
     });
 }
+const anythingLine = mod.match(/.*/);
 const header = mod.text("#").next(mod.match(/REGISTERS|COMPONENTS/)).desc([
     "#REGISTERS",
     "#COMPONENTS"
-]).chain((x)=>mod.match(/.*/).map((c)=>new Header(x, c)
+]).chain((x)=>anythingLine.map((c)=>new Header(x, c)
     )
 );
 const headers = _.next(header).skip(_).repeat();
@@ -2151,31 +2152,25 @@ const strArgFuncs = new Map([
     ], 
 ]);
 function transpileFuncAPGMExpr(funcExpr) {
-    const e = (a)=>transpileEmptyArgFunc(funcExpr, a)
-    ;
-    const n = (a)=>transpileNumArgFunc(funcExpr, a)
-    ;
-    const s = (a)=>transpileStringArgFunc(funcExpr, a)
-    ;
     const emptyOrUndefined = emptyArgFuncs.get(funcExpr.name);
     if (emptyOrUndefined !== undefined) {
-        return e(emptyOrUndefined);
+        return transpileEmptyArgFunc(funcExpr, emptyOrUndefined);
     }
     const numArgOrUndefined = numArgFuncs.get(funcExpr.name);
     if (numArgOrUndefined !== undefined) {
-        return n(numArgOrUndefined);
+        return transpileNumArgFunc(funcExpr, numArgOrUndefined);
     }
     const strArgOrUndefined = strArgFuncs.get(funcExpr.name);
     if (strArgOrUndefined !== undefined) {
-        return s(strArgOrUndefined);
+        return transpileStringArgFunc(funcExpr, strArgOrUndefined);
     }
     switch(funcExpr.name){
         case "break":
             {
                 if (funcExpr.args.length === 0) {
-                    return e(new BreakAPGLExpr(undefined));
+                    return transpileEmptyArgFunc(funcExpr, new BreakAPGLExpr(undefined));
                 } else {
-                    return n((x)=>new BreakAPGLExpr(x)
+                    return transpileNumArgFunc(funcExpr, (x)=>new BreakAPGLExpr(x)
                     );
                 }
             }
@@ -2214,7 +2209,7 @@ function transpileAPGMExpr(e) {
         return new SeqAPGLExpr(e.exprs.map((x)=>t(x)
         ));
     } else if (e instanceof StringAPGMExpr) {
-        throw Error(`string is not allowed: ${e.value}`);
+        throw Error(`string is not allowed: ${e.pretty()}`);
     } else if (e instanceof VarAPGMExpr) {
         throw new ErrorWithLocation(`macro variable is not allowed: variable "${e.name}"${formatLocationAt(e.location)}`, e.location);
     } else if (e instanceof WhileAPGMExpr) {

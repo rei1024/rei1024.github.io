@@ -57,3 +57,8 @@
 ### HALT_OUT: 停止
 * HALT_OUT
    * 停止し、グライダーを出力する。
+
+
+```
+#COMPONENTS NOP,HALT_OUT,OUTPUT,U0-10,B0-20,B2D,ADD,SUB,MUL
+```

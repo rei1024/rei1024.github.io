@@ -366,14 +366,17 @@ export class App {
      * バイナリレジスタの表示
      */
     renderBinary() {
-        if (this.machine === undefined) {
+        const machine = this.machine;
+        if (machine === undefined) {
             return;
         }
+
         if (!$binaryRegisterDetail.open) {
             return;
         }
+
         this.binaryUI.render(
-            this.machine.actionExecutor.bRegMap,
+            machine.actionExecutor.bRegMap,
             $hideBinary.checked,
             $reverseBinary.checked,
             $showBinaryValueInDecimal.checked,

@@ -52,10 +52,12 @@ rule.addEventListener('input', () => {
 });
 
 generateButton.addEventListener("click", () => {
+    rule.classList.remove('is-invalid');
     code.value = "";
     copy.disabled = true;
     const n = parseNum(rule.value);
     if (n === undefined) {
+        rule.classList.add('is-invalid');
         return;
     }
     code.value = generate(n);

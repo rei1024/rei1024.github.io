@@ -1,4 +1,5 @@
 // @ts-check
+// deno-lint-ignore-file no-unused-vars
 
 import { ActionExecutor } from "./ActionExecutor.js";
 import {
@@ -92,7 +93,7 @@ export class Machine {
             let parsed = {};
             try {
                 parsed = JSON.parse(str);
-            } catch (e) {
+            } catch (_e) {
                 throw Error(`Invalid #REGISTERS: is not a valid JSON: "${str}"`);
             }
             if (parsed === null || typeof parsed !== 'object') {

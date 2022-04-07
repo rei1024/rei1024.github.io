@@ -184,8 +184,7 @@ export function makeAPG(regNum, tempRegNum1, tempRegNum2, tempRegNum3, tenRegNum
 
     const tenRegNumTemp = tempRegNum1;
 
-    if (true) {
-        const step = tempRegNum2;
+    {
         array.push(`${prefix}LARGEST_UNIT_1; *; ${prefix}LARGEST_UNIT_2; TDEC U${tenRegNum}, INC U${tenRegNumTemp}`);
         array.push(`${prefix}LARGEST_UNIT_2; Z; ${prefix}LARGEST_UNIT_MUL_STEP_1; NOP`);
         array.push(`${prefix}LARGEST_UNIT_2; NZ; ${prefix}LARGEST_UNIT_SUB_1; TDEC U${tenRegNum}, INC U${tempRegNum1}`);
