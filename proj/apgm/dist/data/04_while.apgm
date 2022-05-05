@@ -2,11 +2,11 @@
     # while_z and while_nz
 
     ## syntax
-    while_z(<expression>) <expression>
-    while_nz(<expression>) <expression>
+    while_z (<expression>) <expression>
+    while_nz (<expression>) <expression>
 */
 
-while_z(tdec_u(0)) { /* TDEC U0 */
+while_z (tdec_u(0)) { /* TDEC U0 */
     /* while tdec_u(0) returns Z */
     output("0");
 
@@ -17,13 +17,13 @@ output("1");
 
 inc_u(1); /* INC U1 */
 
-while_nz(tdec_u(1)) { /* TDEC U1 */
+while_nz (tdec_u(1)) { /* TDEC U1 */
     /* while tdec_u(1) returns NZ */
     output("2");
 }
 
 /* break */
-while_z(tdec_u(2)) {
+while_z (tdec_u(2)) {
     output("3");
     break();
 }

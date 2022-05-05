@@ -4,31 +4,31 @@
 
 /* Copy Ua to Ub */
 macro copy_u!(a, b, temp) {
-  while_nz(tdec_u(a)) {
+  while_nz (tdec_u(a)) {
     inc_u(b);
     inc_u(temp);
   }
-  while_nz(tdec_u(temp)) {
+  while_nz (tdec_u(temp)) {
     inc_u(a);
   }
 }
 
 /* move to (0,0) */
 macro move_to_0_0!() {
-  while_nz(tdec_b2dx()) {}
-  while_nz(tdec_b2dy()) {}
+  while_nz (tdec_b2dx()) {}
+  while_nz (tdec_b2dy()) {}
 }
 
 macro set_u_0!(n) {
-  while_nz(tdec_u(n)) {}
+  while_nz (tdec_u(n)) {}
 }
 
 macro set_b2dx_0!() {
-  while_nz(tdec_b2dx()) {}
+  while_nz (tdec_b2dx()) {}
 }
 
 loop {
-  if_z(read_b2d()) {
+  if_z (read_b2d()) {
     set_b2d();
 
     move_to_0_0!();
@@ -37,7 +37,7 @@ loop {
     set_u_0!(0);
     set_u_0!(1);
   } else {
-    if_z(tdec_u(0)) {
+    if_z (tdec_u(0)) {
       set_b2dx_0!();
       inc_b2dy();
       inc_u(1);

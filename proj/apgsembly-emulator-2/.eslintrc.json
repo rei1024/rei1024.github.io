@@ -50,6 +50,7 @@
         "brace-style": "error"
         // "max-len": "error" // TODO
         // "prefer-template": "error" TODO
+        // "no-constant-binary-expression": "error"
     },
     "globals": {
         "Deno": true

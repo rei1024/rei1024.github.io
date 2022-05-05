@@ -17,6 +17,7 @@
         }
     },
     "tasks": {
+        "commit": "deno task fmt && deno task bundle && deno task t && git add . && git commit -m",
         // test
         "t": "deno test --config=deno.jsonc",
         // test with watcher
