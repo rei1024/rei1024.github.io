@@ -1,0 +1,32 @@
+{
+    "start_url": ".",
+    "name": "APGsembly 2.0 Emulator",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "favicon.svg",
+            "sizes": "256x256",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "images/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "images/apple-touch-icon-180x180.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
+            "src": "images/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon.svg",
+            "sizes": "192x192",
+            "type": "image/svg+xml"
+        }
+    ]
+}

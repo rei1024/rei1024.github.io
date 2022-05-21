@@ -111,7 +111,7 @@ $sampleCodes.forEach(e => {
     }
 
     e.addEventListener('click', () => {
-        $samples.disabled = true;
+        $samples.style.opacity = "0.5";
         const src = e.dataset[SRC_KEY];
         fetch(DATA_DIR + src).then(res => res.text()).then(text => {
             $input.value = text;
@@ -119,7 +119,7 @@ $sampleCodes.forEach(e => {
         }).catch(() => {
             console.error(`Fetch Error: ${src}`);
         }).finally(() => {
-            $samples.disabled = false;
+            $samples.style.opacity = "1";
         });
     });
 });
@@ -370,3 +370,8 @@ idle(() => {
         console.error(e);
     }
 });
+
+// PWA
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js?2022-05-21");
+}

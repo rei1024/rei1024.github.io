@@ -1,3 +1,4 @@
 {
-    "trailing-spaces.trimOnSave": true
+    "trailing-spaces.trimOnSave": true,
+    "deno.enable": false
 }
