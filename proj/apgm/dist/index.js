@@ -85,7 +85,7 @@ const resetError = () => {
     $error.style.display = "none";
     $apgmInput.style.borderColor = "";
     $output.style.borderColor = "";
-    $compile.style.color = "";
+    $compile.style.backgroundColor = "";
 };
 
 const compile = () => {

@@ -33,40 +33,47 @@ if (!($list instanceof HTMLElement)) {
 // 入力が行われなかったらコメントとして追加
 let comment = '';
 
-$generate.addEventListener('click', () => {
-    const tm = TM.parse($input.value);
-    $input.classList.remove('is-invalid');
+/**
+ *
+ * @param {string} input
+ * @returns {string | Error} apg
+ */
+function integration(input) {
+    const tm = TM.parse(input);
     if (tm instanceof Error) {
-        $copy.disabled = true;
-        $output.value = tm.message;
-        $input.classList.add('is-invalid');
-        return;
+        return tm;
     }
     const tmMap = TMMap.fromTM(tm);
     if (tmMap instanceof Error) {
-        $copy.disabled = true;
-        $output.value = tmMap.message;
-        $input.classList.add('is-invalid');
-        return;
+        return tmMap;
     }
-    const apg = convert(tmMap);
+    return convert(tmMap);
+}
+
+$generate.addEventListener('click', () => {
+    $input.classList.remove('is-invalid');
+    $output.style.color = "black";
+    const apg = integration($input.value);
+
     if (apg instanceof Error) {
         $copy.disabled = true;
         $output.value = apg.message;
+        $output.style.color = "var(--bs-danger)";
         $input.classList.add('is-invalid');
+        return;
+    }
+
+    $copy.disabled = false;
+    if (comment !== '') {
+        $output.value = [
+            `# ${comment}`,
+            `#COMPONENTS NOP,HALT_OUT,U0-2,B0-2`,
+            `# State    Input    Next state    Actions`,
+            `# ---------------------------------------`,
+            apg
+        ].join('\n');
     } else {
-        $copy.disabled = false;
-        if (comment !== '') {
-            $output.value = [
-                `# ${comment}`,
-                `#COMPONENTS NOP,HALT_OUT,U0-2,B0-2`,
-                `# State    Input    Next state    Actions`,
-                `# ---------------------------------------`,
-                apg
-            ].join('\n');
-        } else {
-            $output.value = [apg].join('\n');
-        }
+        $output.value = [apg].join('\n');
     }
 });
 

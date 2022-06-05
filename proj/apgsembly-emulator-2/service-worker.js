@@ -1,10 +1,10 @@
 // @ts-check
 
-self.addEventListener("install", function (e) {
+self.addEventListener("install", function () {
 
 });
 
-const CACHE_VERSION = "2022-05-31";
+const CACHE_VERSION = "2022-06-05";
 
 self.addEventListener('activate', function (event) {
     async function deleteCache() {
@@ -14,14 +14,6 @@ self.addEventListener('activate', function (event) {
 
     event.waitUntil(deleteCache());
 });
-
-/**
- *
- * @param {string} url
- */
-function canCache(url) {
-    return !url.includes('apgm') && !url.includes('localhost');
-}
 
 /**
  * @param {Cache} cache
@@ -69,16 +61,18 @@ self.addEventListener('fetch', function (event) {
          */
         const request = event.request;
         const cache = await caches.open(CACHE_VERSION);
-        if (canCache(request.url)) {
-            const cachedResponse = await getCachedResponse(cache, request);
-            if (cachedResponse !== "not found") {
-                return cachedResponse;
-            }
+
+        const cachedResponse = await getCachedResponse(cache, request);
+        if (cachedResponse !== "not found") {
+            return cachedResponse;
         }
 
         try {
             const response = await fetch(request.clone());
-            if (response.status < 400) {
+            const url = new URL(request.url);
+            if (200 < response.status &&
+                response.status < 400 &&
+                url.protocol !== 'chrome-extension') {
                 cache.put(request, response.clone());
             }
             return response;

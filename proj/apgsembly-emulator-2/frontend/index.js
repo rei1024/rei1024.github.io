@@ -143,10 +143,10 @@ $frequencyInput.addEventListener('input', () => {
     const value = parseInt($frequencyInput.value, 10);
     if (!isNaN(value)) {
         const freq = frequencyArray[value] ?? DEFUALT_FREQUENCY;
-        $frequencyInput.ariaValueText = "(" + freq.toString() + "Hz" + ")";
-        app.frequency = freq;
+        $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
+        app.cve.frequency = freq;
     } else {
-        app.frequency = DEFUALT_FREQUENCY;
+        app.cve.frequency = DEFUALT_FREQUENCY;
     }
 
     app.renderFrequencyOutput();
@@ -373,5 +373,5 @@ idle(() => {
 
 // PWA
 if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js?2022-05-21");
+    navigator.serviceWorker.register("./service-worker.js?2022-06-05");
 }

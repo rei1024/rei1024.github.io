@@ -14,8 +14,9 @@ import {
     stopButton
 } from "./components/toggle.js";
 import { renderOutput } from "./components/output.js";
+import { renderErrorMessage } from "./components/error.js";
 
-import { Frequency } from "./util/frequency.js";
+import { CVE, CVEEvent } from "./util/continuously-variable-emitter.js";
 
 import {
     $error,
@@ -84,12 +85,6 @@ export class App {
         this.appState = "Initial";
 
         /**
-         * frequency of update
-         * 周波数[Hz]
-         */
-        this.frequency = DEFUALT_FREQUENCY;
-
-        /**
          * エラーメッセージ
          * @private
          */
@@ -100,13 +95,16 @@ export class App {
 
         /**
          * @readonly
-         * @private
          */
-        this.frequencyManager = new Frequency(
-            () => this.appState === "Running",
-            () => this.frequency,
-            n => this.run(n)
-        );
+        this.cve = new CVE({ frequency: DEFUALT_FREQUENCY });
+        this.cve.addEventListener('emit', e => {
+            /**
+             * @type {CVEEvent}
+             */
+            // @ts-ignore
+            const ev = e;
+            this.run(ev.value);
+        });
 
         /**
          * @private
@@ -133,7 +131,6 @@ export class App {
     initializeApp() {
         try {
             this.render();
-            this.frequencyManager.start();
         } catch (e) {
             console.error('first render failed');
             console.log(e);
@@ -242,7 +239,7 @@ export class App {
         this.steps = 0;
         this.errorMessage = "";
         this.machine = undefined;
-        this.frequencyManager.reset();
+        this.cve.reset();
         const program = Program.parse($input.value);
         if (typeof program === "string") {
             this.appState = "ParseError";
@@ -270,29 +267,7 @@ export class App {
      * 周波数の表示
      */
     renderFrequencyOutput() {
-        $freqencyOutput.textContent = this.frequency.toLocaleString() + "Hz";
-    }
-
-    /**
-     * エラーメッセージ
-     * @private
-     */
-    renderErrorMessage() {
-        if (this.appState === "RuntimeError" ||
-            this.appState === "ParseError") {
-            const messages = this.errorMessage.split('\n');
-            $error.innerHTML = "";
-            for (const message of messages) {
-                const span = document.createElement('span');
-                span.textContent = "- " + message;
-                const br = document.createElement('br');
-                $error.append(span, br);
-            }
-            $error.classList.remove('d-none');
-            console.error("RENDER: " + this.errorMessage);
-        } else {
-            $error.classList.add('d-none');
-        }
+        $freqencyOutput.textContent = this.cve.frequency.toLocaleString() + "Hz";
     }
 
     /**
@@ -433,6 +408,9 @@ export class App {
      * 全体を描画する
      */
     render() {
+        // cve
+        this.cve.disabled = this.appState !== "Running";
+
         // ボタンの有効無効
         switch (this.appState) {
             case "Initial": {
@@ -480,7 +458,7 @@ export class App {
             $input.classList.remove('is-invalid');
         }
 
-        this.renderErrorMessage();
+        renderErrorMessage($error, this.appState, this.errorMessage);
         this.renderFrequencyOutput();
 
         $steps.textContent = this.steps.toLocaleString();

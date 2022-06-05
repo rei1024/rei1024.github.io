@@ -11,7 +11,7 @@
     <title>APGsembly 2.0 Emulator</title>
 
     <!-- critical path -->
-    <script src="./src/exports.js?ver=20220302" type="module"></script>
+    <script src="./src/exports.js" type="module"></script>
 
     <!-- main -->
     <script src="./frontend/index.js?ver=20220302" type="module"></script>
@@ -36,10 +36,10 @@
     <meta property="og:url" content="https://rei1024.github.io/proj/apgsembly-emulator-2/">
     <meta property="og:image" content="https://rei1024.github.io/proj/apgsembly-emulator-2/images/favicon_png.png">
 
-    <meta property="og:description" content="An emulator for APGsembly 2.0. APGsembly is a programming language for general purpose calculator (GPC)." />
+    <meta property="og:description" content="An emulator for APGsembly 2.0. APGsembly is a programming language for general purpose calculator (GPC).">
 
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:creator" content="@rei_1729" />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@rei_1729">
 
     <!-- PWA -->
     <link rel="manifest" href="./manifest.json">
@@ -101,7 +101,7 @@
             <!-- チラつき防止のためデフォルト値を設定 DEFUALT_FREQUENCYと同期すること -->
             <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output">30Hz</span></label>
             <!-- index.jsでminとmaxは設定するが、ジャンプを防ぐため手動でも設定する -->
-            <input id="frequency_input" class="form-range" value="11" type="range" max="63">
+            <input id="frequency_input" class="form-range" value="11" type="range" max="63" aria-valuetext="(30Hz)">
         </div>
         <div>
             <table class="mb-1 table" id="state">

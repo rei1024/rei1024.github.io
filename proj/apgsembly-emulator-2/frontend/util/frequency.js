@@ -1,5 +1,8 @@
 // @ts-check
 
+/**
+ * @deprecated use CVE
+ */
 export class Frequency {
     /**
      *
