@@ -5,6 +5,7 @@ import {
     genURL,
     APGsemblyEmulatorURL,
     setStep,
+    clickStep,
     setProgram,
     assertSteps,
 } from "../common/common.js";
@@ -32,7 +33,7 @@ describe('Generator integration', () => {
 
             setProgram(prog);
             setStep(100);
-            cy.get('#step').click();
+            clickStep();
             assertSteps(100);
         });
     });

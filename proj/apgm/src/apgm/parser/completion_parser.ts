@@ -32,6 +32,9 @@ export function removeComment(src: string): string {
     return res;
 }
 
+/**
+ * エディタ補完用パーサー
+ */
 export function completionParser(src: string): MacroDecl[] {
     const array: MacroDecl[] = [];
     // non-greedy

@@ -8,6 +8,8 @@ export const MUL_1 = 1;
 const MUL_0_STRING = "0";
 const MUL_1_STRING = "1";
 
+const MUL_STRING = "MUL";
+
 /**
  * @typedef {MUL_0 | MUL_1} MulOp
  */
@@ -62,7 +64,7 @@ export class MulAction extends Action {
      * @override
      */
     pretty() {
-        return `MUL ${prettyOp(this.op)}`;
+        return `${MUL_STRING} ${prettyOp(this.op)}`;
     }
 
     /**
@@ -75,13 +77,16 @@ export class MulAction extends Action {
         if (array.length !== 2) {
             return undefined;
         }
+
         const [ mul, op ] = array;
-        if (mul !== "MUL") {
+        if (mul !== MUL_STRING) {
             return undefined;
         }
+
         if (op === MUL_0_STRING || op === MUL_1_STRING) {
             return new MulAction(parseOp(op));
         }
+
         return undefined;
     }
 

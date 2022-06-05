@@ -10,6 +10,8 @@ const SUB_A1_STRING = "A1";
 const SUB_B0_STRING = "B0";
 const SUB_B1_STRING = "B1";
 
+const SUB_STRING = "SUB";
+
 /**
  * @typedef {SUB_A1 | SUB_B0 | SUB_B1} SubOp
  */
@@ -66,7 +68,7 @@ export class SubAction extends Action {
      * @override
      */
     pretty() {
-        return `SUB ${prettyOp(this.op)}`;
+        return `${SUB_STRING} ${prettyOp(this.op)}`;
     }
 
     /**
@@ -79,13 +81,16 @@ export class SubAction extends Action {
         if (array.length !== 2) {
             return undefined;
         }
+
         const [ sub, reg ] = array;
-        if (sub !== "SUB") {
+        if (sub !== SUB_STRING) {
             return undefined;
         }
+
         if (reg === SUB_A1_STRING || reg === SUB_B0_STRING || reg === SUB_B1_STRING) {
             return new SubAction(parseOp(reg));
         }
+
         return undefined;
     }
 

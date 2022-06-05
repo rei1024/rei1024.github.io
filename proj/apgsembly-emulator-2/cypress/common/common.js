@@ -72,6 +72,10 @@ export function setStep(n) {
     cy.wait(30);
 }
 
+export function clickStep() {
+    cy.get('#step').click();
+}
+
 /**
  *
  * @param {string} program

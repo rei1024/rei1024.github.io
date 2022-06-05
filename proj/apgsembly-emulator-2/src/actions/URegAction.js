@@ -92,10 +92,12 @@ export class URegAction extends Action {
         if (array.length !== 2) {
             return undefined;
         }
+
         const [ op, reg ] = array;
         if (op === undefined || reg === undefined) {
             return undefined;
         }
+
         if (op === U_INC_STRING || op === U_TDEC_STRING) {
             // R for APGsembly 1.0
             if (reg.startsWith(U_STRING) || reg.startsWith(R_STRING)) {
@@ -105,6 +107,7 @@ export class URegAction extends Action {
                 }
             }
         }
+
         return undefined;
     }
 

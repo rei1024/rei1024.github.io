@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- *
+ * OUTPUT
  * @param {HTMLTextAreaElement} $output
  * @param {string | undefined} output
  */

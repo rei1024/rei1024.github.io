@@ -5,6 +5,7 @@ import {
     tmToAPGURL,
     APGsemblyEmulatorURL,
     setStep,
+    clickStep,
     setProgram,
     assertSteps,
 } from "../common/common.js";
@@ -20,6 +21,7 @@ describe('TM to APG integration BB3', () => {
         cy.get('#generate').click();
         cy.get('#copy').should('not.be.disabled');
     });
+
     it('should run', () => {
         cy.wait(50);
         cy.get('#output').then(x => {
@@ -32,7 +34,7 @@ describe('TM to APG integration BB3', () => {
 
             setProgram(prog);
             setStep(200);
-            cy.get('#step').click();
+            clickStep();
             cy.get(`[data-test="U1"]`).should('have.text', '14');
             assertSteps(119);
         });
@@ -62,7 +64,7 @@ describe('TM to APG integration BB4', () => {
 
             setProgram(prog);
             setStep(1000);
-            cy.get('#step').click();
+            clickStep();
             cy.get(`[data-test="U1"]`).should('have.text', '108');
             assertSteps(887);
         });

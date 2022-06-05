@@ -8,68 +8,29 @@ import { AbsTurmites } from './src/abs_turmites.js';
 
 import { peggLibrary, timLibrary, absLibrary } from './lib.js';
 
-const rule = document.querySelector("#rule");
-if (!(rule instanceof HTMLInputElement)) {
-    throw Error('rule is not a HTMLInputElement');
-}
+import { $type } from "../frontend/util/selector.js";
 
-const generateButton = document.querySelector("#generate");
-if (!(generateButton instanceof HTMLButtonElement)) {
-    throw Error('generateButton is not a HTMLButtonElement');
-}
+const rule = $type("#rule", HTMLInputElement);
 
-const $samplesButton = document.querySelector("#samples");
-if (!($samplesButton instanceof HTMLButtonElement)) {
-    throw Error('$samplesButton is not a HTMLButtonElement');
-}
+const generateButton = $type("#generate", HTMLButtonElement);
 
-const code = document.querySelector("#output");
-if (!(code instanceof HTMLTextAreaElement)) {
-    throw Error('code is not a HTMLTextAreaElement');
-}
+const $samplesButton = $type("#samples", HTMLButtonElement);
+
+const code = $type("#output", HTMLTextAreaElement);
 
 // 出力をコピーする
-const copy = document.querySelector('#copy');
+const copy = $type('#copy', HTMLButtonElement);
 
-if (!(copy instanceof HTMLButtonElement)) {
-    throw TypeError('copy is not a HTMLButtonElement');
-}
+const $x = $type('#x', HTMLInputElement);
+const $y = $type('#y', HTMLInputElement);
 
-const $x = document.querySelector('#x');
+const $dir = $type('#dir', HTMLSelectElement);
 
-if (!($x instanceof HTMLInputElement)) {
-    throw TypeError('$x is not a HTMLInputElement');
-}
+const $flip = $type('#flip', HTMLInputElement);
 
-const $y = document.querySelector('#y');
+const $sampleList = $type('#sample_list', HTMLElement);
 
-if (!($y instanceof HTMLInputElement)) {
-    throw TypeError('$y is not a HTMLInputElement');
-}
-
-const $dir = document.querySelector('#dir');
-
-if (!($dir instanceof HTMLSelectElement)) {
-    throw TypeError('$dir is not a HTMLSelectElement');
-}
-
-const $flip = document.querySelector('#flip');
-
-if (!($flip instanceof HTMLInputElement)) {
-    throw TypeError('$dir is not a HTMLInputElement');
-}
-
-const $sampleList = document.querySelector('#sample_list');
-
-if ($sampleList === null) {
-    throw TypeError('$sampleList is null');
-}
-
-const $ruleInvalid = document.querySelector('#rule_invalid');
-
-if (!($ruleInvalid instanceof HTMLElement)) {
-    throw TypeError('$ruleInvalid is not a HTMLElement');
-}
+const $ruleInvalid = $type('#rule_invalid', HTMLElement);
 
 // サンプルの名前を保持する
 let comment = '';
@@ -94,6 +55,7 @@ const addSample = (ruleString, desc) => {
     $sampleList.append(button);
 };
 
+// 何かしら変化したらコメント削除
 rule.addEventListener('input', () => {
     comment = '';
 });
@@ -106,9 +68,7 @@ for (const lib of libraries) {
     }
 }
 
-generateButton.addEventListener("click", () => {
-    rule.classList.remove('is-invalid');
-    copy.disabled = true;
+function getInput() {
     let x = Number($x.value);
     if (isNaN(x) || x < 0 || !Number.isInteger(x)) {
         $x.value = "0";
@@ -123,6 +83,13 @@ generateButton.addEventListener("click", () => {
     /** @type {0 | 1 | 2 | 3} */
     // @ts-ignore
     const dir = parseInt($dir.value, 10);
+    return { x, y, dir };
+}
+
+generateButton.addEventListener("click", () => {
+    rule.classList.remove('is-invalid');
+    copy.disabled = true;
+    const { x, y, dir } = getInput();
     const header = `${comment === '' ? '' : `# ${comment}\n`}# Turmite ${rule.value}\n#COMPONENTS NOP,B2D,U0-2\n`;
     try {
         const tur = Turmites.fromObjectString(rule.value);

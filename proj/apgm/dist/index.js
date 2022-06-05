@@ -84,6 +84,8 @@ const resetError = () => {
     editor.setMarker(undefined);
     $error.style.display = "none";
     $apgmInput.style.borderColor = "";
+    $output.style.borderColor = "";
+    $compile.style.color = "";
 };
 
 const compile = () => {
@@ -102,6 +104,12 @@ const compile = () => {
         $output.value = result;
         $download.disabled = false;
         $copy.disabled = false;
+        $output.style.borderColor = "var(--bs-success)";
+        $compile.style.backgroundColor = "var(--bs-success)";
+        setTimeout(() => {
+            $output.style.borderColor = "";
+            $compile.style.backgroundColor = "";
+        }, 500);
     } catch (e) {
         if (!(e instanceof Error)) {
             e = new Error("unknown error");

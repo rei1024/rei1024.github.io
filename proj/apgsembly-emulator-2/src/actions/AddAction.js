@@ -10,6 +10,8 @@ const ADD_A1_STRING = "A1";
 const ADD_B0_STRING = "B0";
 const ADD_B1_STRING = "B1";
 
+const ADD_STRING = "ADD";
+
 /**
  * @typedef {ADD_A1 | ADD_B0 | ADD_B1} AddOp
  */
@@ -66,7 +68,7 @@ export class AddAction extends Action {
      * @override
      */
     pretty() {
-        return `ADD ${prettyOp(this.op)}`;
+        return `${ADD_STRING} ${prettyOp(this.op)}`;
     }
 
     /**
@@ -80,7 +82,7 @@ export class AddAction extends Action {
             return undefined;
         }
         const [ add, reg ] = array;
-        if (add !== "ADD") {
+        if (add !== ADD_STRING) {
             return undefined;
         }
         if (reg === ADD_A1_STRING || reg === ADD_B0_STRING || reg === ADD_B1_STRING) {

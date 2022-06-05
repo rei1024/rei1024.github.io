@@ -5,6 +5,7 @@ import {
     turmitesURL,
     APGsemblyEmulatorURL,
     setStep,
+    clickStep,
     setProgram,
     assertSteps,
 } from "../common/common.js";
@@ -14,12 +15,14 @@ describe('Turmites integration', () => {
         cy.visit(turmitesURL);
         cy.contains('Turmites');
     });
+
     it('should generate', () => {
         cy.get('#samples').click();
         cy.contains('Langton').click();
         cy.get('#generate').click();
         cy.get('#copy').should('not.be.disabled');
     });
+
     it('should run', () => {
         cy.get('#output').then(x => {
             /**
@@ -31,7 +34,7 @@ describe('Turmites integration', () => {
 
             setProgram(prog);
             setStep(500);
-            cy.get('#step').click();
+            clickStep();
             assertSteps(500);
         });
     });

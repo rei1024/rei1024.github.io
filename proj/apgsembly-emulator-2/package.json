@@ -21,7 +21,7 @@
   "author": "Rei",
   "license": "MIT",
   "devDependencies": {
-    "cypress": "9.6.0",
-    "eslint": "^8.16.0"
+    "cypress": "10.0.2",
+    "eslint": "^8.17.0"
   }
 }

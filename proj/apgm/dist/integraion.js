@@ -58,12 +58,10 @@ class Parser {
         });
     }
     skip(parserB) {
-        return this.and(parserB).map(([a])=>a
-        );
+        return this.and(parserB).map(([a])=>a);
     }
     next(parserB) {
-        return this.and(parserB).map(([, b])=>b
-        );
+        return this.and(parserB).map(([, b])=>b);
     }
     or(parserB) {
         return new Parser((context)=>{
@@ -149,8 +147,7 @@ class Parser {
         if (max === 1) {
             return this.map((x)=>[
                     x
-                ]
-            );
+                ]);
         }
         return this.chain((first)=>{
             return separator.next(this).repeat(min - 1, max - 1).map((rest)=>{
@@ -962,6 +959,7 @@ class LegacyTRegAction extends Action {
         }
     }
 }
+typeof BigInt !== 'undefined';
 const HALT_OUT_STRING = `HALT_OUT`;
 class HaltOutAction extends Action {
     constructor(){
@@ -989,19 +987,16 @@ class HaltOutAction extends Action {
     }
 }
 function validateActionReturnOnceCommand(command) {
-    if (command.actions.some((x)=>x instanceof HaltOutAction
-    )) {
+    if (command.actions.some((x)=>x instanceof HaltOutAction)) {
         return undefined;
     }
-    const valueReturnActions = command.actions.filter((x)=>x.doesReturnValue()
-    );
+    const valueReturnActions = command.actions.filter((x)=>x.doesReturnValue());
     if (valueReturnActions.length === 1) {
         return undefined;
     } else if (valueReturnActions.length === 0) {
         return `Does not produce the return value in "${command.pretty()}"`;
     } else {
-        return `Does not contain exactly one action that produces a return value in "${command.pretty()}": Actions that produce value are ${valueReturnActions.map((x)=>`"${x.pretty()}"`
-        ).join(', ')}`;
+        return `Does not contain exactly one action that produces a return value in "${command.pretty()}": Actions that produce value are ${valueReturnActions.map((x)=>`"${x.pretty()}"`).join(', ')}`;
     }
 }
 function validateActionReturnOnce(commands) {
@@ -1134,8 +1129,7 @@ class Command extends ProgramLine {
         this.input = input;
         this.nextState = nextState;
         this.actions = actions;
-        this._string = `${this.state}; ${this.input}; ${this.nextState}; ${this.actions.map((a)=>a.pretty()
-        ).join(", ")}`;
+        this._string = `${this.state}; ${this.input}; ${this.nextState}; ${this.actions.map((a)=>a.pretty()).join(", ")}`;
     }
     static parse(str) {
         if (typeof str !== 'string') {
@@ -1167,8 +1161,7 @@ class Command extends ProgramLine {
         const inputStr = array[1] ?? this.error();
         const nextState = array[2] ?? this.error();
         const actionsStr = array[3] ?? this.error();
-        const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter((x)=>x !== ""
-        );
+        const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter((x)=>x !== "");
         const actions = [];
         for (const actionsStr1 of actionStrs){
             const result = parseAction(actionsStr1);
@@ -1218,8 +1211,7 @@ function validateNoDuplicatedActionCommand(command) {
     if (command.actions.length <= 1) {
         return undefined;
     }
-    const actionStrs = command.actions.map((x)=>x.pretty()
-    );
+    const actionStrs = command.actions.map((x)=>x.pretty());
     actionStrs.sort();
     for(let i = 0; i < actionStrs.length - 1; i++){
         const act1 = actionStrs[i];
@@ -1247,8 +1239,7 @@ function internalError() {
     throw Error('internal error');
 }
 function validateNoSameComponentCommand(command) {
-    if (command.actions.find((x)=>x instanceof HaltOutAction
-    ) !== undefined) {
+    if (command.actions.find((x)=>x instanceof HaltOutAction) !== undefined) {
         return undefined;
     }
     const actions = command.actions;
@@ -1284,8 +1275,7 @@ function internalError1() {
     throw Error('internal error');
 }
 function validateZAndNZ(commands) {
-    const errMsg = (line)=>`Need Z line followed by NZ line at "${line.pretty()}"`
-    ;
+    const errMsg = (line)=>`Need Z line followed by NZ line at "${line.pretty()}"`;
     for(let i = 0; i < commands.length - 1; i++){
         const a = commands[i] ?? internalError1();
         const b = commands[i + 1] ?? internalError1();
@@ -1323,24 +1313,20 @@ class ProgramLines {
         return this.array;
     }
     pretty() {
-        return this.getArray().map((line)=>line.pretty()
-        ).join('\n');
+        return this.getArray().map((line)=>line.pretty()).join('\n');
     }
     static parse(str) {
         const lines = str.split(/\r\n|\n|\r/u);
-        const programLineWithErrorArray = lines.map((line)=>Command.parse(line)
-        );
+        const programLineWithErrorArray = lines.map((line)=>Command.parse(line));
         const errors = programLineWithErrorArray.flatMap((x)=>typeof x === 'string' ? [
                 x
-            ] : []
-        );
+            ] : []);
         if (errors.length > 0) {
             return errors.join('\n');
         }
         const programLines = programLineWithErrorArray.flatMap((x)=>typeof x !== 'string' ? [
                 x
-            ] : []
-        );
+            ] : []);
         return new ProgramLines(programLines);
     }
 }
@@ -1417,20 +1403,16 @@ class Program {
         });
     }
     _actions() {
-        return this.commands.flatMap((command)=>command.actions
-        );
+        return this.commands.flatMap((command)=>command.actions);
     }
     extractUnaryRegisterNumbers() {
-        return sortNub(this._actions().flatMap((a)=>a.extractUnaryRegisterNumbers()
-        ));
+        return sortNub(this._actions().flatMap((a)=>a.extractUnaryRegisterNumbers()));
     }
     extractBinaryRegisterNumbers() {
-        return sortNub(this._actions().flatMap((a)=>a.extractBinaryRegisterNumbers()
-        ));
+        return sortNub(this._actions().flatMap((a)=>a.extractBinaryRegisterNumbers()));
     }
     extractLegacyTRegisterNumbers() {
-        return sortNub(this._actions().flatMap((a)=>a.extractLegacyTRegisterNumbers()
-        ));
+        return sortNub(this._actions().flatMap((a)=>a.extractLegacyTRegisterNumbers()));
     }
     pretty() {
         if (this.commands.length >= 1 && this.programLines.getArray().length === 0) {
@@ -1441,8 +1423,7 @@ class Program {
             if (this.registersHeader !== undefined) {
                 str += this.registersHeader.pretty() + "\n";
             }
-            str += this.commands.map((command)=>command.pretty()
-            ).join('\n');
+            str += this.commands.map((command)=>command.pretty()).join('\n');
             return str.trim();
         } else {
             return this.programLines.pretty();
@@ -1452,17 +1433,14 @@ class Program {
 function sortNub(array) {
     return [
         ...new Set(array)
-    ].sort((a, b)=>a - b
-    );
+    ].sort((a, b)=>a - b);
 }
 const decimalNaturalParser = mod.match(/[0-9]+/).desc([
     "number"
-]).map((x)=>parseInt(x, 10)
-);
+]).map((x)=>parseInt(x, 10));
 const hexadecimalNaturalParser = mod.match(/0x[a-fA-F0-9]+/).desc([
     "hexadecimal number", 
-]).map((x)=>parseInt(x, 16)
-);
+]).map((x)=>parseInt(x, 16));
 const naturalNumberParser = hexadecimalNaturalParser.or(decimalNaturalParser).desc([
     "number"
 ]);
@@ -1491,12 +1469,10 @@ class FuncAPGMExpr extends APGMExpr {
         this.location = location3;
     }
     transform(f) {
-        return f(new FuncAPGMExpr(this.name, this.args.map((x)=>x.transform(f)
-        ), this.location));
+        return f(new FuncAPGMExpr(this.name, this.args.map((x)=>x.transform(f)), this.location));
     }
     pretty() {
-        return `${this.name}(${this.args.map((x)=>x.pretty()
-        ).join(", ")})`;
+        return `${this.name}(${this.args.map((x)=>x.pretty()).join(", ")})`;
     }
     name;
     args;
@@ -1612,12 +1588,10 @@ class SeqAPGMExpr extends APGMExpr {
         this.exprs = exprs;
     }
     transform(f) {
-        return f(new SeqAPGMExpr(this.exprs.map((x)=>x.transform(f)
-        )));
+        return f(new SeqAPGMExpr(this.exprs.map((x)=>x.transform(f))));
     }
     pretty() {
-        return `{${this.exprs.map((x)=>x.pretty() + "; "
-        ).join("")}}`;
+        return `{${this.exprs.map((x)=>x.pretty() + "; ").join("")}}`;
     }
     exprs;
 }
@@ -1672,11 +1646,9 @@ function prettyError(fail1, source) {
     ];
     const prefix = "| ";
     const errorLines = [
-        ...aboveLines.map((x)=>prefix + x
-        ),
+        ...aboveLines.map((x)=>prefix + x),
         " ".repeat(prefix.length) + arrowLine,
-        ...belowLines.map((x)=>prefix + x
-        ), 
+        ...belowLines.map((x)=>prefix + x), 
     ];
     return [
         `parse error at line ${fail1.location.line} column ${fail1.location.column}:`,
@@ -1695,8 +1667,7 @@ function parsePretty(parser, source) {
 const comment = mod.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([]);
 const _ = mod.match(/\s*/).desc([
     "space"
-]).sepBy(comment).map(()=>undefined
-);
+]).sepBy(comment).map(()=>undefined);
 const someSpaces = mod.match(/\s+/).desc([
     "space"
 ]);
@@ -1740,66 +1711,50 @@ const curlyLeft = token("{").desc([
 const curlyRight = token("}").desc([
     "`}`"
 ]);
-const varAPGMExpr = identifierWithLocation.map((x)=>new VarAPGMExpr(x[0], x[1])
-);
+const varAPGMExpr = identifierWithLocation.map((x)=>new VarAPGMExpr(x[0], x[1]));
 function argExprs(arg) {
-    return mod.lazy(()=>arg()
-    ).sepBy(comma).wrap(leftParen, rightParen);
+    return mod.lazy(()=>arg()).sepBy(comma).wrap(leftParen, rightParen);
 }
 function funcAPGMExpr() {
     return _.next(mod.location).chain((location8)=>{
         return mod.choice(macroIdentifier, identifier).chain((ident)=>{
-            return argExprs(()=>apgmExpr()
-            ).map((args)=>{
+            return argExprs(()=>apgmExpr()).map((args)=>{
                 return new FuncAPGMExpr(ident, args, location8);
             });
         });
     });
 }
 const numberAPGMExpr = _.next(mod.location.chain((loc)=>{
-    return naturalNumberParser.map((x)=>new NumberAPGMExpr(x, loc)
-    );
+    return naturalNumberParser.map((x)=>new NumberAPGMExpr(x, loc));
 })).skip(_);
 const stringLit = _.next(mod.text(`"`)).next(mod.match(/[^"]*/)).skip(mod.text(`"`)).skip(_).desc([
     "string"
 ]);
-const stringAPGMExpr = stringLit.map((x)=>new StringAPGMExpr(x)
-);
+const stringAPGMExpr = stringLit.map((x)=>new StringAPGMExpr(x));
 function seqAPGMExprRaw() {
-    return mod.lazy(()=>statement()
-    ).repeat();
+    return mod.lazy(()=>statement()).repeat();
 }
 function seqAPGMExpr() {
-    return seqAPGMExprRaw().wrap(curlyLeft, curlyRight).map((x)=>new SeqAPGMExpr(x)
-    );
+    return seqAPGMExprRaw().wrap(curlyLeft, curlyRight).map((x)=>new SeqAPGMExpr(x));
 }
-const whileKeyword = mod.choice(token("while_z"), token("while_nz")).map((x)=>x === "while_z" ? "Z" : "NZ"
-);
-const exprWithParen = mod.lazy(()=>apgmExpr()
-).wrap(leftParen, rightParen);
+const whileKeyword = mod.choice(token("while_z"), token("while_nz")).map((x)=>x === "while_z" ? "Z" : "NZ");
+const exprWithParen = mod.lazy(()=>apgmExpr()).wrap(leftParen, rightParen);
 function whileAPGMExpr() {
     return whileKeyword.chain((mod1)=>{
         return exprWithParen.chain((cond)=>{
-            return mod.lazy(()=>apgmExpr()
-            ).map((body)=>new WhileAPGMExpr(mod1, cond, body)
-            );
+            return mod.lazy(()=>apgmExpr()).map((body)=>new WhileAPGMExpr(mod1, cond, body));
         });
     });
 }
 function loopAPGMExpr() {
-    return token("loop").next(mod.lazy(()=>apgmExpr()
-    )).map((x)=>new LoopAPGMExpr(x)
-    );
+    return token("loop").next(mod.lazy(()=>apgmExpr())).map((x)=>new LoopAPGMExpr(x));
 }
-const ifKeyword = mod.choice(token("if_z"), token("if_nz")).map((x)=>x === "if_z" ? "Z" : "NZ"
-);
+const ifKeyword = mod.choice(token("if_z"), token("if_nz")).map((x)=>x === "if_z" ? "Z" : "NZ");
 function ifAPGMExpr() {
     return ifKeyword.chain((mod2)=>{
         return exprWithParen.chain((cond)=>{
-            return mod.lazy(()=>apgmExpr()
-            ).chain((body)=>{
-                return mod.choice(token("else").next(mod.lazy(()=>apgmExpr()
-                )), mod.ok(undefined)).map((elseBody)=>{
+            return mod.lazy(()=>apgmExpr()).chain((body)=>{
+                return mod.choice(token("else").next(mod.lazy(()=>apgmExpr())), mod.ok(undefined)).map((elseBody)=>{
                     return new IfAPGMExpr(mod2, cond, body, elseBody);
                 });
             });
@@ -1809,13 +1764,11 @@ function ifAPGMExpr() {
 function macroHead() {
     const macroKeyword = _.chain((_)=>{
         return mod.location.chain((location9)=>{
-            return mod.text("macro").next(someSpaces).map((_)=>location9
-            );
+            return mod.text("macro").next(someSpaces).map((_)=>location9);
         });
     });
     return macroKeyword.and(macroIdentifier).chain(([location10, ident])=>{
-        return argExprs(()=>varAPGMExpr
-        ).map((args)=>{
+        return argExprs(()=>varAPGMExpr).map((args)=>{
             return {
                 loc: location10,
                 name: ident,
@@ -1826,8 +1779,7 @@ function macroHead() {
 }
 function macro() {
     return macroHead().chain(({ loc , name , args  })=>{
-        return mod.lazy(()=>apgmExpr()
-        ).map((body)=>{
+        return mod.lazy(()=>apgmExpr()).map((body)=>{
             return new Macro(name, args, body, loc);
         });
     });
@@ -1836,9 +1788,7 @@ const anythingLine = mod.match(/.*/);
 const header = mod.text("#").next(mod.match(/REGISTERS|COMPONENTS/)).desc([
     "#REGISTERS",
     "#COMPONENTS"
-]).chain((x)=>anythingLine.map((c)=>new Header(x, c)
-    )
-);
+]).chain((x)=>anythingLine.map((c)=>new Header(x, c)));
 const headers = _.next(header).skip(_).repeat();
 function main() {
     return macro().repeat().chain((macros)=>{
@@ -1877,14 +1827,12 @@ class SeqAPGLExpr extends APGLExpr {
         this.exprs = exprs;
     }
     transform(f) {
-        return f(new SeqAPGLExpr(this.exprs.map((x)=>x.transform(f)
-        )));
+        return f(new SeqAPGLExpr(this.exprs.map((x)=>x.transform(f))));
     }
     exprs;
 }
 function isEmptyExpr(expr) {
-    return expr instanceof SeqAPGLExpr && expr.exprs.every((e)=>isEmptyExpr(e)
-    );
+    return expr instanceof SeqAPGLExpr && expr.exprs.every((e)=>isEmptyExpr(e));
 }
 class IfAPGLExpr extends APGLExpr {
     constructor(cond, thenBody, elseBody){
@@ -1944,8 +1892,7 @@ class A {
     }
     static incUMulti(...args) {
         return new ActionAPGLExpr([
-            ...args.map((x)=>`INC U${x}`
-            ),
+            ...args.map((x)=>`INC U${x}`),
             "NOP"
         ]);
     }
@@ -2170,8 +2117,7 @@ function transpileFuncAPGMExpr(funcExpr) {
                 if (funcExpr.args.length === 0) {
                     return transpileEmptyArgFunc(funcExpr, new BreakAPGLExpr(undefined));
                 } else {
-                    return transpileNumArgFunc(funcExpr, (x)=>new BreakAPGLExpr(x)
-                    );
+                    return transpileNumArgFunc(funcExpr, (x)=>new BreakAPGLExpr(x));
                 }
             }
         case "repeat":
@@ -2185,8 +2131,7 @@ function transpileFuncAPGMExpr(funcExpr) {
                 }
                 const expr = funcExpr.args[1];
                 const apgl = transpileAPGMExpr(expr);
-                return new SeqAPGLExpr(Array(n.value).fill(0).map(()=>apgl
-                ));
+                return new SeqAPGLExpr(Array(n.value).fill(0).map(()=>apgl));
             }
     }
     throw new ErrorWithLocation(`Unknown function: "${funcExpr.name}"${formatLocationAt(funcExpr.location)}`, funcExpr.location);
@@ -2206,8 +2151,7 @@ function transpileAPGMExpr(e) {
     } else if (e instanceof NumberAPGMExpr) {
         throw new ErrorWithLocation(`number is not allowed: ${e.value}${formatLocationAt(e.location)}`, e.location);
     } else if (e instanceof SeqAPGMExpr) {
-        return new SeqAPGLExpr(e.exprs.map((x)=>t(x)
-        ));
+        return new SeqAPGLExpr(e.exprs.map((x)=>t(x)));
     } else if (e instanceof StringAPGMExpr) {
         throw Error(`string is not allowed: ${e.pretty()}`);
     } else if (e instanceof VarAPGMExpr) {
@@ -2467,8 +2411,7 @@ function replaceVarInBoby(macro1, funcExpr) {
     const nameToExpr = new Map(macro1.args.map((a, i)=>[
             a.name,
             exprs[i]
-        ]
-    ));
+        ]));
     return macro1.body.transform((x)=>{
         if (x instanceof VarAPGMExpr) {
             const expr = nameToExpr.get(x.name);
@@ -2491,14 +2434,11 @@ class MacroExpander {
         this.macroMap = new Map(main1.macros.map((m)=>[
                 m.name,
                 m
-            ]
-        ));
+            ]));
         if (this.macroMap.size < main1.macros.length) {
-            const ds = dups(main1.macros.map((x)=>x.name
-            ));
+            const ds = dups(main1.macros.map((x)=>x.name));
             const d = ds[0];
-            const location11 = main1.macros.slice().reverse().find((x)=>x.name === d
-            )?.location;
+            const location11 = main1.macros.slice().reverse().find((x)=>x.name === d)?.location;
             throw new ErrorWithLocation(`There is a macro with the same name: "${d}"` + formatLocationAt(location11), location11);
         }
     }
@@ -2510,8 +2450,7 @@ class MacroExpander {
             throw Error("too many macro expansion");
         }
         this.count++;
-        return expr.transform((x)=>this.expandOnce(x)
-        );
+        return expr.transform((x)=>this.expandOnce(x));
     }
     expandOnce(x) {
         if (x instanceof FuncAPGMExpr) {
@@ -2549,22 +2488,16 @@ function merge(as, bs) {
     if (bs.length === 0) {
         return as.slice();
     }
-    if (as.some((x)=>x instanceof HaltOutAction
-    )) {
+    if (as.some((x)=>x instanceof HaltOutAction)) {
         return undefined;
     }
-    if (bs.some((x)=>x instanceof HaltOutAction
-    )) {
+    if (bs.some((x)=>x instanceof HaltOutAction)) {
         return undefined;
     }
-    const asWithoutNOP = as.filter((x)=>!(x instanceof NopAction)
-    );
-    const bsWithoutNOP = bs.filter((x)=>!(x instanceof NopAction)
-    );
-    const asWithoutNOPNonReturn = asWithoutNOP.every((a)=>!a.doesReturnValue()
-    );
-    const bsWithoutNOPNonReturn = bsWithoutNOP.every((b)=>!b.doesReturnValue()
-    );
+    const asWithoutNOP = as.filter((x)=>!(x instanceof NopAction));
+    const bsWithoutNOP = bs.filter((x)=>!(x instanceof NopAction));
+    const asWithoutNOPNonReturn = asWithoutNOP.every((a)=>!a.doesReturnValue());
+    const bsWithoutNOPNonReturn = bsWithoutNOP.every((b)=>!b.doesReturnValue());
     if (!asWithoutNOPNonReturn && !bsWithoutNOPNonReturn) {
         return undefined;
     }
@@ -2595,8 +2528,7 @@ function optimizeSeqAPGLExpr(seqExpr) {
     let items = [];
     const putItems = ()=>{
         if (items.length !== 0) {
-            newExprs.push(new ActionAPGLExpr(items.map((x)=>x.pretty()
-            )));
+            newExprs.push(new ActionAPGLExpr(items.map((x)=>x.pretty())));
             items = [];
         }
     };
@@ -2667,8 +2599,7 @@ function completionParser(src) {
         if (result.type === "ParseOK") {
             array.push({
                 name: result.value.name,
-                args: result.value.args.map((x)=>x.name
-                )
+                args: result.value.args.map((x)=>x.name)
             });
         }
     }
@@ -2694,8 +2625,7 @@ function integration(str, options = {}, log = false) {
         "# State    Input    Next state    Actions",
         "# ---------------------------------------", 
     ];
-    const head = apgm.headers.map((x)=>x.toString()
-    );
+    const head = apgm.headers.map((x)=>x.toString());
     return head.concat(comment1, apgs);
 }
 export { integration as integration };

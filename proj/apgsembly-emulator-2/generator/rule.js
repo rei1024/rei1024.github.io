@@ -63,8 +63,8 @@ export function parseRule(rule) {
  */
 export function makeDelta(rule) {
     const o = parseRule(rule);
+
     /**
-     *
      * @param {number} i
      * @param {number} j
      * @param {number} k
@@ -75,6 +75,7 @@ export function makeDelta(rule) {
         // @ts-ignore
         return o[key];
     }
+
     return delta;
 }
 
@@ -87,6 +88,7 @@ export function generate(rule) {
     if (typeof rule !== 'number') {
         throw Error('rule is not a number');
     }
+
     const delta = makeDelta(rule);
     const boundary = 0;
 
@@ -98,12 +100,14 @@ export function generate(rule) {
     array.push(`# ---------------------------------------`);
     // Set ON cell at (0, 0)
     array.push(`INITIAL; ZZ; NEXT_S${boundary}${boundary}_READ_1; SET B2D, NOP`);
+
     // Current cursor is on the cell that will be read
     bit2((i, j) => {
         array.push(`NEXT_S${i}${j}_READ_1; *; NEXT_S${i}${j}_READ_2; READ B2D`);
         array.push(`NEXT_S${i}${j}_READ_2; Z; NEXT_S${i}${j}0_WRITE_1; NOP`);
         array.push(`NEXT_S${i}${j}_READ_2; NZ; NEXT_S${i}${j}1_WRITE_1; SET B2D, NOP`);
     });
+
     // If the next cell is empty, skip writing
     bit3((i, j, k) => {
         if (delta(i, j, k) == "0") {
@@ -114,6 +118,7 @@ export function generate(rule) {
             array.push(`NEXT_S${i}${j}${k}_WRITE_3; *; NEXT_S${j}${k}_CHECK_1; SET B2D, NOP`);
         }
     });
+
     // skip writing
     bit2((i, j) => {
         array.push(`NEXT_S${i}${j}_CHECK0_1; *; NEXT_S${i}${j}_CHECK0_2; TDEC B2DY`);
@@ -137,6 +142,7 @@ export function generate(rule) {
             array.push(`FINISH_S${i}${j}_WRITE_2; *; FINISH2_S${j}_WRITE_1; SET B2D, NOP`);
         }
     });
+
     bit1(i => {
         array.push(`FINISH2_S${i}_WRITE_1; *; FINISH2_S${i}_WRITE_2; INC B2DX, TDEC B2DY`);
         if (delta(i, boundary, boundary) === "0") {
@@ -145,6 +151,7 @@ export function generate(rule) {
             array.push(`FINISH2_S${i}_WRITE_2; *; RETURN_1; SET B2D, NOP`);
         }
     });
+
     // return to the (0, N)
     array.push(`RETURN_1; *; RETURN_2; INC B2DY, TDEC B2DX`);
     array.push(`RETURN_2; Z; NEXT_S${boundary}${boundary}_READ_1; TDEC B2DY`);

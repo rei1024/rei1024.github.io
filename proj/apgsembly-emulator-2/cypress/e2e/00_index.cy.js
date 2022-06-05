@@ -6,6 +6,7 @@ import {
     loadProgram,
     setProgram,
     setStep,
+    clickStep,
     setProgramSlow,
     assertToggleStart,
     assertToggleStop,
@@ -35,6 +36,7 @@ describe('Run APGsembly', () => {
         cy.get(`[data-test="U0"]`).should('have.text', '0');
         cy.get('#error').should('have.text', '');
     });
+
     it('shold run', () => {
         cy.get(toggleSel).click();
         assertToggleStop();
@@ -63,9 +65,10 @@ describe('unary_multiply.apg', () => {
         cy.get(`[data-test="U0"]`).should('have.text', '7');
         cy.get(`[data-test="U1"]`).should('have.text', '5');
     });
+
     it('should execute unary_multiply.apg', () => {
         setStep(100);
-        cy.get('#step').click();
+        clickStep();
         assertSteps(93);
         cy.get(`[data-test="U2"]`).should('have.text', '35');
 
@@ -81,7 +84,7 @@ describe('Integers', () => {
     });
     it('should print integers', () => {
         setStep(1050);
-        cy.get('#step').click();
+        clickStep();
         cy.get(outputSelector).should('have.value', '1.2.3.4.5.6.7.8.9.10');
         assertSteps(1050);
 
@@ -100,9 +103,10 @@ describe('π calculator', () => {
         cy.contains('B0');
         cy.contains('B3');
     });
+
     it('should print pi', () => {
         setStep(1000000);
-        cy.get('#step').click();
+        clickStep();
         cy.get(outputSelector).should('have.value', '3.141');
 
         assertSteps(1000000);
@@ -119,9 +123,10 @@ describe('Rule 110', () => {
         cy.contains('APGsembly');
         loadProgram('rule110.apg');
     });
+
     it('Rule 110 should work', () => {
         setStep(1000);
-        cy.get('#step').click();
+        clickStep();
 
         assertSteps(1000);
 
@@ -137,6 +142,7 @@ describe('Start Stop Reset', () => {
         cy.contains('APGsembly');
         loadProgram('rule110.apg');
     });
+
     it('Start and Stop', () => {
         assertToggleStart();
         cy.get(toggleSel).click();
@@ -147,6 +153,7 @@ describe('Start Stop Reset', () => {
 
         cy.get('#error').should('have.text', '');
     });
+
     it('Reset', () => {
         cy.get('#reset').click();
         assertSteps(0);
@@ -160,13 +167,14 @@ describe('Error Steps', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
     });
+
     it('Run', () => {
         setProgramSlow(`
     INITIAL; ZZ; A0; NOP
     A0; ZZ; A1; SET B0, NOP
     A1; ZZ; A1; SET B0, NOP`);
         setStep(100);
-        cy.get('#step').click();
+        clickStep();
         assertSteps(3);
 
         cy.get('#error').should('have.text', `- The bit of binary register is already 1: bits = 1, pointer = 0`);

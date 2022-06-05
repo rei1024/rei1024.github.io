@@ -1,5 +1,8 @@
 // @ts-check
 
+/* style.cssで設定 */
+const CURRENT_STATE_CLASS = 'stats_current_state';
+
 /**
  * UI for statistics
  */
@@ -38,6 +41,7 @@ export class StatsUI {
                 $name.colSpan = 2;
                 $name.append($code);
             }
+
             const $sum = document.createElement('td');
             $sum.textContent = (stat.z + stat.nz).toString();
             const $z = document.createElement('td');
@@ -65,12 +69,13 @@ export class StatsUI {
         const len = cells.length;
         for (let i = 0; i < len; i++) {
             const item = cells[i] ?? error();
-            const cls = 'stats_current_state'; /* style.cssで設定 */
+
             if (currentIndex === i) {
-                item.tr.classList.add(cls);
+                item.tr.classList.add(CURRENT_STATE_CLASS);
             } else {
-                item.tr.classList.remove(cls);
+                item.tr.classList.remove(CURRENT_STATE_CLASS);
             }
+
             const stat = stats[i] ?? error();
             item.sum.textContent = (stat.z + stat.nz).toString();
             item.z.textContent = stat.z.toString();

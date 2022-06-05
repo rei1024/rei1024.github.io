@@ -21,7 +21,7 @@
         // test
         "t": "deno test --config=deno.jsonc",
         // test with watcher
-        "w": "deno test --watch --config=deno.jsonc",
+        "w": "deno test --watch --no-check --config=deno.jsonc",
         // formatting
         "fmt": "deno fmt --config=deno.jsonc",
         // reload dependency

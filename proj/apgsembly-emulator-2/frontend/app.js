@@ -1,7 +1,5 @@
 // @ts-check
 
-import { Frequency } from "./util/frequency.js";
-
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
 
@@ -17,6 +15,7 @@ import {
 } from "./components/toggle.js";
 import { renderOutput } from "./components/output.js";
 
+import { Frequency } from "./util/frequency.js";
 
 import {
     $error,
@@ -60,8 +59,6 @@ import {
 
 /** index.htmlと同期する */
 export const DEFUALT_FREQUENCY = 30;
-
-const hasToLocaleString = typeof (42).toLocaleString === 'function';
 
 /**
  * APGsembly 2.0 Emulator frontend application
@@ -273,13 +270,7 @@ export class App {
      * 周波数の表示
      */
     renderFrequencyOutput() {
-        if (hasToLocaleString) {
-            // with ","
-            $freqencyOutput.textContent =
-                this.frequency.toLocaleString() + "Hz";
-        } else {
-            $freqencyOutput.textContent = this.frequency.toString() + "Hz";
-        }
+        $freqencyOutput.textContent = this.frequency.toLocaleString() + "Hz";
     }
 
     /**
@@ -492,7 +483,7 @@ export class App {
         this.renderErrorMessage();
         this.renderFrequencyOutput();
 
-        $steps.textContent = hasToLocaleString ? this.steps.toLocaleString() : this.steps.toString();
+        $steps.textContent = this.steps.toLocaleString();
 
         // current state
         $currentState.textContent = this.machine?.currentState ?? "";
@@ -505,6 +496,18 @@ export class App {
         this.renderAddSubMul();
         this.renderStats();
         this.renderB2D();
+    }
+
+    /**
+     * @returns {-1 | 0 | 1} -1 is any
+     */
+    getBreakpointInput() {
+        // -1: *
+        // 0 : Z
+        // 1 : NZ
+        const biStr = $breakpointInputSelect.value;
+        return biStr === "any" ? -1 :
+               biStr === "zero" ? 0 : 1;
     }
 
     /**
@@ -528,6 +531,11 @@ export class App {
             return;
         }
 
+        const machine = this.machine;
+        if (machine === undefined) {
+            return;
+        }
+
         const isRunning = this.appState === "Running";
 
         // ブレークポイントの処理
@@ -537,18 +545,8 @@ export class App {
             breakpointIndex = tempN;
         }
 
-        // -1: *
-        // 0 : Z
-        // 1 : NZ
-        const biStr = $breakpointInputSelect.value;
-        const breakpointInputValue =
-            biStr === "any" ? -1 :
-            biStr === "zero" ? 0 : 1;
+        const breakpointInputValue = this.getBreakpointInput();
 
-        const machine = this.machine;
-        if (machine === undefined) {
-            return;
-        }
         let i = 0;
         const start = performance.now();
         try {
@@ -588,6 +586,7 @@ export class App {
             this.render();
             return;
         }
+
         this.steps += steps;
         this.render();
     }

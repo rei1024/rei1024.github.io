@@ -4,7 +4,7 @@ self.addEventListener("install", function (e) {
 
 });
 
-const CACHE_VERSION = "2022-05-21";
+const CACHE_VERSION = "2022-05-31";
 
 self.addEventListener('activate', function (event) {
     async function deleteCache() {

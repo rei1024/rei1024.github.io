@@ -40,5 +40,6 @@ export function parseAction(str) {
             return result;
         }
     }
+
     return undefined;
 }

@@ -10,6 +10,54 @@ function error() {
 }
 
 /**
+ * value = ..., hex = ..., pointer = ...
+ */
+function createMetaElem() {
+    const metaDataCode = document.createElement('code');
+
+    // 長い場合は改行を入れる
+    metaDataCode.style.wordBreak = "break-all";
+    metaDataCode.classList.add('binary_info'); // style.cssで設定
+
+    const decimal = document.createElement('span');
+    decimal.classList.add('decimal');
+
+    const hex = document.createElement('span');
+    hex.classList.add('hex');
+
+    const pointer = document.createElement('span');
+    pointer.classList.add('pointer');
+
+    metaDataCode.append(decimal, hex, pointer);
+
+    return { metaDataCode, decimal, hex, pointer };
+}
+
+/**
+ * バイナリ表示
+ */
+function createBinaryElem() {
+    const binaryCode = document.createElement('code');
+    binaryCode.style.wordBreak = "break-all";
+
+    const $prefix = document.createElement('span');
+    $prefix.classList.add('prefix');
+
+    const $head = document.createElement('span');
+    $head.style.color = "#0D47A1";
+    // 下線
+    $head.style.borderBottom = "3px solid #0D47A1";
+    $head.classList.add('head');
+
+    const $suffix = document.createElement('span');
+    $suffix.classList.add('suffix');
+
+    binaryCode.append($prefix, $head, $suffix);
+
+    return { binaryCode, $prefix, $head, $suffix };
+}
+
+/**
  * UI for binary registers
  */
 export class BinaryUI {
@@ -51,37 +99,13 @@ export class BinaryUI {
             const td = document.createElement('td');
             td.dataset['test'] = `B${key}`;
 
-            // start meta
-            const metaDataCode = document.createElement('code');
-            // 長い場合は改行を入れる
-            metaDataCode.style.wordBreak = "break-all";
-            metaDataCode.classList.add('binary_info'); // style.cssで設定
-            const decimal = document.createElement('span');
-            decimal.classList.add('decimal');
-            const hex = document.createElement('span');
-            hex.classList.add('hex');
-            const pointer = document.createElement('span');
-            pointer.classList.add('pointer');
-            metaDataCode.append(decimal, hex, pointer);
-            const br = document.createElement('br');
-            td.append(metaDataCode, br);
-            // end meta
+            // meta
+            const { metaDataCode, decimal, hex, pointer } = createMetaElem();
+            td.append(metaDataCode, document.createElement('br'));
 
-            // start binary
-            const binaryCode = document.createElement('code');
-            binaryCode.style.wordBreak = "break-all";
-            const $prefix = document.createElement('span');
-            $prefix.classList.add('prefix');
-            const $head = document.createElement('span');
-            $head.style.color = "#0D47A1";
-            // 下線
-            $head.style.borderBottom = "3px solid #0D47A1";
-            $head.classList.add('head');
-            const $suffix = document.createElement('span');
-            $suffix.classList.add('suffix');
-            binaryCode.append($prefix, $head, $suffix);
+            // binary
+            const { binaryCode, $prefix, $head, $suffix } = createBinaryElem();
             td.append(binaryCode);
-            // end binary
 
             tr.append(th, td);
             table.append(tr);
