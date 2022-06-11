@@ -12,19 +12,28 @@ import {
 import { piCalculator } from "./pi_calculator.js";
 import { assertEquals, assertThrows, test } from "./deps.js";
 
+/**
+ * @param {string} src
+ * @param {unknown} [ErrorClass]
+ * @param {string} [msgIncludes]
+ */
+function assertNewMachineThrows(src, ErrorClass, msgIncludes) {
+    const program = Program.parse(src);
+    if (!(program instanceof Program)) {
+        throw Error('parse error ' + src);
+    }
+    assertThrows(() => {
+        new Machine(program);
+    }, ErrorClass, msgIncludes);
+}
+
 test('Machine duplicated command', () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3, NOP
 INITIAL; ZZ; ID0; OUTPUT 3, NOP
 ID0; ZZ; ID0; NOP
     `;
-    const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
-    }
-    assertThrows(() => {
-        new Machine(program);
-    });
+    assertNewMachineThrows(str);
 });
 
 test('Machine duplicated command NZ NZ', () => {
@@ -45,13 +54,7 @@ INITIAL; *; ID0; OUTPUT 3, NOP
 INITIAL; *; ID0; OUTPUT 3, NOP
 ID0; ZZ; ID0; NOP
     `;
-    const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
-    }
-    assertThrows(() => {
-        new Machine(program);
-    });
+    assertNewMachineThrows(str);
 });
 
 test('Machine duplicated command * NZ', () => {
@@ -106,13 +109,7 @@ test('Machine INITIAL is not exist', () => {
     const str = `
     ID0; ZZ; ID0; NOP
     `;
-    const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
-    }
-    assertThrows(() => {
-        new Machine(program);
-    }, Error, 'INITIAL state is not present');
+    assertNewMachineThrows(str, Error, 'INITIAL state is not present');
 });
 
 test('Machine Program no return value', () => {
@@ -193,14 +190,7 @@ test('Machine register header error: register is not exist', () => {
 INITIAL; ZZ; A0; NOP
 A0; *; A0; NOP
     `;
-    const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
-    }
-
-    assertThrows(() => {
-        new Machine(program);
-    });
+    assertNewMachineThrows(str);
 });
 
 test('Machine register header error: is not an object: number', () => {
@@ -209,14 +199,7 @@ test('Machine register header error: is not an object: number', () => {
 INITIAL; ZZ; A0; NOP
 A0; *; A0; NOP
     `;
-    const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
-    }
-
-    assertThrows(() => {
-        new Machine(program);
-    });
+    assertNewMachineThrows(str);
 });
 
 test('Machine register header error: is not an object: null', () => {
@@ -225,27 +208,14 @@ test('Machine register header error: is not an object: null', () => {
 INITIAL; ZZ; A0; NOP
 A0; *; A0; NOP
     `;
-    const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
-    }
-
-    assertThrows(() => {
-        new Machine(program);
-    });
+    assertNewMachineThrows(str);
 });
 
 test('Machine next state is not found', () => {
     const str = `
 INITIAL; ZZ; NON_EXIST; NOP
     `;
-    const program = Program.parse(str);
-    if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
-    }
-    assertThrows(() => {
-        new Machine(program);
-    });
+    assertNewMachineThrows(str);
 });
 
 test('Machine program9_1', () => {
@@ -332,16 +302,13 @@ test('Machine PI Calculator', () => {
         throw Error('parse error PI Calculator');
     }
     const machine = new Machine(program);
-    // machine.actionExecutor.getBReg(0)?.setBits([0, 1]);
-    // machine.actionExecutor.getBReg(2)?.setBits([1]);
-    // console.log(machine);
-    // console.log(machine.actionExecutor);
+
     for (let i = 0; i < 250000; i++) {
         const res = machine.execCommand();
         if (res === -1) {
             break;
         }
     }
-    // console.log(machine.actionExecutor);
+
     assertEquals(machine.actionExecutor.output.getString(), "3.14");
 });

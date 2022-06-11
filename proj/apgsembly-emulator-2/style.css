@@ -8,7 +8,13 @@
 }
 
 .table-layout-fixed {
+    /* 幅が変化しないようにする */
     table-layout: fixed;
+}
+
+/* 数字の幅が変わらないようにする */
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
 }
 
 /* 広げる */
@@ -18,11 +24,6 @@
 
 #state td, #state th {
     padding: 4px;
-}
-
-#state {
-    /* 幅が変化しないようにする */
-    table-layout: fixed;
 }
 
 #steps {
@@ -72,6 +73,10 @@
 :root {
     --dark-mode-color: #dddddd;
     --dark-mode-background-color: black;
+}
+
+.animate-color-and-background-color {
+    transition: color .4s, background-color .4s;
 }
 
 body[apge_dark_mode="on"] :is(td, th, #steps) {
@@ -132,7 +137,7 @@ body[apge_dark_mode="on"] .stats_current_state {
 
 /**** speedy animation ****/
 .fade {
-    transition: opacity .10s linear; /* 0.15s */
+    transition: opacity .1s linear; /* 0.15s */
 }
 
 .modal.fade .modal-dialog {

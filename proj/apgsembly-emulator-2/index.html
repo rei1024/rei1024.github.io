@@ -104,7 +104,7 @@
             <input id="frequency_input" class="form-range" value="11" type="range" max="63" aria-valuetext="(30Hz)">
         </div>
         <div>
-            <table class="mb-1 table" id="state">
+            <table class="mb-1 table table-layout-fixed" id="state">
                 <thead>
                     <tr>
                         <th>Current state</th>
@@ -194,7 +194,7 @@
     <!-- Config Modal -->
     <div class="modal fade" id="config_modal" tabindex="-1" aria-labelledby="config_modal_label" aria-hidden="true">
         <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" id="config_modal_content">
             <div class="modal-header">
                 <h5 class="modal-title" id="config_modal_label">Config</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -268,7 +268,7 @@
     <!-- Stats Modal -->
     <div class="modal fade" id="stats_modal" tabindex="-1" aria-labelledby="stats_modal_label" aria-hidden="true">
         <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content tabular-nums">
             <div class="modal-header">
                 <h5 class="modal-title" id="stats_modal_label">Stats</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

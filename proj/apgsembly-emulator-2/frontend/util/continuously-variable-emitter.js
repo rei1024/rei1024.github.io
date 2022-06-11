@@ -19,9 +19,9 @@ export class CVEEvent extends Event {
  */
 export class CVE extends EventTarget {
     /**
-     * @param {{ frequency: number }} param0
+     * @param {{ frequency: number, signal?: AbortSignal }} param0
      */
-    constructor({ frequency }) {
+    constructor({ frequency, signal }) {
         super();
 
         /**
@@ -47,6 +47,12 @@ export class CVE extends EventTarget {
         this._prevTime = -1;
 
         /**
+         * @private
+         * @type {undefined | number}
+         */
+        this._rafID = undefined;
+
+        /**
          *
          * @param {number} time
          */
@@ -60,9 +66,22 @@ export class CVE extends EventTarget {
             }
 
             this._prevTime = time;
-            requestAnimationFrame(update);
+            this._rafID = requestAnimationFrame(update);
         };
-        requestAnimationFrame(update);
+
+        this._rafID = requestAnimationFrame(update);
+
+        if (signal !== undefined) {
+            signal.addEventListener('abort', () => {
+                this.abort();
+            });
+        }
+    }
+
+    abort() {
+        if (this._rafID !== undefined) {
+            cancelAnimationFrame(this._rafID);
+        }
     }
 
     /**

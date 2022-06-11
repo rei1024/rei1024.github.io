@@ -142,10 +142,7 @@ function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
         // break
         case "break": {
             if (funcExpr.args.length === 0) {
-                return transpileEmptyArgFunc(
-                    funcExpr,
-                    new BreakAPGLExpr(undefined),
-                );
+                return new BreakAPGLExpr(undefined);
             } else {
                 return transpileNumArgFunc(
                     funcExpr,

@@ -1520,6 +1520,9 @@ class Macro {
         this.body = body;
         this.location = location4;
     }
+    pretty() {
+        return `${this.name}(${this.args.map((x)=>x.pretty()).join(", ")}) ${this.body}`;
+    }
     name;
     args;
     body;
@@ -2115,7 +2118,7 @@ function transpileFuncAPGMExpr(funcExpr) {
         case "break":
             {
                 if (funcExpr.args.length === 0) {
-                    return transpileEmptyArgFunc(funcExpr, new BreakAPGLExpr(undefined));
+                    return new BreakAPGLExpr(undefined);
                 } else {
                     return transpileNumArgFunc(funcExpr, (x)=>new BreakAPGLExpr(x));
                 }

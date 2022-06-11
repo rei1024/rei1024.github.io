@@ -4,6 +4,31 @@
 const CURRENT_STATE_CLASS = 'stats_current_state';
 
 /**
+ * @param {string} name
+ * @param {{ z: number, nz: number }} stat
+ */
+function createRow(name, stat) {
+    const $tr = document.createElement('tr');
+    const $name = document.createElement('td');
+    if (true) {
+        const $code = document.createElement('code');
+        $code.textContent = name;
+        $name.colSpan = 2;
+        $name.append($code);
+    }
+
+    const $sum = document.createElement('td');
+    $sum.textContent = (stat.z + stat.nz).toString();
+    const $z = document.createElement('td');
+    $z.textContent = stat.z.toString();
+    const $nz = document.createElement('td');
+    $nz.textContent = stat.nz.toString();
+    $tr.append($name, $sum, $z, $nz);
+
+    return { $tr, $sum, $z, $nz };
+}
+
+/**
  * UI for statistics
  */
 export class StatsUI {
@@ -33,22 +58,7 @@ export class StatsUI {
         this.root.innerHTML = "";
         for (const [i, stat] of stateStats.entries()) {
             const name = states[i] ?? "";
-            const $tr = document.createElement('tr');
-            const $name = document.createElement('td');
-            if (true) {
-                const $code = document.createElement('code');
-                $code.textContent = name;
-                $name.colSpan = 2;
-                $name.append($code);
-            }
-
-            const $sum = document.createElement('td');
-            $sum.textContent = (stat.z + stat.nz).toString();
-            const $z = document.createElement('td');
-            $z.textContent = stat.z.toString();
-            const $nz = document.createElement('td');
-            $nz.textContent = stat.nz.toString();
-            $tr.append($name, $sum, $z, $nz);
+            const { $tr, $sum, $z, $nz } = createRow(name, stat);
             this.root.append($tr);
             this.cells.push({ sum: $sum, z: $z, nz: $nz, tr: $tr });
         }

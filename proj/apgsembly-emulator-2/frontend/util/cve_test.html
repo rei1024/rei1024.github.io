@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVE</title>
+    <meta name="robots" content="noindex">
+</head>
+<body>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <span id="freq"></span>
+    <span>Hz</span>
+    <br>
+    <input type="range" id="range" min="1" max="1000" style="width: 50vw">
+
+    <span id="steps"></span>
+    <script type="module">
+        import { CVE } from "./continuously-variable-emitter.js";
+
+        const cve = new CVE({ frequency: 10 });
+
+        document.querySelector('#start').addEventListener('click', () => {
+            cve.enable();
+        });
+
+        document.querySelector('#stop').addEventListener('click', () => {
+            cve.disable();
+        });
+
+        const $range = document.querySelector('#range');
+        const $freq = document.querySelector('#freq');
+        $range.addEventListener('input', e => {
+            const n = parseFloat(e.target.value);
+
+            if (!isNaN(n)) {
+                cve.frequency = n;
+                $freq.textContent = n.toLocaleString();
+            }
+        });
+
+        cve.frequency = parseFloat($range.value);
+        $freq.textContent = cve.frequency.toLocaleString();
+
+        let steps = 0;
+        function render() {
+            document.querySelector('#steps').textContent = steps;
+        }
+
+        render();
+
+        cve.addEventListener('emit', (e) => {
+            steps += e.value;
+            render();
+        });
+    </script>
+</body>
+</html>

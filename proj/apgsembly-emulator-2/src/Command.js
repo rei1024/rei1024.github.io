@@ -248,7 +248,7 @@ export class Command extends ProgramLine {
 
         const input = parseInput(inputStr);
         if (input === undefined) {
-            return `Unknown input "${inputStr}" at "${str}"`;
+            return `Unknown input "${inputStr}" at "${str}". Expect "Z", "NZ", "ZZ", or "*"`;
         }
 
         return new Command({

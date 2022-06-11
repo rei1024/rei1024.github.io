@@ -1,5 +1,5 @@
 import { integration } from "./mod.ts";
-import { assertEquals, assertThrows, test } from "../deps_test.ts";
+import { assertEquals, test } from "../deps_test.ts";
 
 test("integration 0 actions", () => {
     const src = `

@@ -90,6 +90,9 @@ export const $sampleCodes = document.querySelectorAll('.js_sample');
 
 // --------- Modal --------- //
 
+// 設定モーダル
+export const $configModalContent = $type('#config_modal_content', HTMLElement);
+
 // ステップ数入力
 export const $stepInput = $type('#step_input', HTMLInputElement);
 

@@ -6,7 +6,6 @@ import {
     NopAction,
     HaltOutAction,
     parseAction,
-    // run
     runAPGsembly,
 } from "../src/exports.js";
 import { assertEquals, test } from "./deps.js";

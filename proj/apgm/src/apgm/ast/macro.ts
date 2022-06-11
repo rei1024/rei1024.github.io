@@ -15,4 +15,10 @@ export class Macro {
         public readonly location: APGMSourceLocation | undefined,
     ) {
     }
+
+    pretty(): string {
+        return `${this.name}(${
+            this.args.map((x) => x.pretty()).join(", ")
+        }) ${this.body}`;
+    }
 }
