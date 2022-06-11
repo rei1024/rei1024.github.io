@@ -83,5 +83,11 @@ self.addEventListener('fetch', function (event) {
     }
 
     // 同期的に実行する必要がある
-    event.respondWith(getResponse());
+    // TODO Firefoxでエラー
+    // 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css'
+    // の読み込みに失敗しました。
+    // ServiceWorker が ‘cors’ FetchEvent のハンドル中に
+    // opaque Response を FetchEvent.respondWith() へ渡しました
+    // opaque Response オブジェクトは RequestMode が ‘no-cors’ である時のみ有効です。
+    // event.respondWith(getResponse());
 });
