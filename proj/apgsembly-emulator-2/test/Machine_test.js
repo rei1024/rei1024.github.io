@@ -167,7 +167,7 @@ A0; *; A0; NOP
         throw Error('parse error ' + str);
     }
     const machine = new Machine(program);
-    assertEquals(machine.actionExecutor.getUReg(3).getValue(), 2);
+    assertEquals(machine.actionExecutor.getUReg(3)?.getValue(), 2);
 });
 
 test('Machine register header: single quotation support for binary', () => {
@@ -181,7 +181,7 @@ A0; *; A0; NOP
         throw Error('parse error ' + str);
     }
     const machine = new Machine(program);
-    assertEquals(machine.actionExecutor.getBReg(0).getBits(), [1, 1, 0]);
+    assertEquals(machine.actionExecutor.getBReg(0)?.getBits(), [1, 1, 0]);
 });
 
 test('Machine register header error: register is not exist', () => {
@@ -251,8 +251,8 @@ test('Machine program9_2', () => {
             break;
         }
     }
-    assertEquals(machine.actionExecutor.getUReg(0).getValue(), 0);
-    assertEquals(machine.actionExecutor.getUReg(1).getValue(), 12);
+    assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 0);
+    assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 12);
 });
 
 test('Machine program9_3', () => {
@@ -291,7 +291,7 @@ test('Machine program9_4', () => {
         }
     }
     assertEquals(
-        machine.actionExecutor.getBReg(0).toBinaryString(),
+        machine.actionExecutor.getBReg(0)?.toBinaryString(),
         "10001011"
     );
 });

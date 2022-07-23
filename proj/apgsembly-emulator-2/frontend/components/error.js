@@ -1,5 +1,7 @@
 // @ts-check
 
+import { create } from '../util/create.js';
+
 /**
  *
  * @param {HTMLElement} $error
@@ -11,10 +13,12 @@ export function renderErrorMessage($error, appState, errorMessage) {
         const messages = errorMessage.split('\n');
         $error.innerHTML = "";
         for (const message of messages) {
-            const span = document.createElement('span');
-            span.textContent = "- " + message;
-            const br = document.createElement('br');
-            $error.append(span, br);
+            $error.append(
+                create('span', span => {
+                    span.textContent = "- " + message;
+                }),
+                create('br')
+            );
         }
         $error.classList.remove('d-none');
     } else {

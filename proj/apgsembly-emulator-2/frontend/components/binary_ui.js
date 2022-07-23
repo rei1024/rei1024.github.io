@@ -62,7 +62,6 @@ function createBinaryElem() {
  */
 export class BinaryUI {
     /**
-     *
      * @param {HTMLElement} root
      */
     constructor(root) {
@@ -97,7 +96,7 @@ export class BinaryUI {
             const th = document.createElement('th');
             th.textContent = `B${key}`;
             const td = document.createElement('td');
-            td.dataset['test'] = `B${key}`;
+            td.dataset['test'] = `B${key}`; // for e2e
 
             // meta
             const { metaDataCode, decimal, hex, pointer } = createMetaElem();

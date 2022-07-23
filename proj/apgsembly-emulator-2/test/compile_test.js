@@ -23,9 +23,7 @@ test('Compile program9_2', () => {
     assertEquals(obj.lookup.length, 2);
 
     assertEquals(obj.lookup[0].nz, undefined);
-
-
-    assertEquals(obj.lookup[0].z.nextState, 1);
+    assertEquals(obj.lookup[0]?.z?.nextState, 1);
 
     assertEquals(obj.stateMap.size, 2);
     assertEquals(obj.stateMap.get("INITIAL"), 0);

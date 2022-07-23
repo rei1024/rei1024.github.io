@@ -1,28 +1,32 @@
+import { create } from "../util/create.js";
+
 // @ts-check
 
 /* style.cssで設定 */
 const CURRENT_STATE_CLASS = 'stats_current_state';
 
 /**
- * @param {string} name
+ * @param {string} stateName
  * @param {{ z: number, nz: number }} stat
  */
-function createRow(name, stat) {
-    const $tr = document.createElement('tr');
+function createRow(stateName, stat) {
     const $name = document.createElement('td');
-    if (true) {
-        const $code = document.createElement('code');
-        $code.textContent = name;
-        $name.colSpan = 2;
-        $name.append($code);
-    }
+    $name.colSpan = 2;
+    $name.append(create('code', $code => {
+        $code.textContent = stateName;
+    }));
 
     const $sum = document.createElement('td');
     $sum.textContent = (stat.z + stat.nz).toString();
+
     const $z = document.createElement('td');
     $z.textContent = stat.z.toString();
+
     const $nz = document.createElement('td');
     $nz.textContent = stat.nz.toString();
+
+    // row
+    const $tr = document.createElement('tr');
     $tr.append($name, $sum, $z, $nz);
 
     return { $tr, $sum, $z, $nz };

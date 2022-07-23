@@ -46,7 +46,7 @@ export class UnaryUI {
         for (const [key, value] of regs.entries()) {
             const td = document.createElement('td');
             td.textContent = value.getValue().toString();
-            td.dataset['test'] = `U${key}`;
+            td.dataset['test'] = `U${key}`; // for e2e
             cells.push(td);
             unaryData.appendChild(td);
         }

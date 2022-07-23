@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "strict": true,
         // "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
@@ -19,7 +20,7 @@
     "tasks": {
         "commit": "deno task fmt && deno task bundle && deno task t && git add . && git commit -m",
         // test
-        "t": "deno test --config=deno.jsonc",
+        "t": "deno test --config=deno.jsonc --parallel",
         // test with watcher
         "w": "deno test --watch --no-check --config=deno.jsonc",
         // formatting

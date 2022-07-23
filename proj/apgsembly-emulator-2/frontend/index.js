@@ -3,6 +3,7 @@
 // critical path
 import {} from "./util/selector.js";
 import {} from "./util/frequency.js";
+import {} from "./util/create.js";
 import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
@@ -21,7 +22,6 @@ import {
     $reset,
     $step,
     $configButton,
-    $statsButton,
     $frequencyInput,
     $b2dDetail,
     $unaryRegisterDetail,
@@ -80,9 +80,6 @@ const spinner = makeSpinner();
 
 // Step button
 $step.addEventListener('click', () => {
-    if ($step.disabled) {
-        return;
-    }
     // 時間がかかる時はスピナーを表示する
     // show a spinner
     if (app.stepConfig >= 5000000) {
@@ -107,21 +104,19 @@ const SRC_KEY = 'src';
 
 // サンプル
 $sampleCodes.forEach(e => {
-    if (!(e instanceof HTMLElement)) {
-        throw Error('is not HTMLElement');
-    }
-
-    e.addEventListener('click', () => {
+    e.addEventListener('click', async () => {
         $samples.style.opacity = "0.5";
         const src = e.dataset[SRC_KEY];
-        fetch(DATA_DIR + src).then(res => res.text()).then(text => {
+        try {
+            const response = await fetch(DATA_DIR + src);
+            const text = await response.text();
             $input.value = text;
             app.reset();
-        }).catch(() => {
+        } catch (_) {
             console.error(`Fetch Error: ${src}`);
-        }).finally(() => {
+        } finally {
             $samples.style.opacity = "1";
-        });
+        }
     });
 });
 
@@ -145,9 +140,9 @@ $frequencyInput.addEventListener('input', () => {
     if (!isNaN(value)) {
         const freq = frequencyArray[value] ?? DEFUALT_FREQUENCY;
         $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
-        app.cve.frequency = freq;
+        app.setFrequency(freq);
     } else {
-        app.cve.frequency = DEFUALT_FREQUENCY;
+        app.setFrequency(DEFUALT_FREQUENCY);
     }
 
     app.renderFrequencyOutput();
@@ -309,7 +304,6 @@ $input.addEventListener("drop", async (event) => {
 // ボタンの有効化
 $samples.disabled = false;
 $configButton.disabled = false;
-$statsButton.disabled = false;
 
 // 初回描画
 // first render
@@ -317,29 +311,26 @@ app.initializeApp();
 
 idle(() => {
     // 実行時間が掛かる処理をまとめる
-    if (localStorage.getItem(B2D_FLIP_UPSIDE_DOWN_KEY) === "true") {
-        $b2dFlipUpsideDown.checked = true;
-    }
-
-    if (localStorage.getItem(REVERSE_BINARY_KEY) === "true") {
-        $reverseBinary.checked = true;
-    }
-
-    if (localStorage.getItem(HIDE_BINARY_KEY) === "true") {
-        $hideBinary.checked = true;
-    }
-
     // デフォルトはtrue
     if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
         localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, 'true');
     }
 
-    if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === "true") {
-        $showBinaryValueInDecimal.checked = true;
-    }
+    /**
+     * @type {{ key: string; checkbox: HTMLInputElement}[]}
+     */
+    const items = [
+        { key: B2D_FLIP_UPSIDE_DOWN_KEY, checkbox: $b2dFlipUpsideDown },
+        { key: REVERSE_BINARY_KEY, checkbox: $reverseBinary },
+        { key: HIDE_BINARY_KEY, checkbox: $hideBinary },
+        { key: SHOW_BINARY_IN_DECIMAL_KEY, checkbox: $showBinaryValueInDecimal },
+        { key: SHOW_BINARY_IN_HEX_KEY, checkbox: $showBinaryValueInHex },
+    ];
 
-    if (localStorage.getItem(SHOW_BINARY_IN_HEX_KEY) === "true") {
-        $showBinaryValueInHex.checked = true;
+    for (const { key, checkbox } of items) {
+        if (localStorage.getItem(key) === "true") {
+            checkbox.checked = true;
+        }
     }
 
     // ダークモードについてはbodyタグ直下でも設定する
@@ -362,22 +353,16 @@ if (initCode !== null && initCode !== "") {
 
 // サンプルコードをプレフェッチ
 idle(() => {
-    try {
-        const saveData = getSaveData();
-        if (saveData === false || saveData === undefined) {
-            $sampleCodes.forEach(e => {
-                if (!(e instanceof HTMLElement)) {
-                    return;
-                }
-                const src = e.dataset[SRC_KEY];
-                if (src !== undefined) {
-                    prefetch(DATA_DIR + src);
-                }
-            });
-        }
-    } catch (e) {
-        console.error(e);
+    const saveData = getSaveData();
+    if (saveData) {
+        return;
     }
+    $sampleCodes.forEach(e => {
+        const src = e.dataset[SRC_KEY];
+        if (src !== undefined) {
+            prefetch(DATA_DIR + src);
+        }
+    });
 });
 
 // PWA

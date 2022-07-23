@@ -5,55 +5,35 @@
 import { integration } from "./integraion.js";
 import { downloadBlob } from "./download.js";
 import { initEditor, initMonaco } from "./apgm_monaco/init.js";
+import { setupCopy } from "./copy.js";
+import { $$ } from "./selector.js";
 
 initMonaco();
 
+const $examplesButton = $$("#examples", HTMLButtonElement);
 const $examples = document.querySelectorAll(".js_example");
 
-const $output = document.querySelector("#output");
-if (!($output instanceof HTMLTextAreaElement)) {
-    throw Error("$output");
-}
+const $output = $$("#output", HTMLTextAreaElement);
 
-const $compile = document.querySelector("#compile");
-if (!($compile instanceof HTMLButtonElement)) {
-    throw Error("$compile");
-}
+const $compile = $$("#compile", HTMLButtonElement);
 
-const $run = document.querySelector("#run");
-if (!($run instanceof HTMLButtonElement)) {
-    throw Error("$run");
-}
+const $run = $$("#run", HTMLButtonElement);
 
-const $copy = document.querySelector("#copy");
-if (!($copy instanceof HTMLButtonElement)) {
-    throw Error("$copy");
-}
+const $copy = $$("#copy", HTMLButtonElement);
 
-const $download = document.querySelector("#download");
-if (!($download instanceof HTMLButtonElement)) {
-    throw Error("$download");
-}
+const $download = $$("#download", HTMLButtonElement);
 
-const $error = document.querySelector("#error");
-if (!($error instanceof HTMLElement)) {
-    throw Error("$error");
-}
+const $error = $$("#error", HTMLElement);
 
-const $errorMsg = document.querySelector("#error_msg");
-if (!($errorMsg instanceof HTMLElement)) {
-    throw Error("$errorMsg");
-}
+const $errorMsg = $$("#error_msg", HTMLElement);
 
-const $prefix_input = document.querySelector("#prefix_input");
-if (!($prefix_input instanceof HTMLInputElement)) {
-    throw Error("$prefix_input");
-}
+const $prefix_input = $$("#prefix_input", HTMLInputElement);
 
-const $apgmInput = document.querySelector("#apgm_input");
-if (!($apgmInput instanceof HTMLElement)) {
-    throw Error("$apgmInput");
-}
+const $watchMode = $$("#watch_mode", HTMLInputElement);
+
+const $apgmInput = $$("#apgm_input", HTMLElement);
+
+const $configButton = $$("#config_button", HTMLButtonElement);
 
 const editor = initEditor($apgmInput);
 
@@ -76,7 +56,7 @@ export function showError(e) {
         });
         editor.revealLine(line);
     } catch (_e) {
-        // NOP
+        // ignore
     }
 }
 
@@ -88,7 +68,7 @@ const resetError = () => {
     $compile.style.backgroundColor = "";
 };
 
-const compile = () => {
+const compile = (withReaction = true) => {
     $output.value = "";
     resetError();
     try {
@@ -104,11 +84,15 @@ const compile = () => {
         $output.value = result;
         $download.disabled = false;
         $copy.disabled = false;
+        if (withReaction) {
+            $compile.style.backgroundColor = "var(--bs-success)";
+        }
         $output.style.borderColor = "var(--bs-success)";
-        $compile.style.backgroundColor = "var(--bs-success)";
         setTimeout(() => {
             $output.style.borderColor = "";
-            $compile.style.backgroundColor = "";
+            if (withReaction) {
+                $compile.style.backgroundColor = "";
+            }
         }, 500);
     } catch (e) {
         if (!(e instanceof Error)) {
@@ -119,8 +103,10 @@ const compile = () => {
         $error.style.display = "block";
         $download.disabled = true;
         $copy.disabled = true;
-        $apgmInput.style.borderColor = "#dc3545";
-        $apgmInput.style.borderWidth = "2px";
+        if (withReaction) {
+            $apgmInput.style.borderColor = "#dc3545";
+            $apgmInput.style.borderWidth = "2px";
+        }
         if (typeof e.apgmLocation !== "undefined") {
             showError(e);
         }
@@ -143,18 +129,7 @@ $run.addEventListener("click", () => {
     }
 });
 
-$copy.addEventListener("click", () => {
-    navigator.clipboard.writeText($output.value.trim()).then(() => {
-        $copy.textContent = "Copied";
-        $copy.classList.add("btn-success");
-        $copy.classList.remove("btn-primary");
-        setTimeout(() => {
-            $copy.textContent = "Copy";
-            $copy.classList.remove("btn-success");
-            $copy.classList.add("btn-primary");
-        }, 1000);
-    });
-});
+setupCopy($copy, () => $output.value.trim());
 
 $download.addEventListener("click", () => {
     downloadBlob(new Blob([$output.value]), "output.apg");
@@ -180,3 +155,22 @@ $examples.forEach((example) => {
             });
     });
 });
+
+/** @type {number | undefined} */
+let id = undefined;
+$watchMode.addEventListener("change", () => {
+    if ($watchMode.checked) {
+        id = setInterval(() => {
+            compile(false);
+        }, 500);
+    } else {
+        clearInterval(id);
+    }
+});
+
+$compile.disabled = false;
+$run.disabled = false;
+$examplesButton.disabled = false;
+$configButton.disabled = false;
+$copy.disabled = false;
+$download.disabled = false;

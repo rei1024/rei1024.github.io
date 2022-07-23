@@ -94,6 +94,7 @@ export class App {
         this.stepConfig = 1;
 
         /**
+         * @private
          * @readonly
          */
         this.cve = new CVE({ frequency: DEFUALT_FREQUENCY });
@@ -126,15 +127,17 @@ export class App {
     }
 
     /**
+     * @param {number} freq
+     */
+    setFrequency(freq) {
+        this.cve.frequency = freq;
+    }
+
+    /**
      * 初期化
      */
     initializeApp() {
-        try {
-            this.render();
-        } catch (e) {
-            console.error('first render failed');
-            console.log(e);
-        }
+        this.render();
     }
 
     /**
@@ -241,25 +244,29 @@ export class App {
         this.machine = undefined;
         this.cve.reset();
         const program = Program.parse($input.value);
+
         if (typeof program === "string") {
+            // Error
             this.appState = "ParseError";
             this.errorMessage = program;
             this.render();
-        } else {
-            try {
-                this.machine = new Machine(program);
-                this.onMachineSet();
-                this.appState = "Stop";
-                this.render();
-            } catch (e) {
-                this.appState = "ParseError";
-                if (e instanceof Error) {
-                    this.errorMessage = e.message;
-                } else {
-                    this.errorMessage = "Unknown error is occurred.";
-                }
-                this.render();
+            return;
+        }
+
+        // Parse success
+        try {
+            this.machine = new Machine(program);
+            this.onMachineSet();
+            this.appState = "Stop";
+        } catch (e) {
+            this.appState = "ParseError";
+            if (e instanceof Error) {
+                this.errorMessage = e.message;
+            } else {
+                this.errorMessage = "Unknown error is occurred.";
             }
+        } finally {
+            this.render();
         }
     }
 
@@ -295,6 +302,7 @@ export class App {
             $b2dx.textContent = "0";
             $b2dy.textContent = "0";
             context.clearRect(0, 0, $canvas.width, $canvas.height);
+            context.resetTransform();
             return;
         }
         const b2d = machine.actionExecutor.b2d;
@@ -319,30 +327,21 @@ export class App {
      * スライディングレジスタの表示
      */
     renderUnary() {
-        if (this.machine === undefined) {
-            return;
+        if (this.machine !== undefined && $unaryRegisterDetail.open) {
+            this.unaryUI.render(this.machine.actionExecutor.uRegMap);
         }
-        if (!$unaryRegisterDetail.open) {
-            return;
-        }
-        this.unaryUI.render(this.machine.actionExecutor.uRegMap);
     }
 
     /**
      * バイナリレジスタの表示
      */
     renderBinary() {
-        const machine = this.machine;
-        if (machine === undefined) {
-            return;
-        }
-
-        if (!$binaryRegisterDetail.open) {
+        if (this.machine === undefined || !$binaryRegisterDetail.open) {
             return;
         }
 
         this.binaryUI.render(
-            machine.actionExecutor.bRegMap,
+            this.machine.actionExecutor.bRegMap,
             $hideBinary.checked,
             $reverseBinary.checked,
             $showBinaryValueInDecimal.checked,
@@ -404,13 +403,7 @@ export class App {
         );
     }
 
-    /**
-     * 全体を描画する
-     */
-    render() {
-        // cve
-        this.cve.disabled = this.appState !== "Running";
-
+    renderButton() {
         // ボタンの有効無効
         switch (this.appState) {
             case "Initial": {
@@ -450,6 +443,16 @@ export class App {
                 break;
             }
         }
+    }
+
+    /**
+     * 全体を描画する
+     */
+    render() {
+        // cve
+        this.cve.disabled = this.appState !== "Running";
+
+        this.renderButton();
 
         // ParseErrorのときにエラー表示
         if (this.appState === "ParseError") {

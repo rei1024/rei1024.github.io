@@ -32,21 +32,39 @@ test('ActionExecutor setByRegistersInit', () => {
     assertEquals(x.uRegMap.size, 2);
     assertEquals(x.bRegMap.size, 2);
 
+    const bReg0 = x.getBReg(0);
+
+    if (bReg0 === undefined) {
+        throw Error('is undefined');
+    }
+
+    const bReg1 = x.getBReg(1);
+
+    if (bReg1 === undefined) {
+        throw Error('is undefined');
+    }
+
+    const uReg0 = x.getUReg(0);
+
+    if (uReg0 === undefined) {
+        throw Error('is undefined');
+    }
+
     x.setByRegistersInit({ B0: [0, '11010001'], B1: [2, '110'], U0: 8 });
     assertEquals(
-        [...x.getBReg(0).toBinaryString()].reverse().join(''),
+        [...bReg0.toBinaryString()].reverse().join(''),
         '11010001'
     );
-    assertEquals(x.getBReg(0).pointer, 0);
+    assertEquals(bReg0.pointer, 0);
     assertEquals(
-        [...x.getBReg(1).toBinaryString()].reverse().join(''),
+        [...bReg1.toBinaryString()].reverse().join(''),
         '110'
     );
-    assertEquals(x.getBReg(1).pointer, 2);
-    assertEquals(x.getUReg(0).getValue(), 8);
+    assertEquals(bReg1.pointer, 2);
+    assertEquals(uReg0.getValue(), 8);
 
-    x.getUReg(0).inc();
-    assertEquals(x.getUReg(0).getValue(), 9);
+    uReg0.inc();
+    assertEquals(uReg0.getValue(), 9);
 });
 
 test('ActionExecutor setByRegistersInit', () => {

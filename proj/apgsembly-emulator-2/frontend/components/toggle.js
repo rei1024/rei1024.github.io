@@ -5,7 +5,7 @@ const START = "Start";
 const STOP = "Stop";
 
 const primary = "btn-primary";
-const red = "btn-danger";
+const danger = "btn-danger";
 
 /**
  *
@@ -15,7 +15,7 @@ export function startButton($toggle) {
     $toggle.disabled = false;
     $toggle.textContent = START;
     $toggle.classList.add(primary);
-    $toggle.classList.remove(red);
+    $toggle.classList.remove(danger);
 }
 
 /**
@@ -35,5 +35,5 @@ export function stopButton($toggle) {
     $toggle.disabled = false;
     $toggle.textContent = STOP;
     $toggle.classList.remove(primary);
-    $toggle.classList.add(red);
+    $toggle.classList.add(danger);
 }

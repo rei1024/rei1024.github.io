@@ -60,12 +60,10 @@ rule.addEventListener('input', () => {
     comment = '';
 });
 
-const libraries = [peggLibrary, timLibrary, absLibrary];
+const allRules = peggLibrary.concat(timLibrary, absLibrary);
 
-for (const lib of libraries) {
-    for (const [ruleString, desc] of lib) {
-        addSample(ruleString, desc);
-    }
+for (const [ruleString, desc] of allRules) {
+    addSample(ruleString, desc);
 }
 
 function getInput() {

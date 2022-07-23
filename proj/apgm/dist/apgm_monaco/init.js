@@ -1,5 +1,7 @@
 // @ts-check
 
+/// <reference types="./monaco" />
+
 import { APGM_ID } from "./core.js";
 import { completionItemProvider } from "./completionItemProvider.js";
 import { monarchTokensProvider } from "./monarchTokensProvider.js";

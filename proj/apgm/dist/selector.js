@@ -1,15 +1,8 @@
-// @ts-check
-
 /**
- * Asserts that the element found by `selector` is a instance of `klass`
  * @type {<T extends Element>(selector: string, klass: new () => T) => T}
  * @throws {Error}
  */
-export function $type(selector, klass) {
-    if (typeof selector !== 'string') {
-        throw TypeError('selector is not a string');
-    }
-
+export function $$(selector, klass) {
     const el = document.querySelector(selector);
 
     if (el == null) {

@@ -86,6 +86,9 @@ export const $fileImport = $type('#import_file', HTMLInputElement);
 export const $samples = $type('#samples', HTMLButtonElement);
 
 // サンプルコード
+/**
+ * @type {NodeListOf<HTMLElement>}
+ */
 export const $sampleCodes = document.querySelectorAll('.js_sample');
 
 // --------- Modal --------- //

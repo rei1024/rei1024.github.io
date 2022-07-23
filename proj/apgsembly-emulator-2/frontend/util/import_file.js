@@ -6,6 +6,7 @@
  * @param {(_: string) => void} callback
  */
 export function importFileAsText($file, callback) {
+    const decoder = new TextDecoder();
     $file.addEventListener('input', (e) => {
         /** @type {File} */
         // @ts-ignore
@@ -14,7 +15,7 @@ export function importFileAsText($file, callback) {
             return;
         }
         file.arrayBuffer().then(buffer => {
-            callback(new TextDecoder().decode(buffer));
+            callback(decoder.decode(buffer));
         });
     });
 }

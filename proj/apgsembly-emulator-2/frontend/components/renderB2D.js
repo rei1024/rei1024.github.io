@@ -15,9 +15,11 @@ export function renderB2D(context, b2d, hidePointer, flipUpsideDown) {
     const prevHeight = context.canvas.height;
 
     if (width !== prevHeight) {
+        // make square
         context.canvas.height = width;
     }
 
+    // reset canvas
     context.clearRect(0, 0, width, width);
     context.resetTransform();
     context.beginPath();
@@ -48,7 +50,10 @@ export function renderB2D(context, b2d, hidePointer, flipUpsideDown) {
             }
         }
     }
+
     context.fill();
+
+    // draw pointer
     if (!hidePointer) {
         context.strokeStyle = "#03A9F4";
         context.lineWidth = 4;

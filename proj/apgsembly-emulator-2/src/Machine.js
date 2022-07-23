@@ -16,6 +16,7 @@ export { INITIAL_STATE };
 
 /**
  * エミュレーター
+ * プログラムと現在の状態、コンポーネントを保持する
  */
 export class Machine {
     /**
@@ -147,7 +148,7 @@ export class Machine {
 
     /**
      * @param {boolean} [logStats=false] 記録する
-     * @throws
+     * @throws internal error
      * @returns {CompiledCommandWithNextState}
      */
     getNextCompiledCommandWithNextState(logStats = false) {
