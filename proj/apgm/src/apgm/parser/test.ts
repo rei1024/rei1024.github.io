@@ -8,6 +8,7 @@ import {
     ifAPGMExpr,
     main,
     stringLit,
+macro,
 } from "./mod.ts";
 import { SeqAPGMExpr } from "../ast/mod.ts";
 import { assertEquals, assertThrows, test } from "../../deps_test.ts";
@@ -242,4 +243,14 @@ test("parser: pretty 2", () => {
 test("parser: pretty loop", () => {
     const value = apgmExpr().tryParse(`loop { f(1); g("2"); }`);
     assertEquals(value.pretty(), `loop {f(1); g("2"); }`);
+});
+
+test("parser: pretty macro", () => {
+    const value = macro().tryParse(`macro f!() { output("3"); }`);
+    assertEquals(value.pretty(), `macro f!() {output("3"); }`);
+});
+
+test("parser: pretty macro args", () => {
+    const value = macro().tryParse(`macro f!(x, y) { output("3"); }`);
+    assertEquals(value.pretty(), `macro f!(x, y) {output("3"); }`);
 });

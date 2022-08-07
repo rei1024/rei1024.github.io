@@ -39,10 +39,11 @@ export function completionParser(src: string): MacroDecl[] {
     const array: MacroDecl[] = [];
     // non-greedy
     // mod.tsとマクロ名の正規表現を合わせること
+    const MACRO_DECL_REGEXP =
+        /(macro\s+([a-zA-Z_][a-zA-Z_0-9]*?!)\s*\(.*?\))/gs;
+    const possibleMacroDecls = removeComment(src).matchAll(MACRO_DECL_REGEXP);
     for (
-        const match of removeComment(src).matchAll(
-            /(macro\s+([a-zA-Z_][a-zA-Z_0-9]*?!)\s*\(.*?\))/gs,
-        )
+        const match of possibleMacroDecls
     ) {
         const result = macroHead().parse(match[0]);
         if (result.type === "ParseOK") {
@@ -52,5 +53,6 @@ export function completionParser(src: string): MacroDecl[] {
             });
         }
     }
+
     return array;
 }

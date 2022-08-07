@@ -5,7 +5,14 @@ export abstract class APGMExpr {
     constructor() {
     }
 
+    /**
+     * Apply recursive transform
+     */
     abstract transform(f: (_: APGMExpr) => APGMExpr): APGMExpr;
+
+    /**
+     * Convert to string
+     */
     abstract pretty(): string;
 }
 

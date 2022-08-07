@@ -44,6 +44,7 @@
     .command_prefix {
         display: none;
     }
+
     #previous_output {
         text-align: right;
     }

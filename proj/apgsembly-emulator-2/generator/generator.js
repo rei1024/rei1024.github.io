@@ -26,11 +26,10 @@ if (!(copy instanceof HTMLButtonElement)) {
 
 /**
  *
- * @param {string} str
+ * @param {number} n
  * @returns {number | undefined}
  */
-function parseNum(str) {
-    const n = parseInt(str, 10);
+function validateNum(n) {
     if (isNaN(n)) {
         return undefined;
     }
@@ -45,6 +44,29 @@ function parseNum(str) {
     }
 
     return n;
+}
+
+/**
+ * @param {string} str
+ * @returns {number | undefined}
+ */
+function parseNum(str) {
+    str = str.trim();
+    // remove _
+    str = [...str].filter(x => x !== "_").join("");
+
+    if (str.startsWith("0b")) {
+        const n = parseInt(str.slice(2), 2);
+        return validateNum(n);
+    }
+
+    if (str.startsWith("0x")) {
+        const n = parseInt(str.slice(2), 16);
+        return validateNum(n);
+    }
+
+    const n = parseInt(str, 10);
+    return validateNum(n);
 }
 
 rule.addEventListener('input', () => {

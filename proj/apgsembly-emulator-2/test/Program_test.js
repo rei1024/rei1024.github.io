@@ -74,6 +74,51 @@ function parseProgramExpectError(str) {
     }
 }
 
+test('Program duplicated command NZ NZ', () => {
+    const str = `
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    parseProgramExpectError(str);
+});
+
+test('Program duplicated command * NZ', () => {
+    const str = `
+INITIAL; *; ID0; OUTPUT 3, NOP
+INITIAL; NZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    parseProgramExpectError(str);
+});
+
+test('Program duplicated command * Z', () => {
+    const str = `
+INITIAL; *; ID0; OUTPUT 3, NOP
+INITIAL; Z; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    parseProgramExpectError(str);
+});
+
+test('Program duplicated command ZZ Z', () => {
+    const str = `
+INITIAL; ZZ; ID0; OUTPUT 3, NOP
+INITIAL; Z; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    parseProgramExpectError(str);
+});
+
+test('Program command Z NZ different state', () => {
+    const str = `
+INITIAL; ZZ; ID0; OUTPUT 3, NOP
+ID0; Z; ID0; NOP
+ID1; NZ; ID0; NOP
+    `;
+    parseProgramExpectError(str);
+});
+
 test('Program empty', () => {
     const src = '';
     const errorMessage = parseProgramExpectError(src);

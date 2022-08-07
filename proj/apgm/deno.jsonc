@@ -32,6 +32,6 @@
         // bundle
         "bundle": "deno bundle src/integration/mod.ts dist/integraion.js",
         // coverage
-        "cov": "deno test --config=deno.jsonc --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov && genhtml -o coverage/html coverage.lcov && open coverage/html/index.html"
+        "cov": "rm ./coverage -r && rm ./coverage.lcov && deno test --config=deno.jsonc --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov && genhtml -o coverage/html coverage.lcov && open coverage/html/index.html"
     }
 }

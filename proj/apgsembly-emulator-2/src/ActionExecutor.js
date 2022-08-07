@@ -23,6 +23,15 @@ import { UReg } from "./components/UReg.js";
 import { LegacyTReg } from "./components/LegacyTReg.js";
 
 /**
+ * @param {string} type
+ * @param {number} regNum
+ * @returns {never}
+ */
+function throwNotFound(type, regNum) {
+    throw new Error(`Register ${type}${regNum} is not found.`);
+}
+
+/**
  * #REGISTERSのJSON
  * Uの場合はnumberのみ
  * Bのときはポインタとバイナリの文字列の配列である場合はそのまま設定する。
@@ -163,9 +172,11 @@ export class ActionExecutor {
         // SUB   2251968
         // NOP   3771596
         if (action instanceof BRegAction) {
-            return this.bRegMap.get(action.regNumber)?.action(action);
+            const bReg = this.bRegMap.get(action.regNumber) ?? throwNotFound("B", action.regNumber);
+            return bReg.action(action);
         } else if (action instanceof URegAction) {
-            return this.uRegMap.get(action.regNumber)?.action(action);
+            const uReg = this.uRegMap.get(action.regNumber) ?? throwNotFound("U", action.regNumber);
+            return uReg.action(action);
         } else if (action instanceof AddAction) {
             return this.add.action(action);
         } else if (action instanceof NopAction) {
@@ -181,7 +192,8 @@ export class ActionExecutor {
         } else if (action instanceof HaltOutAction) {
             return -1;
         } else if (action instanceof LegacyTRegAction) {
-            return this.legecyTRegMap.get(action.regNumber)?.action(action);
+            const tReg = this.legecyTRegMap.get(action.regNumber) ?? throwNotFound("T", action.regNumber);
+            return tReg.action(action);
         }
         throw Error(`execAction: unknown action ${action.pretty()}`);
     }

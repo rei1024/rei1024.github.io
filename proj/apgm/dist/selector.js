@@ -6,7 +6,7 @@ export function $$(selector, klass) {
     const el = document.querySelector(selector);
 
     if (el == null) {
-        throw Error(`can't found a element for "${selector}"`);
+        throw Error(`can't find a element for "${selector}"`);
     }
 
     if (el instanceof klass) {

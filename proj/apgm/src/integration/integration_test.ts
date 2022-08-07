@@ -87,3 +87,23 @@ test("integration 8", () => {
 `);
     assertEquals(output, ".".repeat(42));
 });
+
+test("integration 9", () => {
+    const output = runAPGM(`
+    repeat(2, output("1"));
+`);
+    assertEquals(output, "11");
+});
+
+test("integration 10", () => {
+    const output = runAPGM(`
+    macro g!(x) {
+        f!(x);
+    }
+    macro f!(x) {
+        output(x);
+    }
+    g!("1");
+`);
+    assertEquals(output, "1");
+});

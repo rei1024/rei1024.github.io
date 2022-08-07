@@ -8,6 +8,7 @@ test("parser: number", () => {
         ["0x10", 16],
         ["0xf", 15],
         ["0xF", 15],
+        ["0xff", 255],
     ];
     for (const [str, num] of array) {
         assertEquals(naturalNumberParser.tryParse(str), num);

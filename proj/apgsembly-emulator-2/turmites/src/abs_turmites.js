@@ -174,7 +174,7 @@ export class AbsTurmites {
             if (Array.isArray(obj)) {
                 return AbsTurmites.fromObject(obj);
             } else {
-                throw Error('Failed to parse');
+                throw Error(`Failed to parse "${str}"`);
             }
         } catch (e) {
             throw Error(`Failed to parse "${str}"`);

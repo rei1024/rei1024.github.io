@@ -71,8 +71,8 @@ export const curlyLeft = token("{").desc(["`{`"]);
 export const curlyRight = token("}").desc(["`}`"]);
 
 export const varAPGMExpr: bnb.Parser<VarAPGMExpr> = identifierWithLocation.map((
-    x,
-) => new VarAPGMExpr(x[0], x[1]));
+    [ident, loc],
+) => new VarAPGMExpr(ident, loc));
 
 function argExprs<T>(arg: () => bnb.Parser<T>): bnb.Parser<T[]> {
     return bnb.lazy(() => arg()).sepBy(comma).wrap(
@@ -126,7 +126,7 @@ const exprWithParen: bnb.Parser<APGMExpr> = bnb.lazy(() => apgmExpr()).wrap(
     rightParen,
 );
 
-export function whileAPGMExpr() {
+export function whileAPGMExpr(): bnb.Parser<WhileAPGMExpr> {
     return whileKeyword.chain((mod) => {
         return exprWithParen.chain((cond) => {
             return bnb.lazy(() => apgmExpr()).map((body) =>
@@ -136,7 +136,7 @@ export function whileAPGMExpr() {
     });
 }
 
-export function loopAPGMExpr() {
+export function loopAPGMExpr(): bnb.Parser<LoopAPGMExpr> {
     return token("loop").next(bnb.lazy(() => apgmExpr())).map((x) =>
         new LoopAPGMExpr(x)
     );
@@ -146,7 +146,7 @@ export const ifKeyword = bnb.choice(token("if_z"), token("if_nz")).map((x) =>
     x === "if_z" ? "Z" : "NZ"
 );
 
-export function ifAPGMExpr() {
+export function ifAPGMExpr(): bnb.Parser<IfAPGMExpr> {
     return ifKeyword.chain((mod) => {
         return exprWithParen.chain((cond) => {
             return bnb.lazy(() => apgmExpr()).chain((body) => {
@@ -205,7 +205,7 @@ export const header = bnb.text("#").next(bnb.match(/REGISTERS|COMPONENTS/))
         anythingLine.map((c) => new Header(x, c))
     );
 
-export const headers = _.next(header).skip(_).repeat();
+export const headers: bnb.Parser<Header[]> = _.next(header).skip(_).repeat();
 
 export function main(): bnb.Parser<Main> {
     return macro().repeat().chain((macros) => {

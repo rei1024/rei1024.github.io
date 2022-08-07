@@ -141,13 +141,14 @@ export class BinaryUI {
         let i = 0;
         const cells = this.cells;
         for (const reg of regs.values()) {
-            const binaryCacheElem = cells[i] ?? error();
-            const $prefix = binaryCacheElem.prefix;
-            const $head = binaryCacheElem.head;
-            const $suffix = binaryCacheElem.suffix;
-            const $decimal = binaryCacheElem.decimal;
-            const $pointer = binaryCacheElem.pointer;
-            const $hex = binaryCacheElem.hex;
+            const {
+                prefix: $prefix,
+                head: $head,
+                suffix: $suffix,
+                decimal: $decimal,
+                hex: $hex,
+                pointer: $pointer,
+            } = cells[i] ?? error();
 
             if (hideBinary) {
                 $prefix.textContent = '';

@@ -21,10 +21,10 @@ graph TD
 
 ### Requirements
 
-- `deno` above 1.20.1
+- `deno` above 1.24.0
   - https://deno.land/#installation
   - `file_server`
-    - `deno install --allow-net --allow-read -f https://deno.land/std@0.143.0/http/file_server.ts`
+    - `deno install --allow-net --allow-read -f https://deno.land/std@0.149.0/http/file_server.ts`
 
 ### Usage
 

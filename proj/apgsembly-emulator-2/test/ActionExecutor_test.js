@@ -1,6 +1,8 @@
 // @ts-check
 
 import { ActionExecutor } from '../src/ActionExecutor.js';
+import { URegAction, U_INC } from "../src/actions/URegAction.js";
+
 import { assertEquals, test, assertThrows } from './deps.js';
 
 test('ActionExecutor output', () => {
@@ -67,7 +69,7 @@ test('ActionExecutor setByRegistersInit', () => {
     assertEquals(uReg0.getValue(), 9);
 });
 
-test('ActionExecutor setByRegistersInit', () => {
+test('ActionExecutor setByRegistersInit 2', () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0, 1],
         binaryRegisterNumbers: [0, 1],
@@ -125,5 +127,19 @@ test('ActionExecutor setByRegistersInit error', () => {
     assertThrows(() => {
         // @ts-ignore expect type error
         x.setByRegistersInit({ B0: ['3', '11'] });
+    });
+});
+
+
+test('ActionExecutor register not found error', () => {
+    const x = new ActionExecutor({
+        unaryRegisterNumbers: [0],
+        binaryRegisterNumbers: [0],
+        legacyTRegisterNumbers: [],
+    });
+
+    assertEquals(x.execAction(new URegAction(U_INC, 0)), undefined);
+    assertThrows(() => {
+        x.execAction(new URegAction(U_INC, 1));
     });
 });

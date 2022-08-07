@@ -39,7 +39,7 @@ import {} from "./ProgramLines.js";
 import {} from "./validate.js";
 
 /**
- *
+ * used by APGM testing
  * @param {string} src
  * @returns {Machine}
  */

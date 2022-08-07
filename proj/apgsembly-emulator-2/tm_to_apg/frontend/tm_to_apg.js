@@ -64,16 +64,20 @@ $generate.addEventListener('click', () => {
     }
 
     $copy.disabled = false;
+    const header = [
+        `#COMPONENTS NOP,HALT_OUT,U0-2,B0-2`,
+        `# State    Input    Next state    Actions`,
+        `# ---------------------------------------`
+    ];
+
     if (comment !== '') {
         $output.value = [
             `# ${comment}`,
-            `#COMPONENTS NOP,HALT_OUT,U0-2,B0-2`,
-            `# State    Input    Next state    Actions`,
-            `# ---------------------------------------`,
+            ...header,
             apg
         ].join('\n');
     } else {
-        $output.value = [apg].join('\n');
+        $output.value = [...header, apg].join('\n');
     }
 });
 

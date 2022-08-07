@@ -36,7 +36,7 @@ function logged<T, S>(
 export function integration(
     str: string,
     options: TranspilerOptions = {},
-    log: boolean = false,
+    log = false,
 ): string[] {
     const apgm = logged(parseMain, str, log ? "apgm" : undefined);
     const expanded = logged(expand, apgm, log ? "apgm expaned" : undefined);

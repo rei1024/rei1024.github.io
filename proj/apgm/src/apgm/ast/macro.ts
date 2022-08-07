@@ -17,8 +17,8 @@ export class Macro {
     }
 
     pretty(): string {
-        return `${this.name}(${
+        return `macro ${this.name}(${
             this.args.map((x) => x.pretty()).join(", ")
-        }) ${this.body}`;
+        }) ${this.body.pretty()}`;
     }
 }

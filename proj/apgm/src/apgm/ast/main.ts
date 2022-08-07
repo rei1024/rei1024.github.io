@@ -8,10 +8,5 @@ export class Main {
         public readonly headers: Header[],
         public readonly seqExpr: SeqAPGMExpr,
     ) {
-        if (macros.length >= 1) {
-            if (!(macros[0] instanceof Macro)) {
-                throw TypeError("internal error");
-            }
-        }
     }
 }

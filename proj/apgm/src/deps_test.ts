@@ -1,9 +1,9 @@
 export {
     assertEquals,
     assertThrows,
-} from "https://deno.land/std@0.149.0/testing/asserts.ts";
+} from "https://deno.land/std@0.150.0/testing/asserts.ts";
 
-export { runAPGsembly } from "https://rei1024.github.io/proj/apgsembly-emulator-2/src/exports.js?2022_06_11";
+export { runAPGsembly } from "https://rei1024.github.io/proj/apgsembly-emulator-2/src/exports.js?2022_08_07";
 
 export function test(name: string, fn: () => void) {
     return Deno.test(name, fn);

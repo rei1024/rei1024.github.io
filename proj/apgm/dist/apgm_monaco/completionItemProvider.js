@@ -11,6 +11,11 @@ import {
     strArgFuncs,
 } from "../integraion.js";
 
+const SNIPPET = monaco.languages.CompletionItemKind.Snippet;
+const INSERT_AS_SNIPPET =
+    monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
+const FUNC_KIND = monaco.languages.CompletionItemKind.Function;
+
 // 再利用しない
 const fixedSuggestions = () => [
     {
@@ -29,30 +34,27 @@ const fixedSuggestions = () => [
     },
     {
         label: "if_z",
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: SNIPPET,
         insertText: ["if_z (${1:condition}) {", "\t$0", "}"].join("\n"),
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "if_z statement",
         detail: "if_z statement",
     },
     {
         label: "if_nz",
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: SNIPPET,
         insertText: ["if_nz (${1:condition}) {", "\t$0", "}"].join(
             "\n",
         ),
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "if_nz statement",
         detail: "if_nz statement",
     },
     {
         label: "else",
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: SNIPPET,
         insertText: ["else {", "\t$0", "}"].join("\n"),
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "else statement",
         detail: "else statement",
     },
@@ -60,66 +62,59 @@ const fixedSuggestions = () => [
         label: "else",
         kind: monaco.languages.CompletionItemKind.Keyword,
         insertText: "else",
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "else keyword",
         detail: "else keyword",
     },
     {
         label: "while_z",
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: SNIPPET,
         insertText: ["while_z (${1:condition}) {", "\t$0", "}"].join(
             "\n",
         ),
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "while_z statement",
         detail: "while_z statement",
     },
     {
         label: "while_nz",
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: SNIPPET,
         insertText: ["while_nz (${1:condition}) {", "\t$0", "}"].join(
             "\n",
         ),
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "while_nz statement",
         detail: "while_nz statement",
     },
     {
         label: "loop",
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: SNIPPET,
         insertText: ["loop {", "\t$0", "}"].join("\n"),
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "loop statement",
         detail: "loop statement",
     },
     {
         label: "macro",
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: SNIPPET,
         insertText: ["macro $1!($2) {", "\t$0", "}"].join("\n"),
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "macro definition",
         detail: "macro definition",
     },
     {
         label: "repeat",
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: SNIPPET,
         insertText: ["repeat(${1:number}, ${0:expression})"].join("\n"),
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "repeat expression",
         detail: "repeat expression",
     },
     {
         label: "break",
-        kind: monaco.languages.CompletionItemKind.Snippet,
+        kind: SNIPPET,
         insertText: ["break()"].join("\n"),
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule
-            .InsertAsSnippet,
+        insertTextRules: INSERT_AS_SNIPPET,
         documentation: "break expression",
         detail: "break expression",
     },
@@ -130,9 +125,6 @@ const fixedSuggestions = () => [
  * @returns {unknown[]}
  */
 function generateSuggestion(decls) {
-    const FUNC_KIND = monaco.languages.CompletionItemKind.Function;
-    const INSERT_AS_SNIPPET =
-        monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
     return decls.map((decl) => {
         const pretty = `macro ${decl.name}(${decl.args.join(", ")})`;
         const formattedArgs = decl.args.map((x, i) =>
@@ -151,6 +143,13 @@ function generateSuggestion(decls) {
 }
 
 export const completionItemProvider = {
+    /**
+     * @param {any} model
+     * @param {any} position
+     * @param {any} context
+     * @param {any} token
+     * @returns
+     */
     provideCompletionItems: (model, position, context, token) => {
         /** @type {string} */
         const str = model.getValue();
@@ -169,10 +168,9 @@ export const completionItemProvider = {
         for (const name of emptyArgFuncs.keys()) {
             suggestions.push({
                 label: name,
-                kind: monaco.languages.CompletionItemKind.Function,
+                kind: FUNC_KIND,
                 insertText: `${name}()`,
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule
-                    .InsertAsSnippet,
+                insertTextRules: INSERT_AS_SNIPPET,
                 documentation: `${name} expression`,
             });
         }
@@ -180,10 +178,9 @@ export const completionItemProvider = {
         for (const name of numArgFuncs.keys()) {
             suggestions.push({
                 label: name,
-                kind: monaco.languages.CompletionItemKind.Function,
+                kind: FUNC_KIND,
                 insertText: `${name}($0)`,
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule
-                    .InsertAsSnippet,
+                insertTextRules: INSERT_AS_SNIPPET,
                 documentation: `${name} expression`,
             });
         }
@@ -191,10 +188,9 @@ export const completionItemProvider = {
         for (const name of strArgFuncs.keys()) {
             suggestions.push({
                 label: name,
-                kind: monaco.languages.CompletionItemKind.Function,
+                kind: FUNC_KIND,
                 insertText: `${name}("$0")`,
-                insertTextRules: monaco.languages.CompletionItemInsertTextRule
-                    .InsertAsSnippet,
+                insertTextRules: INSERT_AS_SNIPPET,
                 documentation: `${name} expression`,
             });
         }
