@@ -50,7 +50,7 @@ function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
 
 export class MacroExpander {
     private readonly macroMap: Map<string, Macro>;
-    private count: number = 0;
+    private count = 0;
     private readonly maxCount: number = 100000;
     public readonly main: Main;
     constructor(main: Main) {

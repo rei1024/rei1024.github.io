@@ -1,3 +1,6 @@
+/*
+ * Print single digit of an Ux register
+ */
 macro print_digit_u!(x) {
     if_z (tdec_u(x)) {
         output("0");

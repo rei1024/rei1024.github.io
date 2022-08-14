@@ -40,6 +40,12 @@
     padding: 2px;
 }
 
+/* Bレジスタの現在位置 */
+.binary-head {
+    color: #0D47A1;
+    border-bottom: 3px solid #0D47A1;
+}
+
 @media screen and (max-width: 480px) {
     .command_prefix {
         display: none;
@@ -80,12 +86,17 @@
     transition: color .4s, background-color .4s;
 }
 
-body[apge_dark_mode="on"] :is(td, th, #steps) {
+body[apge_dark="on"] :is(td, th, #steps) {
     color: var(--dark-mode-color);
 }
 
-body[apge_dark_mode="on"] #canvas {
+body[apge_dark="on"] #canvas {
     filter: invert();
+}
+
+body[apge_dark="on"] .binary-head {
+    color: #438af4;
+    border-bottom-color: #438af4;
 }
 
 /* ライトモード */
@@ -93,7 +104,7 @@ body[apge_dark_mode="on"] #canvas {
     color: black;
 }
 
-body[apge_dark_mode="on"], body[apge_dark_mode="on"] :is(
+body[apge_dark="on"], body[apge_dark="on"] :is(
     .btn-primary,
     textarea.form-control,
     textarea.form-control:focus,
@@ -103,7 +114,7 @@ body[apge_dark_mode="on"], body[apge_dark_mode="on"] :is(
     color: var(--dark-mode-color);
 }
 
-body[apge_dark_mode="on"] :is(
+body[apge_dark="on"] :is(
     .modal-content,
     input[type=number],
     input[type=number]:focus,
@@ -117,11 +128,11 @@ body[apge_dark_mode="on"] :is(
 }
 
 /* 閉じるボタンを白くする */
-body[apge_dark_mode="on"] .btn-close {
+body[apge_dark="on"] .btn-close {
     background-color: var(--dark-mode-color);
 }
 
-body[apge_dark_mode="on"] #error {
+body[apge_dark="on"] #error {
     color: black;
     border-color: #CF6679;
     background-color: #CF6679;
@@ -132,8 +143,13 @@ body[apge_dark_mode="on"] #error {
     background-color: #e1f5fe;
 }
 
-body[apge_dark_mode="on"] .stats_current_state {
+body[apge_dark="on"] .stats_current_state {
     background-color: #333;
+}
+
+/* Statsのborderを薄くする */
+body[apge_dark="on"] #stats_modal .table > :not(caption) > * > * {
+    border-color: #999999;
 }
 
 /**** speedy animation ****/

@@ -16,12 +16,4 @@ export class NOP {
     action() {
         return 0;
     }
-
-    /**
-     *
-     * @returns {0}
-     */
-    nop() {
-        return 0;
-    }
 }

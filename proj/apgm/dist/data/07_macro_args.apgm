@@ -1,9 +1,11 @@
 /*
-    macro
+    # Complex macro
 */
 
-macro my_output!(x) {
+/* takes two strings and output them */
+macro my_output!(x, y) {
     output(x);
+    output(y);
 }
 
 macro twice!(x) {
@@ -12,4 +14,4 @@ macro twice!(x) {
 }
 
 /* using macro */
-twice!(my_output!("1"));
+twice!(my_output!("1", "2"));

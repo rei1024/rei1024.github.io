@@ -66,7 +66,7 @@ export class Machine {
         this.lookup = obj.lookup;
 
         /**
-         * @private
+         * 現在の状態の添字
          */
         this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ?? (() => {
             throw Error(`${INITIAL_STATE} state is not present`);
@@ -116,14 +116,6 @@ export class Machine {
             throw Error('State name is not found');
         }
         return name;
-    }
-
-    /**
-     * 現在の状態の添字を取得する
-     * @returns {number}
-     */
-    getCurrentStateIndex() {
-        return this.currentStateIndex;
     }
 
     /**
@@ -228,13 +220,14 @@ export class Machine {
             }`);
         }
 
-        // INITIALに返ってくることは禁止
         const nextStateIndex = compiledCommand.nextState;
-        if (nextStateIndex === this.initialIndex) {
-            throw Error(`Return to INITIAL state during execution: line = ${
-                compiledCommand.command.pretty()
-            }`);
-        }
+        // INITIALに返ってくることは禁止
+        // バリデーションしているので省く
+        // if (nextStateIndex === this.initialIndex) {
+        //     throw Error(`Return to INITIAL state during execution: line = ${
+        //         compiledCommand.command.pretty()
+        //     }`);
+        // }
         this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;
     }

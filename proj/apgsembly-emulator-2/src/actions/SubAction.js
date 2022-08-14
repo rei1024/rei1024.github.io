@@ -38,7 +38,7 @@ function prettyOp(op) {
  * @param {SubOpString} op
  * @returns {SubOp}
  */
- function parseOp(op) {
+function parseOp(op) {
     switch (op) {
         case SUB_A1_STRING: return SUB_A1;
         case SUB_B0_STRING: return SUB_B0;

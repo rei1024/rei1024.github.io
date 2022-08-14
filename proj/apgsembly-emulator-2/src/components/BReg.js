@@ -181,10 +181,11 @@ export class BReg {
      * @private
      */
     toString(base = 10) {
+        const binString = "0b" + this.toBinaryString();
         if (hasBigInt) {
-            return BigInt("0b" + this.toBinaryString()).toString(base);
+            return BigInt(binString).toString(base);
         } else {
-            return Number("0b" + this.toBinaryString()).toString(base);
+            return Number(binString).toString(base);
         }
     }
 

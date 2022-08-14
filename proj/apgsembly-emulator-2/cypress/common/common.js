@@ -53,9 +53,9 @@ export function assertError(msg) {
  * @param {string} src
  */
 export function loadProgram(src) {
-    cy.get('#samples').click();
+    cy.get('#examples').click();
     cy.get(`[data-src="${src}"]`).click();
-    cy.get('#samples').should('not.be.disabled'); // ロードされるまで待つ
+    cy.get('#examples').should('not.be.disabled'); // ロードされるまで待つ
     assertToggleStart();
 }
 

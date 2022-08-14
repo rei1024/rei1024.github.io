@@ -1,5 +1,5 @@
 /*
-    # while_z and while_nz
+    # Loop with condition
 
     ## syntax
     while_z (<expression>) <expression>

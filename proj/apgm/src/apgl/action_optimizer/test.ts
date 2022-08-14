@@ -198,6 +198,11 @@ test("optimize inner", () => {
         const after = new WhileAPGLExpr("Z", inner2, inner2);
         assertEquals(optimize(before), after);
     }
+    {
+        const before = new IfAPGLExpr(inner1, inner1, inner1);
+        const after = new IfAPGLExpr(inner2, inner2, inner2);
+        assertEquals(optimize(before), after);
+    }
 });
 
 test("optimize loop", () => {

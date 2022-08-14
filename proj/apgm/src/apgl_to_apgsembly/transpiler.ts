@@ -34,7 +34,7 @@ export class Context {
 type Line = string;
 
 export class Transpiler {
-    private id: number = 0;
+    private id = 0;
     private loopFinalStates: string[] = [];
     private readonly prefix: string;
 
@@ -274,7 +274,7 @@ export class Transpiler {
         }
 
         let cond: Line[] = [];
-        let condStartState = ctx.inputZNZ === "*"
+        const condStartState = ctx.inputZNZ === "*"
             ? ctx.input
             : this.getFreshName();
         if (ctx.inputZNZ !== "*") {

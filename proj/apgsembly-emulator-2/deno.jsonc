@@ -6,7 +6,7 @@
         "cy": "npm run cypress:open",
         "lint": "./node_modules/.bin/eslint .",
         "chore": "deno upgrade && npm audit && git gc",
-        "bundle": "deno bundle frontend/index.js bundle.js"
+        "bench": "deno bench --unstable --no-check test/bench.js"
     },
     "lint": {
         "files": {

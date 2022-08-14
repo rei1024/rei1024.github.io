@@ -44,10 +44,7 @@ function createBinaryElem() {
     $prefix.classList.add('prefix');
 
     const $head = document.createElement('span');
-    $head.style.color = "#0D47A1";
-    // 下線
-    $head.style.borderBottom = "3px solid #0D47A1";
-    $head.classList.add('head');
+    $head.classList.add("binary-head"); // style.cssで指定
 
     const $suffix = document.createElement('span');
     $suffix.classList.add('suffix');

@@ -1,5 +1,5 @@
 {
     "trailing-spaces.trimOnSave": true,
-    "deno.enable": true,
+    "deno.enable": false,
     "deno.config": "./deno.jsonc"
 }

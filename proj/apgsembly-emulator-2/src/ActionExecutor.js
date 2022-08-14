@@ -113,7 +113,7 @@ export class ActionExecutor {
     /**
      * `#REGISTERS`による初期化
      * @param {RegistersInit} regInit オブジェクト
-     * @throws
+     * @throws 不正な形式の場合
      */
     setByRegistersInit(regInit) {
         for (const [key, value] of Object.entries(regInit)) {

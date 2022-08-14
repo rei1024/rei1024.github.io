@@ -52,50 +52,6 @@ test('Machine INITIAL is not exist', () => {
     assertNewMachineThrows(str, Error, 'INITIAL state is not present');
 });
 
-test('Machine Program no return value', () => {
-    const str = `
-INITIAL; ZZ; ID0; OUTPUT 3
-ID0; ZZ; ID0; NOP
-    `;
-    const program = Program.parse(str);
-    assertEquals(
-        program,
-        'Does not produce the return value in "INITIAL; ZZ; ID0; OUTPUT 3"'
-    );
-});
-
-test('Machine Program return value twice', () => {
-    const str = `
-INITIAL; ZZ; ID0; NOP, TDEC U0
-ID0; ZZ; ID0; NOP
-    `;
-    const program = Program.parse(str);
-    assertEquals(
-        program,
-        'Does not contain exactly one action that produces a return value in ' +
-        '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
-        'Actions that produce value are "NOP", "TDEC U0"'
-        // 'The return value is returned more than once in ' +
-        // '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
-        // 'Actions that return a return value more than once are NOP, TDEC U0'
-    );
-});
-
-// > Also, the INITIAL state should never be
-//   returned to later in a program’s execution.
-// > It should be the first state, and only the first state.
-test('Machine INITIAL twice', () => {
-    const str = `
-INITIAL; ZZ; INITIAL; NOP
-    `;
-    const program = Program.parse(str);
-    if (typeof program === 'string') {
-        assertEquals(program, 'Return to initial state in "INITIAL; ZZ; INITIAL; NOP"');
-    } else {
-        throw Error('expect parse error');
-    }
-});
-
 test('Machine register header: single quotation support', () => {
     const str = `
 #REGISTERS {'U3': 2}

@@ -6,7 +6,7 @@
 
     <!-- CSP -->
     <!-- `data://*` is close button for modal -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net 'sha256-xYJ0eyX805nvgf5HIKl5CyP65vauWTNQ90lkobGlIOA='; img-src 'self' data://*; object-src 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net 'sha256-lzkzvGpRo6mB8ulsJYSQwSeWClMoDHToCPm1VS2kXcU='; img-src 'self' data://*; object-src 'none'">
 
     <title>APGsembly 2.0 Emulator</title>
 
@@ -17,9 +17,9 @@
     <script src="./frontend/index.js?ver=20220611" type="module"></script>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
 
     <!-- Bootstrapの下で読み込む -->
     <link rel="stylesheet" href="./style.css">
@@ -47,11 +47,11 @@
     <link rel="apple-touch-icon" href="./images/apple-touch-icon-180x180.png" sizes="180x180">
 </head>
 <body>
-    <!-- CSP hash 'sha256-xYJ0eyX805nvgf5HIKl5CyP65vauWTNQ90lkobGlIOA=' -->
+    <!-- CSP hash 'sha256-lzkzvGpRo6mB8ulsJYSQwSeWClMoDHToCPm1VS2kXcU=' -->
     <script>
         // Fix Dark mode flashing
-        if (localStorage.getItem('dark_mode') === "on") {
-            document.body.setAttribute('apge_dark_mode', "on");
+        if (localStorage.getItem("dark_mode") === "on") {
+            document.body.setAttribute("apge_dark", "on");
         }
     </script>
     <header class="text-center">
@@ -78,19 +78,19 @@
                 data-bs-toggle="modal" data-bs-target="#stats_modal">
                 Stats
             </button>
-            <button disabled type="button" class="btn btn-primary dropdown-toggle" id="samples" data-bs-toggle="dropdown" aria-expanded="false">Example</button>
-            <ul class="dropdown-menu" aria-labelledby="samples">
+            <button disabled type="button" class="btn btn-primary dropdown-toggle" id="examples" data-bs-toggle="dropdown" aria-expanded="false">Example</button>
+            <ul class="dropdown-menu" aria-labelledby="examples">
                 <li>
-                    <button class="dropdown-item js_sample" data-src="unary_multiply.apg">Unary register multiplication</button>
-                    <button class="dropdown-item js_sample" data-src="binary_ruler.apg">Binary ruler</button>
-                    <button class="dropdown-item js_sample" data-src="integers.apg">Integers</button>
-                    <button class="dropdown-item js_sample" data-src="sqrt_log_t.apg">O(sqrt(log(t)))</button>
-                    <button class="dropdown-item js_sample" data-src="rule90.apg">Rule 90</button>
-                    <button class="dropdown-item js_sample" data-src="rule110.apg">Rule 110</button>
-                    <button class="dropdown-item js_sample" data-src="ant2.apg">Langton's ant</button>
-                    <button class="dropdown-item js_sample" data-src="alien_counter.apg">Alien Counter</button>
-                    <button class="dropdown-item js_sample" data-src="koch.apg">Koch snowfrake</button>
-                    <button class="dropdown-item js_sample" data-src="pi_calc.apg">π Calculator</button>
+                    <button class="dropdown-item js_example" data-src="unary_multiply.apg">Unary register multiplication</button>
+                    <button class="dropdown-item js_example" data-src="binary_ruler.apg">Binary ruler</button>
+                    <button class="dropdown-item js_example" data-src="integers.apg">Integers</button>
+                    <button class="dropdown-item js_example" data-src="sqrt_log_t.apg">O(sqrt(log(t)))</button>
+                    <button class="dropdown-item js_example" data-src="rule90.apg">Rule 90</button>
+                    <button class="dropdown-item js_example" data-src="rule110.apg">Rule 110</button>
+                    <button class="dropdown-item js_example" data-src="ant2.apg">Langton's ant</button>
+                    <button class="dropdown-item js_example" data-src="alien_counter.apg">Alien Counter</button>
+                    <button class="dropdown-item js_example" data-src="koch.apg">Koch snowfrake</button>
+                    <button class="dropdown-item js_example" data-src="pi_calc.apg">π Calculator</button>
                 </li>
             </ul>
             <input id="import_file" type="file" class="d-none">
@@ -361,13 +361,13 @@
             </li>
             <li>
                 <a href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4192">
-                    Reverse engineering the phi and pi calculators - ConwayLife.com forums<!--
-            --></a>
+                    Reverse engineering the phi and pi calculators - ConwayLife.com forums
+                </a>
             </li>
             <li>
                 <a href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4196">
-                    Smaller Pi Calculator Challenge - ConwayLife.com forums<!--
-            --></a>
+                    Smaller Pi Calculator Challenge - ConwayLife.com forums
+                </a>
             </li>
         </ul>
     </footer>

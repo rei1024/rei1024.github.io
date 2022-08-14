@@ -6,5 +6,5 @@ import { assertEquals, test } from "../deps.js";
 
 test('NOP', () => {
     const x = new NOP();
-    assertEquals(x.nop(), 0);
+    assertEquals(x.action(), 0);
 });

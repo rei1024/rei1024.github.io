@@ -1,4 +1,7 @@
 import { APGMExpr } from "./core.ts";
+import { IfAPGMExpr } from "./if.ts";
+import { LoopAPGMExpr } from "./loop.ts";
+import { WhileAPGMExpr } from "./mod.ts";
 
 export class SeqAPGMExpr extends APGMExpr {
     constructor(
@@ -12,6 +15,20 @@ export class SeqAPGMExpr extends APGMExpr {
     }
 
     pretty(): string {
-        return `{${this.exprs.map((x) => x.pretty() + "; ").join("")}}`;
+        return `{${this.prettyInner()}}`;
+    }
+
+    prettyInner(): string {
+        return this.exprs.map((x) => {
+            if (x instanceof IfAPGMExpr) {
+                return x.pretty();
+            } else if (x instanceof LoopAPGMExpr) {
+                return x.pretty();
+            } else if (x instanceof WhileAPGMExpr) {
+                return x.pretty();
+            } else {
+                return x.pretty() + ";";
+            }
+        }).join("\n");
     }
 }

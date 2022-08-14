@@ -6,12 +6,12 @@ import {
     identifier,
     identifierOnly,
     ifAPGMExpr,
+    macro,
     main,
     stringLit,
-macro,
 } from "./mod.ts";
-import { SeqAPGMExpr } from "../ast/mod.ts";
 import { assertEquals, assertThrows, test } from "../../deps_test.ts";
+import { VarAPGMExpr } from "../ast/var.ts";
 
 test("parser: identifier", () => {
     const value = identifier.tryParse("abc");
@@ -95,8 +95,10 @@ test("parser: func", () => {
     for (const s of array) {
         const value = funcAPGMExpr().tryParse(s);
         assertEquals(value.name, "f");
-        // @ts-expect-error
-        assertEquals(value.args.map((x) => x.name), ["a", "b", "c"]);
+        assertEquals(
+            value.args.map((x) => x instanceof VarAPGMExpr ? x.name : ""),
+            ["a", "b", "c"],
+        );
     }
 });
 
@@ -215,18 +217,20 @@ test("parser: main", () => {
     ];
     for (const c of testCases) {
         const m = main().tryParse(c);
-        const seq = m.seqExpr;
-        // @ts-ignore
-        if (typeof seq.pretty === "function") {
-            // @ts-ignore
-            seq.pretty();
+        const mPretty = m.pretty();
+        try {
+            main().tryParse(mPretty);
+        } catch (error) {
+            throw Error(`Parse Error for: "${c}" -> "${mPretty}"`, {
+                cause: error instanceof Error ? error : undefined,
+            });
         }
     }
 });
 
 test("parser: main hex", () => {
     const res = main().tryParse(`f(0x10);`);
-    // @ts-ignore
+    // @ts-ignore complex
     assertEquals(res.seqExpr.exprs[0].args[0].value, 16);
 });
 
@@ -237,20 +241,20 @@ test("parser: pretty", () => {
 
 test("parser: pretty 2", () => {
     const value = apgmExpr().tryParse(`{ f(1); g("2"); }`);
-    assertEquals(value.pretty(), `{f(1); g("2"); }`);
+    assertEquals(value.pretty(), `{f(1);\ng("2");}`);
 });
 
 test("parser: pretty loop", () => {
     const value = apgmExpr().tryParse(`loop { f(1); g("2"); }`);
-    assertEquals(value.pretty(), `loop {f(1); g("2"); }`);
+    assertEquals(value.pretty(), `loop {f(1);\ng("2");}`);
 });
 
 test("parser: pretty macro", () => {
     const value = macro().tryParse(`macro f!() { output("3"); }`);
-    assertEquals(value.pretty(), `macro f!() {output("3"); }`);
+    assertEquals(value.pretty(), `macro f!() {output("3");}`);
 });
 
 test("parser: pretty macro args", () => {
     const value = macro().tryParse(`macro f!(x, y) { output("3"); }`);
-    assertEquals(value.pretty(), `macro f!(x, y) {output("3"); }`);
+    assertEquals(value.pretty(), `macro f!(x, y) {output("3");}`);
 });

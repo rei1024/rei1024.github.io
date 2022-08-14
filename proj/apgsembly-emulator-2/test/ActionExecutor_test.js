@@ -80,11 +80,15 @@ test('ActionExecutor setByRegistersInit 2', () => {
     assertEquals(x.bRegMap.size, 2);
 
     x.setByRegistersInit({ B0: 11 });
+    const bReg0 = x.getBReg(0);
+    if (bReg0 == undefined) {
+        throw Error('bReg0 is undefined');
+    }
     assertEquals(
-        [...x.getBReg(0).toBinaryString()].reverse().join(''),
+        [...bReg0.toBinaryString()].reverse().join(''),
         '1101'
     );
-    assertEquals(x.getBReg(0).pointer, 0);
+    assertEquals(bReg0.pointer, 0);
 });
 
 test('ActionExecutor setByRegistersInit error', () => {
@@ -127,6 +131,11 @@ test('ActionExecutor setByRegistersInit error', () => {
     assertThrows(() => {
         // @ts-ignore expect type error
         x.setByRegistersInit({ B0: ['3', '11'] });
+    });
+
+    assertThrows(() => {
+        // @ts-ignore expect type error
+        x.setByRegistersInit({ B0: {} });
     });
 });
 

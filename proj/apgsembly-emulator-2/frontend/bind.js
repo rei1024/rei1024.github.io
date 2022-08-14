@@ -83,13 +83,13 @@ export const $addSubMul = $type('#add_sub_mul', HTMLElement);
 // ファイルインポート
 export const $fileImport = $type('#import_file', HTMLInputElement);
 
-export const $samples = $type('#samples', HTMLButtonElement);
+export const $examples = $type('#examples', HTMLButtonElement);
 
 // サンプルコード
 /**
  * @type {NodeListOf<HTMLElement>}
  */
-export const $sampleCodes = document.querySelectorAll('.js_sample');
+export const $exampleCodes = document.querySelectorAll('.js_example');
 
 // --------- Modal --------- //
 

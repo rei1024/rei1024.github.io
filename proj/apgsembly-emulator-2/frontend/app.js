@@ -153,18 +153,17 @@ export class App {
                 if (this.appState === "Stop") {
                     this.appState = "Running";
                 }
-                this.render();
                 break;
             }
             case "Stop": {
                 this.appState = "Running";
-                this.render();
                 break;
             }
             default: {
                 throw Error('start: unreachable');
             }
         }
+        this.render();
     }
 
     /**
@@ -183,10 +182,9 @@ export class App {
     setUpUnary() {
         if (this.machine === undefined) {
             this.unaryUI.clear();
-            return;
+        } else {
+            this.unaryUI.initialize(this.machine.actionExecutor.uRegMap);
         }
-        const regs = this.machine.actionExecutor.uRegMap;
-        this.unaryUI.initialize(regs);
     }
 
     /**
@@ -196,9 +194,9 @@ export class App {
     setUpBinary() {
         if (this.machine === undefined) {
             this.binaryUI.clear();
-            return;
+        } else {
+            this.binaryUI.initialize(this.machine.actionExecutor.bRegMap);
         }
-        this.binaryUI.initialize(this.machine.actionExecutor.bRegMap);
     }
 
     /**
@@ -233,6 +231,15 @@ export class App {
         this.setUpBinary();
         this.setUpStats();
         this.setUpBreakpointSelect();
+    }
+
+    /**
+     * コードを変更してリセットする
+     * @param {string} text
+     */
+    setInputAndReset(text) {
+        $input.value = text;
+        this.reset();
     }
 
     /**
@@ -336,17 +343,15 @@ export class App {
      * バイナリレジスタの表示
      */
     renderBinary() {
-        if (this.machine === undefined || !$binaryRegisterDetail.open) {
-            return;
+        if (this.machine !== undefined && $binaryRegisterDetail.open) {
+            this.binaryUI.render(
+                this.machine.actionExecutor.bRegMap,
+                $hideBinary.checked,
+                $reverseBinary.checked,
+                $showBinaryValueInDecimal.checked,
+                $showBinaryValueInHex.checked
+            );
         }
-
-        this.binaryUI.render(
-            this.machine.actionExecutor.bRegMap,
-            $hideBinary.checked,
-            $reverseBinary.checked,
-            $showBinaryValueInDecimal.checked,
-            $showBinaryValueInHex.checked
-        );
     }
 
     /**
@@ -399,7 +404,7 @@ export class App {
         }
         this.statsUI.render(
             this.machine.stateStats,
-            this.machine.getCurrentStateIndex()
+            this.machine.currentStateIndex
         );
     }
 
@@ -531,7 +536,7 @@ export class App {
         let i = 0;
         const start = performance.now();
         try {
-            for (i = 0; i < steps; i++) {
+            for (; i < steps; i++) {
                 const res = machine.execCommand();
                 if (res === -1) {
                     this.appState = "Halted";
@@ -541,7 +546,7 @@ export class App {
                 }
                 // ブレークポイントの状態の場合、停止する
                 if (
-                    machine.getCurrentStateIndex() === breakpointIndex &&
+                    machine.currentStateIndex === breakpointIndex &&
                     (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
                 ) {
                     this.appState = "Stop";

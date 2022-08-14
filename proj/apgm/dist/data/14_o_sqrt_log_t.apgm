@@ -1,5 +1,5 @@
 /*
-  O(sqrt(log(t))) by APGM
+  # O(sqrt(log(t))) by APGM
 */
 
 /* Copy Ua to Ub */

@@ -5,7 +5,6 @@
  * @abstract
  */
 export class Action {
-
     /**
      * Convert to string
      * 文字列化する

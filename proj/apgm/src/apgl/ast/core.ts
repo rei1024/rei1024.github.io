@@ -1,5 +1,5 @@
 /**
- * Low level
+ * Low level expression
  */
 export abstract class APGLExpr {
     constructor() {

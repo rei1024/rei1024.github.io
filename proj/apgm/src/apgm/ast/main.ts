@@ -9,4 +9,10 @@ export class Main {
         public readonly seqExpr: SeqAPGMExpr,
     ) {
     }
+
+    pretty() {
+        return this.macros.map((m) => m.pretty()).join("\n") + "\n" +
+            this.headers.map((h) => h.toString()).join("\n") + "\n" +
+            this.seqExpr.prettyInner();
+    }
 }

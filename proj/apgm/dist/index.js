@@ -2,7 +2,7 @@
 
 // deno.enable = false
 
-import { integration } from "./integraion.js";
+import { integration } from "./integration.js";
 import { downloadBlob } from "./download.js";
 import { initEditor, initMonaco } from "./apgm_monaco/init.js";
 import { setupCopy } from "./copy.js";
@@ -119,7 +119,6 @@ $compile.addEventListener("click", () => {
 
 $run.addEventListener("click", () => {
     compile();
-    // @ts-ignore
     if (!$copy.disabled) {
         const url = new URL(
             "https://rei1024.github.io/proj/apgsembly-emulator-2/",

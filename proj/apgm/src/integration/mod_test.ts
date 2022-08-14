@@ -13,6 +13,7 @@ test("exports", () => {
     assertEquals(emptyArgFuncs instanceof Map, true);
     assertEquals(numArgFuncs instanceof Map, true);
     assertEquals(strArgFuncs instanceof Map, true);
+    assertEquals(typeof completionParser, "function");
 });
 
 const comment = [
@@ -71,7 +72,7 @@ test("integration output non string", () => {
     output(1);
     `;
     assertThrows(() => {
-        const res = integration(src);
+        integration(src);
     });
 });
 

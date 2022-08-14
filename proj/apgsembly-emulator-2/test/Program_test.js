@@ -247,6 +247,48 @@ test('Program Z and NZ 2', () => {
     );
 });
 
+
+test('Program no return value', () => {
+    const str = `
+INITIAL; ZZ; ID0; OUTPUT 3
+ID0; ZZ; ID0; NOP
+    `;
+    const errorMessage = parseProgramExpectError(str);
+    assertEquals(
+        errorMessage,
+        'Does not produce the return value in "INITIAL; ZZ; ID0; OUTPUT 3"'
+    );
+});
+
+test('Program return value twice', () => {
+    const str = `
+INITIAL; ZZ; ID0; NOP, TDEC U0
+ID0; ZZ; ID0; NOP
+    `;
+    const errorMessage = parseProgramExpectError(str);
+    assertEquals(
+        errorMessage,
+        'Does not contain exactly one action that produces a return value in ' +
+        '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
+        'Actions that produce value are "NOP", "TDEC U0"'
+        // 'The return value is returned more than once in ' +
+        // '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
+        // 'Actions that return a return value more than once are NOP, TDEC U0'
+    );
+});
+
+// > Also, the INITIAL state should never be
+//   returned to later in a program’s execution.
+// > It should be the first state, and only the first state.
+test('Program INITIAL twice', () => {
+    const str = `
+INITIAL; ZZ; INITIAL; NOP
+    `;
+    const errorMessage = parseProgramExpectError(str);
+
+    assertEquals(errorMessage, 'Return to initial state in "INITIAL; ZZ; INITIAL; NOP"');
+});
+
 test('Program pretty program9_1', () => {
     const program = Program.parse(program9_1);
     if (program instanceof Program) {

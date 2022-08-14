@@ -1,7 +1,7 @@
 import { APGLExpr } from "./core.ts";
 
 export class BreakAPGLExpr extends APGLExpr {
-    private kind: string = "break";
+    private kind = "break";
     /**
      * @param level default is 1
      */

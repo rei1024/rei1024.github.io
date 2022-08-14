@@ -8,6 +8,7 @@ import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
 import {} from "./components/stats_ui.js";
+import { setupFrequencyInput } from "./components/frequency_input.js";
 
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { makeSpinner } from "./util/spinner.js";
@@ -27,8 +28,8 @@ import {
     $unaryRegisterDetail,
     $binaryRegisterDetail,
     $fileImport,
-    $sampleCodes,
-    $samples,
+    $exampleCodes,
+    $examples,
 
     // Modal
     $configModalContent,
@@ -76,13 +77,13 @@ $toggle.addEventListener('click', () => {
     }
 });
 
-const spinner = makeSpinner();
-
 // Step button
 $step.addEventListener('click', () => {
     // 時間がかかる時はスピナーを表示する
     // show a spinner
     if (app.stepConfig >= 5000000) {
+        const spinner = makeSpinner();
+
         $step.append(spinner);
         $step.disabled = true;
 
@@ -103,50 +104,23 @@ $step.addEventListener('click', () => {
 const SRC_KEY = 'src';
 
 // サンプル
-$sampleCodes.forEach(e => {
+$exampleCodes.forEach(e => {
     e.addEventListener('click', async () => {
-        $samples.style.opacity = "0.5";
+        $examples.style.opacity = "0.5";
         const src = e.dataset[SRC_KEY];
         try {
             const response = await fetch(DATA_DIR + src);
-            const text = await response.text();
-            $input.value = text;
-            app.reset();
+            app.setInputAndReset(await response.text());
         } catch (_) {
             console.error(`Fetch Error: ${src}`);
         } finally {
-            $samples.style.opacity = "1";
+            $examples.style.opacity = "1";
         }
     });
 });
 
 // 周波数の設定
-/** @type {number[]} */
-const frequencyArray = [];
-for (let i = 0; i < 7; i++) {
-    const base = 10 ** i;
-    for (let j = 1; j <= 9; j++) {
-        frequencyArray.push(base * j);
-    }
-}
-
-frequencyArray.push(10 ** 7);
-
-$frequencyInput.min = "0";
-$frequencyInput.max = (frequencyArray.length - 1).toString();
-
-$frequencyInput.addEventListener('input', () => {
-    const value = parseInt($frequencyInput.value, 10);
-    if (!isNaN(value)) {
-        const freq = frequencyArray[value] ?? DEFUALT_FREQUENCY;
-        $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
-        app.setFrequency(freq);
-    } else {
-        app.setFrequency(DEFUALT_FREQUENCY);
-    }
-
-    app.renderFrequencyOutput();
-});
+setupFrequencyInput($frequencyInput, app, DEFUALT_FREQUENCY);
 
 // 開閉で描画
 $b2dDetail.addEventListener('toggle', () => {
@@ -163,8 +137,7 @@ $unaryRegisterDetail.addEventListener('toggle', () => {
 
 // ファイルインポート
 importFileAsText($fileImport, result => {
-    $input.value = result;
-    app.reset();
+    app.setInputAndReset(result);
 });
 
 // ** Modal ** //
@@ -180,34 +153,29 @@ $stepInput.addEventListener('input', () => {
     }
 });
 
+/**
+ * @param {HTMLInputElement} $checkbox
+ * @param {string} key
+ */
+function setupCheckbox($checkbox, key) {
+    $checkbox.addEventListener("change", () => {
+        app.render();
+        localStorage.setItem(key, $checkbox.checked.toString());
+    });
+}
+
 // バイナリを非表示にする
 const HIDE_BINARY_KEY = 'hide_binary';
-
-$hideBinary.addEventListener('change', () => {
-    app.renderBinary();
-    localStorage.setItem(HIDE_BINARY_KEY, $hideBinary.checked.toString());
-});
+setupCheckbox($hideBinary, HIDE_BINARY_KEY);
 
 const REVERSE_BINARY_KEY = 'reverse_binary';
-
-$reverseBinary.addEventListener('change', () => {
-    app.renderBinary();
-    localStorage.setItem(REVERSE_BINARY_KEY, $reverseBinary.checked.toString());
-});
+setupCheckbox($reverseBinary, REVERSE_BINARY_KEY);
 
 const SHOW_BINARY_IN_DECIMAL_KEY = 'show_binary_in_decimal';
-
-$showBinaryValueInDecimal.addEventListener('change', () => {
-    app.renderBinary();
-    localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, $showBinaryValueInDecimal.checked.toString());
-});
+setupCheckbox($showBinaryValueInDecimal, SHOW_BINARY_IN_DECIMAL_KEY);
 
 const SHOW_BINARY_IN_HEX_KEY = 'show_binary_in_hex';
-
-$showBinaryValueInHex.addEventListener('change', () => {
-    app.renderBinary();
-    localStorage.setItem(SHOW_BINARY_IN_HEX_KEY, $showBinaryValueInHex.checked.toString());
-});
+setupCheckbox($showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
 
 // B2D
 $b2dHidePointer.addEventListener('change', () => {
@@ -215,14 +183,7 @@ $b2dHidePointer.addEventListener('change', () => {
 });
 
 const B2D_FLIP_UPSIDE_DOWN_KEY = 'b2d_flip_upside_down';
-
-$b2dFlipUpsideDown.addEventListener('change', () => {
-    localStorage.setItem(
-        B2D_FLIP_UPSIDE_DOWN_KEY,
-        $b2dFlipUpsideDown.checked.toString()
-    );
-    app.renderB2D();
-});
+setupCheckbox($b2dFlipUpsideDown, B2D_FLIP_UPSIDE_DOWN_KEY);
 
 // showの場合クラスが追加されない
 $statsModal.addEventListener('shown.bs.modal', () => {
@@ -235,10 +196,11 @@ const DARK_MODE_KEY = 'dark_mode';
 $darkMode.addEventListener('change', () => {
     const onOrOff = $darkMode.checked ? "on" : "off";
     localStorage.setItem(DARK_MODE_KEY, onOrOff);
-    document.body.setAttribute('apge_dark_mode', onOrOff);
+    document.body.setAttribute('apge_dark', onOrOff);
 
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
 
+    // アニメーションを付与
     const ANIMATE = "animate-color-and-background-color";
     document.body.classList.add(ANIMATE);
     $configModalContent.classList.add(ANIMATE);
@@ -254,8 +216,8 @@ $darkMode.addEventListener('change', () => {
 // Space: Step
 document.addEventListener('keydown', e => {
     const activeElementTagName =
-        document.activeElement?.tagName.toUpperCase() ?? "";
-    const tags = ["TEXTAREA", "INPUT", "DETAILS", "BUTTON", "AUDIO", "VIDEO", "SELECT", "OPTION"];
+        document.activeElement?.tagName.toLowerCase() ?? "";
+    const tags = ["textarea", "input", "details", "button", "audio", "video", "select", "option"];
     // 入力中は無し
     if (tags.includes(activeElementTagName)) {
         return;
@@ -289,20 +251,15 @@ document.addEventListener('keydown', e => {
 $input.addEventListener("drop", async (event) => {
     event.preventDefault();
     const file = event.dataTransfer?.files.item(0);
-    if (file == null) {
+    if (file == undefined) {
         return;
     }
 
-    const text = await file.text();
-    if (text === undefined) {
-        return;
-    }
-    $input.value = text;
-    app.reset();
+    app.setInputAndReset(await file.text());
 });
 
 // ボタンの有効化
-$samples.disabled = false;
+$examples.disabled = false;
 $configButton.disabled = false;
 
 // 初回描画
@@ -313,7 +270,7 @@ idle(() => {
     // 実行時間が掛かる処理をまとめる
     // デフォルトはtrue
     if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
-        localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, 'true');
+        localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, "true");
     }
 
     /**
@@ -334,8 +291,9 @@ idle(() => {
     }
 
     // ダークモードについてはbodyタグ直下でも設定する
+    // チェックボタンはここで処理する
     if (localStorage.getItem(DARK_MODE_KEY) === "on") {
-        document.body.setAttribute('apge_dark_mode', "on");
+        document.body.setAttribute('apge_dark', "on");
         $darkMode.checked = true;
         $darkModeLabel.textContent = "On";
     }
@@ -347,8 +305,7 @@ const INIT_CODE = "initial_code";
 const initCode = localStorage.getItem(INIT_CODE);
 if (initCode !== null && initCode !== "") {
     localStorage.removeItem(INIT_CODE);
-    $input.value = initCode;
-    app.reset();
+    app.setInputAndReset(initCode);
 }
 
 // サンプルコードをプレフェッチ
@@ -357,7 +314,7 @@ idle(() => {
     if (saveData) {
         return;
     }
-    $sampleCodes.forEach(e => {
+    $exampleCodes.forEach(e => {
         const src = e.dataset[SRC_KEY];
         if (src !== undefined) {
             prefetch(DATA_DIR + src);

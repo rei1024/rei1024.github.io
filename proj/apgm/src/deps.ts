@@ -5,4 +5,5 @@ export {
     HaltOutAction,
     NopAction,
     parseAction,
-} from "https://rei1024.github.io/proj/apgsembly-emulator-2/src/exports.js?2022_06_11";
+    runAPGsembly,
+} from "https://rei1024.github.io/proj/apgsembly-emulator-2/src/exports.js?2022_08_14";

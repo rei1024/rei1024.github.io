@@ -1,5 +1,5 @@
 /*
-    macro
+    # Macro
 */
 
 macro macro_in_macro!() {

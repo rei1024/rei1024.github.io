@@ -13,6 +13,7 @@ import {
     assertSteps,
     assertStepsNot,
     toggleSel,
+    assertError,
 } from "../common/common.js";
 
 const outputSelector = '#output';
@@ -34,7 +35,7 @@ describe('Run APGsembly', () => {
         cy.get('#step').should('not.be.disabled');
         cy.get('#current_state').should('have.text', 'INITIAL');
         cy.get(`[data-test="U0"]`).should('have.text', '0');
-        cy.get('#error').should('have.text', '');
+        assertError('');
     });
 
     it('shold run', () => {
@@ -52,7 +53,7 @@ describe('Error: empty program', () => {
         cy.contains('APGsembly');
         assertToggleStart();
         cy.get(toggleSel).click();
-        cy.get('#error').should('have.text', '- Program is empty');
+        assertError('- Program is empty');
     });
 });
 
@@ -72,7 +73,7 @@ describe('unary_multiply.apg', () => {
         assertSteps(93);
         cy.get(`[data-test="U2"]`).should('have.text', '35');
 
-        cy.get('#error').should('have.text', '');
+        assertError('');
     });
 });
 
@@ -88,7 +89,7 @@ describe('Integers', () => {
         cy.get(outputSelector).should('have.value', '1.2.3.4.5.6.7.8.9.10');
         assertSteps(1050);
 
-        cy.get('#error').should('have.text', '');
+        assertError('');
     });
 });
 
@@ -113,7 +114,7 @@ describe('π calculator', () => {
 
         cy.get(`[data-test="B0"]`).should('have.text', 'value = 243290200817664000, pointer = 1340000000000000000010010001011000001100100111010100000011011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
 
-        cy.get('#error').should('have.text', '');
+        assertError('');
     });
 });
 
@@ -132,7 +133,7 @@ describe('Rule 110', () => {
 
         cy.get('#command').should('have.text', 'NEXT_S000_WRITE_1; *; NEXT_S00_CHECK0_1; INC B2DX, NOP');
 
-        cy.get('#error').should('have.text', '');
+        assertError('');
     });
 });
 
@@ -151,14 +152,14 @@ describe('Start Stop Reset', () => {
         cy.get(toggleSel).click();
         assertStepsNot(0);
 
-        cy.get('#error').should('have.text', '');
+        assertError('');
     });
 
     it('Reset', () => {
         cy.get('#reset').click();
         assertSteps(0);
 
-        cy.get('#error').should('have.text', '');
+        assertError('');
     });
 });
 
@@ -177,6 +178,6 @@ describe('Error Steps', () => {
         clickStep();
         assertSteps(3);
 
-        cy.get('#error').should('have.text', `- The bit of binary register is already 1: bits = 1, pointer = 0`);
+        assertError('- The bit of binary register is already 1: bits = 1, pointer = 0');
     });
 });

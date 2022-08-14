@@ -1,5 +1,8 @@
 import { APGLExpr } from "./core.ts";
 
+/**
+ * Sequential expression
+ */
 export class SeqAPGLExpr extends APGLExpr {
     constructor(public readonly exprs: APGLExpr[]) {
         super();

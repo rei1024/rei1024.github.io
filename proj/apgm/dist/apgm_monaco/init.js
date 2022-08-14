@@ -27,8 +27,8 @@ export function initMonaco() {
  */
 export function initEditor(container) {
     const editor = monaco.editor.create(container, {
-        value: ``,
-        language: "apgm",
+        value: "",
+        language: APGM_ID,
         theme: "vs-dark",
         // https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IStandaloneEditorConstructionOptions.html#suggest
         suggest: {

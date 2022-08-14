@@ -1,5 +1,5 @@
 /*
-    # macro
+    # Macro declaration
 
     ## syntax
     macro <macro_name>(<macro_variable>*) <expression>

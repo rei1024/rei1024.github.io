@@ -14,6 +14,7 @@ export class Program {
      * @param {{
      *   programLines: ProgramLines
      * }} param0
+     * @throw Error
      */
     constructor({
         programLines,

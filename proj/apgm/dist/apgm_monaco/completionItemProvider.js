@@ -9,7 +9,7 @@ import {
     emptyArgFuncs,
     numArgFuncs,
     strArgFuncs,
-} from "../integraion.js";
+} from "../integration.js";
 
 const SNIPPET = monaco.languages.CompletionItemKind.Snippet;
 const INSERT_AS_SNIPPET =

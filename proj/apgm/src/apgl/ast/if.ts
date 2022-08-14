@@ -1,10 +1,15 @@
 import { APGLExpr } from "./core.ts";
 
+/**
+ * if expression
+ */
 export class IfAPGLExpr extends APGLExpr {
     constructor(
         public readonly cond: APGLExpr,
-        public readonly thenBody: APGLExpr, // Z
-        public readonly elseBody: APGLExpr, // NZ
+        /** Z */
+        public readonly thenBody: APGLExpr,
+        /** NZ */
+        public readonly elseBody: APGLExpr,
     ) {
         super();
     }

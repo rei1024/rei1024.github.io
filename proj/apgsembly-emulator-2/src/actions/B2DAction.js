@@ -104,11 +104,13 @@ export class B2DAction extends Action {
      */
     constructor(op, axis) {
         super();
+
         /**
          * @type {B2DOp}
          * @readonly
          */
         this.op = op;
+
         /**
          * @type {B2DAxis}
          * @readonly

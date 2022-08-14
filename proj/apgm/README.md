@@ -23,8 +23,6 @@ graph TD
 
 - `deno` above 1.24.0
   - https://deno.land/#installation
-  - `file_server`
-    - `deno install --allow-net --allow-read -f https://deno.land/std@0.149.0/http/file_server.ts`
 
 ### Usage
 

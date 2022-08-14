@@ -17,7 +17,7 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
-        // "exactOptionalPropertyTypes": true,
+        "exactOptionalPropertyTypes": true,
         "useUnknownInCatchVariables": true,
         "noPropertyAccessFromIndexSignature": true,
         "noUncheckedIndexedAccess": true,
