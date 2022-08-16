@@ -16,7 +16,6 @@ import {} from "./actions/LegacyTRegAction.js";
 import {} from "./components/ADD.js";
 import {} from "./components/B2D.js";
 import {} from "./components/BReg.js";
-import {} from "./components/HALT_OUT.js";
 import {} from "./components/MUL.js";
 import {} from "./components/NOP.js";
 import {} from "./components/OUTPUT.js";
@@ -45,7 +44,7 @@ import {} from "./validate.js";
  */
 export function runAPGsembly(src) {
     const program = Program.parse(src);
-    if (typeof program === 'string') {
+    if (typeof program === "string") {
         throw new Error(program);
     }
 

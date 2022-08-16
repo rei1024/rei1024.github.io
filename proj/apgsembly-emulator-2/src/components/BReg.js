@@ -57,10 +57,49 @@ export class BReg {
             // TDEC 3217502
             // READ 3175344
             // SET   406844
-            case B_TDEC: return this.tdec();
-            case B_INC: return this.inc();
-            case B_READ: return this.read();
-            case B_SET: return this.set();
+            case B_TDEC: {
+                if (this.pointer === 0) {
+                    return 0;
+                } else {
+                    this.pointer--;
+                    return 1;
+                }
+            }
+            case B_INC: {
+                this.pointer++;
+                // using invariant
+                if (this.pointer === this.bits.length) {
+                    this.bits.push(0);
+                }
+                break;
+            }
+            case B_READ: {
+                const pointer = this.pointer;
+                const bits = this.bits;
+                if (pointer < bits.length) {
+                    const value = bits[pointer] ?? this.error();
+                    bits[pointer] = 0;
+                    return value;
+                } else {
+                    return 0;
+                }
+            }
+            case B_SET: {
+                const bits = this.bits;
+                const pointer = this.pointer;
+                if (pointer >= bits.length) {
+                    this.extend();
+                }
+                const value = bits[pointer];
+                if (value === 1) {
+                    throw Error(
+                        'The bit of binary register is already 1: bits = ' +
+                        bits.join('') + ", pointer = " + pointer
+                    );
+                }
+                bits[pointer] = 1;
+                break;
+            }
             default: throw Error('BReg action: ' + act.op);
         }
     }
@@ -85,11 +124,11 @@ export class BReg {
      * @returns {void}
      */
     inc() {
-        this.pointer++;
-        // using invariant
-        if (this.pointer === this.bits.length) {
-            this.bits.push(0);
+        const value = this.action(new BRegAction(B_INC, 0)); // regNumberは仮
+        if (value !== undefined) {
+            throw Error('internal error');
         }
+        return value;
     }
 
     /**
@@ -97,12 +136,11 @@ export class BReg {
      * @returns {0 | 1}
      */
     tdec() {
-        if (this.pointer === 0) {
-            return 0;
-        } else {
-            this.pointer--;
-            return 1;
+        const value = this.action(new BRegAction(B_TDEC, 0)); // regNumberは仮
+        if (value === undefined) {
+            throw Error('internal error');
         }
+        return value;
     }
 
     /**
@@ -110,15 +148,11 @@ export class BReg {
      * @returns {0 | 1}
      */
     read() {
-        const pointer = this.pointer;
-        const bits = this.bits;
-        if (pointer < bits.length) {
-            const value = bits[pointer] ?? this.error();
-            bits[pointer] = 0;
-            return value;
-        } else {
-            return 0;
+        const value = this.action(new BRegAction(B_READ, 0)); // regNumberは仮
+        if (value === undefined) {
+            throw Error('internal error');
         }
+        return value;
     }
 
     /**
@@ -126,19 +160,11 @@ export class BReg {
      * @returns {void}
      */
     set() {
-        const bits = this.bits;
-        const pointer = this.pointer;
-        if (pointer >= bits.length) {
-            this.extend();
+        const value = this.action(new BRegAction(B_SET, 0)); // regNumberは仮
+        if (value !== undefined) {
+            throw Error('internal error');
         }
-        const value = bits[pointer];
-        if (value === 1) {
-            throw Error(
-                'The bit of binary register is already 1: bits = ' +
-                bits.join('') + ", pointer = " + pointer
-            );
-        }
-        bits[pointer] = 1;
+        return value;
     }
 
     /**

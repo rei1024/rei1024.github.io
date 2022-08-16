@@ -1,6 +1,6 @@
-import { create } from "../util/create.js";
-
 // @ts-check
+
+import { create } from "../util/create.js";
 
 /* style.cssで設定 */
 const CURRENT_STATE_CLASS = 'stats_current_state';
@@ -39,15 +39,21 @@ export class StatsUI {
     /**
      *
      * @param {HTMLElement} root
+     * @param {HTMLElement} statsNumberOfStates
      */
-    constructor(root) {
+    constructor(root, statsNumberOfStates) {
         /**
          * @private
          */
         this.root = root;
 
         /**
-         * @type {{ sum: Element, z: Element, nz: Element, tr: HTMLElement }[]}
+         * @private
+         */
+        this.statsNumberOfStates = statsNumberOfStates;
+
+        /**
+         * @type {{ $sum: Element, $z: Element, $nz: Element, $tr: HTMLElement }[]}
          * @private
          */
         this.cells = [];
@@ -58,17 +64,20 @@ export class StatsUI {
      * @param {string[]} states
      */
     initialize(stateStats, states) {
+        this.statsNumberOfStates.textContent = states.length.toString();
+
         this.cells = [];
         this.root.innerHTML = "";
         for (const [i, stat] of stateStats.entries()) {
             const name = states[i] ?? "";
             const { $tr, $sum, $z, $nz } = createRow(name, stat);
             this.root.append($tr);
-            this.cells.push({ sum: $sum, z: $z, nz: $nz, tr: $tr });
+            this.cells.push({ $sum, $z, $nz, $tr });
         }
     }
 
     clear() {
+        this.statsNumberOfStates.textContent = '';
         this.cells = [];
         this.root.innerHTML = '';
     }
@@ -85,15 +94,15 @@ export class StatsUI {
             const item = cells[i] ?? error();
 
             if (currentIndex === i) {
-                item.tr.classList.add(CURRENT_STATE_CLASS);
+                item.$tr.classList.add(CURRENT_STATE_CLASS);
             } else {
-                item.tr.classList.remove(CURRENT_STATE_CLASS);
+                item.$tr.classList.remove(CURRENT_STATE_CLASS);
             }
 
             const stat = stats[i] ?? error();
-            item.sum.textContent = (stat.z + stat.nz).toString();
-            item.z.textContent = stat.z.toString();
-            item.nz.textContent = stat.nz.toString();
+            item.$sum.textContent = (stat.z + stat.nz).toString();
+            item.$z.textContent = stat.z.toString();
+            item.$nz.textContent = stat.nz.toString();
         }
     }
 }

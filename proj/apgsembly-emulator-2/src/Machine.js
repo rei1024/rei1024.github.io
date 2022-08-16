@@ -7,7 +7,10 @@ import {
     CompiledCommandWithNextState
 } from "./compile.js";
 import { Program } from "./Program.js";
-import { INITIAL_STATE } from "./Command.js";
+import { INITIAL_STATE, RegistersHeader } from "./Command.js";
+import { Action } from "./actions/Action.js";
+import { BRegAction } from "./actions/BRegAction.js";
+import { URegAction } from "./actions/URegAction.js";
 export { INITIAL_STATE };
 
 /**
@@ -65,6 +68,14 @@ export class Machine {
          */
         this.lookup = obj.lookup;
 
+        // set cache
+        for (const compiledCommand of obj.lookup) {
+            const actions = (compiledCommand.z?.command.actions ?? []).concat(compiledCommand.nz?.command.actions ?? []);
+            for (const action of actions) {
+                this.setCache(action);
+            }
+        }
+
         /**
          * 現在の状態の添字
          */
@@ -87,22 +98,42 @@ export class Machine {
 
         const regHeader = program.registersHeader;
         if (regHeader !== undefined) {
-            /** @type {string} */
-            const str = regHeader.content.replace(/'/ug, `"`);
+            this.setByRegistersHeader(regHeader);
+        }
+    }
 
-            /** @type {import("./ActionExecutor.js").RegistersInit} */
-            let parsed = {};
-            try {
-                parsed = JSON.parse(str);
-            } catch (_e) {
-                throw Error(`Invalid #REGISTERS: is not a valid JSON: "${str}"`);
-            }
-            if (parsed === null || typeof parsed !== 'object') {
-                throw Error(`Invalid #REGISTERS: "${str}" is not an object`);
-            }
+    /**
+     * @private
+     * @param {RegistersHeader} regHeader
+     */
+    setByRegistersHeader(regHeader) {
+        /** @type {string} */
+        const str = regHeader.content.replace(/'/ug, `"`);
 
-            // throw if error is occurred
-            this.actionExecutor.setByRegistersInit(parsed);
+        /** @type {import("./ActionExecutor.js").RegistersInit} */
+        let parsed = {};
+        try {
+            parsed = JSON.parse(str);
+        } catch (_e) {
+            throw Error(`Invalid #REGISTERS: is not a valid JSON: "${str}"`);
+        }
+        if (parsed === null || typeof parsed !== 'object') {
+            throw Error(`Invalid #REGISTERS: "${str}" is not an object`);
+        }
+
+        // throw if error is occurred
+        this.actionExecutor.setByRegistersInit(parsed);
+    }
+
+    /**
+     * @private
+     * @param {Action} action
+     */
+    setCache(action) {
+        if (action instanceof BRegAction) {
+            action.registerCache = this.actionExecutor.getBReg(action.regNumber);
+        } else if (action instanceof URegAction) {
+            action.registerCache = this.actionExecutor.getUReg(action.regNumber);
         }
     }
 

@@ -19,6 +19,7 @@ export class CVEEvent extends Event {
  */
 export class CVE extends EventTarget {
     /**
+     * 作成時は非活性状態
      * @param {{ frequency: number, signal?: AbortSignal }} param0
      */
     constructor({ frequency, signal }) {
@@ -47,10 +48,12 @@ export class CVE extends EventTarget {
         this._prevTime = -1;
 
         /**
+         * requestAnimationFrameは0を返さない
+         * https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animation-frames
          * @private
-         * @type {undefined | number}
+         * @type {number}
          */
-        this._rafID = undefined;
+        this._rafID = 0;
 
         /**
          *
@@ -79,7 +82,7 @@ export class CVE extends EventTarget {
     }
 
     abort() {
-        if (this._rafID !== undefined) {
+        if (this._rafID !== 0) {
             cancelAnimationFrame(this._rafID);
         }
     }
@@ -103,7 +106,6 @@ export class CVE extends EventTarget {
     }
 
     /**
-     * default is disabled
      * @param {boolean} value
      */
     set disabled(value) {

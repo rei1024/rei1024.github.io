@@ -61,7 +61,7 @@
         <!-- 初期は非表示 -->
         <div id="error" class="d-none alert alert-danger" role="alert"></div>
         <div class="mb-3">
-            <label for="input" class="visually-hidden form-label">Input</label>
+            <label for="input" class="visually-hidden form-label">APGsembly input</label>
             <textarea class="code-mono form-control" name="input" id="input" cols="50" rows="8" placeholder="# Write APGsembly here!"></textarea>
         </div>
         <!-- Buttons -->
@@ -99,9 +99,9 @@
         <!-- End Buttons -->
         <div class="mt-1 mb-2">
             <!-- チラつき防止のためデフォルト値を設定 DEFUALT_FREQUENCYと同期すること -->
-            <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output">30Hz</span></label>
-            <!-- index.jsでminとmaxは設定するが、ジャンプを防ぐため手動でも設定する -->
-            <input id="frequency_input" class="form-range" value="11" type="range" max="63" aria-valuetext="(30Hz)">
+            <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output" class="tabular-nums">30Hz</span></label>
+            <!-- frequency_input.jsでminとmaxは設定するが、ジャンプを防ぐため手動でも設定する -->
+            <input id="frequency_input" class="form-range" value="11" type="range" max="64" aria-valuetext="(30Hz)">
         </div>
         <div>
             <table class="mb-1 table table-layout-fixed" id="state">
@@ -144,7 +144,7 @@
                 <summary>
                     Unary Registers
                 </summary>
-                <div id="unary_register"></div>
+                <div id="unary_register" class="tabular-nums"></div>
             </details>
         </div>
         <div class="mb-2">

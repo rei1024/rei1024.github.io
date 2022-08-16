@@ -73,6 +73,11 @@ export class BRegAction extends Action {
          * @readonly
          */
         this.regNumber = regNumber;
+
+        /**
+         * @type {import('../components/BReg').BReg | undefined}
+         */
+        this.registerCache = undefined;
     }
 
     /**

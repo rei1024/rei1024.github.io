@@ -1,5 +1,4 @@
 // @ts-check
-// deno-lint-ignore-file no-unused-vars
 
 import { Command } from "./Command.js";
 
@@ -55,9 +54,6 @@ export class CompiledCommand {
  * }}
  */
 export function commandsToLookupTable(commands) {
-    /** @type {string[]} */
-    const states = [];
-
     /** @type {Map<string, number>} */
     const stateMap = new Map();
 
@@ -68,15 +64,14 @@ export function commandsToLookupTable(commands) {
      * @returns {never}
      */
     function error() {
-        throw Error('commandsToLookupTable internal error');
+        throw Error("commandsToLookupTable internal error");
     }
 
     // lookupを初期化
     for (const command of commands) {
         // 記録されていない場合追加
         if (!stateMap.has(command.state)) {
-            const n = states.length;
-            states.push(command.state);
+            const n = stateMap.size;
             stateMap.set(command.state, n);
             lookup.push(new CompiledCommand(undefined, undefined));
         }
@@ -137,8 +132,8 @@ export function commandsToLookupTable(commands) {
     }
 
     return {
-        states: states,
-        stateMap: stateMap,
-        lookup: lookup
+        states: [...stateMap.keys()],
+        stateMap,
+        lookup
     };
 }

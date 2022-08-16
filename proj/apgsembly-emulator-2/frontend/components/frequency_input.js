@@ -16,7 +16,8 @@ export function setupFrequencyInput($frequencyInput, app, defaultFrequency) {
         }
     }
 
-    frequencyArray.push(10 ** 7);
+    // 値を追加したらHTMLも変更すること
+    frequencyArray.push(10 * 10 ** 6, 15 * 10 ** 6);
 
     $frequencyInput.min = "0";
     $frequencyInput.max = (frequencyArray.length - 1).toString();
