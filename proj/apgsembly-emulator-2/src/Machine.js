@@ -92,14 +92,38 @@ export class Machine {
 
         /**
          * 統計
-         * @type {{ z: number, nz: number }[]}
+         * NとNZが交互に並ぶ
+         * @type {number[]}
+         * @private
          */
-        this.stateStats = this.lookup.map(() => ({ z: 0, nz: 0 }));
+        this.stateStatsArray = Array(this.lookup.length * 2).fill(0).map(() => 0);
 
         const regHeader = program.registersHeader;
         if (regHeader !== undefined) {
             this.setByRegistersHeader(regHeader);
         }
+    }
+
+    /**
+     * @returns {{ z: number, nz: number }[]}
+     */
+    getStateStats() {
+        /**
+         * @returns {never}
+         */
+        function error() {
+            throw Error('error');
+        }
+
+        /**
+         * @type {{ z: number, nz: number }[]}
+         */
+        const result = [];
+        for (let i = 0; i < this.stateStatsArray.length; i += 2) {
+            result.push({ z: this.stateStatsArray[i] ?? error(), nz: this.stateStatsArray[i + 1] ?? error() });
+        }
+
+        return result;
     }
 
     /**
@@ -175,38 +199,32 @@ export class Machine {
      * @returns {CompiledCommandWithNextState}
      */
     getNextCompiledCommandWithNextState(logStats = false) {
-        const compiledCommand = this.lookup[this.currentStateIndex];
+        const currentStateIndex = this.currentStateIndex;
+        const compiledCommand = this.lookup[currentStateIndex];
 
         if (compiledCommand === undefined) {
             throw Error(`Internal Error: Next command is not found: ` +
-                        `Current state index: ${this.currentStateIndex}`);
+                        `Current state index: ${currentStateIndex}`);
         }
 
-        if (this.prevOutput === 0) {
-            if (logStats) {
-                const stat = this.stateStats[this.currentStateIndex];
-                if (stat === undefined) {
-                    throw Error('Internal error');
-                }
-                stat.z++;
-            }
+        const prevOutput = this.prevOutput;
+
+        if (logStats) {
+            this.stateStatsArray[currentStateIndex * 2 + prevOutput]++;
+        }
+
+        if (prevOutput === 0) {
             const z = compiledCommand.z;
             if (z !== undefined) {
                 return z;
             }
         } else {
-            if (logStats) {
-                const stat = this.stateStats[this.currentStateIndex];
-                if (stat === undefined) {
-                    throw Error('Internal error');
-                }
-                stat.nz++;
-            }
             const nz = compiledCommand.nz;
             if (nz !== undefined) {
                 return nz;
             }
         }
+
         throw Error('Next command is not found: Current state = ' +
             this.currentState + ', output = ' + this.getPreviousOutput());
     }

@@ -1,12 +1,6 @@
 // @ts-check
 
-/**
- * 周波数入力
- * @param {HTMLInputElement} $frequencyInput
- * @param {import("../app").App} app
- * @param {number} defaultFrequency
- */
-export function setupFrequencyInput($frequencyInput, app, defaultFrequency) {
+function createFrequencyArray() {
     /** @type {number[]} */
     const frequencyArray = [];
     for (let i = 0; i < 7; i++) {
@@ -18,6 +12,18 @@ export function setupFrequencyInput($frequencyInput, app, defaultFrequency) {
 
     // 値を追加したらHTMLも変更すること
     frequencyArray.push(10 * 10 ** 6, 15 * 10 ** 6);
+
+    return frequencyArray;
+}
+
+/**
+ * 周波数入力
+ * @param {HTMLInputElement} $frequencyInput
+ * @param {import("../app").App} app
+ * @param {number} defaultFrequency
+ */
+export function setupFrequencyInput($frequencyInput, app, defaultFrequency) {
+    const frequencyArray = createFrequencyArray();
 
     $frequencyInput.min = "0";
     $frequencyInput.max = (frequencyArray.length - 1).toString();

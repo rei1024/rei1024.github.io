@@ -381,7 +381,7 @@ export class App {
         if (this.machine === undefined) {
             this.statsUI.clear();
         } else {
-            this.statsUI.initialize(this.machine.stateStats, this.machine.states);
+            this.statsUI.initialize(this.machine.getStateStats(), this.machine.states);
         }
     }
 
@@ -397,7 +397,7 @@ export class App {
             return;
         }
         this.statsUI.render(
-            this.machine.stateStats,
+            this.machine.getStateStats(),
             this.machine.currentStateIndex
         );
     }

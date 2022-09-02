@@ -114,3 +114,53 @@ Deno.bench('pi', () => {
 //     },
 //     group: 'test'
 // });
+
+// ---------
+// const len = 130;
+// const rep = 10000;
+// const objectArray = Array(len).fill(0).map(() => ({ z: 0, nz: 0 }));
+// const array = Array(len * 2).fill(0).map(() => 0);
+// const uint32Array = new Uint32Array(len * 2);
+
+// Deno.bench({
+//     name: 'objectArray',
+//     fn() {
+//         for (let j = 0; j < rep; j++) {
+//             for (let i = 0; i < len; i++) {
+//                 objectArray[i].z++;
+//             }
+//             for (let i = 0; i < len; i++) {
+//                 objectArray[i].nz++;
+//             }
+//         }
+//     },
+//     group: 'test'
+// });
+
+// Deno.bench({
+//     name: 'array',
+//     fn() {
+//         for (let j = 0; j < rep; j++) {
+//             for (let i = 0; i < len; i++) {
+//                 array[i * 2]++;
+//             }
+//             for (let i = 0; i < len; i++) {
+//                 array[i * 2 + 1]++;
+//             }
+//         }
+//     },
+//     group: 'test'
+// });
+
+// Deno.bench({
+//     name: 'typed',
+//     fn() {
+//         for (let j = 0; j < rep; j++) {
+//             for (let i = 0; i < len; i++) {
+//                 uint32Array[i * 2]++;
+//                 uint32Array[i * 2 + 1]++;
+//             }
+//         }
+//     },
+//     group: 'test'
+// });

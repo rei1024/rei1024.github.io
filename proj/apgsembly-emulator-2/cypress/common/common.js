@@ -93,3 +93,24 @@ export function setProgramSlow(program) {
     cy.get('#input').type(program, { delay: 1 });
     cy.get('#reset').click();
 }
+
+const statsSelector = '#stats_button';
+
+export function clickStats() {
+    cy.get(statsSelector).click();
+    cy.wait(200);
+}
+
+export function closeStats() {
+    cy.get(`#stats_modal > div > div > div.modal-header > button`).click();
+    cy.wait(200);
+}
+
+/**
+ * @param {number} n
+ */
+export function assertNumberOfStates(n) {
+    clickStats();
+    cy.get('#stats_number_of_states').contains(n.toString());
+    closeStats();
+}

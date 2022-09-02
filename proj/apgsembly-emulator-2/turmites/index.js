@@ -87,13 +87,14 @@ function getInput() {
 generateButton.addEventListener("click", () => {
     rule.classList.remove('is-invalid');
     copy.disabled = true;
+
     const { x, y, dir } = getInput();
     const header = `${comment === '' ? '' : `# ${comment}\n`}# Turmite ${rule.value}\n#COMPONENTS NOP,B2D,U0-2\n`;
     try {
         const tur = Turmites.fromObjectString(rule.value);
         code.value = header + generate(tur, x, y, dir);
         copy.disabled = false;
-    } catch (e) {
+    } catch (_) {
         try {
             const tur = AbsTurmites.fromObjectString(rule.value);
             code.value = header + absGenerate(tur, x, y, dir, $flip.checked);

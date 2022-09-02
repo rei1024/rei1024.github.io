@@ -10,6 +10,7 @@ import {
     setProgramSlow,
     assertToggleStart,
     assertToggleStop,
+    assertNumberOfStates,
     assertSteps,
     assertStepsNot,
     toggleSel,
@@ -103,6 +104,8 @@ describe('π calculator', () => {
         cy.contains('U9');
         cy.contains('B0');
         cy.contains('B3');
+
+        // assertNumberOfStates(131);
     });
 
     it('should print pi', () => {
