@@ -2,7 +2,7 @@
 // deno-lint-ignore-file no-unused-vars
 
 import { Action } from "./actions/Action.js";
-import { parseAction } from "./actions/parse.js";
+import { parseAction } from "./actionParse.js";
 
 /**
  * 初期状態
@@ -124,6 +124,7 @@ export class Comment extends ProgramLine {
 
 /**
  * 空行
+ * Empty line
  */
 export class EmptyLine extends ProgramLine {
     constructor() {
@@ -154,7 +155,7 @@ function parseInput(inputStr) {
 }
 
 /**
- * A line of program
+ * A line of APGsembly program
  */
 export class Command extends ProgramLine {
     /**
@@ -163,10 +164,11 @@ export class Command extends ProgramLine {
      *    state: string;
      *    input: "Z" | "NZ" | "ZZ" | "*";
      *    nextState: string;
-     *    actions: Action[]
+     *    actions: Action[];
+     *    line?: number | undefined;
      * }} param0
      */
-    constructor({ state, input, nextState, actions }) {
+    constructor({ state, input, nextState, actions, line }) {
         super();
 
         /**
@@ -190,6 +192,13 @@ export class Command extends ProgramLine {
         this.actions = actions;
 
         /**
+         * 1始まりの行数
+         * @readonly
+         */
+        this.line = line;
+
+        /**
+         * 文字列表現のキャッシュ
          * @readonly
          * @private
          */
@@ -199,9 +208,10 @@ export class Command extends ProgramLine {
     /**
      * CommandまたはCommentまたは空行またはエラーメッセージ
      * @param {string} str
+     * @param {number} [line]
      * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
      */
-    static parse(str) {
+    static parse(str, line = undefined) {
         if (typeof str !== 'string') {
             throw TypeError('str is not a string');
         }
@@ -241,7 +251,7 @@ export class Command extends ProgramLine {
         for (const actionsStr of actionStrs) {
             const result = parseAction(actionsStr);
             if (result === undefined) {
-                return `Unknown action "${actionsStr}" at "${str}"`;
+                return `Unknown action "${actionsStr}" at "${str}"${lineNumberMessage(line)}`;
             }
             actions.push(result);
         }
@@ -255,7 +265,8 @@ export class Command extends ProgramLine {
             state: state,
             input: input,
             nextState: nextState,
-            actions: actions
+            actions: actions,
+            line: line
         });
     }
 
@@ -275,4 +286,26 @@ export class Command extends ProgramLine {
     pretty() {
         return this._string; // `${this.state}; ${this.input}; ${this.nextState}; ${this.actions.map(a => a.pretty()).join(", ")}`;
     }
+}
+
+/**
+ *
+ * @param {number | undefined} line
+ * @returns {string}
+ */
+function lineNumberMessage(line) {
+    if (line !== null && line !== undefined) {
+        return ` at line ${line}`;
+    } else {
+        return "";
+    }
+}
+
+/**
+ *
+ * @param {Command} command
+ * @returns {string}
+ */
+export function addLineNumber(command) {
+    return lineNumberMessage(command.line);
 }

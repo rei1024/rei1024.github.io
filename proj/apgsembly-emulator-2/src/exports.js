@@ -8,7 +8,7 @@ export { HaltOutAction } from "./actions/HaltOutAction.js";
 import {} from "./actions/MulAction.js";
 export { NopAction } from "./actions/NopAction.js";
 import {} from "./actions/OutputAction.js";
-export { parseAction } from "./actions/parse.js";
+export { parseAction } from "./actionParse.js";
 import {} from "./actions/SubAction.js";
 import {} from "./actions/URegAction.js";
 import {} from "./actions/LegacyTRegAction.js";

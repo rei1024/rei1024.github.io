@@ -10,10 +10,11 @@ import {
     setProgramSlow,
     assertToggleStart,
     assertToggleStop,
+    assertToggleDisabledStart,
     assertNumberOfStates,
     assertSteps,
     assertStepsNot,
-    toggleSel,
+    toggle,
     assertError,
 } from "../common/common.js";
 
@@ -40,7 +41,7 @@ describe('Run APGsembly', () => {
     });
 
     it('shold run', () => {
-        cy.get(toggleSel).click();
+        toggle();
         assertToggleStop();
         cy.get('#step').should('be.disabled');
         cy.get('#current_state').should('have.text', 'A0');
@@ -53,8 +54,9 @@ describe('Error: empty program', () => {
         cy.visit(APGsemblyEmulatorURL);
         cy.contains('APGsembly');
         assertToggleStart();
-        cy.get(toggleSel).click();
+        toggle();
         assertError('- Program is empty');
+        assertToggleDisabledStart();
     });
 });
 
@@ -94,33 +96,6 @@ describe('Integers', () => {
     });
 });
 
-describe('π calculator', () => {
-    it('should load', () => {
-        cy.visit(APGsemblyEmulatorURL);
-        cy.contains('APGsembly');
-        loadProgram('pi_calc.apg');
-
-        cy.contains('U0');
-        cy.contains('U9');
-        cy.contains('B0');
-        cy.contains('B3');
-
-        // assertNumberOfStates(131);
-    });
-
-    it('should print pi', () => {
-        setStep(1000000);
-        clickStep();
-        cy.get(outputSelector).should('have.value', '3.141');
-
-        assertSteps(1000000);
-
-        cy.get(`[data-test="B0"]`).should('have.text', 'value = 243290200817664000, pointer = 1340000000000000000010010001011000001100100111010100000011011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
-
-        assertError('');
-    });
-});
-
 describe('Rule 110', () => {
     it('should load', () => {
         cy.visit(APGsemblyEmulatorURL);
@@ -149,10 +124,10 @@ describe('Start Stop Reset', () => {
 
     it('Start and Stop', () => {
         assertToggleStart();
-        cy.get(toggleSel).click();
+        toggle();
         assertToggleStop();
         cy.wait(400);
-        cy.get(toggleSel).click();
+        toggle();
         assertStepsNot(0);
 
         assertError('');
@@ -173,7 +148,7 @@ describe('Error Steps', () => {
     });
 
     it('Run', () => {
-        setProgramSlow(`
+        setProgram(`
     INITIAL; ZZ; A0; NOP
     A0; ZZ; A1; SET B0, NOP
     A1; ZZ; A1; SET B0, NOP`);
@@ -181,6 +156,33 @@ describe('Error Steps', () => {
         clickStep();
         assertSteps(3);
 
-        assertError('- The bit of binary register is already 1: bits = 1, pointer = 0');
+        assertError('- The bit of the binary register B0 is already 1 in "A1; ZZ; A1; SET B0, NOP" at line 4');
+    });
+});
+
+describe('π calculator', () => {
+    it('should load', () => {
+        cy.visit(APGsemblyEmulatorURL);
+        cy.contains('APGsembly');
+        loadProgram('pi_calc.apg');
+
+        cy.contains('U0');
+        cy.contains('U9');
+        cy.contains('B0');
+        cy.contains('B3');
+
+        // assertNumberOfStates(131);
+    });
+
+    it('should print pi', () => {
+        setStep(1000000);
+        clickStep();
+        cy.get(outputSelector).should('have.value', '3.141');
+
+        assertSteps(1000000);
+
+        cy.get(`[data-test="B0"]`).should('have.text', 'value = 243290200817664000, pointer = 1340000000000000000010010001011000001100100111010100000011011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
+
+        assertError('');
     });
 });

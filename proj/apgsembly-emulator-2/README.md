@@ -5,8 +5,6 @@ An emulator for APGsembly 2.0
 ### Requirements
 * `deno`
     * https://deno.land/#installation
-    * `file_server`
-        * https://deno.land/std@0.154.0/http
 * `npm`
     * Run `$ npm install`
 

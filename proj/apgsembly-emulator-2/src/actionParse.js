@@ -1,16 +1,16 @@
 // @ts-check
 
-import { Action } from "./Action.js";
-import { AddAction } from "./AddAction.js";
-import { B2DAction } from "./B2DAction.js";
-import { BRegAction } from "./BRegAction.js";
-import { HaltOutAction } from "./HaltOutAction.js";
-import { MulAction } from "./MulAction.js";
-import { NopAction } from "./NopAction.js";
-import { OutputAction } from "./OutputAction.js";
-import { SubAction } from "./SubAction.js";
-import { URegAction } from "./URegAction.js";
-import { LegacyTRegAction } from "./LegacyTRegAction.js";
+import { Action } from "./actions/Action.js";
+import { AddAction } from "./actions/AddAction.js";
+import { B2DAction } from "./actions/B2DAction.js";
+import { BRegAction } from "./actions/BRegAction.js";
+import { HaltOutAction } from "./actions/HaltOutAction.js";
+import { MulAction } from "./actions/MulAction.js";
+import { NopAction } from "./actions/NopAction.js";
+import { OutputAction } from "./actions/OutputAction.js";
+import { SubAction } from "./actions/SubAction.js";
+import { URegAction } from "./actions/URegAction.js";
+import { LegacyTRegAction } from "./actions/LegacyTRegAction.js";
 
 /**
  * アクションをパースする

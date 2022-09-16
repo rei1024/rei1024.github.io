@@ -52,7 +52,9 @@ const addSample = (ruleString, desc) => {
         rule.value = ruleString;
         comment = desc;
     });
-    $sampleList.append(button);
+    const li = document.createElement('li');
+    li.append(button);
+    $sampleList.append(li);
 };
 
 // 何かしら変化したらコメント削除

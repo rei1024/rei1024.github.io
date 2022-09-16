@@ -114,11 +114,18 @@ INITIAL; ZZ; NON_EXIST; NOP
     assertNewMachineThrows(str);
 });
 
-test('Machine program9_1', () => {
+test('Machine program9_1 new Machine', () => {
     const program = Program.parse(program9_1);
     if (!(program instanceof Program)) {
         throw Error('parse error program9_1');
     }
+    const machine = new Machine(program);
+    assertEquals(machine.getCurrentState(), "INITIAL");
+});
+
+test('Machine program9_1 fromString', () => {
+    const machine = Machine.fromString(program9_1);
+    assertEquals(machine.getCurrentState(), "INITIAL");
 });
 
 test('Machine program9_2', () => {
@@ -170,6 +177,25 @@ test('Machine program9_3', () => {
     assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 5);
     assertEquals(machine.actionExecutor.getUReg(2)?.getValue(), 35);
     assertEquals(machine.actionExecutor.getUReg(3)?.getValue(), 0);
+
+    assertEquals(machine.getStateStats(), [
+        {
+            nz: 0,
+            z: 1,
+        },
+        {
+            nz: 7,
+            z: 1,
+        },
+        {
+            nz: 35,
+            z: 7,
+        },
+        {
+            nz: 35,
+            z: 7,
+        },
+    ]);
 });
 
 test('Machine program9_4', () => {
@@ -192,19 +218,61 @@ test('Machine program9_4', () => {
     );
 });
 
+test('Machine exec', () => {
+    const program = Program.parse(`
+#REGISTERS { "U0": 42 }
+INITIAL; ZZ; A_Z; INC B0, NOP
+A_Z; *; A0; TDEC B0
+A0; Z; A1; NOP
+A0; NZ; A0; TDEC U0, INC U1
+A1; *; A1; HALT_OUT
+    `);
+    if (!(program instanceof Program)) {
+        throw Error('parse error: ' + program);
+    }
+
+    for (const cond of [true, false]) {
+        const machine = new Machine(program);
+        const N = 100;
+        if (cond) {
+            for (let i = 0; i < N; i++) {
+                const res = machine.execCommand();
+                if (res === -1) {
+                    break;
+                }
+            }
+        } else {
+            machine.exec(N, false, -1, 0);
+        }
+        assertEquals(machine.stepCount, 47);
+        assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 0);
+        assertEquals(machine.actionExecutor.getUReg(1)?.getValue(), 43);
+        assertEquals(machine.getStateStats()[2], { nz: 43, z: 1 });
+    }
+});
+
 test('Machine PI Calculator', () => {
     const program = Program.parse(piCalculator);
     if (!(program instanceof Program)) {
         throw Error('parse error PI Calculator');
     }
-    const machine = new Machine(program);
+    for (const cond of [true, false]) {
+        const machine = new Machine(program);
 
-    for (let i = 0; i < 250000; i++) {
-        const res = machine.execCommand();
-        if (res === -1) {
-            break;
+        const N = 250000;
+
+        if (cond) {
+            for (let i = 0; i < N; i++) {
+                const res = machine.execCommand();
+                if (res === -1) {
+                    break;
+                }
+            }
+        } else {
+            machine.exec(N, false, -1, 0);
         }
-    }
 
-    assertEquals(machine.actionExecutor.output.getString(), "3.14");
+        assertEquals(machine.stepCount, N);
+        assertEquals(machine.actionExecutor.output.getString(), "3.14");
+    }
 });

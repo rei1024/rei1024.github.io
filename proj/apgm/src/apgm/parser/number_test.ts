@@ -11,6 +11,6 @@ test("parser: number", () => {
         ["0xff", 255],
     ];
     for (const [str, num] of array) {
-        assertEquals(naturalNumberParser.tryParse(str), num);
+        assertEquals(naturalNumberParser.tryParse(str).value, num);
     }
 });

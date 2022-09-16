@@ -77,14 +77,20 @@ export class UReg {
      * @param {unknown} value
      */
     setByRegistersInit(key, value) {
-        if (typeof value !== "number") {
-            const debugStr = `"${key}": ${JSON.stringify(value)}`;
-            throw Error(`Invalid #REGISTERS ${debugStr}`);
-        }
-        if (value < 0 || !Number.isInteger(value)) {
-            const debugStr = `"${key}": ${JSON.stringify(value)}`;
-            throw Error(`Invalid #REGISTERS ${debugStr}`);
+        if (typeof value !== "number" || value < 0 || !Number.isInteger(value)) {
+            initError(key, value);
         }
         this.setValue(value);
     }
+}
+
+/**
+ *
+ * @param {string} key
+ * @param {unknown} value
+ * @returns {never}
+ */
+function initError(key, value) {
+    const debugStr = `"${key}": ${JSON.stringify(value)}`;
+    throw Error(`Invalid #REGISTERS ${debugStr}`);
 }

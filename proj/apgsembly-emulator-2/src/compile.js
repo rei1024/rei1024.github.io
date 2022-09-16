@@ -1,6 +1,6 @@
 // @ts-check
 
-import { Command } from "./Command.js";
+import { Command, addLineNumber } from "./Command.js";
 
 /**
  * コマンドと次の状態
@@ -45,6 +45,15 @@ export class CompiledCommand {
 }
 
 /**
+ *
+ * @param {Command} oldCommand
+ * @param {Command} command
+ */
+function throwDuplicated(oldCommand, command) {
+    throw Error(`Duplicated command: "${oldCommand.pretty()}" and "${command.pretty()}"${addLineNumber(command)}`);
+}
+
+/**
  * 速く実行できる形式へ変換する
  * @param {Command[]} commands
  * @returns {{
@@ -82,7 +91,7 @@ export function commandsToLookupTable(commands) {
         const nextState = stateMap.get(command.nextState);
         // 次の状態が見つからない場合はエラー
         if (nextState === undefined) {
-            throw Error(`Unknown state: "${command.nextState}" at "${command.pretty()}"`);
+            throw Error(`Unknown state: "${command.nextState}" at "${command.pretty()}"${addLineNumber(command)}`);
         }
         switch (command.input) {
             case "Z": {
@@ -90,7 +99,7 @@ export function commandsToLookupTable(commands) {
                     // 新しく作成する
                     compiledCommand.z = new CompiledCommandWithNextState(command, nextState);
                 } else {
-                    throw Error(`Duplicated command: "${compiledCommand.z.command.pretty()}" and "${command.pretty()}"`);
+                    throwDuplicated(compiledCommand.z.command, command);
                 }
                 break;
             }
@@ -99,25 +108,25 @@ export function commandsToLookupTable(commands) {
                     // 新しく作成する
                     compiledCommand.nz = new CompiledCommandWithNextState(command, nextState);
                 } else {
-                    throw Error(`Duplicated command: "${compiledCommand.nz.command.pretty()}" and "${command.pretty()}"`);
+                    throwDuplicated(compiledCommand.nz.command, command);
                 }
                 break;
             }
             case "ZZ": {
                 if (compiledCommand.nz !== undefined) {
-                    throw Error(`Invalid input: ZZ with NZ or *: "${command.pretty()}" and "${compiledCommand.nz.command.pretty()}"`);
+                    throw Error(`Invalid input: ZZ with NZ or *: "${command.pretty()}" and "${compiledCommand.nz.command.pretty()}"${addLineNumber(command)}`);
                 } else if (compiledCommand.z === undefined) {
                     compiledCommand.z = new CompiledCommandWithNextState(command, nextState);
                 } else {
-                    throw Error(`Duplicate command: "${compiledCommand.z.command.pretty()}" and "${command.pretty()}"`);
+                    throwDuplicated(compiledCommand.z.command, command);
                 }
                 break;
             }
             case "*": {
                 if (compiledCommand.nz !== undefined) {
-                    throw Error(`Invalid input: * "${command.pretty()}" and "${compiledCommand.nz.command.pretty()}"`);
+                    throw Error(`Invalid input: * "${command.pretty()}" and "${compiledCommand.nz.command.pretty()}"${addLineNumber(command)}`);
                 } else if (compiledCommand.z !== undefined) {
-                    throw Error(`Invalid input: * "${command.pretty()}" and "${compiledCommand.z.command.pretty()}"`);
+                    throw Error(`Invalid input: * "${command.pretty()}" and "${compiledCommand.z.command.pretty()}"${addLineNumber(command)}`);
                 } else {
                     const c = new CompiledCommandWithNextState(command, nextState);
                     compiledCommand.z = c;
@@ -126,6 +135,10 @@ export function commandsToLookupTable(commands) {
                 break;
             }
             default: {
+                // type-check
+                /** @type {Error} */
+                const inputNever = command.input;
+                console.error(inputNever);
                 error();
             }
         }

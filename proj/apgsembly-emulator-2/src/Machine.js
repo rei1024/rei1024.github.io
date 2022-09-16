@@ -7,11 +7,18 @@ import {
     CompiledCommandWithNextState
 } from "./compile.js";
 import { Program } from "./Program.js";
-import { INITIAL_STATE, RegistersHeader } from "./Command.js";
+import { INITIAL_STATE, RegistersHeader, addLineNumber } from "./Command.js";
 import { Action } from "./actions/Action.js";
 import { BRegAction } from "./actions/BRegAction.js";
 import { URegAction } from "./actions/URegAction.js";
 export { INITIAL_STATE };
+
+/**
+ * @returns {never}
+ */
+function error(msg = 'error') {
+    throw Error(msg);
+}
 
 /**
  * @typedef {"Z" | "NZ" | "ZZ" | "*"} Input
@@ -31,6 +38,11 @@ export class Machine {
         if (!(program instanceof Program)) {
             throw TypeError('program is not a Program');
         }
+
+        /**
+         * ステップ数
+         */
+        this.stepCount = 0;
 
         /**
          * @readonly
@@ -70,7 +82,9 @@ export class Machine {
 
         // set cache
         for (const compiledCommand of obj.lookup) {
-            const actions = (compiledCommand.z?.command.actions ?? []).concat(compiledCommand.nz?.command.actions ?? []);
+            const actions = (compiledCommand.z?.command.actions ?? []).concat(
+                compiledCommand.nz?.command.actions ?? []
+            );
             for (const action of actions) {
                 this.setCache(action);
             }
@@ -79,9 +93,8 @@ export class Machine {
         /**
          * 現在の状態の添字
          */
-        this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ?? (() => {
-            throw Error(`${INITIAL_STATE} state is not present`);
-        })();
+        this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ??
+            error(`${INITIAL_STATE} state is not present`);
 
         /**
          * @type {number}
@@ -105,22 +118,33 @@ export class Machine {
     }
 
     /**
+     * 文字列から作成する
+     * @param {string} source
+     * @returns {Machine}
+     */
+    static fromString(source) {
+        const program = Program.parse(source);
+
+        if (typeof program === "string") {
+            throw new Error(program);
+        }
+
+        return new Machine(program);
+    }
+
+    /**
      * @returns {{ z: number, nz: number }[]}
      */
     getStateStats() {
-        /**
-         * @returns {never}
-         */
-        function error() {
-            throw Error('error');
-        }
-
         /**
          * @type {{ z: number, nz: number }[]}
          */
         const result = [];
         for (let i = 0; i < this.stateStatsArray.length; i += 2) {
-            result.push({ z: this.stateStatsArray[i] ?? error(), nz: this.stateStatsArray[i + 1] ?? error() });
+            result.push({
+                z: this.stateStatsArray[i] ?? error(),
+                nz: this.stateStatsArray[i + 1] ?? error()
+            });
         }
 
         return result;
@@ -165,7 +189,7 @@ export class Machine {
      * 現在の状態の名前
      * @returns {string}
      */
-    get currentState() {
+    getCurrentState() {
         const name = this.states[this.currentStateIndex];
         if (name === undefined) {
             throw Error('State name is not found');
@@ -174,7 +198,7 @@ export class Machine {
     }
 
     /**
-     * 状態の文字列から添字へのマップを取得する
+     * 状態の名前から添字へのマップを取得する
      * @returns {Map<string, number>}
      */
     getStateMap() {
@@ -226,7 +250,60 @@ export class Machine {
         }
 
         throw Error('Next command is not found: Current state = ' +
-            this.currentState + ', output = ' + this.getPreviousOutput());
+            this.getCurrentState() + ', output = ' + this.getPreviousOutput());
+    }
+
+    /**
+     * nステップ進める
+     * @param {number} n
+     * @param {boolean} isRunning 実行中は重い場合途中で止める
+     * @param {number} breakpointIndex -1はブレークポイントなし
+     * @param {-1 | 0 | 1} breakpointInputValue -1はZとNZ両方
+     * @returns {"Halted" | "Stop" | undefined} HALT_OUTによる停止は"Halted"、ブレークポイントによる停止は"Stop"
+     * @throws {Error} 実行時エラー
+     */
+    exec(n, isRunning, breakpointIndex, breakpointInputValue) {
+        const hasBreakpoint = breakpointIndex !== -1;
+        let i = 0;
+        const start = performance.now();
+
+        for (; i < n; i++) {
+            /**
+             * @type {void | -1}
+             */
+            let res = undefined;
+            try {
+                res = this.execCommand();
+            } catch (error) {
+                if (error instanceof Error) {
+                    const command = this.getNextCompiledCommandWithNextState(false).command;
+                    const line = addLineNumber(command);
+                    throw new Error(error.message + ` in "${command.pretty()}"` + line);
+                } else {
+                    throw error;
+                }
+            }
+
+            if (res === -1) {
+                return "Halted";
+            }
+
+            // ブレークポイントの状態の場合、停止する
+            if (
+                hasBreakpoint &&
+                this.currentStateIndex === breakpointIndex &&
+                (breakpointInputValue === -1 || breakpointInputValue === this.prevOutput)
+            ) {
+                return "Stop";
+            }
+
+            // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
+            if (isRunning && (i + 1) % 500000 === 0 && (performance.now() - start >= 50)) {
+                return undefined;
+            }
+        }
+
+        return undefined;
     }
 
     /**
@@ -235,9 +312,10 @@ export class Machine {
      * -1はHALT_OUT
      * voidは正常
      * @returns {-1 | void}
-     * @throws
+     * @throws {Error} 実行時エラー
      */
     execCommand() {
+        this.stepCount += 1;
         const compiledCommand = this.getNextCompiledCommandWithNextState(true);
 
         /**
@@ -258,7 +336,7 @@ export class Machine {
                 } else {
                     throw Error(`Return value twice: line = ${
                         compiledCommand.command.pretty()
-                    }`);
+                    }${addLineNumber(compiledCommand.command)}`);
                 }
             }
         }
@@ -266,7 +344,7 @@ export class Machine {
         if (result === -1) {
             throw Error(`No return value: line = ${
                 compiledCommand.command.pretty()
-            }`);
+            }${addLineNumber(compiledCommand.command)}`);
         }
 
         const nextStateIndex = compiledCommand.nextState;

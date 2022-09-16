@@ -69,7 +69,7 @@ export class Transpiler {
     emitTransition(
         current: string,
         next: string,
-        inputZNZ: "*" | "Z" | "NZ" = "*",
+        inputZNZ: "*" | "Z" | "NZ" | "ZZ" = "*",
     ): Line[] {
         return this.emitLine({
             currentState: current,
@@ -82,7 +82,7 @@ export class Transpiler {
     transpile(expr: APGLExpr): Line[] {
         const initialState = "INITIAL";
         const secondState = this.getFreshName() + "_INITIAL";
-        const initial = this.emitTransition(initialState, secondState);
+        const initial = this.emitTransition(initialState, secondState, "ZZ");
 
         const endState = this.prefix + "END";
 

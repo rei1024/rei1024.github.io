@@ -7,6 +7,11 @@
  */
 export function renderOutput($output, output) {
     output = output ?? "";
+    const oldValue = $output.value;
+    if (oldValue === output) {
+        return;
+    }
+
     $output.value = output;
 
     const len = output.length;

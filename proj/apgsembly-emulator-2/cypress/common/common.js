@@ -14,8 +14,17 @@ export const tmToAPGURL = baseURL + '/tm_to_apg/index.html';
 
 export const toggleSel = '#toggle';
 
+export function toggle() {
+    cy.get(toggleSel).click();
+}
+
 export function assertToggleStart() {
     cy.get(toggleSel).should('not.be.disabled');
+    cy.get(toggleSel).should('have.text', 'Start');
+}
+
+export function assertToggleDisabledStart() {
+    cy.get(toggleSel).should('be.disabled');
     cy.get(toggleSel).should('have.text', 'Start');
 }
 

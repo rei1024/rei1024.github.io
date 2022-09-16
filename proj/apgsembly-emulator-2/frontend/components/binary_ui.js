@@ -2,6 +2,23 @@
 
 import { BReg } from "../../src/components/BReg.js";
 
+// ```
+// <table>
+// <tr>
+//     <th>B1</th>
+//     <td>
+//         <code style="color: black;">
+//             <span class="decimal">value = 3432</span><span class="pointer">, pointer = 12</span>
+//         </code>
+//         <br>
+//         <code style="word-break: break-all">
+//             <span class="prefix">110011010</span><span class="head" style="border-bottom: 3px solid #0D47A1; color: #0D47A1;">1</span><span class="suffix">101101001</span>
+//         </code>
+//     </td>
+// </tr>
+// </table>
+// ```
+
 /**
  * @returns {never}
  */

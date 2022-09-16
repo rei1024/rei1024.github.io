@@ -150,9 +150,11 @@ test('Program duplicated actions', () => {
     INITIAL; ZZ; A0; NOP, NOP
     A0; *; A0; NOP`;
     const errorMessage = parseProgramExpectError(src);
-    assertEquals(errorMessage, `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"
-Does not contain exactly one action that produces a return value in "INITIAL; ZZ; A0; NOP, NOP": Actions that produce value are "NOP", "NOP"
-Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`);
+    assertEquals(errorMessage, [
+        `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP" at line 2`,
+        `Does not contain exactly one action that produces a return value in "INITIAL; ZZ; A0; NOP, NOP": Actions that produce value are "NOP", "NOP" at line 2`,
+        `Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP" at line 2`
+    ].join('\n'));
 });
 
 test('Program return one value: no return', () => {
@@ -160,7 +162,7 @@ test('Program return one value: no return', () => {
     INITIAL; ZZ; A0; OUTPUT 1
     A0; *; A0; NOP`;
     const errorMessage = parseProgramExpectError(src);
-    assertEquals(errorMessage, `Does not produce the return value in "INITIAL; ZZ; A0; OUTPUT 1"`);
+    assertEquals(errorMessage, `Does not produce the return value in "INITIAL; ZZ; A0; OUTPUT 1" at line 2`);
 });
 
 test('Program return one value', () => {
@@ -171,7 +173,8 @@ test('Program return one value', () => {
     assertEquals(
         errorMessage,
         'Does not contain exactly one action that produces a return value in' +
-        ' "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that produce value are "NOP", "TDEC U0"'
+        ' "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that produce value are "NOP", "TDEC U0"' +
+        ' at line 2'
     );
 });
 
@@ -183,7 +186,7 @@ test('Program same component actions U', () => {
     assertEquals(
         errorMessage,
         `Actions "INC U0" and "TDEC U0" use same component in ` +
-        `"INITIAL; ZZ; A0; INC U0, TDEC U0"`
+        `"INITIAL; ZZ; A0; INC U0, TDEC U0" at line 2`
     );
 });
 
@@ -195,7 +198,7 @@ test('Program same component actions SUB', () => {
     assertEquals(
         errorMessage,
         `Actions "SUB A1" and "SUB B0" use same component in ` +
-        `"INITIAL; ZZ; A0; SUB A1, SUB B0"`
+        `"INITIAL; ZZ; A0; SUB A1, SUB B0" at line 2`
     );
 });
 
@@ -207,7 +210,7 @@ test('Program same component actions B', () => {
     assertEquals(
         errorMessage,
         `Actions "INC B0" and "TDEC B0"` +
-        ` use same component in "INITIAL; ZZ; A0; INC B0, TDEC B0"`
+        ` use same component in "INITIAL; ZZ; A0; INC B0, TDEC B0" at line 2`
     );
 });
 
@@ -219,7 +222,7 @@ test('Program same component actions OUTPUT', () => {
     assertEquals(
         errorMessage,
         `Actions "OUTPUT 1" and "OUTPUT 2" use same component in ` +
-        `"INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2"`
+        `"INITIAL; ZZ; A0; OUTPUT 1, NOP, OUTPUT 2" at line 2`
     );
 });
 
@@ -231,7 +234,7 @@ test('Program Z and NZ', () => {
     const errorMessage = parseProgramExpectError(src);
     assertEquals(
         errorMessage,
-        `Need Z line followed by NZ line at "ID1; Z; ID1; HALT_OUT"`
+        `Need Z line followed by NZ line in "ID1; Z; ID1; HALT_OUT"`
     );
 });
 
@@ -243,10 +246,9 @@ test('Program Z and NZ 2', () => {
     const errorMessage = parseProgramExpectError(src);
     assertEquals(
         errorMessage,
-        `Need Z line followed by NZ line at "ID1; NZ; ID1; TDEC U1"`
+        `Need Z line followed by NZ line in "INITIAL; ZZ; ID1; TDEC U0" at line 2 and 4`
     );
 });
-
 
 test('Program no return value', () => {
     const str = `
@@ -256,7 +258,7 @@ ID0; ZZ; ID0; NOP
     const errorMessage = parseProgramExpectError(str);
     assertEquals(
         errorMessage,
-        'Does not produce the return value in "INITIAL; ZZ; ID0; OUTPUT 3"'
+        'Does not produce the return value in "INITIAL; ZZ; ID0; OUTPUT 3" at line 2'
     );
 });
 
@@ -270,10 +272,8 @@ ID0; ZZ; ID0; NOP
         errorMessage,
         'Does not contain exactly one action that produces a return value in ' +
         '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
-        'Actions that produce value are "NOP", "TDEC U0"'
-        // 'The return value is returned more than once in ' +
-        // '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
-        // 'Actions that return a return value more than once are NOP, TDEC U0'
+        'Actions that produce value are "NOP", "TDEC U0"' +
+        ' at line 2'
     );
 });
 
@@ -286,7 +286,7 @@ INITIAL; ZZ; INITIAL; NOP
     `;
     const errorMessage = parseProgramExpectError(str);
 
-    assertEquals(errorMessage, 'Return to initial state in "INITIAL; ZZ; INITIAL; NOP"');
+    assertEquals(errorMessage, 'Return to initial state in "INITIAL; ZZ; INITIAL; NOP" at line 2');
 });
 
 test('Program pretty program9_1', () => {

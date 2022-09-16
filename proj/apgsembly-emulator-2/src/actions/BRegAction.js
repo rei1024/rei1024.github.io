@@ -75,7 +75,7 @@ export class BRegAction extends Action {
         this.regNumber = regNumber;
 
         /**
-         * @type {import('../components/BReg').BReg | undefined}
+         * @type {import('../components/BReg.js').BReg | undefined}
          */
         this.registerCache = undefined;
     }

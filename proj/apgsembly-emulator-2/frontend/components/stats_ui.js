@@ -16,14 +16,19 @@ function createRow(stateName, stat) {
         $code.textContent = stateName;
     }));
 
+    const num = 'num';
+
     const $sum = document.createElement('td');
     $sum.textContent = (stat.z + stat.nz).toString();
+    $sum.classList.add(num);
 
     const $z = document.createElement('td');
     $z.textContent = stat.z.toString();
+    $z.classList.add(num);
 
     const $nz = document.createElement('td');
     $nz.textContent = stat.nz.toString();
+    $nz.classList.add(num);
 
     // row
     const $tr = document.createElement('tr');
@@ -68,6 +73,7 @@ export class StatsUI {
 
         this.cells = [];
         this.root.innerHTML = "";
+
         for (const [i, stat] of stateStats.entries()) {
             const name = states[i] ?? "";
             const { $tr, $sum, $z, $nz } = createRow(name, stat);
@@ -99,10 +105,10 @@ export class StatsUI {
                 item.$tr.classList.remove(CURRENT_STATE_CLASS);
             }
 
-            const stat = stats[i] ?? error();
-            item.$sum.textContent = (stat.z + stat.nz).toString();
-            item.$z.textContent = stat.z.toString();
-            item.$nz.textContent = stat.nz.toString();
+            const { z, nz } = stats[i] ?? error();
+            item.$sum.textContent = (z + nz).toString();
+            item.$z.textContent = z.toString();
+            item.$nz.textContent = nz.toString();
         }
     }
 }

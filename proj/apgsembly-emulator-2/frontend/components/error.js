@@ -5,7 +5,7 @@ import { create } from '../util/create.js';
 /**
  *
  * @param {HTMLElement} $error
- * @param {import('../index.js').AppState} appState
+ * @param {import('../app.js').AppState} appState
  * @param {string} errorMessage
  */
 export function renderErrorMessage($error, appState, errorMessage) {

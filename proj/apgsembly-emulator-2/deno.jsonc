@@ -1,9 +1,10 @@
 {
     "tasks": {
-        "up": "file_server . -p 1123",
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.156.0/http/file_server.ts . -p 1123",
         "t": "deno test --no-check --parallel src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ generator/",
         "w": "deno test --watch --no-check src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ generator/",
-        "cy": "npm run cypress:open",
+        "cy": "node ./node_modules/.bin/cypress open",
+        "cy-run": "node ./node_modules/.bin/cypress run",
         "lint": "./node_modules/.bin/eslint .",
         "chore": "deno upgrade && npm audit && git gc",
         "bench": "deno bench --unstable --no-check test/bench.js"

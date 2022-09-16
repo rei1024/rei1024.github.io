@@ -1,4 +1,5 @@
 # Binary ruler
+# https://conwaylife.com/book/ > 9.4 A Binary Register > APGsembly 9.5
 #COMPONENTS B0,NOP
 #REGISTERS {}
 # State Input Next state Actions

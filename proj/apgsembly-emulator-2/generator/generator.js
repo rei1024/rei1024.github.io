@@ -1,28 +1,14 @@
 // @ts-check
 
+import { $type } from '../frontend/util/selector.js';
 import { generate } from './rule.js';
 
-const rule = document.querySelector("#rule");
-if (!(rule instanceof HTMLInputElement)) {
-    throw Error('rule is not a HTMLInputElement');
-}
-
-const generateButton = document.querySelector("#generate");
-if (!(generateButton instanceof HTMLButtonElement)) {
-    throw Error('generateButton is not a HTMLButtonElement');
-}
-
-const code = document.querySelector("#output");
-if (!(code instanceof HTMLTextAreaElement)) {
-    throw Error('code is not a HTMLTextAreaElement');
-}
+const rule = $type("#rule", HTMLInputElement);
+const generateButton = $type("#generate", HTMLButtonElement);
+const code = $type("#output", HTMLTextAreaElement);
 
 // 出力をコピーする
-const copy = document.querySelector('#copy');
-
-if (!(copy instanceof HTMLButtonElement)) {
-    throw TypeError('copy is not a HTMLButtonElement');
-}
+const copy = $type('#copy', HTMLButtonElement);
 
 /**
  *

@@ -27,7 +27,7 @@ const $error = $$("#error", HTMLElement);
 
 const $errorMsg = $$("#error_msg", HTMLElement);
 
-const $prefix_input = $$("#prefix_input", HTMLInputElement);
+const $prefixInput = $$("#prefix_input", HTMLInputElement);
 
 const $watchMode = $$("#watch_mode", HTMLInputElement);
 
@@ -38,23 +38,36 @@ const $configButton = $$("#config_button", HTMLButtonElement);
 const editor = initEditor($apgmInput);
 
 /**
- * @param {{ message: string, apgmLocation: { line: number, column: number } }} e
+ * @typedef {{ line: number, column: number }} Loc
+ */
+
+/**
+ * @param {Error & { apgmSpan?: { start: Loc, end: Loc }, apgmLocation?: Loc }} e
  */
 export function showError(e) {
     try {
-        const line = e.apgmLocation.line;
-        const column = e.apgmLocation.column;
-        if (!Number.isInteger(line)) {
+        if (!e.apgmSpan) {
+            if (e.apgmLocation) {
+                editor.setMarker({
+                    message: e.message,
+                    startLineNumber: e.apgmLocation.line,
+                    startColumn: e.apgmLocation.column,
+                    endLineNumber: e.apgmLocation.line,
+                    endColumn: e.apgmLocation.column + 3,
+                });
+                editor.revealLine(e.apgmLocation.line);
+            }
             return;
         }
+
         editor.setMarker({
             message: e.message,
-            startLineNumber: line,
-            startColumn: column,
-            endLineNumber: line,
-            endColumn: column + 3,
+            startLineNumber: e.apgmSpan.start.line,
+            startColumn: e.apgmSpan.start.column,
+            endLineNumber: e.apgmSpan.end.line,
+            endColumn: e.apgmSpan.end.column,
         });
-        editor.revealLine(line);
+        editor.revealLine(e.apgmSpan.start.line);
     } catch (_e) {
         // ignore
     }
@@ -62,7 +75,7 @@ export function showError(e) {
 
 const resetError = () => {
     editor.setMarker(undefined);
-    $error.style.display = "none";
+    $error.classList.add("d-none");
     $apgmInput.style.borderColor = "";
     $output.style.borderColor = "";
     $compile.style.backgroundColor = "";
@@ -72,9 +85,12 @@ const compile = (withReaction = true) => {
     $output.value = "";
     resetError();
     try {
+        /**
+         * @type {{ prefix?: string }}
+         */
         const options = {};
-        if ($prefix_input.value.trim() !== "") {
-            options.prefix = $prefix_input.value.trim();
+        if ($prefixInput.value.trim() !== "") {
+            options.prefix = $prefixInput.value.trim();
         }
 
         /**
@@ -100,16 +116,14 @@ const compile = (withReaction = true) => {
         }
 
         $errorMsg.textContent = e.message;
-        $error.style.display = "block";
+        $error.classList.remove("d-none");
         $download.disabled = true;
         $copy.disabled = true;
         if (withReaction) {
             $apgmInput.style.borderColor = "#dc3545";
             $apgmInput.style.borderWidth = "2px";
         }
-        if (typeof e.apgmLocation !== "undefined") {
-            showError(e);
-        }
+        showError(e);
     }
 };
 
@@ -162,8 +176,10 @@ $watchMode.addEventListener("change", () => {
         id = setInterval(() => {
             compile(false);
         }, 500);
+        $compile.disabled = true;
     } else {
         clearInterval(id);
+        $compile.disabled = false;
     }
 });
 

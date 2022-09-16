@@ -23,8 +23,9 @@ function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
             `argument length mismatch: "${macro.name}"` +
                 ` expect ${argumentsMessage(macro.args.length)} but given ${
                     argumentsMessage(exprs.length)
-                }${formatLocationAt(funcExpr.location)}`,
-            funcExpr.location,
+                }${formatLocationAt(funcExpr.span?.start)}`,
+            funcExpr.span?.start,
+            funcExpr.span,
         );
     }
 
@@ -37,8 +38,11 @@ function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
             const expr = nameToExpr.get(x.name);
             if (expr === undefined) {
                 throw new ErrorWithLocation(
-                    `scope error: "${x.name}"${formatLocationAt(x.location)}`,
-                    x.location,
+                    `scope error: Unknown variable "${x.name}"${
+                        formatLocationAt(x.span?.start)
+                    }`,
+                    x.span?.start,
+                    x.span,
                 );
             }
             return expr;
@@ -59,13 +63,14 @@ export class MacroExpander {
         if (this.macroMap.size < main.macros.length) {
             const ds = dups(main.macros.map((x) => x.name));
             const d = ds[0];
-            const location = main.macros.slice().reverse().find((x) =>
-                x.name === d
-            )?.location;
+            const span = main.macros.slice().reverse().find((x) => x.name === d)
+                ?.span;
+            const location = span?.start;
             throw new ErrorWithLocation(
                 `There is a macro with the same name: "${d}"` +
                     formatLocationAt(location),
                 location,
+                span,
             );
         }
     }

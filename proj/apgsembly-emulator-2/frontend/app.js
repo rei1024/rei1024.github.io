@@ -1,7 +1,6 @@
 // @ts-check
 
 import { Machine } from "../src/Machine.js";
-import { Program } from "../src/Program.js";
 
 // Components
 import { renderB2D } from "./components/renderB2D.js";
@@ -15,6 +14,7 @@ import {
 } from "./components/toggle.js";
 import { renderOutput } from "./components/output.js";
 import { renderErrorMessage } from "./components/error.js";
+import { initializeBreakpointSelect, getBreakpointInput } from "./components/breakpoint.js";
 
 import { CVE, CVEEvent } from "./util/continuously-variable-emitter.js";
 
@@ -22,7 +22,7 @@ import {
     $error,
     $input,
     $output,
-    $steps,
+    $stepCount,
     $toggle,
     $reset,
     $step,
@@ -32,8 +32,7 @@ import {
     $command,
     $canvas,
     context,
-    $b2dx,
-    $b2dy,
+    $b2dPos,
     $b2dDetail,
     $unaryRegister,
     $unaryRegisterDetail,
@@ -42,10 +41,7 @@ import {
     $addSubMul,
 
     // Modal
-    $hideBinary,
-    $reverseBinary,
-    $showBinaryValueInDecimal,
-    $showBinaryValueInHex,
+    binaryConfig,
     $breakpointSelect,
     $breakpointInputSelect,
     $b2dHidePointer,
@@ -58,8 +54,13 @@ import {
     $statsButton,
 } from "./bind.js";
 
-/** index.htmlと同期する */
+/** index.htmlと同期すること */
 export const DEFUALT_FREQUENCY = 30;
+
+/**
+ * @typedef {"Initial" | "Running" | "Stop" | "ParseError" |
+ *           "RuntimeError" | "Halted"} AppState
+ */
 
 /**
  * APGsembly 2.0 Emulator frontend application
@@ -73,16 +74,16 @@ export class App {
         this.machine = undefined;
 
         /**
-         * ステップ数
-         * @private
-         */
-        this.steps = 0;
-
-        /**
          * アプリ状態
-         * @type {import("./index.js").AppState}
+         * @type {AppState}
          */
         this.appState = "Initial";
+
+        /**
+         * @private
+         * @type {AppState | undefined}
+         */
+        this.prevAppState = undefined;
 
         /**
          * エラーメッセージ
@@ -106,6 +107,11 @@ export class App {
             const ev = e;
             this.run(ev.value);
         });
+
+        /**
+         * @type {undefined | number}
+         */
+        this.prevFrequency = undefined;
 
         /**
          * @private
@@ -204,22 +210,7 @@ export class App {
      * @private
      */
     setUpBreakpointSelect() {
-        $breakpointSelect.innerHTML = "";
-        const machine = this.machine;
-        if (machine === undefined) {
-            return;
-        }
-        const none = document.createElement('option');
-        none.textContent = "None";
-        none.value = "-1";
-        none.selected = true;
-        $breakpointSelect.append(none);
-        for (const [state, stateIndex] of machine.getStateMap().entries()) {
-            const option = document.createElement('option');
-            option.textContent = state;
-            option.value = stateIndex.toString();
-            $breakpointSelect.append(option);
-        }
+        initializeBreakpointSelect($breakpointSelect, this.machine);
     }
 
     /**
@@ -246,23 +237,13 @@ export class App {
      * 状態をリセットし、パースする
      */
     reset() {
-        this.steps = 0;
         this.errorMessage = "";
         this.machine = undefined;
         this.cve.reset();
-        const program = Program.parse($input.value);
-
-        if (typeof program === "string") {
-            // Error
-            this.appState = "ParseError";
-            this.errorMessage = program;
-            this.render();
-            return;
-        }
 
         // Parse success
         try {
-            this.machine = new Machine(program);
+            this.machine = Machine.fromString($input.value);
             this.onMachineSet();
             this.appState = "Stop";
         } catch (e) {
@@ -281,7 +262,11 @@ export class App {
      * 周波数の表示
      */
     renderFrequencyOutput() {
-        $freqencyOutput.textContent = this.cve.frequency.toLocaleString() + "Hz";
+        const currentFreqeucy = this.cve.frequency;
+        if (this.prevFrequency !== currentFreqeucy) {
+            $freqencyOutput.textContent = currentFreqeucy.toLocaleString();
+        }
+        this.prevFrequency = currentFreqeucy;
     }
 
     /**
@@ -302,15 +287,15 @@ export class App {
         }
         const machine = this.machine;
         if (machine === undefined) {
-            $b2dx.textContent = "0";
-            $b2dy.textContent = "0";
+            $b2dPos.x.textContent = "0";
+            $b2dPos.y.textContent = "0";
             context.clearRect(0, 0, $canvas.width, $canvas.height);
             context.resetTransform();
             return;
         }
         const b2d = machine.actionExecutor.b2d;
-        $b2dx.textContent = b2d.x.toString();
-        $b2dy.textContent = b2d.y.toString();
+        $b2dPos.x.textContent = b2d.x.toString();
+        $b2dPos.y.textContent = b2d.y.toString();
 
         const start = performance.now();
         renderB2D(
@@ -342,10 +327,10 @@ export class App {
         if (this.machine !== undefined && $binaryRegisterDetail.open) {
             this.binaryUI.render(
                 this.machine.actionExecutor.bRegMap,
-                $hideBinary.checked,
-                $reverseBinary.checked,
-                $showBinaryValueInDecimal.checked,
-                $showBinaryValueInHex.checked
+                binaryConfig.$hideBinary.checked,
+                binaryConfig.$reverseBinary.checked,
+                binaryConfig.$showBinaryValueInDecimal.checked,
+                binaryConfig.$showBinaryValueInHex.checked
             );
         }
     }
@@ -385,9 +370,6 @@ export class App {
         }
     }
 
-    /**
-     * @property
-     */
     renderStats() {
         if (!$statsModal.classList.contains('show')) {
             return;
@@ -402,6 +384,10 @@ export class App {
         );
     }
 
+    /**
+     * AppStateのみに依存する
+     * @private
+     */
     renderButton() {
         // ボタンの有効無効
         switch (this.appState) {
@@ -451,22 +437,25 @@ export class App {
         // cve
         this.cve.disabled = this.appState !== "Running";
 
-        this.renderButton();
+        if (this.prevAppState !== this.appState) {
+            this.renderButton();
 
-        // ParseErrorのときにエラー表示
-        if (this.appState === "ParseError") {
-            $input.classList.add('is-invalid');
-        } else {
-            $input.classList.remove('is-invalid');
+            // ParseErrorのときにエラー表示
+            if (this.appState === "ParseError") {
+                $input.classList.add('is-invalid');
+            } else {
+                $input.classList.remove('is-invalid');
+            }
         }
 
         renderErrorMessage($error, this.appState, this.errorMessage);
+
         this.renderFrequencyOutput();
 
-        $steps.textContent = this.steps.toLocaleString();
+        $stepCount.textContent = this.machine?.stepCount.toLocaleString() ?? "";
 
         // current state
-        $currentState.textContent = this.machine?.currentState ?? "";
+        $currentState.textContent = this.machine?.getCurrentState() ?? "";
         $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
 
         this.renderCommand();
@@ -476,18 +465,8 @@ export class App {
         this.renderAddSubMul();
         this.renderB2D();
         this.renderStats();
-    }
 
-    /**
-     * @returns {-1 | 0 | 1} -1 is any
-     */
-    getBreakpointInput() {
-        // -1: *
-        // 0 : Z
-        // 1 : NZ
-        const biStr = $breakpointInputSelect.value;
-        return biStr === "any" ? -1 :
-               biStr === "zero" ? 0 : 1;
+        this.prevAppState = this.appState;
     }
 
     /**
@@ -519,58 +498,28 @@ export class App {
         const isRunning = this.appState === "Running";
 
         // ブレークポイントの処理
-        const NON_BREAKPOINT = -1;
-        let breakpointIndex = NON_BREAKPOINT;
+        const breakpointIndex = parseInt($breakpointSelect.value, 10);
+        const breakpointInputValue = getBreakpointInput($breakpointInputSelect);
 
-        const tempN = parseInt($breakpointSelect.value, 10);
-        if (!isNaN(tempN)) {
-            breakpointIndex = tempN;
-        }
-        const hasBreakpoint = breakpointIndex !== NON_BREAKPOINT;
-        const breakpointInputValue = this.getBreakpointInput();
-
-        let i = 0;
-        const start = performance.now();
         try {
-            for (; i < steps; i++) {
-                const res = machine.execCommand();
-                if (res === -1) {
-                    this.appState = "Halted";
-                    this.steps += i + 1;
-                    this.render();
-                    return;
-                }
-                // ブレークポイントの状態の場合、停止する
-                if (
-                    hasBreakpoint &&
-                    machine.currentStateIndex === breakpointIndex &&
-                    (breakpointInputValue === -1 || breakpointInputValue === machine.prevOutput)
-                ) {
-                    this.appState = "Stop";
-                    this.steps += i + 1;
-                    this.render();
-                    return;
-                }
-                // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
-                if (isRunning && i % 500000 === 0 && (performance.now() - start >= 50)) {
-                    this.steps += i + 1;
-                    this.render();
-                    return;
-                }
+            const resultState = machine.exec(
+                steps,
+                isRunning,
+                breakpointIndex,
+                breakpointInputValue
+            );
+            if (resultState !== undefined) {
+                this.appState = resultState;
             }
-        } catch (e) {
+        } catch (error) {
             this.appState = "RuntimeError";
-            if (e instanceof Error) {
-                this.errorMessage = e.message;
+            if (error instanceof Error) {
+                this.errorMessage = error.message;
             } else {
                 this.errorMessage = "Unkown error is occurred.";
             }
-            this.steps += i + 1; // 1回目でエラーが発生したら1ステップとする
-            this.render();
-            return;
         }
 
-        this.steps += steps;
         this.render();
     }
 }

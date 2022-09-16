@@ -1,7 +1,8 @@
 // @ts-check
 
 import { ActionExecutor } from '../src/ActionExecutor.js';
-import { URegAction, U_INC } from "../src/actions/URegAction.js";
+import { BRegAction, B_INC, B_SET, B_TDEC, B_READ } from '../src/actions/BRegAction.js';
+import { URegAction, U_INC, U_TDEC } from "../src/actions/URegAction.js";
 
 import { assertEquals, test, assertThrows } from './deps.js';
 
@@ -148,6 +149,27 @@ test('ActionExecutor register not found error', () => {
     });
 
     assertEquals(x.execAction(new URegAction(U_INC, 0)), undefined);
+    assertEquals(x.execAction(new URegAction(U_TDEC, 0)), 1);
+    assertEquals(x.execAction(new URegAction(U_TDEC, 0)), 0);
+    assertThrows(() => {
+        x.execAction(new URegAction(U_INC, 1));
+    });
+});
+
+test('ActionExecutor BReg', () => {
+    const x = new ActionExecutor({
+        unaryRegisterNumbers: [],
+        binaryRegisterNumbers: [0],
+        legacyTRegisterNumbers: [],
+    });
+
+    assertEquals(x.execAction(new BRegAction(B_INC, 0)), undefined);
+    assertEquals(x.execAction(new BRegAction(B_TDEC, 0)), 1);
+    assertEquals(x.execAction(new BRegAction(B_TDEC, 0)), 0);
+    assertEquals(x.execAction(new BRegAction(B_SET, 0)), undefined);
+    assertEquals(x.execAction(new BRegAction(B_READ, 0)), 1);
+    assertEquals(x.execAction(new BRegAction(B_READ, 0)), 0);
+
     assertThrows(() => {
         x.execAction(new URegAction(U_INC, 1));
     });

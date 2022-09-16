@@ -3,7 +3,6 @@
 // @ts-ignore
 import * as Comlink from "https://unpkg.com/comlink/dist/esm/comlink.mjs";
 import { Machine } from "../../src/Machine.js";
-import { Program } from "../../src/Program.js";
 
 export const App = {
     /**
@@ -16,12 +15,7 @@ export const App = {
      * @param {string} src
      */
     initialize(src) {
-        const program = Program.parse(src);
-        if (typeof program === 'string') {
-            console.error(program);
-        } else {
-            this._machine = new Machine(program);
-        }
+        this._machine = Machine.fromString(src);
     },
     /**
      *

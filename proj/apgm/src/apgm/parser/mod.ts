@@ -17,6 +17,7 @@ import {
     VarAPGMExpr,
     WhileAPGMExpr,
 } from "../ast/mod.ts";
+import { APGMSourceSpan } from "../ast/core.ts";
 
 // https://stackoverflow.com/questions/16160190/regular-expression-to-find-c-style-block-comments#:~:text=35-,Try%20using,-%5C/%5C*(%5C*(%3F!%5C/)%7C%5B%5E*%5D)*%5C*%5C/
 export const comment = bnb.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([] /* 無し */);
@@ -35,15 +36,26 @@ const identifierRexExp = /[a-zA-Z_][a-zA-Z_0-9]*/u;
 export const identifierOnly: bnb.Parser<string> = bnb.match(identifierRexExp)
     .desc(["identifier"]);
 
+function createSpan(start: bnb.SourceLocation, word: string): APGMSourceSpan {
+    return {
+        start: start,
+        end: {
+            index: start.index + word.length - 1,
+            line: start.line,
+            column: start.column + word.length,
+        },
+    };
+}
 export const identifier: bnb.Parser<string> = _.next(identifierOnly).skip(_);
-export const identifierWithLocation: bnb.Parser<[string, bnb.SourceLocation]> =
-    _.chain(() => {
+export const identifierWithSpan: bnb.Parser<[string, APGMSourceSpan]> = _.chain(
+    () => {
         return bnb.location.chain((loc) => {
             return identifierOnly.skip(_).map((ident) => {
-                return [ident, loc];
+                return [ident, createSpan(loc, ident)];
             });
         });
-    });
+    },
+);
 
 // completion_parser.tsと合わせる
 const macroIdentifierRegExp = /[a-zA-Z_][a-zA-Z_0-9]*!/u;
@@ -70,9 +82,9 @@ export const curlyLeft = token("{").desc(["`{`"]);
 /** `)` */
 export const curlyRight = token("}").desc(["`}`"]);
 
-export const varAPGMExpr: bnb.Parser<VarAPGMExpr> = identifierWithLocation.map((
-    [ident, loc],
-) => new VarAPGMExpr(ident, loc));
+export const varAPGMExpr: bnb.Parser<VarAPGMExpr> = identifierWithSpan.map((
+    [ident, span],
+) => new VarAPGMExpr(ident, span));
 
 function argExprs<T>(arg: () => bnb.Parser<T>): bnb.Parser<T[]> {
     return bnb.lazy(() => arg()).sepBy(comma).wrap(
@@ -86,7 +98,11 @@ export function funcAPGMExpr(): bnb.Parser<FuncAPGMExpr> {
         return bnb.choice(macroIdentifier, identifier).chain((ident) => {
             return argExprs(() => apgmExpr()).map(
                 (args) => {
-                    return new FuncAPGMExpr(ident, args, location);
+                    return new FuncAPGMExpr(
+                        ident,
+                        args,
+                        createSpan(location, ident),
+                    );
                 },
             );
         });
@@ -95,17 +111,27 @@ export function funcAPGMExpr(): bnb.Parser<FuncAPGMExpr> {
 
 export const numberAPGMExpr: bnb.Parser<NumberAPGMExpr> = _.next(
     bnb.location.chain((loc) => {
-        return naturalNumberParser.map((x) => new NumberAPGMExpr(x, loc));
+        return naturalNumberParser.map((x) =>
+            new NumberAPGMExpr(x.value, createSpan(loc, x.raw), x.raw)
+        );
     }),
 ).skip(_);
 
-// TODO location
-export const stringLit: bnb.Parser<string> = _.next(bnb.text(`"`)).next(
-    bnb.match(/[^"]*/),
-).skip(
-    bnb.text(`"`),
-).skip(_).desc(["string"]);
-export const stringAPGMExpr = stringLit.map((x) => new StringAPGMExpr(x));
+export const stringLit: bnb.Parser<{ value: string; span: APGMSourceSpan }> = _
+    .next(bnb.location).chain((loc) => {
+        return bnb.text(`"`).next(bnb.match(/[^"]*/)).skip(
+            bnb.text(`"`),
+        ).skip(_).desc(["string"]).map((str) => {
+            return {
+                value: str,
+                span: createSpan(loc, `"${str}"`),
+            };
+        });
+    });
+
+export const stringAPGMExpr = stringLit.map((x) =>
+    new StringAPGMExpr(x.value, x.span)
+);
 
 export function seqAPGMExprRaw(): bnb.Parser<APGMExpr[]> {
     return bnb.lazy(() => statement()).repeat();
@@ -163,19 +189,21 @@ export function ifAPGMExpr(): bnb.Parser<IfAPGMExpr> {
 
 // macro f!(a, b)
 export function macroHead(): bnb.Parser<
-    { loc: bnb.SourceLocation; name: string; args: VarAPGMExpr[] }
+    { span: APGMSourceSpan; name: string; args: VarAPGMExpr[] }
 > {
-    const macroKeyword: bnb.Parser<bnb.SourceLocation> = _.chain((_) => {
+    const macroKeyword: bnb.Parser<APGMSourceSpan> = _.chain((_) => {
         return bnb.location.chain((location) => {
-            return bnb.text("macro").next(someSpaces).map((_) => location);
+            return bnb.text("macro").next(someSpaces).map((_) =>
+                createSpan(location, "macro")
+            );
         });
     });
 
-    return macroKeyword.and(macroIdentifier).chain(([location, ident]) => {
+    return macroKeyword.and(macroIdentifier).chain(([span, ident]) => {
         return argExprs(() => varAPGMExpr).map(
             (args) => {
                 return {
-                    loc: location,
+                    span: span,
                     name: ident,
                     args: args,
                 };
@@ -190,9 +218,9 @@ export function macroHead(): bnb.Parser<
  * }
  */
 export function macro(): bnb.Parser<Macro> {
-    return macroHead().chain(({ loc, name, args }) => {
+    return macroHead().chain(({ span, name, args }) => {
         return bnb.lazy(() => apgmExpr()).map((body) => {
-            return new Macro(name, args, body, loc);
+            return new Macro(name, args, body, span);
         });
     });
 }

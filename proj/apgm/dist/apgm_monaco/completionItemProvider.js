@@ -145,12 +145,12 @@ function generateSuggestion(decls) {
 export const completionItemProvider = {
     /**
      * @param {any} model
-     * @param {any} position
-     * @param {any} context
-     * @param {any} token
+     * @param {unknown} _position
+     * @param {unknown} _context
+     * @param {unknown} _token
      * @returns
      */
-    provideCompletionItems: (model, position, context, token) => {
+    provideCompletionItems: (model, _position, _context, _token) => {
         /** @type {string} */
         const str = model.getValue();
 

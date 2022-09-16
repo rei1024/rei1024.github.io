@@ -1,3 +1,15 @@
+.font-x-large {
+    font-size: x-large;
+}
+
+.white-space-pre-wrap {
+    white-space: pre-wrap;
+}
+
+.input-border {
+    border: 1px solid black;
+}
+
 .mono {
     font-family: var(--bs-font-monospace);
     font-size: .875em;
@@ -10,7 +22,7 @@
 
 #apgm_input {
     width: 60%;
-    height: 475px;
+    height: calc(100vh - 150px);
 }
 
 #output {

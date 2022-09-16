@@ -107,5 +107,7 @@ for (const { name, prog } of list) {
         $input.value = prog;
         comment = name;
     });
-    $list.append(button);
+    const li = document.createElement('li');
+    li.append(button);
+    $list.append(li);
 }

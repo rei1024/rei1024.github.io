@@ -39,7 +39,7 @@ export function prettyError(fail: bnb.ParseFail, source: string): string {
  * @param parser
  * @param source source string
  * @returns parsed value
- * @throws Error
+ * @throws ErrorWithLocation
  */
 export function parsePretty<A>(parser: bnb.Parser<A>, source: string): A {
     const res = parser.parse(source);

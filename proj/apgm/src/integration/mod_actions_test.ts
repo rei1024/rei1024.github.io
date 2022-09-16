@@ -11,7 +11,7 @@ test("integration 0 actions", () => {
     assertEquals(res, [
         "# State    Input    Next state    Actions",
         "# ---------------------------------------",
-        "INITIAL; *; STATE_1_INITIAL; NOP",
+        "INITIAL; ZZ; STATE_1_INITIAL; NOP",
         "STATE_1_INITIAL; *; STATE_2; NOP",
         "STATE_2; *; STATE_3; HALT_OUT",
         "STATE_3; *; STATE_END; MUL 0",

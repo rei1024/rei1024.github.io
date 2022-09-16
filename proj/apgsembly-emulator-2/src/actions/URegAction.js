@@ -67,7 +67,7 @@ export class URegAction extends Action {
         this.regNumber = regNumber;
 
         /**
-         * @type {import('../components/UReg').UReg | undefined}
+         * @type {import('../components/UReg.js').UReg | undefined}
          */
         this.registerCache = undefined;
     }

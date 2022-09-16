@@ -1,20 +1,27 @@
+interface MonacoEditor {
+    setModelMarkers(model: any, owner: string, _: any[]): unknown;
+    create(container: HTMLElement, _: any): Editor;
+}
+
 interface Editor {
-    setModelMarkers(model: any, owner: string, _: any[]): any;
-    create(container: HTMLElement, _: any): any;
+    getModel(): unknown;
+    getValue(): string;
+    setValue(str: string): string;
+    revealLine(line: number): void;
 }
 
 interface Languages {
-    register(_: any): any;
-    registerCompletionItemProvider(id: string, _: any): any;
-    setMonarchTokensProvider(id: string, _: any): any;
-    setLanguageConfiguration(id: string, _: any): any;
+    register(_: unknown): any;
+    registerCompletionItemProvider(id: string, _: unknown): unknown;
+    setMonarchTokensProvider(id: string, _: unknown): unknown;
+    setLanguageConfiguration(id: string, _: unknown): unknown;
     CompletionItemKind: any;
     CompletionItemInsertTextRule: any;
 }
 
 interface Monaco {
     languages: Languages;
-    editor: Editor;
+    editor: MonacoEditor;
     MarkerSeverity: any;
 }
 

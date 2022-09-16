@@ -1,5 +1,5 @@
 {
     "trailing-spaces.trimOnSave": true,
-    "deno.enable": false,
+    "deno.enablePaths": ["bundle.ts", "./src"],
     "deno.config": "./deno.jsonc"
 }

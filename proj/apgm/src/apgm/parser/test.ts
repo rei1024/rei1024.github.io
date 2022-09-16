@@ -104,10 +104,10 @@ test("parser: func", () => {
 
 test("parser: stringLit", () => {
     const value = stringLit.tryParse(`"abc"`);
-    assertEquals(value, "abc");
+    assertEquals(value.value, "abc");
 
     const value2 = stringLit.tryParse(`  "def"`);
-    assertEquals(value2, "def");
+    assertEquals(value2.value, "def");
 });
 
 test("parser: main", () => {
@@ -219,7 +219,8 @@ test("parser: main", () => {
         const m = main().tryParse(c);
         const mPretty = m.pretty();
         try {
-            main().tryParse(mPretty);
+            const m2 = main().tryParse(mPretty);
+            assertEquals(mPretty, m2.pretty());
         } catch (error) {
             throw Error(`Parse Error for: "${c}" -> "${mPretty}"`, {
                 cause: error instanceof Error ? error : undefined,

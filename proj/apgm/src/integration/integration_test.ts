@@ -5,14 +5,8 @@ function runAPGMMachine(src: string) {
     return runAPGsembly(integration(src).join("\n"));
 }
 
-test("integration 1", () => {
-    const machine = runAPGMMachine(``);
-    assertEquals(machine.currentState, "STATE_END");
-});
-
 function runAPGM(src: string): string {
-    return runAPGsembly(integration(src).join("\n")).actionExecutor.output
-        .getString();
+    return runAPGMMachine(src).actionExecutor.output.getString();
 }
 
 test("integration 2", () => {
@@ -106,4 +100,41 @@ test("integration 10", () => {
     g!("1");
 `);
     assertEquals(output, "1");
+});
+
+test("integration 11", () => {
+    const output = runAPGM(`
+/*
+* Print single digit of an Ux register
+*/
+macro print_digit_u!(x) {
+    if_z (tdec_u(x)) {
+        output("0");
+    } else if_z (tdec_u(x)) {
+        output("1");
+    } else if_z (tdec_u(x)) {
+        output("2");
+    } else if_z (tdec_u(x)) {
+        output("3");
+    } else if_z (tdec_u(x)) {
+        output("4");
+    } else if_z (tdec_u(x)) {
+        output("5");
+    } else if_z (tdec_u(x)) {
+        output("6");
+    } else if_z (tdec_u(x)) {
+        output("7");
+    } else if_z (tdec_u(x)) {
+        output("8");
+    } else {
+        output("9");
+    }
+}
+
+#REGISTERS { "U0": 4, "U1": 2 }
+
+print_digit_u!(0);
+print_digit_u!(1);
+`);
+    assertEquals(output, "42");
 });

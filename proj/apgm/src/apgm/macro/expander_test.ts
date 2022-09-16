@@ -1,12 +1,8 @@
 import { expand } from "./expander.ts";
 import {
-    APGMExpr,
     FuncAPGMExpr,
-    IfAPGMExpr,
-    LoopAPGMExpr,
     Macro,
     Main,
-    NumberAPGMExpr,
     SeqAPGMExpr,
     StringAPGMExpr,
     VarAPGMExpr,
@@ -154,6 +150,6 @@ test("macro scope error", () => {
             expand(new Main(macros, [], new SeqAPGMExpr([whileExpr])));
         },
         Error,
-        `scope error: "y"`,
+        `scope error: Unknown variable "y"`,
     );
 });

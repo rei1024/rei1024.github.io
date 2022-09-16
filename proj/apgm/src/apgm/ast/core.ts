@@ -30,10 +30,16 @@ export interface APGMSourceLocation {
     column: number;
 }
 
+export interface APGMSourceSpan {
+    start: APGMSourceLocation;
+    end: APGMSourceLocation;
+}
+
 export class ErrorWithLocation extends Error {
     constructor(
         message: string,
         public apgmLocation?: APGMSourceLocation | undefined,
+        public apgmSpan?: APGMSourceSpan,
         options?: ErrorOptions | undefined,
     ) {
         super(message, options);

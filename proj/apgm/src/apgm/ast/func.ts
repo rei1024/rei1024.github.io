@@ -1,4 +1,4 @@
-import { APGMExpr, type APGMSourceLocation } from "./core.ts";
+import { APGMExpr, type APGMSourceSpan } from "./core.ts";
 
 /**
  * Function call
@@ -7,7 +7,7 @@ export class FuncAPGMExpr extends APGMExpr {
     constructor(
         public readonly name: string,
         public readonly args: APGMExpr[],
-        public readonly location: APGMSourceLocation | undefined,
+        public readonly span: APGMSourceSpan | undefined,
     ) {
         super();
     }
@@ -17,7 +17,7 @@ export class FuncAPGMExpr extends APGMExpr {
             new FuncAPGMExpr(
                 this.name,
                 this.args.map((x) => x.transform(f)),
-                this.location,
+                this.span,
             ),
         );
     }

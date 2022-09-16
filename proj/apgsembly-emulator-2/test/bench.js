@@ -164,3 +164,129 @@ Deno.bench('pi', () => {
 //     },
 //     group: 'test'
 // });
+
+// const rep = 10000000;
+
+// Deno.bench({
+//     name: 'switch',
+//     fn() {
+//         let x = "abc";
+//         for (let j = 0; j < rep; j++) {
+//             switch (x) {
+//                 case 'xyz': console.log(x);
+//             }
+//         }
+//     },
+//     group: 'test'
+// });
+
+// Deno.bench({
+//     name: 'switch int',
+//     fn() {
+//         let x = 3;
+//         let y = 4;
+//         for (let j = 0; j < rep; j++) {
+//             switch (x) {
+//                 case y: console.log(x);
+//             }
+//         }
+//     },
+//     group: 'test'
+// });
+
+// const repeat = 10000000;
+
+// // const a = [
+// //     0b0101, 0b0100, 0b0111, 0b0110, 0b0001, 0b0000, 0b0011, 0b0010,
+// //     0b1101, 0b1100, 0b1111, 0b1110, 0b1001, 0b1000, 0b1011, 0b1010
+// // ];
+// // console.log(a.map((v, i) => `case ${i}: {\n    v = ${v};\n    break;\n}`).join("\n"))
+// Deno.bench({
+//     name: 'switch',
+//     fn() {
+//         let v = 0;
+//         for (let j = 0; j < repeat; j++) {
+//             switch (v) {
+//                 case 0: {
+//                     v = 5;
+//                     break;
+//                 }
+//                 case 1: {
+//                     v = 4;
+//                     break;
+//                 }
+//                 case 2: {
+//                     v = 7;
+//                     break;
+//                 }
+//                 case 3: {
+//                     v = 6;
+//                     break;
+//                 }
+//                 case 4: {
+//                     v = 1;
+//                     break;
+//                 }
+//                 case 5: {
+//                     v = 0;
+//                     break;
+//                 }
+//                 case 6: {
+//                     v = 3;
+//                     break;
+//                 }
+//                 case 7: {
+//                     v = 2;
+//                     break;
+//                 }
+//                 case 8: {
+//                     v = 13;
+//                     break;
+//                 }
+//                 case 9: {
+//                     v = 12;
+//                     break;
+//                 }
+//                 case 10: {
+//                     v = 15;
+//                     break;
+//                 }
+//                 case 11: {
+//                     v = 14;
+//                     break;
+//                 }
+//                 case 12: {
+//                     v = 9;
+//                     break;
+//                 }
+//                 case 13: {
+//                     v = 8;
+//                     break;
+//                 }
+//                 case 14: {
+//                     v = 11;
+//                     break;
+//                 }
+//                 case 15: {
+//                     v = 10;
+//                     break;
+//                 }
+//             }
+//         }
+//     },
+//     group: 'test'
+// });
+
+// Deno.bench({
+//     name: 'array',
+//     fn() {
+//         let v = 0;
+//         for (let j = 0; j < repeat; j++) {
+//             v = [
+//                 0b0101, 0b0100, 0b0111, 0b0110, 0b0001, 0b0000, 0b0011, 0b0010,
+//                 0b1101, 0b1100, 0b1111, 0b1110, 0b1001, 0b1000, 0b1011, 0b1010
+//             ][v];
+//         }
+//     },
+//     group: 'test'
+// });

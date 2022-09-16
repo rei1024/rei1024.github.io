@@ -1,5 +1,7 @@
 // @ts-check
 
+// https://conwaylife.com/book
+
 const part1 = `
 #COMPONENTS NOP,DIGITPRINTER_SE,B0-3,U0-9,ADD,SUB,MUL
 #REGISTERS {"U1":1, "U6":6, "B0":2, "B2":1}

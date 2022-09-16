@@ -1,12 +1,32 @@
 import { bnb } from "../../deps.ts";
 
-export const decimalNaturalParser = bnb.match(/[0-9]+/).desc(["number"]).map(
-    (x) => parseInt(x, 10),
+interface NumberResult {
+    raw: string;
+    value: number;
+}
+
+export const decimalNaturalParser: bnb.Parser<NumberResult> = bnb.match(
+    /[0-9]+/,
+).desc(["number"]).map(
+    (x) => {
+        return {
+            raw: x,
+            value: parseInt(x, 10),
+        };
+    },
 );
 
-export const hexadecimalNaturalParser = bnb.match(/0x[a-fA-F0-9]+/).desc([
+export const hexadecimalNaturalParser: bnb.Parser<NumberResult> = bnb.match(
+    /0x[a-fA-F0-9]+/,
+).desc([
     "hexadecimal number",
-]).map((x) => parseInt(x, 16));
+]).map((x) => {
+    return {
+        raw: x,
+        value: parseInt(x, 16),
+    };
+});
 
-export const naturalNumberParser: bnb.Parser<number> = hexadecimalNaturalParser
-    .or(decimalNaturalParser).desc(["number"]);
+export const naturalNumberParser: bnb.Parser<NumberResult> =
+    hexadecimalNaturalParser
+        .or(decimalNaturalParser).desc(["number"]);

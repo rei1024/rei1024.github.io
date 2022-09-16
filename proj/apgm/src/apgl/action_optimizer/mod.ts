@@ -9,10 +9,7 @@ export function optimize(expr: APGLExpr): APGLExpr {
 }
 
 function optimizeOnce(expr: APGLExpr): APGLExpr {
-    if (expr instanceof SeqAPGLExpr) {
-        return optimizeSeqAPGLExpr(expr);
-    }
-    return expr;
+    return expr instanceof SeqAPGLExpr ? optimizeSeqAPGLExpr(expr) : expr;
 }
 
 function merge(
@@ -105,6 +102,7 @@ function optimizeSeqAPGLExpr(seqExpr: SeqAPGLExpr): SeqAPGLExpr {
             newExprs.push(expr);
         }
     }
+
     putItems();
     return new SeqAPGLExpr(newExprs);
 }

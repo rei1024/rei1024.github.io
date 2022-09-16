@@ -4,18 +4,24 @@
 import {} from "./util/selector.js";
 import {} from "./util/frequency.js";
 import {} from "./util/create.js";
+import {} from "./util/continuously-variable-emitter.js";
 import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
 import {} from "./components/stats_ui.js";
-import { setupFrequencyInput } from "./components/frequency_input.js";
+import {} from "./components/breakpoint.js";
+import {} from "./components/toggle.js";
+import {} from "./components/error.js";
+import {} from "./components/output.js";
 
+import { setupFrequencyInput } from "./components/frequency_input.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
 import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
 import { prefetch } from "./util/prefetch.js";
+import { localStorageSetItem } from "./util/local-storage-set-item.js";
 
 import {
     $input,
@@ -34,10 +40,7 @@ import {
     // Modal
     $configModalContent,
     $stepInput,
-    $hideBinary,
-    $reverseBinary,
-    $showBinaryValueInDecimal,
-    $showBinaryValueInHex,
+    binaryConfig,
     $darkMode,
     $darkModeLabel,
     $b2dHidePointer,
@@ -47,18 +50,13 @@ import {
     $statsModal,
 } from "./bind.js";
 
-import { App, DEFUALT_FREQUENCY } from "./app.js";
+import { App } from "./app.js";
 
 // データ
 // GitHub Pagesは1階層上になる
 const DATA_DIR = location.origin.includes('github') ?
     "../apgsembly-emulator-2/data/" :
     "../data/";
-
-/**
- * @typedef {"Initial" | "Running" | "Stop" | "ParseError" |
- *           "RuntimeError" | "Halted"} AppState
- */
 
 /** instance */
 const app = new App();
@@ -111,6 +109,8 @@ $exampleCodes.forEach(e => {
         try {
             const response = await fetch(DATA_DIR + src);
             app.setInputAndReset(await response.text());
+            // スクロール
+            $input.scrollTop = 0;
         } catch (_) {
             console.error(`Fetch Error: ${src}`);
         } finally {
@@ -120,7 +120,7 @@ $exampleCodes.forEach(e => {
 });
 
 // 周波数の設定
-setupFrequencyInput($frequencyInput, app, DEFUALT_FREQUENCY);
+setupFrequencyInput($frequencyInput, app);
 
 // 開閉で描画
 $b2dDetail.addEventListener('toggle', () => {
@@ -138,6 +138,8 @@ $unaryRegisterDetail.addEventListener('toggle', () => {
 // ファイルインポート
 importFileAsText($fileImport, result => {
     app.setInputAndReset(result);
+    // スクロール
+    $input.scrollTop = 0;
 });
 
 // ** Modal ** //
@@ -160,22 +162,22 @@ $stepInput.addEventListener('input', () => {
 function setupCheckbox($checkbox, key) {
     $checkbox.addEventListener("change", () => {
         app.render();
-        localStorage.setItem(key, $checkbox.checked.toString());
+        localStorageSetItem(key, $checkbox.checked.toString());
     });
 }
 
 // バイナリを非表示にする
 const HIDE_BINARY_KEY = 'hide_binary';
-setupCheckbox($hideBinary, HIDE_BINARY_KEY);
+setupCheckbox(binaryConfig.$hideBinary, HIDE_BINARY_KEY);
 
 const REVERSE_BINARY_KEY = 'reverse_binary';
-setupCheckbox($reverseBinary, REVERSE_BINARY_KEY);
+setupCheckbox(binaryConfig.$reverseBinary, REVERSE_BINARY_KEY);
 
 const SHOW_BINARY_IN_DECIMAL_KEY = 'show_binary_in_decimal';
-setupCheckbox($showBinaryValueInDecimal, SHOW_BINARY_IN_DECIMAL_KEY);
+setupCheckbox(binaryConfig.$showBinaryValueInDecimal, SHOW_BINARY_IN_DECIMAL_KEY);
 
 const SHOW_BINARY_IN_HEX_KEY = 'show_binary_in_hex';
-setupCheckbox($showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
+setupCheckbox(binaryConfig.$showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
 
 // B2D
 $b2dHidePointer.addEventListener('change', () => {
@@ -195,7 +197,7 @@ $statsModal.addEventListener('shown.bs.modal', () => {
 const DARK_MODE_KEY = 'dark_mode';
 $darkMode.addEventListener('change', () => {
     const onOrOff = $darkMode.checked ? "on" : "off";
-    localStorage.setItem(DARK_MODE_KEY, onOrOff);
+    localStorageSetItem(DARK_MODE_KEY, onOrOff);
     document.body.setAttribute('apge_dark', onOrOff);
 
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
@@ -256,6 +258,8 @@ $input.addEventListener("drop", async (event) => {
     }
 
     app.setInputAndReset(await file.text());
+    // スクロール
+    $input.scrollTop = 0;
 });
 
 // ボタンの有効化
@@ -266,11 +270,21 @@ $configButton.disabled = false;
 // first render
 app.initializeApp();
 
+// 初期コード
 idle(() => {
-    // 実行時間が掛かる処理をまとめる
+    const INIT_CODE = "initial_code";
+    const initCode = localStorage.getItem(INIT_CODE);
+    if (initCode !== null && initCode !== "") {
+        localStorage.removeItem(INIT_CODE);
+        app.setInputAndReset(initCode);
+    }
+});
+
+// 実行時間が掛かる処理をまとめる
+idle(() => {
     // デフォルトはtrue
     if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
-        localStorage.setItem(SHOW_BINARY_IN_DECIMAL_KEY, "true");
+        localStorageSetItem(SHOW_BINARY_IN_DECIMAL_KEY, "true");
     }
 
     /**
@@ -278,10 +292,10 @@ idle(() => {
      */
     const items = [
         { key: B2D_FLIP_UPSIDE_DOWN_KEY, checkbox: $b2dFlipUpsideDown },
-        { key: REVERSE_BINARY_KEY, checkbox: $reverseBinary },
-        { key: HIDE_BINARY_KEY, checkbox: $hideBinary },
-        { key: SHOW_BINARY_IN_DECIMAL_KEY, checkbox: $showBinaryValueInDecimal },
-        { key: SHOW_BINARY_IN_HEX_KEY, checkbox: $showBinaryValueInHex },
+        { key: REVERSE_BINARY_KEY, checkbox: binaryConfig.$reverseBinary },
+        { key: HIDE_BINARY_KEY, checkbox: binaryConfig.$hideBinary },
+        { key: SHOW_BINARY_IN_DECIMAL_KEY, checkbox: binaryConfig.$showBinaryValueInDecimal },
+        { key: SHOW_BINARY_IN_HEX_KEY, checkbox: binaryConfig.$showBinaryValueInHex },
     ];
 
     for (const { key, checkbox } of items) {
@@ -300,14 +314,6 @@ idle(() => {
     app.render();
 });
 
-// 初期コード
-const INIT_CODE = "initial_code";
-const initCode = localStorage.getItem(INIT_CODE);
-if (initCode !== null && initCode !== "") {
-    localStorage.removeItem(INIT_CODE);
-    app.setInputAndReset(initCode);
-}
-
 // サンプルコードをプレフェッチ
 idle(() => {
     const saveData = getSaveData();
@@ -324,10 +330,23 @@ idle(() => {
 
 // PWA
 if ("serviceWorker" in navigator) {
-    // navigator.serviceWorker.register("./service-worker.js?2022-06-10");
-    navigator.serviceWorker.getRegistrations().then(registrations => {
-        for (const registration of registrations) {
-            registration.unregister();
-        }
+    idle(async () => {
+        // await navigator.serviceWorker.register("./service-worker.js?2022-09-14");
+
+        // // check for update
+        // if (navigator.onLine) {
+        //     navigator.serviceWorker
+        //     .getRegistrations()
+        //     .then((registrations) => registrations.forEach((reg) => reg.update()));
+        // }
+
+        // unregister all
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            for (const registration of registrations) {
+                registration.unregister();
+            }
+        });
     });
 }
+
+export const _index = null;

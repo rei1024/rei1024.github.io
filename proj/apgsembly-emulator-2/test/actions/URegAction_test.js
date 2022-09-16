@@ -58,4 +58,8 @@ test("URegAction isSameComponent", () => {
         URegAction.parse('INC U1').isSameComponent(URegAction.parse('INC U2')),
         false
     );
+    assertEquals(
+        URegAction.parse('TDEC U1').isSameComponent(URegAction.parse('INC U2')),
+        false
+    );
 });

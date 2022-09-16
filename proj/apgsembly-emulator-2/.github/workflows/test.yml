@@ -10,6 +10,7 @@ on:
       - "turmites/**"
       - "transpiler/**"
       - "labs/fast_emulator/**"
+      - "generator/**"
   pull_request:
     branches: [main]
     paths:
@@ -19,6 +20,7 @@ on:
       - "turmites/**"
       - "transpiler/**"
       - "labs/fast_emulator/**"
+      - "generator/**"
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -35,4 +37,4 @@ jobs:
       # - name: Build Deno Module
       #   run: deno run --reload mod.ts
       - name: Run Test
-        run: deno test --allow-none --no-check
+        run: deno task t

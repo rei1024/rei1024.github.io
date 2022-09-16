@@ -1,14 +1,15 @@
 // @ts-check
 
 import { HaltOutAction } from "../actions/HaltOutAction.js";
-import { Command } from "../Command.js";
+import { Command, addLineNumber } from "../Command.js";
 
 /**
- *
+ * アクションが値を一度だけ返すか検査する
+ * エラーメッセージを返却する
  * @param {Command} command
  * @returns {string | undefined}
  */
-function validateActionReturnOnceCommand(command) {
+export function validateActionReturnOnceCommand(command) {
     // FIXME: HALT_OUTが含まれる場合は一旦無視
     if (command.actions.some(x => x instanceof HaltOutAction)) {
         return undefined;
@@ -18,33 +19,12 @@ function validateActionReturnOnceCommand(command) {
     if (valueReturnActions.length === 1) {
         return undefined;
     } else if (valueReturnActions.length === 0) {
-        return `Does not produce the return value in "${command.pretty()}"`;
+        return `Does not produce the return value in "${command.pretty()}"${addLineNumber(command)}`;
     } else {
         return `Does not contain exactly one action that produces a return value in "${
             command.pretty()
         }": Actions that produce value are ${
             valueReturnActions.map(x => `"${x.pretty()}"`).join(', ')
-        }`;
+        }${addLineNumber(command)}`;
     }
-}
-
-/**
- * アクションが値を一度だけ返すか検査する
- * エラーメッセージを返却する
- * @param {Command[]} commands
- * @returns {string[] | undefined}
- */
-export function validateActionReturnOnce(commands) {
-    /** @type {string[]} */
-    const errors = [];
-    for (const command of commands) {
-        const err = validateActionReturnOnceCommand(command);
-        if (typeof err === 'string') {
-            errors.push(err);
-        }
-    }
-    if (errors.length > 0) {
-        return errors;
-    }
-    return undefined;
 }

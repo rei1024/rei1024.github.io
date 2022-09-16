@@ -13,10 +13,6 @@ graph TD
     APGL3[APGL] -->|Transpile| APGsembly[APGsembly]
 ```
 
-## Commit
-
-- `deno task commit "message"`
-
 ## Testing
 
 ### Requirements

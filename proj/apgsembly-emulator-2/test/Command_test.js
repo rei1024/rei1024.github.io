@@ -22,6 +22,16 @@ test('Command parse', () => {
     }
 });
 
+test('Command parse line', () => {
+    const str = `INITIAL; ZZ; DIR0; TDEC U2`;
+    const res = Command.parse(str, 42);
+    if (res instanceof Command) {
+        assertEquals(res.line, 42);
+    } else {
+        throw Error('parse error ' + str);
+    }
+});
+
 test('Command parse empty line', () => {
     const str = ``;
     const res = Command.parse(str);

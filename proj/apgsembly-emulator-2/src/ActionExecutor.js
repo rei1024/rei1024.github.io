@@ -128,8 +128,7 @@ export class ActionExecutor {
         if (key.startsWith('U')) {
             const n = parseInt(key.slice(1), 10);
             if (isNaN(n)) {
-                const debugStr = `"${key}": ${JSON.stringify(value)}`;
-                throw Error(`Invalid #REGISTERS ${debugStr}`);
+                initError(key, value);
             }
             const reg = this.getUReg(n);
             if (reg === undefined) {
@@ -139,8 +138,7 @@ export class ActionExecutor {
         } else if (key.startsWith('B')) {
            const n = parseInt(key.slice(1), 10);
             if (isNaN(n)) {
-                const debugStr = `"${key}": ${JSON.stringify(value)}`;
-                throw Error(`Invalid #REGISTERS ${debugStr}`);
+                initError(key, value);
             }
             const reg = this.getBReg(n);
             if (reg === undefined) {
@@ -148,8 +146,7 @@ export class ActionExecutor {
             }
             reg.setByRegistersInit(key, value);
         } else {
-            const debugStr = `"${key}": ${JSON.stringify(value)}`;
-            throw Error(`Invalid #REGISTERS ${debugStr}`);
+            initError(key, value);
         }
     }
 
@@ -212,4 +209,15 @@ export class ActionExecutor {
     getBReg(n) {
         return this.bRegMap.get(n);
     }
+}
+
+/**
+ *
+ * @param {string} key
+ * @param {unknown} value
+ * @returns {never}
+ */
+function initError(key, value) {
+    const debugStr = `"${key}": ${JSON.stringify(value)}`;
+    throw Error(`Invalid #REGISTERS ${debugStr}`);
 }

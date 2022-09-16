@@ -1,9 +1,9 @@
-import { APGMExpr, type APGMSourceLocation } from "./core.ts";
+import { APGMExpr, type APGMSourceSpan } from "./core.ts";
 
 export class StringAPGMExpr extends APGMExpr {
     constructor(
         public readonly value: string,
-        public readonly location?: APGMSourceLocation | undefined,
+        public readonly span?: APGMSourceSpan | undefined,
     ) {
         super();
     }

@@ -1,7 +1,7 @@
 import { APGLExpr } from "./core.ts";
 
 export class LoopAPGLExpr extends APGLExpr {
-    private kind: string = "loop";
+    private kind = "loop";
     constructor(
         public readonly body: APGLExpr,
     ) {

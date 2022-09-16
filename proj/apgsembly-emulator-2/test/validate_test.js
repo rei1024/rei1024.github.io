@@ -5,9 +5,10 @@ import { OutputAction } from "../src/actions/OutputAction.js";
 import { HaltOutAction } from "../src/actions/HaltOutAction.js";
 import { URegAction, U_INC } from "../src/actions/URegAction.js";
 import { Command } from "../src/Command.js";
-import { validateNoSameComponent } from "../src/validators/no_same_component.js";
-import { validateActionReturnOnce } from "../src/validators/action_return_once.js";
-import { validateNoDuplicatedAction } from "../src/validators/no_dup_action.js";
+import { validateNoSameComponentCommand } from "../src/validators/no_same_component.js";
+import { validateActionReturnOnceCommand } from "../src/validators/action_return_once.js";
+import { validateNoDuplicatedActionCommand } from "../src/validators/no_dup_action.js";
+import { validateZAndNZ } from "../src/validators/z_and_nz.js";
 import { validateAll } from "../src/validate.js";
 import { assertEquals, test } from "./deps.js";
 
@@ -24,71 +25,80 @@ Actions "INC U0" and "INC U0" use same component in "INITIAL; ZZ; A0; INC U0, IN
 });
 
 test('validateActionReturnOnce HALT_OUT', () => {
-    const err = validateActionReturnOnce([
+    const err = validateActionReturnOnceCommand(
         new Command({
             state: "INITIAL",
             input: "ZZ",
             nextState: "A0",
             actions: [new HaltOutAction(), new HaltOutAction()]
         })
-    ]);
+    );
     // FIXME: とりあえず無視
     assertEquals(err, undefined);
 });
 
 test('validateNoSameComponent NOP NOP', () => {
-    const err = validateNoSameComponent([
+    const err = validateNoSameComponentCommand(
         new Command({
             state: "INITIAL",
             input: "ZZ",
             nextState: "A0",
             actions: [new NopAction(), new NopAction()]
         })
+    );
+    assertEquals(
+        err,
+        `Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`
+    );
+});
+
+test('validateZAndNZ ZZ and NZ', () => {
+    const err = validateZAndNZ([
+        new Command({
+            state: "A0",
+            input: "ZZ",
+            nextState: "A0",
+            actions: [new NopAction()]
+        }),
+        new Command({
+            state: "INITIAL",
+            input: "NZ",
+            nextState: "A0",
+            actions: [new NopAction()]
+        })
     ]);
-    if (err === undefined) {
-        throw Error('expected error');
-    } else {
-        assertEquals(
-            err,
-            [`Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP"`]
-        );
-    }
+    assertEquals(
+        err,
+        [`Need Z line followed by NZ line in "A0; ZZ; A0; NOP"`]
+    );
 });
 
 test('validateNoDuplicatedAction NOP NOP', () => {
-    const err = validateNoDuplicatedAction([
+    const err = validateNoDuplicatedActionCommand(
         new Command({
             state: "INITIAL",
             input: "ZZ",
             nextState: "A0",
             actions: [new NopAction(), new NopAction()]
         })
-    ]);
-    if (err === undefined) {
-        throw Error('expected error');
-    } else {
-        assertEquals(
-            err,
-            [`Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`]
-        );
-    }
+    );
+    assertEquals(
+        err,
+        `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP"`
+    );
 });
 
 test('validateNoDuplicatedAction NOP, OUTPUT 1, NOP', () => {
-    const err = validateNoDuplicatedAction([
+    const err = validateNoDuplicatedActionCommand(
         new Command({
             state: "INITIAL",
             input: "ZZ",
             nextState: "A0",
             actions: [new NopAction(), new OutputAction("1"), new NopAction()]
         })
-    ]);
-    if (err === undefined) {
-        throw Error('expected error');
-    } else {
-        assertEquals(
-            err,
-            [`Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, OUTPUT 1, NOP"`]
-        );
-    }
+    );
+    assertEquals(
+        err,
+        `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, OUTPUT 1, NOP"`
+    );
 });

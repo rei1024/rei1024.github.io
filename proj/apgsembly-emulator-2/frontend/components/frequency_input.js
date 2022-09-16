@@ -1,5 +1,8 @@
 // @ts-check
 
+/**
+ * @returns {number[]}
+ */
 function createFrequencyArray() {
     /** @type {number[]} */
     const frequencyArray = [];
@@ -17,12 +20,18 @@ function createFrequencyArray() {
 }
 
 /**
+ * @returns {never}
+ */
+function error() {
+    throw Error('error');
+}
+
+/**
  * 周波数入力
  * @param {HTMLInputElement} $frequencyInput
- * @param {import("../app").App} app
- * @param {number} defaultFrequency
+ * @param {import("../app.js").App} app
  */
-export function setupFrequencyInput($frequencyInput, app, defaultFrequency) {
+export function setupFrequencyInput($frequencyInput, app) {
     const frequencyArray = createFrequencyArray();
 
     $frequencyInput.min = "0";
@@ -30,14 +39,9 @@ export function setupFrequencyInput($frequencyInput, app, defaultFrequency) {
 
     $frequencyInput.addEventListener('input', () => {
         const value = parseInt($frequencyInput.value, 10);
-        if (!isNaN(value)) {
-            const freq = frequencyArray[value] ?? defaultFrequency;
-            $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
-            app.setFrequency(freq);
-        } else {
-            app.setFrequency(defaultFrequency);
-        }
-
+        const freq = frequencyArray[value] ?? error();
+        $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
+        app.setFrequency(freq);
         app.renderFrequencyOutput();
     });
 }
