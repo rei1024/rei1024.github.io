@@ -1,0 +1,254 @@
+# Prime printer
+# Transpiled from https://conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=25#p92224
+
+# B0: a log of which primes have been found so far
+# R0: the number that is being counted and will be printed
+# R1: number of digits in R0
+# R2: 10^(R1-1)
+# R3: current digit of R0 to print
+# R14: flag that says whether or not to print current R0
+# Other registers are temporary helpers
+# State    Input    Next state    Actions
+# ---------------------------------------
+INITIAL; ZZ; INIT1; INC B0, INC U0, INC U1, INC U2, OUTPUT 2, NOP
+INIT1; *; INIT2_1; READ B0, INC U0, OUTPUT .
+INIT2_1; *; INIT2; SET B0, NOP
+INIT2; *; CPYDIG1; TDEC B0, INC U0
+
+# Copy R0 to R4 with the help of R7
+CPYDIG1; *; CPYDIG2; TDEC U0
+CPYDIG2; Z; CPYDIG3; TDEC U7
+CPYDIG2; NZ; CPYDIG2; INC U7, TDEC U0
+CPYDIG3; Z; CPYDIG3A; TDEC U15
+CPYDIG3; NZ; CPYDIG3; INC U0, INC U4, TDEC U7
+
+# Set R15 = 0
+CPYDIG3A; Z; CPYDIG4; NOP
+CPYDIG3A; NZ; CPYDIG3A; TDEC U15
+
+# Copy R1 to R5 with the help of R7
+CPYDIG4; ZZ; CPYDIG5; TDEC U1
+CPYDIG5; Z; CPYDIG6; TDEC U7
+CPYDIG5; NZ; CPYDIG5; INC U7, TDEC U1
+CPYDIG6; Z; CPYDIG7; NOP
+CPYDIG6; NZ; CPYDIG6; INC U1, INC U5, TDEC U7
+
+# Copy R2 to R8 with the help of R7
+CPYDIG7; ZZ; CPYDIG8; TDEC U2
+CPYDIG8; Z; CPYDIG9; TDEC U7
+CPYDIG8; NZ; CPYDIG8; INC U7, TDEC U2
+CPYDIG9; Z; CPYDIG10; NOP
+CPYDIG9; NZ; CPYDIG9; INC U2, INC U8, TDEC U7
+
+# Copy R8 to R6 with the help of R7
+CPYDIG10; ZZ; CPYDIG11; TDEC U8
+CPYDIG11; Z; CPYDIG12; TDEC U7
+CPYDIG11; NZ; CPYDIG11; INC U7, TDEC U8
+CPYDIG12; Z; SUB1; NOP
+CPYDIG12; NZ; CPYDIG12; INC U8, INC U6, TDEC U7
+
+# Check whether R6 <= R4, and subtract if it is
+# If R6 <= R4 then this sets R4 = R4 - R6, R6 = 0 and increases R3 by 1
+# If R4 < R6 then this sets R6 = R6 - R4, R4 = 0 and moves on to digit printing
+# Set R3 = number of times we subtracted
+SUB1; ZZ; SUB2; TDEC U6
+SUB2; Z; CPYDIG10; NOP, INC U3
+SUB2; NZ; SUB3; TDEC U4
+SUB3; Z; SUB4; TDEC U15, INC U6
+SUB3; NZ; SUB2; TDEC U6
+SUB4; Z; CHKPRINT; NOP
+SUB4; NZ; PRINTDIG; NOP
+
+### Put any custom sequence code here (i.e., if you want to only print integers
+### with a certain property, test for that property between CHKPRINT and PRINTRES).
+### If you want to print the integer, give a Z input to PRINTRES, otherwise give
+### it an NZ input.
+### You can use R7 and R9 as temporary helper registers, if needed, but reset them
+### to 0 when done with them.
+CHKPRINT; ZZ; CHKPRM1; NOP
+
+## Check primality.
+# Copy R0 to R7 with the help of R9.
+CHKPRM1; ZZ; CHKPRM2; TDEC U0
+CHKPRM2; Z; CHKPRM3; TDEC U9
+CHKPRM2; NZ; CHKPRM2; INC U9, TDEC U0
+CHKPRM3; Z; CHKPRM4; NOP, INC U13
+CHKPRM3; NZ; CHKPRM3; INC U0, INC U7, TDEC U9
+
+# Loop over R7, increasing the head location of B0. Also loops over R13 increasing.
+CHKPRM4; ZZ; CHKPRM5; TDEC U7
+CHKPRM5; Z; ISPRM1; TDEC B0
+CHKPRM5; NZ; CHKPRM6; INC B0, INC U13, NOP
+CHKPRM6; *; CHKPRM7; READ B0
+CHKPRM7; Z; CHKPRM4; NOP
+CHKPRM7; NZ; CPYPM1; NOP, SET B0
+
+# If R0 is prime, SET B0, then DEC B0 back to 0 and goto print
+ISPRM1; *; ISPRM2_1; READ B0
+ISPRM2_1; *; ISPRM2; SET B0, NOP
+ISPRM2; *; ISPRM3; TDEC B0
+ISPRM3; Z; ISPRM4; TDEC U13
+ISPRM3; NZ; ISPRM3; TDEC B0
+ISPRM4; Z; PRINTDIG; NOP
+ISPRM4; NZ; ISPRM4; TDEC U13
+
+# Divide (by subtraction) R0 by R13, checking for a remainder.
+#   If we get a remainder, go to CHKPRMEX via a TDEC R7.
+#   If there is no remainder, increase some flag or break out, indicating not prime
+# Copy R0 to R10 with the help of R12
+CPYPM1; *; CPYPM2; TDEC U0
+CPYPM2; Z; CPYPM3; TDEC U12
+CPYPM2; NZ; CPYPM2; INC U12, TDEC U0
+CPYPM3; Z; CPYPM4; NOP
+CPYPM3; NZ; CPYPM3; INC U0, INC U10, TDEC U12
+
+# Copy R13 to R11 with the help of R12
+CPYPM4; *; CPYPM5; TDEC U13
+CPYPM5; Z; CPYPM6; TDEC U12
+CPYPM5; NZ; CPYPM5; INC U12, TDEC U13
+CPYPM6; Z; SUBPM1; NOP
+CPYPM6; NZ; CPYPM6; INC U13, INC U11, TDEC U12
+
+# Check whether R11 <= R10, and subtract if it is
+# If R11 <= R10 then this sets R10 = R10 - R11, R11 = 0
+# If R10 < R11 (i.e., there is a remainder when dividing) then this sets R11 = R11 - R10, R10 = 0
+# Set R3 = number of times we subtracted
+SUBPM1; ZZ; SUBPM2; TDEC U11
+SUBPM2; Z; SUBPM4; NOP
+SUBPM2; NZ; SUBPM3; TDEC U10
+SUBPM3; Z; SUBPM6; NOP
+SUBPM3; NZ; SUBPM2; TDEC U11
+
+# After subtracting R11 (R13), either escape as non-prime (if R10 = 0) or refill R11 and resubtract (if R10 > 0)
+SUBPM4; ZZ; SUBPM5; TDEC U10
+SUBPM5; Z; NOPRM1; NOP
+SUBPM5; NZ; CPYPM4; INC U10, NOP
+
+# Reset R11 and then go back to check divisibility by next prime
+SUBPM6; ZZ; SUBPM7; TDEC U11
+SUBPM7; Z; CHKPRM4; NOP
+SUBPM7; NZ; SUBPM7; TDEC U11
+
+# Not a prime, so don't print it. Also set a flag (R14) so we
+# know to skip printing other digits and the period.
+NOPRM1; ZZ; NOPRM2; TDEC U11
+NOPRM2; Z; NOPRM3; TDEC U7
+NOPRM2; NZ; NOPRM2; TDEC U11
+NOPRM3; Z; NOPRM4; TDEC U13
+NOPRM3; NZ; NOPRM3; TDEC U7
+NOPRM4; Z; NOPRM5; TDEC B0
+NOPRM4; NZ; NOPRM4; TDEC U13
+NOPRM5; Z; NOPRINT1; TDEC U4, INC U14
+NOPRM5; NZ; NOPRM5; TDEC B0
+### End custom checking code
+
+# Not printing R3? Have to zero out some registers.
+NOPRINT1; Z; NOPRINT2; TDEC U5
+NOPRINT1; NZ; NOPRINT1; TDEC U4
+NOPRINT2; Z; NOPRINT3; TDEC U6
+NOPRINT2; NZ; NOPRINT2; TDEC U5
+NOPRINT3; Z; NOPRINT4; TDEC U8
+NOPRINT3; NZ; NOPRINT3; TDEC U6
+NOPRINT4; Z; NOPRINT5; NOP
+NOPRINT4; NZ; NOPRINT4; TDEC U8
+# If R3 >= 10 then update R1 and R2. Otherwise just loop back.
+NOPRINT5; ZZ; NOPRINT6; TDEC U3
+NOPRINT6; *; NOPRINT7; TDEC U3
+NOPRINT7; *; NOPRINT8; TDEC U3
+NOPRINT8; *; NOPRINT9; TDEC U3
+NOPRINT9; *; NOPRINT10; TDEC U3
+NOPRINT10; *; NOPRINT11; TDEC U3
+NOPRINT11; *; NOPRINT12; TDEC U3
+NOPRINT12; *; NOPRINT13; TDEC U3
+NOPRINT13; *; NOPRINT14; TDEC U3
+NOPRINT14; *; NOPRINT15; TDEC U3
+NOPRINT15; Z; CPYDIG1; TDEC U14, INC U0
+NOPRINT15; NZ; EXP1; NOP
+
+# Print the digit currently stored in R3
+PRINTDIG; ZZ; OUT0; TDEC U3, INC U15
+OUT0; Z; OUTD; NOP, OUTPUT 0
+OUT0; NZ; OUT1; TDEC U3
+OUT1; Z; OUTD; NOP, OUTPUT 1
+OUT1; NZ; OUT2; TDEC U3
+OUT2; Z; OUTD; NOP, OUTPUT 2
+OUT2; NZ; OUT3; TDEC U3
+OUT3; Z; OUTD; NOP, OUTPUT 3
+OUT3; NZ; OUT4; TDEC U3
+OUT4; Z; OUTD; NOP, OUTPUT 4
+OUT4; NZ; OUT5; TDEC U3
+OUT5; Z; OUTD; NOP, OUTPUT 5
+OUT5; NZ; OUT6; TDEC U3
+OUT6; Z; OUTD; NOP, OUTPUT 6
+OUT6; NZ; OUT7; TDEC U3
+OUT7; Z; OUTD; NOP, OUTPUT 7
+OUT7; NZ; OUT8; TDEC U3
+OUT8; Z; OUTD; NOP, OUTPUT 8
+OUT8; NZ; OUT9; TDEC U3
+OUT9; Z; OUTD; NOP, OUTPUT 9
+OUT9; NZ; OUT10; NOP, OUTPUT 1
+OUT10; ZZ; EXP1; NOP, OUTPUT 0
+OUTD; ZZ; DECD1; NOP
+
+# Set R1 = R1 + 1 and R2 = R2 * 10 if R0 just got a new decimal digit
+# Copy R2 to R9 with the help of R7
+EXP1; ZZ; EXP2; INC U1, TDEC U2
+EXP2; Z; EXP3; TDEC U7
+EXP2; NZ; EXP2; INC U7, TDEC U2
+EXP3; Z; EXP4; NOP
+EXP3; NZ; EXP3; INC U2, INC U9, TDEC U7
+# Set R2 = 10 * R9, R9 = 0
+EXP4; ZZ; EXP5A; TDEC U9
+EXP5A; Z; CHKFLAG1; NOP
+EXP5A; NZ; EXP5B; NOP, INC U2
+EXP5B; ZZ; EXP5C; NOP, INC U2
+EXP5C; ZZ; EXP5D; NOP, INC U2
+EXP5D; ZZ; EXP5E; NOP, INC U2
+EXP5E; ZZ; EXP5F; NOP, INC U2
+EXP5F; ZZ; EXP5G; NOP, INC U2
+EXP5G; ZZ; EXP5H; NOP, INC U2
+EXP5H; ZZ; EXP5I; NOP, INC U2
+EXP5I; ZZ; EXP5A; TDEC U9, INC U2
+
+# If R14 = 1 then jump to next R0
+CHKFLAG1; ZZ; CHKFLAG2; TDEC U14
+CHKFLAG2; Z; DECD1; NOP
+CHKFLAG2; NZ; CPYDIG1; NOP, INC U0
+
+# Copy R8 to R4 with the help of R7
+DECD1; ZZ; DECD2; TDEC U8
+DECD2; Z; DECD3; TDEC U7
+DECD2; NZ; DECD2; INC U7, TDEC U8
+DECD3; Z; DECD4; NOP
+DECD3; NZ; DECD3; INC U8, INC U4, TDEC U7
+
+# Set R4 = R4 - R6, R6 = 0, R5 = R5 - 1
+DECD4; ZZ; DECD5; TDEC U6
+DECD5; Z; DECDT; TDEC U5
+DECD5; NZ; DECD6; TDEC U4
+DECD6; *; DECD5; TDEC U6
+
+# Set R6 = R8/10, R8 = 0, or quit if we've printed all digits
+DECDT; *; DECD7; TDEC U5
+DECD7; Z; DECD18; TDEC U8
+DECD7; NZ; DECD8; INC U5, TDEC U8
+DECD8; *; DECD9; TDEC U8
+DECD9; *; DECD10; TDEC U8
+DECD10; *; DECD11; TDEC U8
+DECD11; *; DECD12; TDEC U8
+DECD12; *; DECD13; TDEC U8
+DECD13; *; DECD14; TDEC U8
+DECD14; *; DECD15; TDEC U8
+DECD15; *; DECD16; TDEC U8
+DECD16; *; DECD17; TDEC U8
+DECD17; Z; CPYDIG13; NOP
+DECD17; NZ; DECD8; TDEC U8, INC U6
+DECD18; Z; CPYDIG1; NOP, INC U0, OUTPUT .
+DECD18; NZ; DECD18; TDEC U8
+
+# Copy R6 to R8 with the help of R7
+CPYDIG13; ZZ; CPYDIG14; TDEC U6
+CPYDIG14; Z; CPYDIG15; TDEC U7
+CPYDIG14; NZ; CPYDIG14; INC U7, TDEC U6
+CPYDIG15; Z; SUB1; NOP
+CPYDIG15; NZ; CPYDIG15; INC U6, INC U8, TDEC U7

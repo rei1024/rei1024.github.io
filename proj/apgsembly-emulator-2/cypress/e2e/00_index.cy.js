@@ -186,3 +186,25 @@ describe('π calculator', () => {
         assertError('');
     });
 });
+
+
+describe('Step', () => {
+    it('should load', () => {
+        cy.visit(APGsemblyEmulatorURL);
+        cy.contains('APGsembly');
+        loadProgram('binary_ruler.apg');
+    });
+
+    it('should step twice', () => {
+        setStep(5000000);
+        clickStep();
+        assertSteps(5000000);
+        assertToggleStart();
+
+        clickStep();
+        assertSteps(5000000 * 2);
+        assertToggleStart();
+
+        assertError('');
+    });
+});

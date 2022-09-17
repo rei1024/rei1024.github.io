@@ -90,7 +90,6 @@ $step.addEventListener('click', () => {
         $toggle.disabled = true;
 
         setTimeout(() => {
-            // $step.disabled = false; // app.runで更新されるため必要ない
             app.run(app.stepConfig);
             $step.removeChild(spinner);
         }, 33); // 走らせるタイミングを遅らせることでスピナーの表示を確定させる

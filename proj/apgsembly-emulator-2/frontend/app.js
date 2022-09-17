@@ -386,7 +386,6 @@ export class App {
 
     /**
      * AppStateのみに依存する
-     * @private
      */
     renderButton() {
         // ボタンの有効無効
@@ -437,7 +436,8 @@ export class App {
         // cve
         this.cve.disabled = this.appState !== "Running";
 
-        if (this.prevAppState !== this.appState) {
+        // Stop状態はStepで変化する可能性がある
+        if (this.prevAppState !== this.appState || this.appState === "Stop") {
             this.renderButton();
 
             // ParseErrorのときにエラー表示
