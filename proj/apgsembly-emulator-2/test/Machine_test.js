@@ -242,7 +242,8 @@ A1; *; A1; HALT_OUT
                 }
             }
         } else {
-            machine.exec(N, false, -1, 0);
+            const result = machine.exec(N, false, -1, 0);
+            assertEquals(result, 'Halted');
         }
         assertEquals(machine.stepCount, 47);
         assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 0);
@@ -269,7 +270,8 @@ test('Machine PI Calculator', () => {
                 }
             }
         } else {
-            machine.exec(N, false, -1, 0);
+            const result = machine.exec(N, false, -1, 0);
+            assertEquals(result, undefined);
         }
 
         assertEquals(machine.stepCount, N);

@@ -10,8 +10,12 @@ const app = Comlink.wrap(worker);
 const output = document.querySelector('#output');
 
 async function init() {
+    if (output == null) {
+        throw Error('error');
+    }
+
     // console.log('a');
-    const text = await (await fetch('../data/pi_calc.apg')).text();
+    const text = await (await fetch('../../data/pi_calc.apg')).text();
     // console.log(text.slice(0, 20));
     await app.initialize(text);
     // console.log(JSON.stringify(await app.getOutput()));
@@ -23,7 +27,7 @@ async function init() {
      */
     const update = async time => {
         // console.log(time);
-        await app.run(1000000);
+        await app.run(2000000);
         output.textContent = await app.getOutput();
         requestAnimationFrame(update);
     };

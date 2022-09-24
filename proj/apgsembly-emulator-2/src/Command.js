@@ -206,79 +206,6 @@ export class Command extends ProgramLine {
     }
 
     /**
-     * CommandまたはCommentまたは空行またはエラーメッセージ
-     * @param {string} str
-     * @param {number} [line]
-     * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
-     */
-    static parse(str, line = undefined) {
-        if (typeof str !== 'string') {
-            throw TypeError('str is not a string');
-        }
-        const trimmedStr = str.trim();
-        if (trimmedStr === "") {
-            return new EmptyLine();
-        }
-        if (trimmedStr.startsWith("#")) {
-            // ヘッダーをパースする
-            if (trimmedStr.startsWith(ComponentsHeader.key)) {
-                return new ComponentsHeader(trimmedStr.slice(ComponentsHeader.key.length).trim());
-            } else if (trimmedStr.startsWith(RegistersHeader.key)) {
-                return new RegistersHeader(trimmedStr.slice(RegistersHeader.key.length).trim());
-            }
-            return new Comment(str);
-        }
-        const array = trimmedStr.split(/\s*;\s*/u);
-        if (array.length < 4) {
-            return `Invalid line "${str}"`;
-        }
-        if (array.length > 4) {
-            if (array[4] === "") {
-                return `Extraneous semicolon "${str}"`;
-            }
-            return `Invalid line "${str}"`;
-        }
-        // arrayの長さは4
-        const state = array[0] ?? this.error();
-        const inputStr = array[1] ?? this.error();
-        const nextState = array[2] ?? this.error();
-        const actionsStr = array[3] ?? this.error();
-        // 空文字を除く
-        const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter(x => x !== "");
-
-        /** @type {Action[]} */
-        const actions = [];
-        for (const actionsStr of actionStrs) {
-            const result = parseAction(actionsStr);
-            if (result === undefined) {
-                return `Unknown action "${actionsStr}" at "${str}"${lineNumberMessage(line)}`;
-            }
-            actions.push(result);
-        }
-
-        const input = parseInput(inputStr);
-        if (input === undefined) {
-            return `Unknown input "${inputStr}" at "${str}". Expect "Z", "NZ", "ZZ", or "*"`;
-        }
-
-        return new Command({
-            state: state,
-            input: input,
-            nextState: nextState,
-            actions: actions,
-            line: line
-        });
-    }
-
-    /**
-     * @private
-     * @returns {never}
-     */
-    static error() {
-        throw Error('internal error');
-    }
-
-    /**
      * 文字列化する
      * @override
      * @returns {string}
@@ -286,6 +213,79 @@ export class Command extends ProgramLine {
     pretty() {
         return this._string; // `${this.state}; ${this.input}; ${this.nextState}; ${this.actions.map(a => a.pretty()).join(", ")}`;
     }
+}
+
+/**
+ * @private
+ * @returns {never}
+ */
+function error() {
+    throw Error('internal error');
+}
+
+/**
+ * CommandまたはCommentまたは空行またはエラーメッセージ
+ * @param {string} str
+ * @param {number} [line]
+ * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
+ */
+export function parseProgramLine(str, line = undefined) {
+    if (typeof str !== 'string') {
+        throw TypeError('str is not a string');
+    }
+    const trimmedStr = str.trim();
+    if (trimmedStr === "") {
+        return new EmptyLine();
+    }
+    if (trimmedStr.startsWith("#")) {
+        // ヘッダーをパースする
+        if (trimmedStr.startsWith(ComponentsHeader.key)) {
+            return new ComponentsHeader(trimmedStr.slice(ComponentsHeader.key.length).trim());
+        } else if (trimmedStr.startsWith(RegistersHeader.key)) {
+            return new RegistersHeader(trimmedStr.slice(RegistersHeader.key.length).trim());
+        }
+        return new Comment(str);
+    }
+    const array = trimmedStr.split(/\s*;\s*/u);
+    if (array.length < 4) {
+        return `Invalid line "${str}"${lineNumberMessage(line)}`;
+    }
+    if (array.length > 4) {
+        if (array[4] === "") {
+            return `Extraneous semicolon "${str}"${lineNumberMessage(line)}`;
+        }
+        return `Invalid line "${str}"${lineNumberMessage(line)}`;
+    }
+    // arrayの長さは4
+    const state = array[0] ?? error();
+    const inputStr = array[1] ?? error();
+    const nextState = array[2] ?? error();
+    const actionsStr = array[3] ?? error();
+    // 空文字を除く
+    const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter(x => x !== "");
+
+    /** @type {Action[]} */
+    const actions = [];
+    for (const actionsStr of actionStrs) {
+        const result = parseAction(actionsStr);
+        if (result === undefined) {
+            return `Unknown action "${actionsStr}" in "${str}"${lineNumberMessage(line)}`;
+        }
+        actions.push(result);
+    }
+
+    const input = parseInput(inputStr);
+    if (input === undefined) {
+        return `Unknown input "${inputStr}" in "${str}"${lineNumberMessage(line)}. Expect "Z", "NZ", "ZZ", or "*"`;
+    }
+
+    return new Command({
+        state: state,
+        input: input,
+        nextState: nextState,
+        actions: actions,
+        line: line
+    });
 }
 
 /**

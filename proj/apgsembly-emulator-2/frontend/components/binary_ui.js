@@ -100,7 +100,7 @@ export class BinaryUI {
 
     /**
      * initialize DOM
-     * @param {Map<number, BReg>} regs
+     * @param {ReadonlyMap<number, BReg>} regs
      */
     initialize(regs) {
         const cells = [];
@@ -145,7 +145,7 @@ export class BinaryUI {
 
     /**
      *
-     * @param {Map<number, BReg>} regs
+     * @param {ReadonlyMap<number, BReg>} regs
      * @param {boolean} hideBinary
      * @param {boolean} reverseBinary
      * @param {boolean} showBinaryValueInDecimal

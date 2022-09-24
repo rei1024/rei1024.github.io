@@ -92,7 +92,7 @@ function direction(array, zOrNZ, state, direction) {
         array.push(`${state}__CHECK_SYMBOL_3; NZ; ${state}__NZ_WRITE_SYMBOL_1; NOP`);
 
         // 空白の場合
-        if (true) {
+        {
             const blankLine = tmMap.getLine(state, BLANK_SYMBOL);
             // 書き込み
             if (blankLine === undefined) {
@@ -116,8 +116,9 @@ function direction(array, zOrNZ, state, direction) {
                 array.push(`${state}__Z_FINISH_1; *; ${blankLine.newState}__CHECK_SYMBOL_1; NOP`);
             }
         }
-        if (true) {
-            // 空白でない場合
+
+        // 空白でない場合
+        {
             const otherLine = tmMap.getLine(state, otherSymbol);
             if (otherLine === undefined) {
                 array.push(`${state}__NZ_WRITE_SYMBOL_1; *; ${state}__NZ_WRITE_SYMBOL_1; HALT_OUT`);
@@ -141,5 +142,6 @@ function direction(array, zOrNZ, state, direction) {
             }
         }
     }
+
     return array.join('\n');
 }

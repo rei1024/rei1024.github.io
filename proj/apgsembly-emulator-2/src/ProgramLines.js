@@ -1,9 +1,6 @@
 // @ts-check
 
-import {
-    Command,
-    ProgramLine,
-} from "./Command.js";
+import { ProgramLine, parseProgramLine } from "./Command.js";
 
 /**
  * プログラムの行の配列
@@ -46,7 +43,7 @@ export class ProgramLines {
     static parse(str) {
         const lines = str.split(/\r\n|\n|\r/u);
 
-        const programLineWithErrorArray = lines.map((line, index) => Command.parse(line, index + 1));
+        const programLineWithErrorArray = lines.map((line, index) => parseProgramLine(line, index + 1));
 
         const errors = programLineWithErrorArray
             .flatMap(x => typeof x === 'string' ? [x] : []);

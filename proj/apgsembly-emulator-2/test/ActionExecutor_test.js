@@ -25,6 +25,17 @@ test('ActionExecutor setByRegistersInit empty', () => {
     x.setByRegistersInit({});
 });
 
+test('ActionExecutor constructor', () => {
+    const x = new ActionExecutor({
+        unaryRegisterNumbers: [0],
+        binaryRegisterNumbers: [1],
+        legacyTRegisterNumbers: [2],
+    });
+    assertEquals(x.getUReg(0) !== undefined, true);
+    assertEquals(x.getBReg(1) !== undefined, true);
+    assertEquals(x.legecyTRegMap.get(2) !== undefined, true);
+});
+
 test('ActionExecutor setByRegistersInit', () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0, 1],

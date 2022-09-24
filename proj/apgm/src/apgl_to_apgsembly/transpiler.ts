@@ -203,13 +203,9 @@ export class Transpiler {
         const loopState = ctx.inputZNZ === "*"
             ? ctx.input
             : this.getFreshName();
-        let trans: Line[] = [];
-
-        if (ctx.inputZNZ !== "*") {
-            trans = trans.concat(
-                this.emitTransition(ctx.input, loopState, ctx.inputZNZ),
-            );
-        }
+        const fromZOrNZ: Line[] = ctx.inputZNZ === "*"
+            ? []
+            : this.emitTransition(ctx.input, loopState, ctx.inputZNZ);
 
         this.loopFinalStates.push(ctx.output);
 
@@ -220,7 +216,7 @@ export class Transpiler {
 
         this.loopFinalStates.pop();
 
-        return [...trans, ...body];
+        return [...fromZOrNZ, ...body];
     }
 
     /**
@@ -234,12 +230,9 @@ export class Transpiler {
         const condStartState = ctx.inputZNZ === "*"
             ? ctx.input
             : this.getFreshName();
-        let trans: Line[] = [];
-        if (ctx.inputZNZ !== "*") {
-            trans = trans.concat(
-                this.emitTransition(ctx.input, condStartState, ctx.inputZNZ),
-            );
-        }
+        const fromZOrNZ: Line[] = ctx.inputZNZ === "*"
+            ? []
+            : this.emitTransition(ctx.input, condStartState, ctx.inputZNZ);
 
         const condEndState = this.getFreshName();
         const condRes = this.transpileExpr(
@@ -261,7 +254,8 @@ export class Transpiler {
             actions: ["NOP"],
         });
 
-        return [...trans, ...condRes, ...zRes, ...nzRes];
+        // zResとnzResは1行
+        return [...fromZOrNZ, ...condRes, ...zRes, ...nzRes];
     }
 
     transpileWhileAPGLExpr(ctx: Context, whileExpr: WhileAPGLExpr): Line[] {

@@ -35,31 +35,31 @@ test("URegAction parse fail", () => {
 });
 
 test("URegAction pretty", () => {
-    assertEquals(URegAction.parse("INC U0").pretty(), "INC U0");
-    assertEquals(URegAction.parse("INC U7").pretty(), "INC U7");
+    assertEquals(URegAction.parse("INC U0")?.pretty(), "INC U0");
+    assertEquals(URegAction.parse("INC U7")?.pretty(), "INC U7");
 
-    assertEquals(URegAction.parse("TDEC U0").pretty(), "TDEC U0");
-    assertEquals(URegAction.parse("TDEC U7").pretty(), "TDEC U7");
+    assertEquals(URegAction.parse("TDEC U0")?.pretty(), "TDEC U0");
+    assertEquals(URegAction.parse("TDEC U7")?.pretty(), "TDEC U7");
 });
 
 test("URegAction extract", () => {
     assertEquals(
-        URegAction.parse("TDEC U7").extractUnaryRegisterNumbers(),
+        URegAction.parse("TDEC U7")?.extractUnaryRegisterNumbers(),
         [7]
     );
 });
 
 test("URegAction isSameComponent", () => {
     assertEquals(
-        URegAction.parse('INC U2').isSameComponent(URegAction.parse('INC U2')),
+        URegAction.parse('INC U2')?.isSameComponent(URegAction.parse('INC U2')),
         true
     );
     assertEquals(
-        URegAction.parse('INC U1').isSameComponent(URegAction.parse('INC U2')),
+        URegAction.parse('INC U1')?.isSameComponent(URegAction.parse('INC U2')),
         false
     );
     assertEquals(
-        URegAction.parse('TDEC U1').isSameComponent(URegAction.parse('INC U2')),
+        URegAction.parse('TDEC U1')?.isSameComponent(URegAction.parse('INC U2')),
         false
     );
 });

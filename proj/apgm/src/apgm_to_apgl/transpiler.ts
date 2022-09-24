@@ -1,6 +1,6 @@
 import {
     APGMExpr,
-    ErrorWithLocation,
+    ErrorWithSpan,
     formatLocationAt,
     FuncAPGMExpr,
     IfAPGMExpr,
@@ -24,11 +24,10 @@ import { A } from "../apgl/actions.ts";
 
 function transpileEmptyArgFunc(funcExpr: FuncAPGMExpr, expr: APGLExpr) {
     if (funcExpr.args.length !== 0) {
-        throw new ErrorWithLocation(
+        throw new ErrorWithSpan(
             `"${funcExpr.name}" expects empty argments${
                 formatLocationAt(funcExpr.span?.start)
             }`,
-            funcExpr.span?.start,
             funcExpr.span,
         );
     }
@@ -40,21 +39,19 @@ function transpileNumArgFunc(
     expr: (_: number) => APGLExpr,
 ) {
     if (funcExpr.args.length !== 1) {
-        throw new ErrorWithLocation(
+        throw new ErrorWithSpan(
             `number of arguments is not 1: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.span?.start)
             }`,
-            funcExpr.span?.start,
             funcExpr.span,
         );
     }
     const arg = funcExpr.args[0];
     if (!(arg instanceof NumberAPGMExpr)) {
-        throw new ErrorWithLocation(
+        throw new ErrorWithSpan(
             `argument is not a number: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.span?.start)
             }`,
-            funcExpr.span?.start,
             funcExpr.span,
         );
     }
@@ -66,21 +63,19 @@ function transpileStringArgFunc(
     expr: (_: string) => APGLExpr,
 ) {
     if (funcExpr.args.length !== 1) {
-        throw new ErrorWithLocation(
+        throw new ErrorWithSpan(
             `number of arguments is not 1: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.span?.start)
             }`,
-            funcExpr.span?.start,
             funcExpr.span,
         );
     }
     const arg = funcExpr.args[0];
     if (!(arg instanceof StringAPGMExpr)) {
-        throw new ErrorWithLocation(
+        throw new ErrorWithSpan(
             `argument is not a string: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.span?.start)
             }`,
-            funcExpr.span?.start,
             funcExpr.span,
         );
     }
@@ -160,21 +155,19 @@ function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
 
         case "repeat": {
             if (funcExpr.args.length !== 2) {
-                throw new ErrorWithLocation(
+                throw new ErrorWithSpan(
                     `"repeat" takes two arguments${
                         formatLocationAt(funcExpr.span?.start)
                     }`,
-                    funcExpr.span?.start,
                     funcExpr.span,
                 );
             }
             const n = funcExpr.args[0];
             if (!(n instanceof NumberAPGMExpr)) {
-                throw new ErrorWithLocation(
+                throw new ErrorWithSpan(
                     `first argument of "repeat" must be a number${
                         formatLocationAt(funcExpr.span?.start)
                     }`,
-                    funcExpr.span?.start,
                     funcExpr.span,
                 );
             }
@@ -184,11 +177,10 @@ function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
         }
     }
 
-    throw new ErrorWithLocation(
-        `Unknown function: "${funcExpr.name}"${
-            formatLocationAt(funcExpr.span?.start)
-        }`,
-        funcExpr.span?.start,
+    throw new ErrorWithSpan(
+        `Unknown ${
+            funcExpr.name.endsWith("!") ? "macro" : "function"
+        }: "${funcExpr.name}"${formatLocationAt(funcExpr.span?.start)}`,
         funcExpr.span,
     );
 }
@@ -214,29 +206,26 @@ export function transpileAPGMExpr(e: APGMExpr): APGLExpr {
     } else if (e instanceof LoopAPGMExpr) {
         return new LoopAPGLExpr(t(e.body));
     } else if (e instanceof NumberAPGMExpr) {
-        throw new ErrorWithLocation(
+        throw new ErrorWithSpan(
             `number is not allowed: ${e.raw ?? e.value}${
                 formatLocationAt(e.span?.start)
             }`,
-            e.span?.start,
             e.span,
         );
     } else if (e instanceof SeqAPGMExpr) {
         return new SeqAPGLExpr(e.exprs.map((x) => t(x)));
     } else if (e instanceof StringAPGMExpr) {
-        throw new ErrorWithLocation(
+        throw new ErrorWithSpan(
             `string is not allowed: ${e.pretty()}${
                 formatLocationAt(e.span?.start)
             }`,
-            e.span?.start,
             e.span,
         );
     } else if (e instanceof VarAPGMExpr) {
-        throw new ErrorWithLocation(
+        throw new ErrorWithSpan(
             `macro variable is not allowed: variable "${e.name}"${
                 formatLocationAt(e.span?.start)
             }`,
-            e.span?.start,
             e.span,
         );
     } else if (e instanceof WhileAPGMExpr) {

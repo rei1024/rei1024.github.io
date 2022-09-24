@@ -1,4 +1,4 @@
-import { ErrorWithLocation } from "../apgm/ast/mod.ts";
+import { ErrorWithSpan } from "../apgm/ast/mod.ts";
 import {
     // export
     completionParser,
@@ -297,7 +297,7 @@ test("integration repeat throws empty args", () => {
     `;
     assertThrows(() => {
         integration(src);
-    }, ErrorWithLocation);
+    }, ErrorWithSpan);
 });
 
 test("integration repeat throws one args", () => {
@@ -306,7 +306,7 @@ test("integration repeat throws one args", () => {
     `;
     assertThrows(() => {
         integration(src);
-    }, ErrorWithLocation);
+    }, ErrorWithSpan);
 });
 
 test("integration unknown function", () => {
@@ -317,12 +317,25 @@ test("integration unknown function", () => {
         () => {
             integration(src);
         },
-        ErrorWithLocation,
+        ErrorWithSpan,
         'Unknown function: "unknown_function" at line 2 column 5',
     );
 });
 
-test("integration parse error with location", () => {
+test("integration unknown macro", () => {
+    const src = `
+    unknown_macro!();
+    `;
+    assertThrows(
+        () => {
+            integration(src);
+        },
+        ErrorWithSpan,
+        'Unknown macro: "unknown_macro!" at line 2 column 5',
+    );
+});
+
+test("integration parse error with span", () => {
     const src = `
     {
     `;
@@ -330,6 +343,6 @@ test("integration parse error with location", () => {
         () => {
             integration(src);
         },
-        ErrorWithLocation,
+        ErrorWithSpan,
     );
 });

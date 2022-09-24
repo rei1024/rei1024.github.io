@@ -42,21 +42,11 @@ const editor = initEditor($apgmInput);
  */
 
 /**
- * @param {Error & { apgmSpan?: { start: Loc, end: Loc }, apgmLocation?: Loc }} e
+ * @param {Error & { apgmSpan?: { start: Loc, end: Loc } }} e
  */
 export function showError(e) {
     try {
         if (!e.apgmSpan) {
-            if (e.apgmLocation) {
-                editor.setMarker({
-                    message: e.message,
-                    startLineNumber: e.apgmLocation.line,
-                    startColumn: e.apgmLocation.column,
-                    endLineNumber: e.apgmLocation.line,
-                    endColumn: e.apgmLocation.column + 3,
-                });
-                editor.revealLine(e.apgmLocation.line);
-            }
             return;
         }
 

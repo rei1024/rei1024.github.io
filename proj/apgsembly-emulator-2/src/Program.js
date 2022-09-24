@@ -1,7 +1,6 @@
 // @ts-check
 
 import { Command, ComponentsHeader, RegistersHeader } from "./Command.js";
-import { Action } from "./actions/Action.js";
 import { ProgramLines } from "./ProgramLines.js";
 import { validateAll } from "./validate.js";
 
@@ -100,38 +99,25 @@ export class Program {
                 programLines: programLines
             });
         } catch (error) {
-            // @ts-expect-error TODO
-            return error.message;
+            if (error instanceof Error) {
+                return error.message;
+            } else {
+                return "Unknown error is occurred.";
+            }
         }
     }
 
     /**
-     * @private
-     * @returns {Action[]}
+     * @returns {{ unary: number[], binary: number[], legacyT: number[] }}
      */
-    _actions() {
-        return this.commands.flatMap(command => command.actions);
-    }
+    extractRegisterNumbers() {
+        const actions = this.commands.flatMap(command => command.actions);
 
-    /**
-     * @returns {number[]}
-     */
-    extractUnaryRegisterNumbers() {
-        return sortNub(this._actions().flatMap(a => a.extractUnaryRegisterNumbers()));
-    }
-
-    /**
-     * @returns {number[]}
-     */
-    extractBinaryRegisterNumbers() {
-        return sortNub(this._actions().flatMap(a => a.extractBinaryRegisterNumbers()));
-    }
-
-    /**
-     * @returns {number[]}
-     */
-    extractLegacyTRegisterNumbers() {
-        return sortNub(this._actions().flatMap(a => a.extractLegacyTRegisterNumbers()));
+        return {
+            unary: sortNub(actions.flatMap(a => a.extractUnaryRegisterNumbers())),
+            binary: sortNub(actions.flatMap(a => a.extractBinaryRegisterNumbers())),
+            legacyT: sortNub(actions.flatMap(a => a.extractLegacyTRegisterNumbers()))
+        };
     }
 
     /**

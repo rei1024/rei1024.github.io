@@ -26,8 +26,9 @@ export const App = {
         if (this._machine === undefined) {
             return;
         }
+        const machine = this._machine;
         for (let i = 0; i < n; i++) {
-            const res = this._machine?.execCommand();
+            const res = machine.execCommand();
             if (res === -1) {
                 return;
             }

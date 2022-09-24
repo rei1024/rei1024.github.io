@@ -35,10 +35,9 @@ export interface APGMSourceSpan {
     end: APGMSourceLocation;
 }
 
-export class ErrorWithLocation extends Error {
+export class ErrorWithSpan extends Error {
     constructor(
         message: string,
-        public apgmLocation?: APGMSourceLocation | undefined,
         public apgmSpan?: APGMSourceSpan,
         options?: ErrorOptions | undefined,
     ) {

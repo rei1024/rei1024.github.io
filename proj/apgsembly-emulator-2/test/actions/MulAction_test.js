@@ -13,11 +13,11 @@ test('parse MUL 1', () => {
 
 test('MUL isSameComponent', () => {
     assertEquals(
-        MulAction.parse('MUL 1').isSameComponent(MulAction.parse('MUL 1')),
+        MulAction.parse('MUL 1')?.isSameComponent(MulAction.parse('MUL 1')),
         true
     );
     assertEquals(
-        MulAction.parse('MUL 1').isSameComponent(MulAction.parse('MUL 0')),
+        MulAction.parse('MUL 1')?.isSameComponent(MulAction.parse('MUL 0')),
         true
     );
 });

@@ -123,3 +123,15 @@ export function assertNumberOfStates(n) {
     cy.get('#stats_number_of_states').contains(n.toString());
     closeStats();
 }
+
+/**
+ * @typedef {'0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'} Digit
+ */
+
+/**
+ * @param {`${'U' | 'B'}${`${Digit}` | `${Digit}${Digit}`}`} reg
+ * @param {string} x
+ */
+export function assertRegister(reg, x) {
+    cy.get(`[data-test="${reg}"]`).should('have.text', x);
+}

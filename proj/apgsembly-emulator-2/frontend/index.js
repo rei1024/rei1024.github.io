@@ -2,9 +2,10 @@
 
 // critical path
 import {} from "./util/selector.js";
-import {} from "./util/frequency.js";
 import {} from "./util/create.js";
 import {} from "./util/continuously-variable-emitter.js";
+import {} from "./util/get-message.js";
+import {} from "./util/chunk.js";
 import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
@@ -22,6 +23,7 @@ import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
 import { prefetch } from "./util/prefetch.js";
 import { localStorageSetItem } from "./util/local-storage-set-item.js";
+import { hasFocus } from "./util/has-focus.js";
 
 import {
     $input,
@@ -216,11 +218,8 @@ $darkMode.addEventListener('change', () => {
 // Enter: toggle Start and Stop
 // Space: Step
 document.addEventListener('keydown', e => {
-    const activeElementTagName =
-        document.activeElement?.tagName.toLowerCase() ?? "";
-    const tags = ["textarea", "input", "details", "button", "audio", "video", "select", "option"];
     // 入力中は無し
-    if (tags.includes(activeElementTagName)) {
+    if (hasFocus() || e.isComposing) {
         return;
     }
 
@@ -252,13 +251,11 @@ document.addEventListener('keydown', e => {
 $input.addEventListener("drop", async (event) => {
     event.preventDefault();
     const file = event.dataTransfer?.files.item(0);
-    if (file == undefined) {
-        return;
+    if (file != undefined) {
+        app.setInputAndReset(await file.text());
+        // スクロール
+        $input.scrollTop = 0;
     }
-
-    app.setInputAndReset(await file.text());
-    // スクロール
-    $input.scrollTop = 0;
 });
 
 // ボタンの有効化

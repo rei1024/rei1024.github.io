@@ -16,6 +16,7 @@ import {
     assertStepsNot,
     toggle,
     assertError,
+    assertRegister,
 } from "../common/common.js";
 
 const outputSelector = '#output';
@@ -36,7 +37,7 @@ describe('Run APGsembly', () => {
         assertToggleStart();
         cy.get('#step').should('not.be.disabled');
         cy.get('#current_state').should('have.text', 'INITIAL');
-        cy.get(`[data-test="U0"]`).should('have.text', '0');
+        assertRegister("U0", "0");
         assertError('');
     });
 
@@ -45,7 +46,7 @@ describe('Run APGsembly', () => {
         assertToggleStop();
         cy.get('#step').should('be.disabled');
         cy.get('#current_state').should('have.text', 'A0');
-        cy.get(`[data-test="U0"]`).should('have.text', '1');
+        assertRegister("U0", "1");
     });
 });
 
@@ -66,15 +67,15 @@ describe('unary_multiply.apg', () => {
         cy.contains('APGsembly');
         loadProgram('unary_multiply.apg');
 
-        cy.get(`[data-test="U0"]`).should('have.text', '7');
-        cy.get(`[data-test="U1"]`).should('have.text', '5');
+        assertRegister("U0", '7');
+        assertRegister('U1', '5');
     });
 
     it('should execute unary_multiply.apg', () => {
         setStep(100);
         clickStep();
         assertSteps(93);
-        cy.get(`[data-test="U2"]`).should('have.text', '35');
+        assertRegister('U2', '35');
 
         assertError('');
     });
@@ -181,7 +182,7 @@ describe('π calculator', () => {
 
         assertSteps(1000000);
 
-        cy.get(`[data-test="B0"]`).should('have.text', 'value = 243290200817664000, pointer = 1340000000000000000010010001011000001100100111010100000011011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
+        assertRegister('B0', 'value = 243290200817664000, pointer = 1340000000000000000010010001011000001100100111010100000011011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
 
         assertError('');
     });

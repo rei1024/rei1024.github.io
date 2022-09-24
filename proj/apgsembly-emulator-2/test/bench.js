@@ -35,8 +35,23 @@ function run() {
     }
 }
 
-Deno.bench('pi', () => {
+function run2() {
+    const machine = new Machine(program);
+    machine.exec(N, false, -1, -1);
+
+    const exp = '3.141';
+    const act = machine.actionExecutor.output.getString();
+    if (exp !== act) {
+        throw Error('error' + act);
+    }
+}
+
+Deno.bench('pi', { group: 'pi' }, () => {
     run();
+});
+
+Deno.bench('pi2', { group: 'pi' }, () => {
+    run2();
 });
 
 // const obj = { x: { y: 1 }, y: { y: 1 }, z: { y: 1 } };

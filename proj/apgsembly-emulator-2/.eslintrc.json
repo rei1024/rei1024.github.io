@@ -47,10 +47,10 @@
         "no-multi-spaces": "error",
         "func-style": "off",
         "no-trailing-spaces": "error",
-        "brace-style": "error"
+        "brace-style": "error",
+        "no-constant-binary-expression": "error"
         // "max-len": "error" // TODO
         // "prefer-template": "error" TODO
-        // "no-constant-binary-expression": "error"
     },
     "globals": {
         "Deno": true

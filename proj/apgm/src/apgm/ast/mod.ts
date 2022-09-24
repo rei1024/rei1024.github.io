@@ -1,7 +1,7 @@
 export {
     APGMExpr,
     type APGMSourceLocation,
-    ErrorWithLocation,
+    ErrorWithSpan,
     formatLocation,
     formatLocationAt,
 } from "./core.ts";

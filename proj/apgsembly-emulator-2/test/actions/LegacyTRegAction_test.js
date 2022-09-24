@@ -31,29 +31,29 @@ test("LegacyTRegAction parse fail", () => {
 });
 
 test("LegacyTRegAction pretty", () => {
-    assertEquals(LegacyTRegAction.parse('INC T2').pretty(), "INC T2");
-    assertEquals(LegacyTRegAction.parse('DEC T2').pretty(), "DEC T2");
-    assertEquals(LegacyTRegAction.parse('RESET T2').pretty(), "RESET T2");
+    assertEquals(LegacyTRegAction.parse('INC T2')?.pretty(), "INC T2");
+    assertEquals(LegacyTRegAction.parse('DEC T2')?.pretty(), "DEC T2");
+    assertEquals(LegacyTRegAction.parse('RESET T2')?.pretty(), "RESET T2");
 });
 
 test("LegacyTRegAction extract", () => {
     assertEquals(
-        LegacyTRegAction.parse('INC T2').extractBinaryRegisterNumbers(),
+        LegacyTRegAction.parse('INC T2')?.extractBinaryRegisterNumbers(),
         []
     );
     assertEquals(
-        LegacyTRegAction.parse('INC T2').extractLegacyTRegisterNumbers(),
+        LegacyTRegAction.parse('INC T2')?.extractLegacyTRegisterNumbers(),
         [2]
     );
 });
 
 test("BRegAction isSameComponent", () => {
     assertEquals(
-        LegacyTRegAction.parse('INC T2').isSameComponent(LegacyTRegAction.parse('INC T2')),
+        LegacyTRegAction.parse('INC T2')?.isSameComponent(LegacyTRegAction.parse('INC T2')),
         true
     );
     assertEquals(
-        LegacyTRegAction.parse('INC T1').isSameComponent(LegacyTRegAction.parse('INCT2')),
+        LegacyTRegAction.parse('INC T1')?.isSameComponent(LegacyTRegAction.parse('INCT2')),
         false
     );
 });

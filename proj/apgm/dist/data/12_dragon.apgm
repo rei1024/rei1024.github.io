@@ -189,7 +189,7 @@ loop {
     break();
   } else if_z (check!()) {
     /* F */
-    if_nz(tdec_u(1)) {
+    if_nz (tdec_u(1)) {
       b2d_plus_x!();
       inc_u(1);
     } else if_nz (tdec_u(2)) {
