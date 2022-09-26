@@ -55,10 +55,7 @@ import {
 import { App } from "./app.js";
 
 // データ
-// GitHub Pagesは1階層上になる
-const DATA_DIR = location.origin.includes('github') ?
-    "../apgsembly-emulator-2/data/" :
-    "../data/";
+const DATA_DIR = "./frontend/data/";
 
 /** instance */
 const app = new App();
@@ -109,6 +106,9 @@ $exampleCodes.forEach(e => {
         const src = e.dataset[SRC_KEY];
         try {
             const response = await fetch(DATA_DIR + src);
+            if (!response.ok) {
+                throw Error('error');
+            }
             app.setInputAndReset(await response.text());
             // スクロール
             $input.scrollTop = 0;

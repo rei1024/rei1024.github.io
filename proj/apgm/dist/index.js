@@ -138,9 +138,7 @@ $download.addEventListener("click", () => {
     downloadBlob(new Blob([$output.value]), "output.apg");
 });
 
-const DATA_DIR = location.origin.includes("github")
-    ? "./dist/data/"
-    : "./dist/data/";
+const DATA_DIR = "./dist/data/";
 
 $examples.forEach((example) => {
     if (!(example instanceof HTMLElement)) {
