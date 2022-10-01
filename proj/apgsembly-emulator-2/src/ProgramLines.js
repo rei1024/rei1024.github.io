@@ -8,7 +8,7 @@ import { ProgramLine, parseProgramLine } from "./Command.js";
 export class ProgramLines {
     /**
      *
-     * @param {ProgramLine[]} array
+     * @param {ReadonlyArray<ProgramLine>} array
      */
     constructor(array) {
         /**
@@ -20,7 +20,7 @@ export class ProgramLines {
 
     /**
      *
-     * @returns {ProgramLine[]}
+     * @returns {ReadonlyArray<ProgramLine>}
      */
     getArray() {
         return this.array;

@@ -13,6 +13,10 @@ function argumentsMessage(num: number): string {
     return `${num} argument${num === 1 ? "" : "s"}`;
 }
 
+function internalError(): never {
+    throw new Error("internal error");
+}
+
 /**
  * macroのbodyに現れる変数を呼び出した引数で置き換え
  */
@@ -29,7 +33,7 @@ function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
     }
 
     const nameToExpr: Map<string, APGMExpr> = new Map(
-        macro.args.map((a, i) => [a.name, exprs[i]]),
+        macro.args.map((a, i) => [a.name, exprs[i] ?? internalError()]),
     );
 
     return macro.body.transform((x) => {

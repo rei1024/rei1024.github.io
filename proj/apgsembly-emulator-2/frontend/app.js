@@ -19,6 +19,7 @@ import { initializeBreakpointSelect, getBreakpointInput } from "./components/bre
 
 import { CVE, CVEEvent } from "./util/continuously-variable-emitter.js";
 import { getMessage } from "./util/get-message.js";
+import { makeSpinner } from "./util/spinner.js";
 
 import {
     $error,
@@ -101,13 +102,10 @@ export class App {
          * @readonly
          */
         this.cve = new CVE({ frequency: DEFUALT_FREQUENCY });
-        this.cve.addEventListener('emit', e => {
-            /**
-             * @type {CVEEvent}
-             */
-            // @ts-ignore
-            const ev = e;
-            this.run(ev.value);
+        this.cve.addEventListener('emit', ev => {
+            if (ev instanceof CVEEvent) {
+                this.run(ev.value);
+            }
         });
 
         /**
@@ -225,6 +223,40 @@ export class App {
     setInputAndReset(text) {
         $input.value = text;
         this.reset();
+    }
+
+    toggle() {
+        if (this.appState === "Running") {
+            this.stop();
+        } else {
+            this.start();
+        }
+    }
+
+    doStep() {
+        // 実行中の場合は停止する
+        if (this.appState === "Running") {
+            this.stop();
+        }
+        // 時間がかかる時はスピナーを表示する
+        // show a spinner
+        if (this.stepConfig >= 5000000) {
+            const spinner = makeSpinner();
+
+            $step.append(spinner);
+            $step.disabled = true;
+
+            // 他のボタンも一時的に無効化する app.runで有効化される
+            $reset.disabled = true;
+            $toggle.disabled = true;
+
+            setTimeout(() => {
+                this.run(this.stepConfig);
+                $step.removeChild(spinner);
+            }, 33); // 走らせるタイミングを遅らせることでスピナーの表示を確定させる
+        } else {
+            this.run(this.stepConfig);
+        }
     }
 
     /**

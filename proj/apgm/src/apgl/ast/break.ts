@@ -1,3 +1,4 @@
+import { APGMSourceSpan } from "../../apgm/ast/core.ts";
 import { APGLExpr } from "./core.ts";
 
 export class BreakAPGLExpr extends APGLExpr {
@@ -5,7 +6,10 @@ export class BreakAPGLExpr extends APGLExpr {
     /**
      * @param level default is 1
      */
-    constructor(public readonly level: number | undefined) {
+    constructor(
+        public readonly level: number | undefined,
+        public readonly span?: APGMSourceSpan,
+    ) {
         super();
     }
 

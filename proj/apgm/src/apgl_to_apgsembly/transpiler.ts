@@ -8,6 +8,7 @@ import {
     SeqAPGLExpr,
     WhileAPGLExpr,
 } from "../apgl/ast/mod.ts";
+import { ErrorWithSpan } from "../apgm/ast/core.ts";
 
 export interface TranspilerOptions {
     prefix?: string;
@@ -139,6 +140,9 @@ export class Transpiler {
 
         if (seqExpr.exprs.length === 1) {
             const expr = seqExpr.exprs[0];
+            if (expr === undefined) {
+                throw new Error("internal error");
+            }
             return this.transpileExpr(
                 ctx,
                 expr,
@@ -316,7 +320,10 @@ export class Transpiler {
         const level = breakExpr.level ?? 1;
 
         if (level < 1) {
-            throw Error("break level is less than 1");
+            throw new ErrorWithSpan(
+                "break level is less than 1",
+                breakExpr.span,
+            );
         }
 
         const finalState =
@@ -324,10 +331,14 @@ export class Transpiler {
 
         if (finalState === undefined) {
             if (level === 1) {
-                throw Error("break outside while or loop");
+                throw new ErrorWithSpan(
+                    "break outside while or loop",
+                    breakExpr.span,
+                );
             } else {
-                throw Error(
+                throw new ErrorWithSpan(
                     "break level is greater than number of nests of while or loop",
+                    breakExpr.span,
                 );
             }
         }

@@ -26,7 +26,7 @@ function addLineNumberTwo(command1, command2) {
 /**
  * ZとNZがペアになっていることを検査する
  * エラーメッセージを返却する
- * @param {Command[]} commands
+ * @param {ReadonlyArray<Command>} commands
  * @returns {string[] | undefined}
  */
  export function validateZAndNZ(commands) {
@@ -37,7 +37,9 @@ function addLineNumberTwo(command1, command2) {
      */
     const errMsg = (c1, c2) => `Need Z line followed by NZ line in "${c1.pretty()}"${addLineNumberTwo(c1, c2)}`;
 
-    for (let i = 0; i < commands.length - 1; i++) {
+    const lastIndex = commands.length - 1;
+
+    for (let i = 0; i < lastIndex; i++) {
         const a = commands[i] ?? internalError();
         const b = commands[i + 1] ?? internalError();
 

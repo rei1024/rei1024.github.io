@@ -20,7 +20,7 @@ export class Program {
     }) {
         /**
          * @readonly
-         * @type {Command[]}
+         * @type {ReadonlyArray<Command>}
          */
         this.commands = programLines.getArray().flatMap(x => {
             if (x instanceof Command) {

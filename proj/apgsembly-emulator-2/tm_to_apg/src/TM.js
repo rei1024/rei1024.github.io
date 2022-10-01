@@ -5,11 +5,11 @@ import { Line } from "./Line.js";
 export class TM {
     /**
      *
-     * @param {Line[]} lines
+     * @param {ReadonlyArray<Line>} lines
      */
     constructor(lines) {
         /**
-         * @type {Line[]}
+         * @type {ReadonlyArray<Line>}
          * @readonly
          */
         this.lines = lines;

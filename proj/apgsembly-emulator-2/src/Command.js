@@ -164,7 +164,7 @@ export class Command extends ProgramLine {
      *    state: string;
      *    input: "Z" | "NZ" | "ZZ" | "*";
      *    nextState: string;
-     *    actions: Action[];
+     *    actions: ReadonlyArray<Action>;
      *    line?: number | undefined;
      * }} param0
      */
@@ -187,6 +187,7 @@ export class Command extends ProgramLine {
         this.nextState = nextState;
 
         /**
+         * @type {ReadonlyArray<Action>}
          * @readonly
          */
         this.actions = actions;

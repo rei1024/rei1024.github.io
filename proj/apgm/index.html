@@ -6,16 +6,17 @@
 
     <!-- CSP -->
     <!-- `data://*` is close button for modal -->
-    <meta http-equiv="Content-Security-Policy" content="
+    <!-- TODO: Firefox -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         style-src 'self' 'unsafe-inline'
             cdn.jsdelivr.net cdnjs.cloudflare.com;
         script-src 'self' 'unsafe-inline'
             cdn.jsdelivr.net cdnjs.cloudflare.com
-            blob://*;
+            blob://* blob:;
         img-src 'self' data://*;
         object-src 'none';
-        font-src cdnjs.cloudflare.com">
+        font-src cdnjs.cloudflare.com"> -->
 
     <title>APGM - APGsembly macro language</title>
 
@@ -28,7 +29,7 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 
     <!-- importmapのpolyfill -->
-    <script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1.5.9/dist/es-module-shims.js" integrity="sha256-A8Km3w1WDEGXpaA3sUDOhEKjePBHdSFa97hKjWFGm0U=" crossorigin="anonymous"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1.5.18/dist/es-module-shims.js" integrity="sha384-FXCvUyj5HWieYdbJEJaE7UVRElND632lM6dvyLorD1gIkf53ruZWv2xzORMNuf2u" crossorigin="anonymous"></script>
 
     <!-- Bootstrapのesm用 -->
     <script type="importmap">

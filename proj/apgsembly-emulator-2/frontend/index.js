@@ -17,7 +17,6 @@ import {} from "./components/output.js";
 
 import { setupFrequencyInput } from "./components/frequency_input.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
-import { makeSpinner } from "./util/spinner.js";
 import { importFileAsText } from "./util/import_file.js";
 import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
@@ -67,34 +66,12 @@ $reset.addEventListener('click', () => {
 
 // Toggle button
 $toggle.addEventListener('click', () => {
-    if (app.appState === "Running") {
-        app.stop();
-    } else {
-        app.start();
-    }
+    app.toggle();
 });
 
 // Step button
 $step.addEventListener('click', () => {
-    // 時間がかかる時はスピナーを表示する
-    // show a spinner
-    if (app.stepConfig >= 5000000) {
-        const spinner = makeSpinner();
-
-        $step.append(spinner);
-        $step.disabled = true;
-
-        // 他のボタンも一時的に無効化する app.runで有効化される
-        $reset.disabled = true;
-        $toggle.disabled = true;
-
-        setTimeout(() => {
-            app.run(app.stepConfig);
-            $step.removeChild(spinner);
-        }, 33); // 走らせるタイミングを遅らせることでスピナーの表示を確定させる
-    } else {
-        app.run(app.stepConfig);
-    }
+    app.doStep();
 });
 
 const SRC_KEY = 'src';
@@ -225,10 +202,7 @@ document.addEventListener('keydown', e => {
 
     switch (e.code) {
         case "Enter": {
-            switch (app.appState) {
-                case "Running": return app.stop();
-                case "Stop": return app.start();
-            }
+            app.toggle();
             break;
         }
         case "Space": {
@@ -236,11 +210,7 @@ document.addEventListener('keydown', e => {
             if (!$step.disabled) {
                 // スペースで下に移動することを防ぐ
                 e.preventDefault();
-                // 実行中の場合は停止する
-                if (app.appState === "Running") {
-                    app.stop();
-                }
-                app.run(app.stepConfig);
+                app.doStep();
             }
             break;
         }

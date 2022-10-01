@@ -55,7 +55,7 @@ function throwDuplicated(oldCommand, command) {
 
 /**
  * 速く実行できる形式へ変換する
- * @param {Command[]} commands
+ * @param {ReadonlyArray<Command>} commands
  * @returns {{
  *   states: string[];
  *   stateMap: Map<string, number>;

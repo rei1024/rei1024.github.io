@@ -25,11 +25,10 @@ describe('Turmites integration', () => {
 
     it('should run', () => {
         cy.get('#output').then(x => {
-            /**
-             * @type {string}
-             */
-            // @ts-ignore
             const prog = x.val();
+            if (typeof prog !== 'string') {
+                throw Error('prog is not a string');
+            }
             cy.visit(APGsemblyEmulatorURL);
 
             setProgram(prog);

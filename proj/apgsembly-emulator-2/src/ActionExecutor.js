@@ -45,9 +45,9 @@ export class ActionExecutor {
     /**
      * 使用するレジスタ番号を引数に取る
      * @param {{
-     *    unaryRegisterNumbers: number[];
-     *    binaryRegisterNumbers: number[];
-     *    legacyTRegisterNumbers: number[];
+     *    unaryRegisterNumbers: ReadonlyArray<number>;
+     *    binaryRegisterNumbers: ReadonlyArray<number>;
+     *    legacyTRegisterNumbers: ReadonlyArray<number>;
      * }} param0
      */
     constructor({ unaryRegisterNumbers, binaryRegisterNumbers, legacyTRegisterNumbers }) {

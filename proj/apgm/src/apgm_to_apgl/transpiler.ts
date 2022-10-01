@@ -142,11 +142,11 @@ function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
         // break
         case "break": {
             if (funcExpr.args.length === 0) {
-                return new BreakAPGLExpr(undefined);
+                return new BreakAPGLExpr(undefined, funcExpr.span);
             } else {
                 return transpileNumArgFunc(
                     funcExpr,
-                    (x) => new BreakAPGLExpr(x),
+                    (x) => new BreakAPGLExpr(x, funcExpr.span),
                 );
             }
         }
@@ -171,7 +171,11 @@ function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
                     funcExpr.span,
                 );
             }
+
             const expr = funcExpr.args[1];
+            if (expr === undefined) {
+                throw new Error("internal error");
+            }
             const apgl = transpileAPGMExpr(expr);
             return new SeqAPGLExpr(Array(n.value).fill(0).map(() => apgl));
         }

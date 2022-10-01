@@ -41,7 +41,7 @@ export function flipDir(dir) {
 }
 
 /**
- * @type {Dir[]}
+ * @type {ReadonlyArray<Dir>}
  */
 export const allDirs = [NORTH, EAST, WEST, SOUTH, HALT];
 
@@ -111,10 +111,6 @@ export class AbsTurmites {
      */
     constructor(array) {
         this.array = array;
-    }
-
-    static fromString() {
-
     }
 
     /**

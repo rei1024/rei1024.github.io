@@ -25,11 +25,10 @@ describe('TM to APG integration BB3', () => {
     it('should run', () => {
         cy.wait(50);
         cy.get('#output').then(x => {
-            /**
-             * @type {string}
-             */
-            // @ts-ignore
             const prog = x.val();
+            if (typeof prog !== 'string') {
+                throw Error('prog is not a string');
+            }
             cy.visit(APGsemblyEmulatorURL);
 
             setProgram(prog);
@@ -55,11 +54,10 @@ describe('TM to APG integration BB4', () => {
     it('should run', () => {
         cy.wait(50);
         cy.get('#output').then(x => {
-            /**
-             * @type {string}
-             */
-            // @ts-ignore
             const prog = x.val();
+            if (typeof prog !== 'string') {
+                throw Error('prog is not a string');
+            }
             cy.visit(APGsemblyEmulatorURL);
 
             setProgram(prog);

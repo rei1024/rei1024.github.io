@@ -10,7 +10,7 @@ import { validateZAndNZ } from "./validators/z_and_nz.js";
 
 /**
  * 全てのバリデーションを通す
- * @param {Command[]} commands
+ * @param {ReadonlyArray<Command>} commands
  * @returns {undefined | string} string is error
  */
 export function validateAll(commands) {
@@ -37,7 +37,7 @@ export function validateAll(commands) {
     }
 
     /**
-     * @type {((_: Command[]) => string[] | undefined)[]}
+     * @type {((_: ReadonlyArray<Command>) => string[] | undefined)[]}
      */
     const validators = [validateZAndNZ];
 

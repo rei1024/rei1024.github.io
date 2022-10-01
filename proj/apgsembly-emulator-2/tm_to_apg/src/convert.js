@@ -9,7 +9,7 @@ const POS_TAPE = 'B1';
 /**
  * input ${state}__${zOrNZ}_MOVE_1
  * output ${state}__${zOrNZ}_FINISH_1
- * @param {string[]} array
+ * @param {string[]} array mutated
  * @param {"Z" | "NZ"} zOrNZ
  * @param {string} state
  * @param {"l" | "r" | "*"} direction

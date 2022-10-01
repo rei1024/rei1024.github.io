@@ -1,4 +1,4 @@
-import { bundle } from "https://deno.land/x/emit@0.8.0/mod.ts";
+import { bundle } from "https://deno.land/x/emit@0.9.0/mod.ts";
 
 // experimental bundling
 
@@ -14,4 +14,4 @@ const result = await bundle("./frontend/index.js", {
 });
 const { code } = result;
 const [first] = code.split("//# sourceMappingURL=data:application/json;base64,");
-await Deno.writeTextFile("./dist/index.js", first);
+await Deno.writeTextFile("./index.js", first);

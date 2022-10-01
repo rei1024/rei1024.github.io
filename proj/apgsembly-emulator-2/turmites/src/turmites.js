@@ -20,7 +20,7 @@ export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";
 
 /**
- * @type {Dir[]}
+ * @type {ReadonlyArray<Dir>}
  */
 export const allDirs = [UP, DOWN, LEFT, RIGHT];
 
@@ -152,10 +152,6 @@ export class Turmites {
      */
     constructor(array) {
         this.array = array;
-    }
-
-    static fromString() {
-
     }
 
     /**

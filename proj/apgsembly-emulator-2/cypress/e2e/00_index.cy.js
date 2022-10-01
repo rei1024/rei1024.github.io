@@ -43,7 +43,6 @@ describe('Run APGsembly', () => {
 
     it('shold run', () => {
         toggle();
-        assertToggleStop();
         cy.get('#step').should('be.disabled');
         cy.get('#current_state').should('have.text', 'A0');
         assertRegister("U0", "1");

@@ -45,12 +45,11 @@ function bit3(f) {
  */
 export function parseRule(rule) {
     const str = rule.toString(2).padStart(8, '0');
+    /** @type {Record<string, string>} */
     const o = {};
     for (let i = 0; i <= 7; i++) {
-        /** @type {string} */
         const key = (7 - i).toString(2).padStart(3, '0');
-        // @ts-ignore
-        o[key] = str[i];
+        o[key] = str[i] ?? '0';
     }
     // @ts-ignore
     return o;

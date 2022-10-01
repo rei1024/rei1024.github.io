@@ -4,9 +4,9 @@
         // "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
-        "useUnknownInCatchVariables": true
-        // "noPropertyAccessFromIndexSignature": true,
-        // "noUncheckedIndexedAccess": true,
+        "useUnknownInCatchVariables": true,
+        "noPropertyAccessFromIndexSignature": true
+        // "noUncheckedIndexedAccess": true
         // "noUnusedLocals": true
     },
     "fmt": {
@@ -28,9 +28,9 @@
         // reload dependency
         "reload": "deno test --reload",
         // local server
-        "up": "deno run --allow-net --allow-read https://deno.land/std@0.157.0/http/file_server.ts . -p 1618",
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.158.0/http/file_server.ts . -p 1618",
         // bundle
-        "bundle": "deno run --allow-read --allow-write=. --allow-env --allow-net bundle.ts",
+        "bundle": "deno run --allow-read --allow-write --allow-env --allow-net bundle.ts",
         // coverage
         "cov": "rm ./coverage -r && rm ./coverage.lcov && deno test --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov && genhtml -o coverage/html coverage.lcov && open coverage/html/index.html"
     }
