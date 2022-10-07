@@ -17,9 +17,9 @@ import {
     toggle,
     assertError,
     assertRegister,
+    assertCurrentState,
+    assertOutput,
 } from "../common/common.js";
-
-const outputSelector = '#output';
 
 describe('Load', () => {
     it('should load', () => {
@@ -36,7 +36,7 @@ describe('Run APGsembly', () => {
         `)
         assertToggleStart();
         cy.get('#step').should('not.be.disabled');
-        cy.get('#current_state').should('have.text', 'INITIAL');
+        assertCurrentState('INITIAL')
         assertRegister("U0", "0");
         assertError('');
     });
@@ -44,7 +44,7 @@ describe('Run APGsembly', () => {
     it('shold run', () => {
         toggle();
         cy.get('#step').should('be.disabled');
-        cy.get('#current_state').should('have.text', 'A0');
+        assertCurrentState('A0');
         assertRegister("U0", "1");
     });
 });
@@ -89,7 +89,7 @@ describe('Integers', () => {
     it('should print integers', () => {
         setStep(1050);
         clickStep();
-        cy.get(outputSelector).should('have.value', '1.2.3.4.5.6.7.8.9.10');
+        assertOutput('1.2.3.4.5.6.7.8.9.10');
         assertSteps(1050);
 
         assertError('');
@@ -177,7 +177,7 @@ describe('π calculator', () => {
     it('should print pi', () => {
         setStep(1000000);
         clickStep();
-        cy.get(outputSelector).should('have.value', '3.141');
+        assertOutput('3.141');
 
         assertSteps(1000000);
 

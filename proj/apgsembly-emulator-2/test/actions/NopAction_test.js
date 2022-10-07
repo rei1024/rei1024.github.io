@@ -1,7 +1,7 @@
 // @ts-check
 
 import { NopAction } from "../../src/actions/NopAction.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, never, test } from "../deps.js";
 
 test('parse NOP', () => {
     assertEquals(NopAction.parse('NOP')?.pretty(), 'NOP');
@@ -17,7 +17,7 @@ test('parse NOP fail', () => {
 
 test('NOP isSameComponent', () => {
     assertEquals(
-        NopAction.parse('NOP').isSameComponent(NopAction.parse('NOP')),
+        NopAction.parse('NOP')?.isSameComponent(NopAction.parse('NOP') ?? never()),
         true
     );
 });

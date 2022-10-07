@@ -36,7 +36,7 @@ export class OutputAction extends Action {
         if (array.length !== 2) {
             return undefined;
         }
-        const [ output, digit ] = array;
+        const [output, digit] = array;
         if (output !== OUTPUT_STRING) {
             return undefined;
         }

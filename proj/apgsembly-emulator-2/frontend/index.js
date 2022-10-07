@@ -6,6 +6,7 @@ import {} from "./util/create.js";
 import {} from "./util/continuously-variable-emitter.js";
 import {} from "./util/get-message.js";
 import {} from "./util/chunk.js";
+import {} from "./util/spinner.js";
 import {} from "./components/renderB2D.js";
 import {} from "./components/unary_ui.js";
 import {} from "./components/binary_ui.js";
@@ -14,6 +15,7 @@ import {} from "./components/breakpoint.js";
 import {} from "./components/toggle.js";
 import {} from "./components/error.js";
 import {} from "./components/output.js";
+import {} from "./components/render_add_sub_mul.js";
 
 import { setupFrequencyInput } from "./components/frequency_input.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";

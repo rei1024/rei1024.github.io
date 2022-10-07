@@ -33,7 +33,7 @@ import {} from "./ActionExecutor.js";
 import {} from "./Command.js";
 import {} from "./compile.js";
 import { Machine } from "./Machine.js";
-import { Program } from "./Program.js";
+import {} from "./Program.js";
 import {} from "./ProgramLines.js";
 import {} from "./validate.js";
 
@@ -43,12 +43,7 @@ import {} from "./validate.js";
  * @returns {Machine}
  */
 export function runAPGsembly(src) {
-    const program = Program.parse(src);
-    if (typeof program === "string") {
-        throw new Error(program);
-    }
-
-    const machine = new Machine(program);
+    const machine = Machine.fromString(src);
     while (true) {
         const res = machine.execCommand();
         if (res === -1) {

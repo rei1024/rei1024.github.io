@@ -98,7 +98,7 @@ export class URegAction extends Action {
             return undefined;
         }
 
-        const [ op, reg ] = array;
+        const [op, reg] = array;
         if (op === undefined || reg === undefined) {
             return undefined;
         }

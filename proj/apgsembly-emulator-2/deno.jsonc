@@ -1,6 +1,6 @@
 {
     "tasks": {
-        "up": "deno run --allow-net --allow-read https://deno.land/std@0.158.0/http/file_server.ts . -p 1123",
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.159.0/http/file_server.ts . -p 1123",
         "t": "deno test --no-check --parallel src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ generator/",
         "w": "deno test --watch --no-check src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ generator/",
         "cy": "node ./node_modules/.bin/cypress open",

@@ -81,7 +81,7 @@ export class AddAction extends Action {
         if (array.length !== 2) {
             return undefined;
         }
-        const [ add, reg ] = array;
+        const [add, reg] = array;
         if (add !== ADD_STRING) {
             return undefined;
         }

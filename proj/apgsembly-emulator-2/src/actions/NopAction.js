@@ -28,7 +28,7 @@ export class NopAction extends Action {
         if (array.length !== 1) {
             return undefined;
         }
-        const [ nop ] = array;
+        const [nop] = array;
         if (nop !== "NOP") {
             return undefined;
         }

@@ -6,6 +6,7 @@ import { APGM_ID } from "./core.js";
 import { completionItemProvider } from "./completionItemProvider.js";
 import { monarchTokensProvider } from "./monarchTokensProvider.js";
 import { languageConfiguration } from "./languageConfiguration.js";
+import { hoverProvider } from "./hoverProvider.js";
 
 export function initMonaco() {
     monaco.languages.register({
@@ -20,6 +21,7 @@ export function initMonaco() {
     // https://github.com/microsoft/monaco-editor/blob/main/website/monarch/monarch.js
     monaco.languages.setMonarchTokensProvider(APGM_ID, monarchTokensProvider);
     monaco.languages.setLanguageConfiguration(APGM_ID, languageConfiguration);
+    monaco.languages.registerHoverProvider(APGM_ID, hoverProvider);
 }
 
 /**

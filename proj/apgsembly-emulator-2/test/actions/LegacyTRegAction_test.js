@@ -8,7 +8,7 @@ import {
     T_SET,
     T_RESET
 } from "../../src/actions/LegacyTRegAction.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, never, test } from "../deps.js";
 
 test("LegacyTRegAction parse success", () => {
     assertEquals(LegacyTRegAction.parse('INC T2'), new LegacyTRegAction(T_INC, 2));
@@ -49,11 +49,11 @@ test("LegacyTRegAction extract", () => {
 
 test("BRegAction isSameComponent", () => {
     assertEquals(
-        LegacyTRegAction.parse('INC T2')?.isSameComponent(LegacyTRegAction.parse('INC T2')),
+        LegacyTRegAction.parse('INC T2')?.isSameComponent(LegacyTRegAction.parse('INC T2') ?? never()),
         true
     );
     assertEquals(
-        LegacyTRegAction.parse('INC T1')?.isSameComponent(LegacyTRegAction.parse('INCT2')),
+        LegacyTRegAction.parse('INC T1')?.isSameComponent(LegacyTRegAction.parse('INC T2') ?? never()),
         false
     );
 });

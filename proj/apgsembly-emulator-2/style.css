@@ -180,3 +180,7 @@ body[apge_dark="on"] {
 .modal.fade .modal-dialog {
     transition: transform .2s ease-out; /* 0.3s */
 }
+
+footer {
+    contain: content;
+}

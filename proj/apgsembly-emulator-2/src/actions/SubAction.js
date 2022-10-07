@@ -82,7 +82,7 @@ export class SubAction extends Action {
             return undefined;
         }
 
-        const [ sub, reg ] = array;
+        const [sub, reg] = array;
         if (sub !== SUB_STRING) {
             return undefined;
         }

@@ -7,7 +7,7 @@ import {
     B_READ,
     B_SET
 } from "../../src/actions/BRegAction.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, test, never } from "../deps.js";
 
 test("BRegAction parse success", () => {
     assertEquals(BRegAction.parse('INC B2'), new BRegAction(B_INC, 2));
@@ -34,24 +34,24 @@ test("BRegAction parse fail", () => {
 });
 
 test("BRegAction pretty", () => {
-    assertEquals(BRegAction.parse('INC B2').pretty(), "INC B2");
-    assertEquals(BRegAction.parse('INC  B2').pretty(), "INC B2");
+    assertEquals(BRegAction.parse('INC B2')?.pretty(), "INC B2");
+    assertEquals(BRegAction.parse('INC  B2')?.pretty(), "INC B2");
 });
 
 test("BRegAction extract", () => {
     assertEquals(
-        BRegAction.parse('INC B2').extractBinaryRegisterNumbers(),
+        BRegAction.parse('INC B2')?.extractBinaryRegisterNumbers(),
         [2]
     );
 });
 
 test("BRegAction isSameComponent", () => {
     assertEquals(
-        BRegAction.parse('INC B2').isSameComponent(BRegAction.parse('INC B2')),
+        BRegAction.parse('INC B2')?.isSameComponent(BRegAction.parse('INC B2') ?? never()),
         true
     );
     assertEquals(
-        BRegAction.parse('INC B1').isSameComponent(BRegAction.parse('INC B2')),
+        BRegAction.parse('INC B1')?.isSameComponent(BRegAction.parse('INC B2') ?? never()),
         false
     );
 });

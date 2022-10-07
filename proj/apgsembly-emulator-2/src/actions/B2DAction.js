@@ -134,7 +134,7 @@ export class B2DAction extends Action {
         if (array.length !== 2) {
             return undefined;
         }
-        const [ op, axis ] = array;
+        const [op, axis] = array;
         if (op === undefined || axis === undefined) {
             return undefined;
         }

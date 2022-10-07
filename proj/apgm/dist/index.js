@@ -110,7 +110,7 @@ const compile = (withReaction = true) => {
         $download.disabled = true;
         $copy.disabled = true;
         if (withReaction) {
-            $apgmInput.style.borderColor = "#dc3545";
+            $apgmInput.style.borderColor = "var(--bs-danger)";
             $apgmInput.style.borderWidth = "2px";
         }
         showError(e);

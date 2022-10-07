@@ -37,6 +37,24 @@ export class UReg {
     }
 
     /**
+     * @param {URegAction} act
+     * @param {number} n
+     * @returns {0 | 1 | void}
+     */
+    actionN(act, n) {
+        switch (act.op) {
+            case U_TDEC: {
+               this.value -= n;
+               break;
+            }
+            case U_INC: {
+                this.value += n;
+                break;
+            }
+        }
+    }
+
+    /**
      * @returns {number}
      */
     getValue() {

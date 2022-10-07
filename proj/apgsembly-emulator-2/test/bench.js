@@ -46,11 +46,11 @@ function run2() {
     }
 }
 
-Deno.bench('pi', { group: 'pi' }, () => {
+Deno.bench('pi normal', { group: 'pi' }, () => {
     run();
 });
 
-Deno.bench('pi2', { group: 'pi' }, () => {
+Deno.bench('pi exec', { group: 'pi' }, () => {
     run2();
 });
 

@@ -1,7 +1,7 @@
 // @ts-check
 
 import { AddAction } from "../../src/actions/AddAction.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, test, never } from "../deps.js";
 
 /**
  *
@@ -33,7 +33,7 @@ test('ADD parse fail', () => {
 
 test('ADD isSameComponent', () => {
     assertEquals(
-        AddAction.parse('ADD A1').isSameComponent(AddAction.parse('ADD B0')),
+        AddAction.parse('ADD A1')?.isSameComponent(AddAction.parse('ADD B0') ?? never()),
         true
     );
 });

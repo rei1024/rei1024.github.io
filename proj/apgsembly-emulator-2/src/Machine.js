@@ -7,7 +7,7 @@ import {
     CompiledCommandWithNextState
 } from "./compile.js";
 import { Program } from "./Program.js";
-import { INITIAL_STATE, RegistersHeader, addLineNumber } from "./Command.js";
+import { INITIAL_STATE, RegistersHeader, addLineNumber, Command } from "./Command.js";
 import { Action } from "./actions/Action.js";
 import { BRegAction } from "./actions/BRegAction.js";
 import { URegAction } from "./actions/URegAction.js";
@@ -220,11 +220,19 @@ export class Machine {
     }
 
     /**
-     * @param {boolean} [logStats=false] 記録する
+     * @private
+     */
+    log() {
+        const currentStateIndex = this.currentStateIndex;
+        const prevOutput = this.prevOutput;
+        this.stateStatsArray[currentStateIndex * 2 + prevOutput]++;
+    }
+
+    /**
      * @throws internal error
      * @returns {CompiledCommandWithNextState}
      */
-    getNextCompiledCommandWithNextState(logStats = false) {
+    getNextCompiledCommandWithNextState() {
         const currentStateIndex = this.currentStateIndex;
         const compiledCommand = this.lookup[currentStateIndex];
 
@@ -234,10 +242,6 @@ export class Machine {
         }
 
         const prevOutput = this.prevOutput;
-
-        if (logStats) {
-            this.stateStatsArray[currentStateIndex * 2 + prevOutput]++;
-        }
 
         if (prevOutput === 0) {
             const z = compiledCommand.z;
@@ -256,6 +260,29 @@ export class Machine {
     }
 
     /**
+     * @private
+     * @param {Command} command
+     * @param {number} num
+     */
+    _internalExecActionN(command, num) {
+        try {
+            const actionExecutor = this.actionExecutor;
+            for (const action of command.actions) {
+                // HALT_OUTは含まれないため停止しない
+                actionExecutor.execActionN(action, num);
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                this.throwError(error);
+            } else {
+                throw error;
+            }
+        }
+        this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] += num;
+        this.stepCount += num;
+    }
+
+    /**
      * nステップ進める
      * @param {number} n
      * @param {boolean} isRunning 実行中は重い場合途中で止める
@@ -269,16 +296,40 @@ export class Machine {
         const start = performance.now();
 
         for (let i = 0; i < n; i++) {
+            const compiledCommand = this.getNextCompiledCommandWithNextState();
+
+            // optimization
+            if (compiledCommand.tdecuOptimize) {
+                const tdec = compiledCommand.tdecuOptimize.tdecU;
+                let num = tdec.registerCache?.getValue();
+                if (num !== undefined && num !== 0) {
+                    num = Math.min(num, n - i);
+                    const command = compiledCommand.command;
+                    this._internalExecActionN(command, num);
+                    i += num - 1; // i++しているため1減らす
+                    continue;
+                }
+            } else if (compiledCommand.tdecbOptimize) {
+                const tdecb = compiledCommand.tdecbOptimize.tdecB;
+                let num = tdecb.registerCache?.pointer;
+                if (num !== undefined && num !== 0) {
+                    num = Math.min(num, n - i);
+                    const command = compiledCommand.command;
+                    this._internalExecActionN(command, num);
+                    i += num - 1; // i++しているため1減らす
+                    continue;
+                }
+            }
+            // optimization end
+
             try {
-                const res = this.execCommand();
+                const res = this.execCommandFor(compiledCommand);
                 if (res === -1) {
                     return "Halted";
                 }
             } catch (error) {
                 if (error instanceof Error) {
-                    const command = this.getNextCompiledCommandWithNextState(false).command;
-                    const line = addLineNumber(command);
-                    throw new Error(`${error.message} in "${command.pretty()}"${line}`);
+                    this.throwError(error);
                 } else {
                     throw error;
                 }
@@ -303,16 +354,23 @@ export class Machine {
     }
 
     /**
-     * 次のコマンドを実行する
-     * エラーが発生した場合は例外を投げる
-     * -1はHALT_OUT
-     * voidは正常
-     * @returns {-1 | void}
-     * @throws {Error} 実行時エラー
+     * @private
+     * @param {Error} error
      */
-    execCommand() {
+    throwError(error) {
+        const command = this.getNextCompiledCommandWithNextState().command;
+        const line = addLineNumber(command);
+        throw new Error(error.message + ` in "${command.pretty()}"` + line);
+    }
+
+    /**
+     * @private
+     * @param {import('./compile.js').CompiledCommandWithNextState} compiledCommand
+     * @returns {-1 | void}
+     */
+    execCommandFor(compiledCommand) {
         this.stepCount += 1;
-        const compiledCommand = this.getNextCompiledCommandWithNextState(true);
+        this.log();
 
         /**
          * -1は返り値無し
@@ -353,5 +411,18 @@ export class Machine {
         // }
         this.currentStateIndex = nextStateIndex;
         this.prevOutput = result;
+    }
+
+    /**
+     * 次のコマンドを実行する
+     * エラーが発生した場合は例外を投げる
+     * -1はHALT_OUT
+     * voidは正常
+     * @returns {-1 | void}
+     * @throws {Error} 実行時エラー
+     */
+    execCommand() {
+        const compiledCommand = this.getNextCompiledCommandWithNextState();
+        return this.execCommandFor(compiledCommand);
     }
 }

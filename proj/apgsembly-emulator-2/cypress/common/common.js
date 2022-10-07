@@ -35,6 +35,24 @@ export function assertToggleStop() {
 
 /**
  *
+ * @param {string} state
+ */
+export function assertCurrentState(state) {
+    cy.get('#current_state').should('have.text', state);
+}
+
+const outputSelector = '#output';
+
+/**
+ *
+ * @param {string} output
+ */
+export function assertOutput(output) {
+    cy.get(outputSelector).should('have.value', output);
+}
+
+/**
+ *
  * @param {number} n
  */
 export function assertSteps(n) {
@@ -125,11 +143,15 @@ export function assertNumberOfStates(n) {
 }
 
 /**
- * @typedef {'0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'} Digit
+ * @typedef {'1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'} DigitNonZero
  */
 
 /**
- * @param {`${'U' | 'B'}${`${Digit}` | `${Digit}${Digit}`}`} reg
+ * @typedef {'0' | DigitNonZero} Digit
+ */
+
+/**
+ * @param {`${'U' | 'B'}${`${Digit}` | `${DigitNonZero}${Digit}`}`} reg
  * @param {string} x
  */
 export function assertRegister(reg, x) {

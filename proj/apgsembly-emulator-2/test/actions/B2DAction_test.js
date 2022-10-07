@@ -1,12 +1,12 @@
 // @ts-check
 
 import { B2DAction, B2D_INC, B2D_B2DX } from "../../src/actions/B2DAction.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, test, never } from "../deps.js";
 
 /**
  *
  * @param {string} source
- * @param {string} expected
+ * @param {string | undefined} expected
  */
 function parsePretty(source, expected) {
     assertEquals(B2DAction.parse(source)?.pretty(), expected);
@@ -72,7 +72,7 @@ test('B2DAction isSameComponent', () => {
      */
     function same(str1, str2, value) {
         assertEquals(
-            B2DAction.parse(str1).isSameComponent(B2DAction.parse(str2)),
+            B2DAction.parse(str1)?.isSameComponent(B2DAction.parse(str2) ?? never()),
             value
         );
     }

@@ -2,7 +2,7 @@ import { bundle } from "https://deno.land/x/emit@0.9.0/mod.ts";
 
 import * as swc from "https://deno.land/x/swc@0.2.1/mod.ts";
 
-function minifyCode(code: string) {
+function minifyCode(code: string): string {
     const { code: minify } = swc.print(
         swc.parse(
             code,
@@ -20,9 +20,7 @@ async function bundleOrCheck(
 ) {
     const result = await bundle(bundleEntryPath);
 
-    const { code } = result;
-
-    const minify = minifyCode(code);
+    const minify = minifyCode(result.code);
 
     if (check) {
         const current = await Deno.readTextFile(outputPath);

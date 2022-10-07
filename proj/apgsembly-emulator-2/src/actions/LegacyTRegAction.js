@@ -101,7 +101,7 @@ export class LegacyTRegAction extends Action {
         if (array.length !== 2) {
             return undefined;
         }
-        const [ op, reg ] = array;
+        const [op, reg] = array;
         if (op === undefined || reg === undefined) {
             return undefined;
         }

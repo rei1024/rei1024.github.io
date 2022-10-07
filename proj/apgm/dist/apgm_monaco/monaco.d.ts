@@ -15,6 +15,7 @@ interface Languages {
     registerCompletionItemProvider(id: string, _: unknown): unknown;
     setMonarchTokensProvider(id: string, _: unknown): unknown;
     setLanguageConfiguration(id: string, _: unknown): unknown;
+    registerHoverProvider(id: string, _: unknown): unknown;
     CompletionItemKind: any;
     CompletionItemInsertTextRule: any;
 }

@@ -113,6 +113,28 @@ export class BReg {
     }
 
     /**
+     *
+     * @param {BRegAction} act
+     * @param {number} n
+     */
+    actionN(act, n) {
+        switch (act.op) {
+            case B_INC: {
+                this.pointer += n;
+                this.extend();
+                break;
+            }
+            case B_TDEC: {
+                this.pointer -= n;
+                break;
+            }
+            default: {
+                throw Error('todo');
+            }
+        }
+    }
+
+    /**
      * @returns {(0 | 1)[]}
      */
     getBits() {
@@ -189,7 +211,7 @@ export class BReg {
                  * @type {0[]}
                  */
                 const rest = Array(pointer - len + 1).fill(0).map(() => 0);
-                this.bits.push(...rest);
+                this.bits = this.bits.concat(rest);
             }
         }
     }

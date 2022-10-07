@@ -78,7 +78,7 @@ export class MulAction extends Action {
             return undefined;
         }
 
-        const [ mul, op ] = array;
+        const [mul, op] = array;
         if (mul !== MUL_STRING) {
             return undefined;
         }

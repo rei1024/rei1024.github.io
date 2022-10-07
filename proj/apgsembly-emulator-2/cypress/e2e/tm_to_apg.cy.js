@@ -8,6 +8,7 @@ import {
     clickStep,
     setProgram,
     assertSteps,
+    assertRegister,
 } from "../common/common.js";
 
 describe('TM to APG integration BB3', () => {
@@ -63,7 +64,7 @@ describe('TM to APG integration BB4', () => {
             setProgram(prog);
             setStep(1000);
             clickStep();
-            cy.get(`[data-test="U1"]`).should('have.text', '108');
+            assertRegister('U1', '108');
             assertSteps(887);
         });
     });

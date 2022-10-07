@@ -1,7 +1,7 @@
 // @ts-check
 
 import { SubAction } from "../../src/actions/SubAction.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, never, test } from "../deps.js";
 
 test('SubAction parse SUB A1', () => {
     assertEquals(SubAction.parse('SUB A1')?.pretty(), 'SUB A1');
@@ -21,7 +21,7 @@ test('SubAction parse fail', () => {
 
 test('SubAction isSameComponent', () => {
     assertEquals(
-        SubAction.parse('SUB A1').isSameComponent(SubAction.parse('SUB B0')),
+        SubAction.parse('SUB A1')?.isSameComponent(SubAction.parse('SUB B0') ?? never()),
         true
     );
 });
