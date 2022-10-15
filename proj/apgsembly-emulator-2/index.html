@@ -65,7 +65,7 @@
             This application requires JavaScript to be enabled.
         </noscript>
         <!-- 初期は非表示 -->
-        <div id="error" class="d-none alert alert-danger" role="alert"></div>
+        <div id="error" class="d-none alert alert-danger tabular-nums" role="alert"></div>
         <div class="mb-3">
             <label for="input" class="visually-hidden form-label">APGsembly input</label>
             <textarea spellcheck="false" class="code-mono form-control" name="input" id="input" cols="50" rows="8" placeholder="# Write APGsembly here!"></textarea>
@@ -265,9 +265,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>
-                    Number of states: <span id="stats_number_of_states"></span>
-                </p>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        Number of states: <span id="stats_number_of_states"></span>
+                    </div>
+                    <button class="btn btn-outline-primary" id="view-state-diagram">
+                        View state diagram
+                    </button>
+                </div>
                 <table id="stats_table" class="table table-layout-fixed">
                     <thead>
                         <tr>

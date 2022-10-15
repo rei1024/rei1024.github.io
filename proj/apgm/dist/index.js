@@ -128,7 +128,7 @@ $run.addEventListener("click", () => {
             "https://rei1024.github.io/proj/apgsembly-emulator-2/",
         );
         localStorage.setItem("initial_code", $output.value);
-        open(url);
+        open(url, undefined, "noreferrer=yes,noopener=yes");
     }
 });
 

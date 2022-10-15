@@ -19,15 +19,15 @@ function createRow(stateName, stat) {
     const num = 'num';
 
     const $sum = document.createElement('td');
-    $sum.textContent = (stat.z + stat.nz).toString();
+    $sum.textContent = (stat.z + stat.nz).toLocaleString();
     $sum.classList.add(num);
 
     const $z = document.createElement('td');
-    $z.textContent = stat.z.toString();
+    $z.textContent = stat.z.toLocaleString();
     $z.classList.add(num);
 
     const $nz = document.createElement('td');
-    $nz.textContent = stat.nz.toString();
+    $nz.textContent = stat.nz.toLocaleString();
     $nz.classList.add(num);
 
     // row
@@ -69,7 +69,7 @@ export class StatsUI {
      * @param {string[]} states
      */
     initialize(stateStats, states) {
-        this.statsNumberOfStates.textContent = states.length.toString();
+        this.statsNumberOfStates.textContent = states.length.toLocaleString();
 
         this.cells = [];
         this.root.innerHTML = "";
@@ -106,9 +106,9 @@ export class StatsUI {
             }
 
             const { z, nz } = stats[i] ?? error();
-            item.$sum.textContent = (z + nz).toString();
-            item.$z.textContent = z.toString();
-            item.$nz.textContent = nz.toString();
+            item.$sum.textContent = (z + nz).toLocaleString();
+            item.$z.textContent = z.toLocaleString();
+            item.$nz.textContent = nz.toLocaleString();
         }
     }
 }

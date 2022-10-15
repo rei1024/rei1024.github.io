@@ -33,9 +33,12 @@ import {} from "./ActionExecutor.js";
 import {} from "./Command.js";
 import {} from "./compile.js";
 import { Machine } from "./Machine.js";
-import {} from "./Program.js";
+import { Program } from "./Program.js";
 import {} from "./ProgramLines.js";
 import {} from "./validate.js";
+
+// diagram
+export { Program };
 
 /**
  * used by APGM testing

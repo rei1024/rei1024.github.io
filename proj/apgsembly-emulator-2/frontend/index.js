@@ -51,6 +51,7 @@ import {
 
     // Stats
     $statsModal,
+    $viewStateDiagramButton,
 } from "./bind.js";
 
 import { App } from "./app.js";
@@ -170,6 +171,11 @@ setupCheckbox($b2dFlipUpsideDown, B2D_FLIP_UPSIDE_DOWN_KEY);
 // showの場合クラスが追加されない
 $statsModal.addEventListener('shown.bs.modal', () => {
     app.renderStats();
+});
+
+$viewStateDiagramButton.addEventListener('click', () => {
+    localStorageSetItem('state-diagram-input', $input.value);
+    window.open('./labs/diagram/index.html', undefined, 'noreferrer=yes,noopener=yes');
 });
 
 // ダークモード

@@ -30,6 +30,7 @@
         "generator/**/*.js",
         "transpiler/**/*.js",
         "turmites/**/*.js",
-        "tm_to_apg/**/*.js"
+        "tm_to_apg/**/*.js",
+        "labs/diagram/**/*.js"
     ]
 }
