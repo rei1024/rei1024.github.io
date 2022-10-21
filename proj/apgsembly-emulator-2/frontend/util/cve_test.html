@@ -22,11 +22,11 @@
         const cve = new CVE({ frequency: 10 });
 
         document.querySelector('#start').addEventListener('click', () => {
-            cve.enable();
+            cve.disabled = false;
         });
 
         document.querySelector('#stop').addEventListener('click', () => {
-            cve.disable();
+            cve.disabled = true;
         });
 
         const $range = document.querySelector('#range');

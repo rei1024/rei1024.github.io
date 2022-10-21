@@ -1,3 +1,4 @@
+/**** Util ****/
 .vertical-align-middle {
     vertical-align: middle;
 }
@@ -17,6 +18,12 @@
     font-variant-numeric: tabular-nums;
 }
 
+/* 長い場合に改行を入れる */
+.word-break-all {
+    word-break: break-all;
+}
+
+/**** App ****/
 /* 広げる */
 #stats_modal .modal-dialog {
     max-width: 550px;
@@ -75,19 +82,7 @@ body[apge_dark="on"] .binary-head {
     .btn-group {
         display: grid;
         gap: 4px 0px;
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@media screen and (max-width: 330px) {
-    .btn-group {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media screen and (max-width: 255px) {
-    .btn-group {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     }
 }
 

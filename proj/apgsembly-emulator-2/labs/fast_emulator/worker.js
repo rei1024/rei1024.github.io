@@ -1,7 +1,7 @@
 // @ts-check
 
 // @ts-ignore
-import * as Comlink from "https://unpkg.com/comlink/dist/esm/comlink.mjs";
+import * as Comlink from "https://unpkg.com/comlink@4.3.1/dist/esm/comlink.mjs";
 import { Machine } from "../../src/Machine.js";
 
 export const App = {
@@ -27,15 +27,13 @@ export const App = {
             return;
         }
         const machine = this._machine;
-        for (let i = 0; i < n; i++) {
-            const res = machine.execCommand();
-            if (res === -1) {
-                return;
-            }
-        }
+        machine.exec(n, false, -1, -1);
     },
     getOutput() {
         return this._machine?.actionExecutor.output.getString();
+    },
+    getSteps() {
+        return this._machine?.stepCount;
     }
 };
 

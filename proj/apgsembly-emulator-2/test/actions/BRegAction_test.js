@@ -38,13 +38,6 @@ test("BRegAction pretty", () => {
     assertEquals(BRegAction.parse('INC  B2')?.pretty(), "INC B2");
 });
 
-test("BRegAction extract", () => {
-    assertEquals(
-        BRegAction.parse('INC B2')?.extractBinaryRegisterNumbers(),
-        [2]
-    );
-});
-
 test("BRegAction isSameComponent", () => {
     assertEquals(
         BRegAction.parse('INC B2')?.isSameComponent(BRegAction.parse('INC B2') ?? never()),

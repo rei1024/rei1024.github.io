@@ -79,14 +79,6 @@ export class LegacyTRegAction extends Action {
 
     /**
      * @override
-     * @returns {number[]}
-     */
-    extractLegacyTRegisterNumbers() {
-        return [this.regNumber];
-    }
-
-    /**
-     * @override
      */
     pretty() {
         return `${prettyOp(this.op)} T${this.regNumber}`;

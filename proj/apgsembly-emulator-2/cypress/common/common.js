@@ -20,17 +20,17 @@ export function toggle() {
 
 export function assertToggleStart() {
     cy.get(toggleSel).should('not.be.disabled');
-    cy.get(toggleSel).should('have.text', 'Start');
+    cy.get(toggleSel).should('have.class', 'btn-primary');
 }
 
 export function assertToggleDisabledStart() {
     cy.get(toggleSel).should('be.disabled');
-    cy.get(toggleSel).should('have.text', 'Start');
+    cy.get(toggleSel).should('have.class', 'btn-primary');
 }
 
 export function assertToggleStop() {
     cy.get(toggleSel).should('not.be.disabled');
-    cy.get(toggleSel).should('have.text', 'Stop');
+    cy.get(toggleSel).should('have.class', 'btn-danger');
 }
 
 /**

@@ -1,6 +1,7 @@
 // @ts-check
 
 import { BReg } from "../../src/components/BReg.js";
+import { create } from "../util/create.js";
 
 // ```
 // <table>
@@ -30,45 +31,32 @@ function error() {
  * value = ..., hex = ..., pointer = ...
  */
 function createMetaElem() {
-    const metaDataCode = document.createElement('code');
+    const $decimal = create('span', { classes: ['decimal'] });
+    const $hex = create('span', { classes: ['hex'] });
+    const $pointer = create('span', { classes: ['pointer'] });
 
-    // 長い場合は改行を入れる
-    metaDataCode.style.wordBreak = "break-all";
-    metaDataCode.classList.add('binary_info'); // style.cssで設定
+    const metaData = create('code', {
+        classes: ['binary_info', 'word-break-all'], // style.cssで設定
+        children: [$decimal, $hex, $pointer]
+    });
 
-    const decimal = document.createElement('span');
-    decimal.classList.add('decimal');
-
-    const hex = document.createElement('span');
-    hex.classList.add('hex');
-
-    const pointer = document.createElement('span');
-    pointer.classList.add('pointer');
-
-    metaDataCode.append(decimal, hex, pointer);
-
-    return { metaDataCode, decimal, hex, pointer };
+    return { metaData, $decimal, $hex, $pointer };
 }
 
 /**
  * バイナリ表示
  */
 function createBinaryElem() {
-    const binaryCode = document.createElement('code');
-    binaryCode.style.wordBreak = "break-all";
+    const $prefix = create('span', { classes: ['prefix'] });
+    const $head = create('span', { classes: ["binary-head"] });
+    const $suffix = create('span', { classes: ['suffix'] });
 
-    const $prefix = document.createElement('span');
-    $prefix.classList.add('prefix');
+    const binaryBits = create('code', {
+        classes: ['word-break-all'],
+        children: [$prefix, $head, $suffix]
+    });
 
-    const $head = document.createElement('span');
-    $head.classList.add("binary-head"); // style.cssで指定
-
-    const $suffix = document.createElement('span');
-    $suffix.classList.add('suffix');
-
-    binaryCode.append($prefix, $head, $suffix);
-
-    return { binaryCode, $prefix, $head, $suffix };
+    return { binaryBits, $prefix, $head, $suffix };
 }
 
 /**
@@ -86,12 +74,12 @@ export class BinaryUI {
 
         /**
          * @type {{
-         * decimal: HTMLElement,
-         * hex: HTMLElement,
-         * pointer: HTMLElement,
-         * prefix: HTMLElement,
-         * head: HTMLElement,
-         * suffix: HTMLElement
+         * $decimal: HTMLElement,
+         * $hex: HTMLElement,
+         * $pointer: HTMLElement,
+         * $prefix: HTMLElement,
+         * $head: HTMLElement,
+         * $suffix: HTMLElement
          * }[]}
          * @private
          */
@@ -104,31 +92,28 @@ export class BinaryUI {
      */
     initialize(regs) {
         const cells = [];
-        const table = document.createElement('table');
+        const table = create('table');
         for (const key of regs.keys()) {
-            const tr = document.createElement('tr');
-            const th = document.createElement('th');
-            th.textContent = `B${key}`;
-            const td = document.createElement('td');
+            const td = create('td');
             td.dataset['test'] = `B${key}`; // for e2e
 
             // meta
-            const { metaDataCode, decimal, hex, pointer } = createMetaElem();
-            td.append(metaDataCode, document.createElement('br'));
+            const { metaData, $decimal, $hex, $pointer } = createMetaElem();
+            td.append(metaData, create('br'));
 
             // binary
-            const { binaryCode, $prefix, $head, $suffix } = createBinaryElem();
-            td.append(binaryCode);
+            const { binaryBits, $prefix, $head, $suffix } = createBinaryElem();
+            td.append(binaryBits);
 
-            tr.append(th, td);
+            const tr = create('tr', { children: [create('th', `B${key}`), td] });
             table.append(tr);
             cells.push({
-                decimal: decimal,
-                hex: hex,
-                pointer: pointer,
-                prefix: $prefix,
-                head: $head,
-                suffix: $suffix
+                $decimal,
+                $hex,
+                $pointer,
+                $prefix,
+                $head,
+                $suffix
             });
         }
 
@@ -156,18 +141,18 @@ export class BinaryUI {
         const cells = this.cells;
         for (const reg of regs.values()) {
             const {
-                prefix: $prefix,
-                head: $head,
-                suffix: $suffix,
-                decimal: $decimal,
-                hex: $hex,
-                pointer: $pointer,
+                $prefix,
+                $head,
+                $suffix,
+                $decimal,
+                $hex,
+                $pointer,
             } = cells[i] ?? error();
 
             if (hideBinary) {
-                $prefix.textContent = '';
-                $head.textContent = '';
-                $suffix.textContent = '';
+                $prefix.innerHTML = '';
+                $head.innerHTML = '';
+                $suffix.innerHTML = '';
             } else if (reverseBinary) {
                 const obj = reg.toObject();
                 // toObjectは新しい配列を返すため、reverseの副作用は無視する
@@ -182,15 +167,15 @@ export class BinaryUI {
             }
 
             if (showBinaryValueInDecimal) {
-                $decimal.textContent = "value = " + reg.toDecimalString() + ", ";
+                $decimal.textContent = "value = " + reg.toNumberString(10) + ", ";
             } else {
-                $decimal.textContent = "";
+                $decimal.innerHTML = "";
             }
 
             if (showBinaryValueInHex) {
-                $hex.textContent = "hex = " + reg.toHexString() + ", ";
+                $hex.textContent = "hex = " + reg.toNumberString(16) + ", ";
             } else {
-                $hex.textContent = "";
+                $hex.innerHTML = "";
             }
 
             $pointer.textContent = "pointer = " + reg.pointer.toString();

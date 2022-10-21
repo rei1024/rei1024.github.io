@@ -42,19 +42,20 @@ function addLineNumberTwo(command1, command2) {
     for (let i = 0; i < lastIndex; i++) {
         const a = commands[i] ?? internalError();
         const b = commands[i + 1] ?? internalError();
-
+        const inputA = a.input;
+        const inputB = b.input;
         // Zならば次がNZである必要がある
-        if (a.input === "Z" && b.input !== 'NZ') {
+        if (inputA === "Z" && inputB !== 'NZ') {
             return [errMsg(a, b)];
         }
 
         // NZならば前がZである必要がある
-        if (b.input === "NZ" && a.input !== 'Z') {
+        if (inputB === "NZ" && inputA !== 'Z') {
             return [errMsg(a, b)];
         }
 
         // Zの次がNZの時、入力状態は同じである必要がある
-        if (a.input === "Z" && b.input === "NZ" && a.state !== b.state) {
+        if (inputA === "Z" && inputB === "NZ" && a.state !== b.state) {
             return [errMsg(a, b)];
         }
     }

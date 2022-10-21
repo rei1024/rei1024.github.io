@@ -36,17 +36,6 @@ test("LegacyTRegAction pretty", () => {
     assertEquals(LegacyTRegAction.parse('RESET T2')?.pretty(), "RESET T2");
 });
 
-test("LegacyTRegAction extract", () => {
-    assertEquals(
-        LegacyTRegAction.parse('INC T2')?.extractBinaryRegisterNumbers(),
-        []
-    );
-    assertEquals(
-        LegacyTRegAction.parse('INC T2')?.extractLegacyTRegisterNumbers(),
-        [2]
-    );
-});
-
 test("BRegAction isSameComponent", () => {
     assertEquals(
         LegacyTRegAction.parse('INC T2')?.isSameComponent(LegacyTRegAction.parse('INC T2') ?? never()),

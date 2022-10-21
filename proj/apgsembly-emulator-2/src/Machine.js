@@ -62,27 +62,28 @@ export class Machine {
          */
         this.program = program;
 
-        const obj = commandsToLookupTable(program.commands);
+        const { states, stateMap, lookup } =
+            commandsToLookupTable(program.commands);
 
         /**
          * @readonly
          */
-        this.states = obj.states;
-
-        /**
-         * @readonly
-         * @private
-         */
-        this.stateMap = obj.stateMap;
+        this.states = states;
 
         /**
          * @readonly
          * @private
          */
-        this.lookup = obj.lookup;
+        this.stateMap = stateMap;
+
+        /**
+         * @readonly
+         * @private
+         */
+        this.lookup = lookup;
 
         // set cache
-        for (const compiledCommand of obj.lookup) {
+        for (const compiledCommand of lookup) {
             const actions = (compiledCommand.z?.command.actions ?? []).concat(
                 compiledCommand.nz?.command.actions ?? []
             );
@@ -94,7 +95,7 @@ export class Machine {
         /**
          * 現在の状態の添字
          */
-        this.currentStateIndex = this.stateMap.get(INITIAL_STATE) ??
+        this.currentStateIndex = stateMap.get(INITIAL_STATE) ??
             error(`${INITIAL_STATE} state is not present`);
 
         /**
@@ -110,10 +111,10 @@ export class Machine {
          * @type {number[]}
          * @private
          */
-        this.stateStatsArray = Array(this.lookup.length * 2).fill(0).map(() => 0);
+        this.stateStatsArray = Array(lookup.length * 2).fill(0).map(() => 0);
 
         const regHeader = program.registersHeader;
-        if (regHeader !== undefined) {
+        if (regHeader) {
             this.setByRegistersHeader(regHeader);
         }
     }
@@ -127,7 +128,7 @@ export class Machine {
         const program = Program.parse(source);
 
         if (typeof program === "string") {
-            throw new Error(program);
+            throw Error(program);
         }
 
         return new Machine(program);
@@ -137,14 +138,15 @@ export class Machine {
      * @returns {{ z: number, nz: number }[]}
      */
     getStateStats() {
+        const array = this.stateStatsArray;
         /**
          * @type {{ z: number, nz: number }[]}
          */
         const result = [];
-        for (let i = 0; i < this.stateStatsArray.length; i += 2) {
+        for (let i = 0; i < array.length; i += 2) {
             result.push({
-                z: this.stateStatsArray[i] ?? error(),
-                nz: this.stateStatsArray[i + 1] ?? error()
+                z: array[i] ?? error(),
+                nz: array[i + 1] ?? error()
             });
         }
 
@@ -165,10 +167,10 @@ export class Machine {
         try {
             parsed = JSON.parse(str);
         } catch (_e) {
-            throw Error(`Invalid #REGISTERS: is not a valid JSON: "${str}"`);
+            error(`Invalid #REGISTERS: is not a valid JSON: "${str}"`);
         }
         if (parsed === null || typeof parsed !== 'object') {
-            throw Error(`Invalid #REGISTERS: "${str}" is not an object`);
+            error(`Invalid #REGISTERS: "${str}" is not an object`);
         }
 
         // throw if error is occurred
@@ -194,7 +196,7 @@ export class Machine {
     getCurrentState() {
         const name = this.states[this.currentStateIndex];
         if (name === undefined) {
-            throw Error('State name is not found');
+            error('State name is not found');
         }
         return name;
     }
@@ -229,15 +231,16 @@ export class Machine {
     }
 
     /**
+     * 次に実行するコマンドを返す
      * @throws internal error
      * @returns {CompiledCommandWithNextState}
      */
-    getNextCompiledCommandWithNextState() {
+    getNextCommand() {
         const currentStateIndex = this.currentStateIndex;
         const compiledCommand = this.lookup[currentStateIndex];
 
         if (compiledCommand === undefined) {
-            throw Error(`Internal Error: Next command is not found: ` +
+            error(`Internal Error: Next command is not found: ` +
                         `Current state index: ${currentStateIndex}`);
         }
 
@@ -255,7 +258,7 @@ export class Machine {
             }
         }
 
-        throw Error('Next command is not found: Current state = ' +
+        error('Next command is not found: Current state = ' +
             this.getCurrentState() + ', output = ' + this.getPreviousOutput());
     }
 
@@ -296,7 +299,7 @@ export class Machine {
         const start = performance.now();
 
         for (let i = 0; i < n; i++) {
-            const compiledCommand = this.getNextCompiledCommandWithNextState();
+            const compiledCommand = this.getNextCommand();
 
             // optimization
             if (compiledCommand.tdecuOptimize) {
@@ -304,8 +307,7 @@ export class Machine {
                 let num = tdec.registerCache?.getValue();
                 if (num !== undefined && num !== 0) {
                     num = Math.min(num, n - i);
-                    const command = compiledCommand.command;
-                    this._internalExecActionN(command, num);
+                    this._internalExecActionN(compiledCommand.command, num);
                     i += num - 1; // i++しているため1減らす
                     continue;
                 }
@@ -314,8 +316,7 @@ export class Machine {
                 let num = tdecb.registerCache?.pointer;
                 if (num !== undefined && num !== 0) {
                     num = Math.min(num, n - i);
-                    const command = compiledCommand.command;
-                    this._internalExecActionN(command, num);
+                    this._internalExecActionN(compiledCommand.command, num);
                     i += num - 1; // i++しているため1減らす
                     continue;
                 }
@@ -355,12 +356,12 @@ export class Machine {
 
     /**
      * @private
-     * @param {Error} error
+     * @param {Error} err
      */
-    throwError(error) {
-        const command = this.getNextCompiledCommandWithNextState().command;
+    throwError(err) {
+        const command = this.getNextCommand().command;
         const line = addLineNumber(command);
-        throw new Error(error.message + ` in "${command.pretty()}"` + line);
+        error(err.message + ` in "${command.pretty()}"` + line);
     }
 
     /**
@@ -379,7 +380,8 @@ export class Machine {
         let result = -1;
 
         const actionExecutor = this.actionExecutor;
-        for (const action of compiledCommand.command.actions) {
+        const command = compiledCommand.command;
+        for (const action of command.actions) {
             const actionResult = actionExecutor.execAction(action);
             if (actionResult === -1) { // HALT_OUT
                 return -1;
@@ -388,17 +390,16 @@ export class Machine {
                 if (result === -1) {
                     result = actionResult;
                 } else {
-                    throw Error(`Return value twice: line = ${
-                        compiledCommand.command.pretty()
-                    }${addLineNumber(compiledCommand.command)}`);
+                    error(`Return value twice: ` +
+                        `line = ${command.pretty()}${addLineNumber(command)}`);
                 }
             }
         }
 
         if (result === -1) {
-            throw Error(`No return value: line = ${
-                compiledCommand.command.pretty()
-            }${addLineNumber(compiledCommand.command)}`);
+            error(`No return value: line = ${
+                command.pretty()
+            }${addLineNumber(command)}`);
         }
 
         const nextStateIndex = compiledCommand.nextState;
@@ -422,7 +423,6 @@ export class Machine {
      * @throws {Error} 実行時エラー
      */
     execCommand() {
-        const compiledCommand = this.getNextCompiledCommandWithNextState();
-        return this.execCommandFor(compiledCommand);
+        return this.execCommandFor(this.getNextCommand());
     }
 }

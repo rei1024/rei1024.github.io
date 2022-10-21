@@ -53,7 +53,9 @@ export class CVE extends EventTarget {
          * @private
          * @type {number}
          */
-        this._rafID = 0;
+        this._id = 0;
+
+        const raf = requestAnimationFrame;
 
         /**
          *
@@ -63,16 +65,17 @@ export class CVE extends EventTarget {
             if (this._enabled && this._prevTime !== -1) {
                 const diff = time - this._prevTime;
                 const prevFractionStep = this._fractionStep;
-                this._fractionStep += (diff / 1000) * this._frequency;
-                const value = Math.floor(this._fractionStep) - Math.floor(prevFractionStep);
+                const nextFractionStep = prevFractionStep + (diff / 1000) * this._frequency;
+                const value = Math.floor(nextFractionStep) - Math.floor(prevFractionStep);
+                this._fractionStep = nextFractionStep;
                 this.dispatchEvent(new CVEEvent(value));
             }
 
             this._prevTime = time;
-            this._rafID = requestAnimationFrame(update);
+            this._id = raf(update);
         };
 
-        this._rafID = requestAnimationFrame(update);
+        this._id = raf(update);
 
         if (signal !== undefined) {
             signal.addEventListener('abort', () => {
@@ -82,8 +85,8 @@ export class CVE extends EventTarget {
     }
 
     abort() {
-        if (this._rafID !== 0) {
-            cancelAnimationFrame(this._rafID);
+        if (this._id !== 0) {
+            cancelAnimationFrame(this._id);
         }
     }
 
@@ -110,14 +113,6 @@ export class CVE extends EventTarget {
      */
     set disabled(value) {
         this._enabled = !value;
-    }
-
-    enable() {
-        this._enabled = true;
-    }
-
-    disable() {
-        this._enabled = false;
     }
 
     reset() {

@@ -5,7 +5,6 @@ import { Machine } from "../src/Machine.js";
 // Components
 import {
     startButton,
-    startButtonDisabled,
     stopButton
 } from "./components/toggle.js";
 
@@ -142,23 +141,14 @@ export class App {
     }
 
     /**
-     * 初期化
-     */
-    initializeApp() {
-        this.render();
-    }
-
-    /**
      * 実行を開始する
      * Start execution
      */
     start() {
         switch (this.appState) {
             case "Initial": {
-                this.reset();
                 // 初期化に成功していれば走らせる
-                // @ts-ignore
-                if (this.appState === "Stop") {
+                if (this.reset()) {
                     this.appState = "Running";
                 }
                 break;
@@ -263,6 +253,7 @@ export class App {
 
     /**
      * 状態をリセットし、パースする
+     * @returns {boolean} 成功
      */
     reset() {
         this.errorMessage = "";
@@ -277,9 +268,12 @@ export class App {
         } catch (e) {
             this.appState = "ParseError";
             this.errorMessage = getMessage(e);
-        } finally {
             this.render();
+            return false;
         }
+
+        this.render();
+        return true;
     }
 
     /**
@@ -298,8 +292,13 @@ export class App {
      * @private
      */
     renderCommand() {
-        const next = this.machine?.getNextCompiledCommandWithNextState();
-        $command.textContent = next?.command.pretty() ?? "";
+        try {
+            const next = this.machine?.getNextCommand();
+            $command.textContent = next?.command.pretty() ?? "";
+        } catch (error) {
+            // internal error
+            console.error(error);
+        }
     }
 
     /**
@@ -421,14 +420,16 @@ export class App {
             }
             case "RuntimeError":
             case "ParseError": {
-                startButtonDisabled($toggle);
+                startButton($toggle);
+                $toggle.disabled = true; // disable
                 $step.disabled = true;
                 $reset.disabled = false;
                 $statsButton.disabled = true;
                 break;
             }
             case "Halted": {
-                startButtonDisabled($toggle);
+                startButton($toggle);
+                $toggle.disabled = true; // disable
                 $step.disabled = true;
                 $reset.disabled = false;
                 $statsButton.disabled = false;
@@ -460,17 +461,16 @@ export class App {
 
         this.renderFrequencyOutput();
 
-        $stepCount.textContent = this.machine?.stepCount.toLocaleString() ?? "";
-
-        // current state
-        $currentState.textContent = this.machine?.getCurrentState() ?? "";
-        $previousOutput.textContent = this.machine?.getPreviousOutput() ?? "";
+        const machine = this.machine;
+        $currentState.textContent = machine?.getCurrentState() ?? "";
+        $previousOutput.textContent = machine?.getPreviousOutput() ?? "";
+        $stepCount.textContent = machine?.stepCount.toLocaleString() ?? "";
 
         this.renderCommand();
         this.renderOutput();
         this.renderUnary();
         this.renderBinary();
-        $addSubMul.textContent = renderAddSubMul(this.machine?.actionExecutor);
+        $addSubMul.textContent = renderAddSubMul(machine?.actionExecutor);
         this.renderB2D();
         this.renderStats();
 
@@ -482,18 +482,17 @@ export class App {
      * @param {number} steps
      */
     run(steps) {
-        switch (this.appState) {
+        const appState = this.appState;
+        switch (appState) {
             case "Initial": {
-                this.reset();
                 // エラーであれば走らせない
-                // @ts-ignore
-                if (this.appState !== "Stop") {
+                if (!this.reset()) {
                     return;
                 }
             }
         }
 
-        if (steps <= 0 || Number.isNaN(steps)) {
+        if (steps <= 0 || isNaN(steps)) {
             // no render
             return;
         }
@@ -503,7 +502,7 @@ export class App {
             return;
         }
 
-        const isRunning = this.appState === "Running";
+        const isRunning = appState === "Running";
 
         // ブレークポイントの処理
         const breakpointIndex = parseInt($breakpointSelect.value, 10);
@@ -522,8 +521,8 @@ export class App {
         } catch (error) {
             this.appState = "RuntimeError";
             this.errorMessage = getMessage(error);
+        } finally {
+            this.render();
         }
-
-        this.render();
     }
 }

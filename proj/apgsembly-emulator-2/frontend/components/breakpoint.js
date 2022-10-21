@@ -1,5 +1,7 @@
 // @ts-check
 
+import { create } from "../util/create.js";
+
 /**
  * ブレークポイント初期化
  * @param {HTMLSelectElement} $breakpointSelect
@@ -11,14 +13,13 @@ export function initializeBreakpointSelect($breakpointSelect, machine) {
         return;
     }
 
-    const none = document.createElement('option');
-    none.textContent = "None";
+    const none = create('option', "None");
     none.value = "-1";
     none.selected = true;
     $breakpointSelect.append(none);
 
-    for (const [state, stateIndex] of machine.getStateMap().entries()) {
-        const option = document.createElement('option');
+    for (const [state, stateIndex] of machine.getStateMap()) {
+        const option = create('option', state);
         option.textContent = state;
         option.value = stateIndex.toString();
         $breakpointSelect.append(option);

@@ -10,16 +10,12 @@
 
     <title>APGsembly 2.0 Emulator</title>
 
-    <!-- critical path -->
-    <script src="./src/exports.js" type="module"></script>
-
     <!-- main -->
-    <script src="./frontend/index.js?ver=20220611" type="module"></script>
+    <script src="./frontend/index.dist.js?ver=20220611" type="module"></script>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 
     <!-- Bootstrapの下で読み込む -->
     <link rel="stylesheet" href="./style.css">
@@ -73,15 +69,31 @@
         <!-- Buttons -->
         <div data-test="control_buttons" class="btn-group" role="group" aria-label="Control">
             <!-- index.jsが読み込まれるまではdisabled -->
-            <button id="reset" type="button" class="btn btn-primary" disabled>Reset</button>
+            <button id="reset" type="button" class="btn btn-primary" disabled>
+                <!-- https://icons.getbootstrap.com/icons/arrow-clockwise/ -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                    <path stroke="currentColor" stroke-width="0.5" fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                </svg>
+                Reset
+            </button>
             <button id="toggle" type="button" class="btn btn-primary" disabled>Start</button>
             <button id="step" type="button" class="btn btn-primary" disabled>Step</button>
             <button id="config_button" disabled data-test="config_button" type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#config_modal">
+                <!-- https://icons.getbootstrap.com/icons/gear/ -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                    <path stroke="currentColor" stroke-width="0.5" d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                    <path stroke="currentColor" stroke-width="0.5" d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                </svg>
                 Config
             </button>
             <button id="stats_button" disabled type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#stats_modal">
+                <!-- https://icons.getbootstrap.com/icons/bar-chart/ -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart" viewBox="0 0 16 16">
+                    <path stroke="currentColor" stroke-width="0.3" d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/>
+                </svg>
                 Stats
             </button>
             <button disabled type="button" class="btn btn-primary dropdown-toggle" id="examples" data-bs-toggle="dropdown" aria-expanded="false">Example</button>
@@ -99,7 +111,14 @@
                 <li><button class="dropdown-item js_example" data-src="pi_calc.apg">π Calculator</button></li>
             </ul>
             <input id="import_file" type="file" class="d-none">
-            <label for="import_file" class="btn btn-primary">Import</label>
+            <label for="import_file" class="btn btn-primary">
+                <!-- https://icons.getbootstrap.com/icons/upload/ -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                    <path stroke="currentColor" stroke-width="0.5" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path stroke="currentColor" stroke-width="0.5" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                </svg>
+                Import
+            </label>
         </div>
         <!-- End Buttons -->
         <div class="mt-1 mb-2">
@@ -187,7 +206,14 @@
         <div class="modal-dialog">
         <div class="modal-content" id="config_modal_content">
             <div class="modal-header">
-                <h5 class="modal-title" id="config_modal_label">Config</h5>
+                <h5 class="modal-title" id="config_modal_label">
+                    <!-- https://icons.getbootstrap.com/icons/gear/ -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                        <path stroke="currentColor" stroke-width="0.5" d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                        <path stroke="currentColor" stroke-width="0.5" d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                    </svg>
+                    Config
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -261,7 +287,13 @@
         <div class="modal-dialog">
         <div class="modal-content tabular-nums">
             <div class="modal-header">
-                <h5 class="modal-title" id="stats_modal_label">Stats</h5>
+                <h5 class="modal-title" id="stats_modal_label">
+                    <!-- https://icons.getbootstrap.com/icons/bar-chart/ -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart" viewBox="0 0 16 16">
+                        <path stroke="currentColor" stroke-width="0.3" d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/>
+                    </svg>
+                    Stats
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -298,74 +330,80 @@
     <!-- End Stats Modal -->
 
     <footer class="mt-3 container">
-        <h2 class="fs-4">Shortcuts</h2>
-        <table>
-            <tr>
-                <th><kbd>Space</kbd></th>
-                <td>Step</td>
-            </tr>
-            <tr>
-                <th><kbd>Enter</kbd></th>
-                <td>Toggle start and stop</td>
-            </tr>
-        </table>
-        <h2 class="fs-4 mt-3">Tools</h2>
-        <ul>
-            <li>
-                <a href="./generator/index.html">
-                    Code generator for elementary cellular automata
-                </a>
-            </li>
-            <li>
-                <a href="./turmites/index.html">
-                    Code generator for turmites
-                </a>
-            </li>
-            <li>
-                <a href="./tm_to_apg/index.html">
-                    Turing machine to APGsembly
-                </a>
-            </li>
-            <li>
-                <a href="./transpiler/index.html">
-                    Transpiler for APGsembly 1.0 to APGsembly 2.0
-                </a>
-            </li>
-            <li>
-                <a href="../apgm/">
-                    APGM - APGsembly macro language
-                </a>
-            </li>
-        </ul>
-        <h2 class="fs-4 mt-3">Links</h2>
-        <ul>
-            <li>
-                <a href="https://github.com/rei1024/rei1024.github.io/tree/main/proj/apgsembly-emulator-2">
-                    Source code for APGsembly 2.0 Emulator - GitHub
-                </a>
-            </li>
-            <li>
-                <a href="https://conwaylife.com/book/">
-                    Conway's Game of Life: Mathematics and Construction
-                </a>
-                (Chapter 9: Universal Computation)
-            </li>
-            <li>
-                <a href="https://conwaylife.com/wiki/APGsembly">
-                    APGsembly - ConwayLife.com wiki
-                </a>
-            </li>
-            <li>
-                <a href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4192">
-                    Reverse engineering the phi and pi calculators - ConwayLife.com forums
-                </a>
-            </li>
-            <li>
-                <a href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4196">
-                    Smaller Pi Calculator Challenge - ConwayLife.com forums
-                </a>
-            </li>
-        </ul>
+        <section>
+            <h2 class="fs-4">Shortcuts</h2>
+            <table>
+                <tr>
+                    <th><kbd>Space</kbd></th>
+                    <td>Step</td>
+                </tr>
+                <tr>
+                    <th><kbd>Enter</kbd></th>
+                    <td>Toggle start and stop</td>
+                </tr>
+            </table>
+        </section>
+        <section>
+            <h2 class="fs-4 mt-3">Tools</h2>
+            <ul>
+                <li>
+                    <a href="./generator/index.html">
+                        Code generator for elementary cellular automata
+                    </a>
+                </li>
+                <li>
+                    <a href="./turmites/index.html">
+                        Code generator for turmites
+                    </a>
+                </li>
+                <li>
+                    <a href="./tm_to_apg/index.html">
+                        Turing machine to APGsembly
+                    </a>
+                </li>
+                <li>
+                    <a href="./transpiler/index.html">
+                        Transpiler for APGsembly 1.0 to APGsembly 2.0
+                    </a>
+                </li>
+                <li>
+                    <a href="../apgm/">
+                        APGM - APGsembly macro language
+                    </a>
+                </li>
+            </ul>
+        </section>
+        <section>
+            <h2 class="fs-4 mt-3">Links</h2>
+            <ul>
+                <li>
+                    <a href="https://github.com/rei1024/rei1024.github.io/tree/main/proj/apgsembly-emulator-2">
+                        Source code for APGsembly 2.0 Emulator - GitHub
+                    </a>
+                </li>
+                <li>
+                    <a href="https://conwaylife.com/book/">
+                        Conway's Game of Life: Mathematics and Construction
+                    </a>
+                    (Chapter 9: Universal Computation)
+                </li>
+                <li>
+                    <a href="https://conwaylife.com/wiki/APGsembly">
+                        APGsembly - ConwayLife.com wiki
+                    </a>
+                </li>
+                <li>
+                    <a href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4192">
+                        Reverse engineering the phi and pi calculators - ConwayLife.com forums
+                    </a>
+                </li>
+                <li>
+                    <a href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4196">
+                        Smaller Pi Calculator Challenge - ConwayLife.com forums
+                    </a>
+                </li>
+            </ul>
+        </section>
     </footer>
 </body>
 </html>

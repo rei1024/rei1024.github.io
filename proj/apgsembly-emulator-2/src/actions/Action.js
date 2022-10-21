@@ -1,6 +1,13 @@
 // @ts-check
 
 /**
+ * @returns {never}
+ */
+export function internalError() {
+    throw Error('internal error');
+}
+
+/**
  * アクション
  * @abstract
  */
@@ -12,30 +19,6 @@ export class Action {
      */
     pretty() {
         return "unimplemented";
-    }
-
-    /**
-     * アクションに含まれるスライディングレジスタのレジスタ番号を返す。
-     * @returns {number[]}
-     */
-    extractUnaryRegisterNumbers() {
-        return [];
-    }
-
-    /**
-     * アクションに含まれるバイナリレジスタのレジスタ番号を返す。
-     * @returns {number[]}
-     */
-    extractBinaryRegisterNumbers() {
-        return [];
-    }
-
-    /**
-     * アクションに含まれるTレジスタのレジスタ番号を返す。
-     * @returns {number[]}
-     */
-    extractLegacyTRegisterNumbers() {
-        return [];
     }
 
     /**

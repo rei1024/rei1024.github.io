@@ -2,6 +2,7 @@
 
 import { chunk } from "../util/chunk.js";
 import { UReg } from "../../src/components/UReg.js";
+import { create } from "../util/create.js";
 
 /**
  * 列の数
@@ -31,9 +32,7 @@ function groupNumber(size) {
  * @param {number} key
  */
 function createHeaderCell(key) {
-    const th = document.createElement('th');
-    th.textContent = `U${key}`;
-    return th;
+    return create('th', `U${key}`);
 }
 
 /**
@@ -42,10 +41,12 @@ function createHeaderCell(key) {
  * @param {UReg} value
  */
 function createDataCell(key, value) {
-    const td = document.createElement('td');
-    td.textContent = value.getValue().toString();
-    td.dataset['test'] = `U${key}`; // for e2e
-    return td;
+    return create('td', {
+        text: value.getValue().toString(),
+        fn: td => {
+            td.dataset['test'] = `U${key}`;
+        }
+    });
 }
 
 /**
@@ -64,21 +65,21 @@ function createTable(regs) {
 
     const num = groupNumber(regs.size);
 
-    for (const entries of chunk(regs.entries(), num)) {
-        const header = document.createElement('tr');
-        const data = document.createElement('tr');
+    for (const entries of chunk(regs, num)) {
+        const header = create('tr');
+        const data = create('tr');
         for (const [key, value] of entries) {
-            header.appendChild(createHeaderCell(key));
+            header.append(createHeaderCell(key));
 
             const td = createDataCell(key, value);
             cells.push(td);
-            data.appendChild(td);
+            data.append(td);
         }
 
         rows.push({ header, data });
     }
 
-    const table = document.createElement('table');
+    const table = create('table');
     for (const row of rows) {
         table.append(row.header, row.data);
     }
@@ -127,7 +128,7 @@ export class UnaryUI {
     initialize(regs) {
         const { table, cells } = createTable(regs);
         this.root.innerHTML = "";
-        this.root.appendChild(table);
+        this.root.append(table);
         this.cells = cells;
     }
 
@@ -144,8 +145,8 @@ export class UnaryUI {
         const cells = this.cells;
         for (const reg of regs.values()) {
             const item = cells[i];
-            if (item === undefined) {
-                throw Error('renderUnary: internal error');
+            if (!item) {
+                throw Error('internal error');
             }
             item.textContent = reg.getValue().toString();
             i++;

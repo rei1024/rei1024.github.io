@@ -2,6 +2,8 @@
 
 import { Action } from "./Action.js";
 
+const NOP_STRING = "NOP";
+
 /**
  * `NOP` action
  */
@@ -15,7 +17,7 @@ export class NopAction extends Action {
      * @returns {string}
      */
     pretty() {
-        return `NOP`;
+        return NOP_STRING;
     }
 
     /**
@@ -29,7 +31,7 @@ export class NopAction extends Action {
             return undefined;
         }
         const [nop] = array;
-        if (nop !== "NOP") {
+        if (nop !== NOP_STRING) {
             return undefined;
         }
         return new NopAction();

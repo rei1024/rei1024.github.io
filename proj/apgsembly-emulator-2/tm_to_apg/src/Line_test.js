@@ -39,7 +39,7 @@ test('pretty Line', () => {
     function v(str) {
         const line = Line.parse(str);
         if (line === undefined) {
-            throw new Error('line is undefined');
+            throw Error('line is undefined');
         }
         if (line instanceof Error) {
             throw line;

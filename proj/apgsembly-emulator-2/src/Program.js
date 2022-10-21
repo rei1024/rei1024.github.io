@@ -1,6 +1,9 @@
 // @ts-check
 
 import { Command, ComponentsHeader, RegistersHeader } from "./Command.js";
+import { BRegAction } from "./actions/BRegAction.js";
+import { LegacyTRegAction } from "./actions/LegacyTRegAction.js";
+import { URegAction } from "./actions/URegAction.js";
 import { ProgramLines } from "./ProgramLines.js";
 import { validateAll } from "./validate.js";
 
@@ -53,7 +56,7 @@ export class Program {
         for (const x of programLines.getArray()) {
             if (x instanceof RegistersHeader) {
                 if (this.registersHeader !== undefined) {
-                    throw new Error(`Multiple ${RegistersHeader.key}`);
+                    throw Error(`Multiple ${RegistersHeader.key}`);
                 }
                 this.registersHeader = x;
             }
@@ -114,9 +117,15 @@ export class Program {
         const actions = this.commands.flatMap(command => command.actions);
 
         return {
-            unary: sortNub(actions.flatMap(a => a.extractUnaryRegisterNumbers())),
-            binary: sortNub(actions.flatMap(a => a.extractBinaryRegisterNumbers())),
-            legacyT: sortNub(actions.flatMap(a => a.extractLegacyTRegisterNumbers()))
+            unary: sortNub(actions.flatMap(
+                action => action instanceof URegAction ? [action.regNumber] : []
+            )),
+            binary: sortNub(actions.flatMap(
+                action => action instanceof BRegAction ? [action.regNumber] : []
+            )),
+            legacyT: sortNub(actions.flatMap(
+                action => action instanceof LegacyTRegAction ? [action.regNumber] : []
+            ))
         };
     }
 

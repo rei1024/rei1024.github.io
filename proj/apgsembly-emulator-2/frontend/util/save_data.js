@@ -6,6 +6,7 @@
  */
 export function getSaveData() {
     const connection =
+        // @ts-ignore
         navigator.connection ||
         // @ts-ignore
         navigator.mozConnection ||

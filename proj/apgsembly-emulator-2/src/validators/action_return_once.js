@@ -11,11 +11,12 @@ import { Command, addLineNumber } from "../Command.js";
  */
 export function validateActionReturnOnceCommand(command) {
     // FIXME: HALT_OUTが含まれる場合は一旦無視
-    if (command.actions.some(x => x instanceof HaltOutAction)) {
+    const actions = command.actions;
+    if (actions.some(x => x instanceof HaltOutAction)) {
         return undefined;
     }
 
-    const valueReturnActions = command.actions.filter(x => x.doesReturnValue());
+    const valueReturnActions = actions.filter(x => x.doesReturnValue());
     if (valueReturnActions.length === 1) {
         return undefined;
     } else if (valueReturnActions.length === 0) {

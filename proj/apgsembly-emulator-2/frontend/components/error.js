@@ -14,9 +14,7 @@ export function renderErrorMessage($error, appState, errorMessage) {
         $error.innerHTML = "";
         for (const message of messages) {
             $error.append(
-                create('span', span => {
-                    span.textContent = "- " + message;
-                }),
+                create('span', "- " + message),
                 create('br')
             );
         }

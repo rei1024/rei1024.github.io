@@ -230,10 +230,7 @@ function error() {
  * @param {number} [line]
  * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
  */
-export function parseProgramLine(str, line = undefined) {
-    if (typeof str !== 'string') {
-        throw TypeError('str is not a string');
-    }
+export function parseProgramLine(str, line) {
     const trimmedStr = str.trim();
     if (trimmedStr === "") {
         return new EmptyLine();
@@ -277,7 +274,7 @@ export function parseProgramLine(str, line = undefined) {
 
     const input = parseInput(inputStr);
     if (input === undefined) {
-        return `Unknown input "${inputStr}" in "${str}"${lineNumberMessage(line)}. Expect "Z", "NZ", "ZZ", or "*"`;
+        return `Unknown input "${inputStr}" in "${str}"${lineNumberMessage(line)}. Expect "Z", "NZ", "ZZ" or "*"`;
     }
 
     return new Command({

@@ -27,7 +27,7 @@ import { LegacyTReg } from "./components/LegacyTReg.js";
  * @returns {never}
  */
 function throwNotFound(type, regNum) {
-    throw new Error(`Register ${type}${regNum} is not found.`);
+    throw Error(`Register ${type}${regNum} is not found.`);
 }
 
 /**
@@ -54,22 +54,12 @@ export class ActionExecutor {
         /**
          * @readonly
          */
-        this.unaryRegisterNumbers = unaryRegisterNumbers;
+        this.uRegMap = new Map(unaryRegisterNumbers.map(n => [n, new UReg()]));
 
         /**
          * @readonly
          */
-        this.binaryRegisterNumbers = binaryRegisterNumbers;
-
-        /**
-         * @readonly
-         */
-        this.uRegMap = new Map(this.unaryRegisterNumbers.map(n => [n, new UReg()]));
-
-        /**
-         * @readonly
-         */
-        this.bRegMap = new Map(this.binaryRegisterNumbers.map(n => [n, new BReg()]));
+        this.bRegMap = new Map(binaryRegisterNumbers.map(n => [n, new BReg()]));
 
         /**
          * @readonly

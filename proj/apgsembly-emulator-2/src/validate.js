@@ -43,7 +43,7 @@ export function validateAll(commands) {
 
     for (const validator of validators) {
         const errorsOrUndefined = validator(commands);
-        if (Array.isArray(errorsOrUndefined)) {
+        if (errorsOrUndefined !== undefined) {
             errors = errors.concat(errorsOrUndefined);
         }
     }

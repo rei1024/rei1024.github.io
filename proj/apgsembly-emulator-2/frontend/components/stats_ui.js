@@ -6,33 +6,42 @@ import { create } from "../util/create.js";
 const CURRENT_STATE_CLASS = 'stats_current_state';
 
 /**
- * @param {string} stateName
- * @param {{ z: number, nz: number }} stat
+ * @typedef {{ z: number, nz: number }} StatsItem
  */
-function createRow(stateName, stat) {
-    const $name = document.createElement('td');
-    $name.colSpan = 2;
-    $name.append(create('code', $code => {
-        $code.textContent = stateName;
-    }));
 
-    const num = 'num';
+/**
+ * @param {string} stateName
+ * @param {StatsItem} stat
+ */
+function createRow(stateName, { z, nz }) {
+    const $name = create('td', {
+        fn: $name => {
+            $name.colSpan = 2;
+        },
+        children: [create('code', stateName)]
+    });
 
-    const $sum = document.createElement('td');
-    $sum.textContent = (stat.z + stat.nz).toLocaleString();
-    $sum.classList.add(num);
+    const numClass = 'num';
 
-    const $z = document.createElement('td');
-    $z.textContent = stat.z.toLocaleString();
-    $z.classList.add(num);
+    const $sum = create('td', {
+        text: (z + nz).toLocaleString(),
+        classes: [numClass]
+    });
 
-    const $nz = document.createElement('td');
-    $nz.textContent = stat.nz.toLocaleString();
-    $nz.classList.add(num);
+    const $z = create('td', {
+        text: z.toLocaleString(),
+        classes: [numClass]
+    });
+
+    const $nz = create('td', {
+        text: nz.toLocaleString(),
+        classes: [numClass]
+    });
 
     // row
-    const $tr = document.createElement('tr');
-    $tr.append($name, $sum, $z, $nz);
+    const $tr = create('tr', {
+        children: [$name, $sum, $z, $nz]
+    });
 
     return { $tr, $sum, $z, $nz };
 }
@@ -65,7 +74,7 @@ export class StatsUI {
     }
 
     /**
-     * @param {{ z: number, nz: number }[]} stateStats
+     * @param {StatsItem[]} stateStats
      * @param {string[]} states
      */
     initialize(stateStats, states) {
@@ -83,13 +92,13 @@ export class StatsUI {
     }
 
     clear() {
-        this.statsNumberOfStates.textContent = '';
+        this.statsNumberOfStates.innerHTML = '';
         this.cells = [];
         this.root.innerHTML = '';
     }
 
     /**
-     * @param {{ z: number, nz: number }[]} stateStats
+     * @param {StatsItem[]} stateStats
      * @param {number} currentIndex
      */
     render(stateStats, currentIndex) {

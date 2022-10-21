@@ -42,13 +42,6 @@ test("URegAction pretty", () => {
     assertEquals(URegAction.parse("TDEC U7")?.pretty(), "TDEC U7");
 });
 
-test("URegAction extract", () => {
-    assertEquals(
-        URegAction.parse("TDEC U7")?.extractUnaryRegisterNumbers(),
-        [7]
-    );
-});
-
 test("URegAction isSameComponent", () => {
     assertEquals(
         URegAction.parse('INC U2')?.isSameComponent(URegAction.parse('INC U2') ?? never()),

@@ -9,10 +9,11 @@ import { addLineNumber, Command } from "../Command.js";
  * @returns {string | undefined}
  */
 export function validateNoDuplicatedActionCommand(command) {
-    if (command.actions.length <= 1) {
+    const actions = command.actions;
+    if (actions.length <= 1) {
         return undefined;
     }
-    const actionStrs = command.actions.map(x => x.pretty());
+    const actionStrs = actions.map(x => x.pretty());
     actionStrs.sort();
     for (let i = 0; i < actionStrs.length - 1; i++) {
         const act1 = actionStrs[i];

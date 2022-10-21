@@ -10,6 +10,7 @@ import {
     B2D_B2DX,
     B2D_B2DY,
 } from "../actions/B2DAction.js";
+import { internalError } from "../actions/Action.js";
 
 /**
  * @template A
@@ -99,7 +100,7 @@ export class B2D {
                 switch (act.axis) {
                     case B2D_B2DX: return this.incB2DX();
                     case B2D_B2DY: return this.incB2DY();
-                    case B2D_B2D: throw Error('B2D: internal');
+                    case B2D_B2D: internalError();
                 }
                 break;
             }
@@ -107,25 +108,25 @@ export class B2D {
                 switch (act.axis) {
                     case B2D_B2DX: return this.tdecB2DX();
                     case B2D_B2DY: return this.tdecB2DY();
-                    case B2D_B2D: throw Error('B2D: internal');
+                    case B2D_B2D: internalError();
                 }
                 break;
             }
             case B2D_READ: {
                 switch (act.axis) {
                     case B2D_B2D: return this.read();
-                    default: throw Error('B2D: internal');
+                    default: internalError();
                 }
                 break;
             }
             case B2D_SET: {
                 switch (act.axis) {
                     case B2D_B2D: return this.set();
-                    default: throw Error('B2D: internal');
+                    default: internalError();
                 }
                 break;
             }
-            default: throw Error('B2D: internal');
+            default: internalError();
         }
     }
 
@@ -188,11 +189,11 @@ export class B2D {
     read() {
         const arrayY = this.array[this.y];
         if (arrayY === undefined) {
-            throw Error('B2D: internal error');
+            internalError();
         }
         const value = arrayY[this.x];
         if (value === undefined) {
-            throw Error('B2D: internal error');
+            internalError();
         }
         arrayY[this.x] = 0;
         return value;
@@ -205,7 +206,7 @@ export class B2D {
     set() {
         const arrayY = this.array[this.y];
         if (arrayY === undefined) {
-            throw Error('B2D: internal error');
+            internalError();
         }
         if (arrayY[this.x] === 1) {
             throw Error(`SET B2D: Tried to set when it was already 1. x = ${this.x}, y = ${this.y}.`);

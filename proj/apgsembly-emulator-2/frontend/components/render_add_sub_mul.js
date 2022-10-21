@@ -6,7 +6,7 @@
  * @returns {string}
  */
 export function renderAddSubMul(actionExecutor) {
-    if (actionExecutor === undefined) {
+    if (!actionExecutor) {
         return '';
     }
 

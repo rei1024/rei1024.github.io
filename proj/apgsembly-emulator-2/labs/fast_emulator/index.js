@@ -15,11 +15,18 @@ async function init() {
     }
 
     // console.log('a');
-    const text = await (await fetch('../../data/pi_calc.apg')).text();
+    const text = await (await fetch('../../frontend/data/pi_calc.apg')).text();
     // console.log(text.slice(0, 20));
     await app.initialize(text);
     // console.log(JSON.stringify(await app.getOutput()));
-    output.textContent = await app.getOutput();
+    await render();
+    async function render() {
+        if (output == null) {
+            throw Error('error');
+        }
+        output.textContent = `[${(await app.getSteps()).toLocaleString()}]`
+            + (await app.getOutput());
+    }
 
     /**
      *
@@ -27,8 +34,8 @@ async function init() {
      */
     const update = async time => {
         // console.log(time);
-        await app.run(2000000);
-        output.textContent = await app.getOutput();
+        await app.run(1000000);
+        await render();
         requestAnimationFrame(update);
     };
     requestAnimationFrame(update);

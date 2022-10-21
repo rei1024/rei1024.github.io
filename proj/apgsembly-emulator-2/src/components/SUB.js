@@ -1,6 +1,7 @@
 // @ts-check
 
 import { SubAction, SUB_A1, SUB_B0, SUB_B1 } from "../actions/SubAction.js";
+import { internalError } from "../actions/Action.js";
 
 /**
  * `SUB`
@@ -26,7 +27,7 @@ export class SUB {
             case SUB_B0: return this.b0();
             case SUB_A1: return this.a1();
             case SUB_B1: return this.b1();
-            default: throw Error('SUB: action error');
+            default: internalError();
         }
     }
 
@@ -51,7 +52,7 @@ export class SUB {
                 3, 2, -1, -1, 7, 6, -1, -1, 11, 10, -1, -1, 15, 14, -1, -1,
                 19, 18, -1, -1, 23, 22, -1, -1, 27, 26, -1, -1, 31, 30, -1, -1
             ];
-        const x = subLookupA1[this.value] ?? this.error();
+        const x = subLookupA1[this.value] ?? internalError();
         if (x === -1) {
             throw Error("SUB error: A1");
         }
@@ -69,7 +70,7 @@ export class SUB {
                 0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17,
                 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 17, 17
             ];
-        this.value = subLookupB0[this.value] ?? this.error();
+        this.value = subLookupB0[this.value] ?? internalError();
         // @ts-ignore
         return t;
     }
@@ -85,7 +86,7 @@ export class SUB {
                 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 0, 0, 0, 0,
                 17, 17, 17, 17, 17, 17, 0, 0, 17, 17, 17, 17, 0, 0, 17, 17
             ];
-        this.value = subLookupB1[this.value] ?? this.error();
+        this.value = subLookupB1[this.value] ?? internalError();
         // @ts-ignore
         return t;
     }
@@ -106,13 +107,5 @@ export class SUB {
         const str = this.toString();
         return str.slice(0, 3) + " stopper" + str.slice(3, 4) +
                 " bit" + str.slice(4);
-    }
-
-    /**
-     * @private
-     * @returns {never}
-     */
-    error() {
-        throw Error('SUB: internal error');
     }
 }

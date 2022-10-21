@@ -8,7 +8,7 @@ import { Program } from "../../src/exports.js";
 export function create(apgsemblySource) {
     const program = Program.parse(apgsemblySource);
     if (typeof program === 'string') {
-        throw new Error(program);
+        throw Error(program);
     }
 
     /** @type {Edge[]} */

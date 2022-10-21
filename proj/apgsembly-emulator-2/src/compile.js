@@ -210,8 +210,7 @@ export function commandsToLookupTable(commands) {
             default: {
                 // type-check
                 /** @type {Error} */
-                const inputNever = command.input;
-                console.error(inputNever);
+                const _ = command.input;
                 error();
             }
         }

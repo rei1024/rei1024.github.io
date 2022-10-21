@@ -98,6 +98,21 @@ test("BReg toBinaryString", () => {
     assertEquals(x.toBinaryString(), "010");
 });
 
+test("BReg toNumberString", () => {
+    const x = new BReg();
+    x.inc();
+    x.set();
+    assertEquals(x.toNumberString(), "2");
+    x.read();
+    for (let i = 0; i < 19; i++) {
+        x.inc();
+    }
+    x.set();
+    assertEquals(x.toNumberString(), "1048576");
+    assertEquals(x.toNumberString(10), "1048576");
+    assertEquals(x.toNumberString(16), "100000");
+});
+
 test('BReg toObject', () => {
     const x = new BReg();
     assertEquals(x.toBinaryString(), "0");

@@ -1,6 +1,6 @@
-// Elementary cellular automata
-
 // @ts-check
+
+// Elementary cellular automata
 
 /**
  *
@@ -43,7 +43,7 @@ function bit3(f) {
  * @param {number} rule rule number
  * @returns {{ [key: string]: "0" | "1" }}
  */
-export function parseRule(rule) {
+function parseRule(rule) {
     const str = rule.toString(2).padStart(8, '0');
     /** @type {Record<string, string>} */
     const o = {};
@@ -60,7 +60,7 @@ export function parseRule(rule) {
  * @param {number} rule rule number
  * @returns {(x: number, y: number, z: number) => "0" | "1"} transition function
  */
-export function makeDelta(rule) {
+function makeDelta(rule) {
     const o = parseRule(rule);
 
     /**

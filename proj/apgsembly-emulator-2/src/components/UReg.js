@@ -1,6 +1,7 @@
 // @ts-check
 
 import { URegAction, U_INC, U_TDEC } from "../actions/URegAction.js";
+import { internalError } from "../actions/Action.js";
 
 /**
  * Un: Sliding Block Register
@@ -84,7 +85,7 @@ export class UReg {
     tdec() {
         const res = this.action(new URegAction(U_TDEC, 0)); // regNumberは仮
         if (res === undefined) {
-            throw Error('internal error');
+            internalError();
         }
         return res;
     }

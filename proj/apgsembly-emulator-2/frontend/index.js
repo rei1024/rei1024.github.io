@@ -20,10 +20,8 @@ import {} from "./components/render_add_sub_mul.js";
 import { setupFrequencyInput } from "./components/frequency_input.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { importFileAsText } from "./util/import_file.js";
-import { getSaveData } from "./util/save_data.js";
 import { idle } from "./util/idle.js";
-import { prefetch } from "./util/prefetch.js";
-import { localStorageSetItem } from "./util/local-storage-set-item.js";
+import { localStorageSetItem, localStorageGetItem } from "./util/local-storage.js";
 import { hasFocus } from "./util/has-focus.js";
 
 import {
@@ -77,23 +75,21 @@ $step.addEventListener('click', () => {
     app.doStep();
 });
 
-const SRC_KEY = 'src';
-
 // サンプル
 $exampleCodes.forEach(e => {
     e.addEventListener('click', async () => {
         $examples.style.opacity = "0.5";
-        const src = e.dataset[SRC_KEY];
+        const src = e.dataset['src'];
         try {
             const response = await fetch(DATA_DIR + src);
             if (!response.ok) {
-                throw Error('error');
+                throw 'error';
             }
             app.setInputAndReset(await response.text());
             // スクロール
-            $input.scrollTop = 0;
-        } catch (_) {
-            console.error(`Fetch Error: ${src}`);
+            scrollToTop();
+        } catch (e) {
+            console.error(`Fetch: ${src}`);
         } finally {
             $examples.style.opacity = "1";
         }
@@ -116,11 +112,15 @@ $unaryRegisterDetail.addEventListener('toggle', () => {
     app.renderUnary();
 });
 
+const scrollToTop = () => {
+    $input.scrollTop = 0;
+};
+
 // ファイルインポート
 importFileAsText($fileImport, result => {
     app.setInputAndReset(result);
     // スクロール
-    $input.scrollTop = 0;
+    scrollToTop();
 });
 
 // ** Modal ** //
@@ -174,6 +174,10 @@ $statsModal.addEventListener('shown.bs.modal', () => {
 });
 
 $viewStateDiagramButton.addEventListener('click', () => {
+    // 1MB以上は無し
+    if ($input.value.length >= 10 ** 6) {
+        return;
+    }
     localStorageSetItem('state-diagram-input', $input.value);
     window.open('./labs/diagram/index.html', undefined, 'noreferrer=yes,noopener=yes');
 });
@@ -232,7 +236,7 @@ $input.addEventListener("drop", async (event) => {
     if (file != undefined) {
         app.setInputAndReset(await file.text());
         // スクロール
-        $input.scrollTop = 0;
+        scrollToTop();
     }
 });
 
@@ -242,13 +246,13 @@ $configButton.disabled = false;
 
 // 初回描画
 // first render
-app.initializeApp();
+app.render();
 
 // 初期コード
 idle(() => {
     const INIT_CODE = "initial_code";
-    const initCode = localStorage.getItem(INIT_CODE);
-    if (initCode !== null && initCode !== "") {
+    const initCode = localStorageGetItem(INIT_CODE);
+    if (initCode !== null) {
         localStorage.removeItem(INIT_CODE);
         app.setInputAndReset(initCode);
     }
@@ -257,7 +261,7 @@ idle(() => {
 // 実行時間が掛かる処理をまとめる
 idle(() => {
     // デフォルトはtrue
-    if (localStorage.getItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
+    if (localStorageGetItem(SHOW_BINARY_IN_DECIMAL_KEY) === null) {
         localStorageSetItem(SHOW_BINARY_IN_DECIMAL_KEY, "true");
     }
 
@@ -273,33 +277,19 @@ idle(() => {
     ];
 
     for (const { key, checkbox } of items) {
-        if (localStorage.getItem(key) === "true") {
+        if (localStorageGetItem(key) === "true") {
             checkbox.checked = true;
         }
     }
 
     // ダークモードについてはbodyタグ直下でも設定する
     // チェックボタンはここで処理する
-    if (localStorage.getItem(DARK_MODE_KEY) === "on") {
+    if (localStorageGetItem(DARK_MODE_KEY) === "on") {
         document.body.setAttribute('apge_dark', "on");
         $darkMode.checked = true;
         $darkModeLabel.textContent = "On";
     }
     app.render();
-});
-
-// サンプルコードをプレフェッチ
-idle(() => {
-    const saveData = getSaveData();
-    if (saveData) {
-        return;
-    }
-    $exampleCodes.forEach(e => {
-        const src = e.dataset[SRC_KEY];
-        if (src !== undefined) {
-            prefetch(DATA_DIR + src);
-        }
-    });
 });
 
 // PWA
@@ -315,11 +305,8 @@ if ("serviceWorker" in navigator) {
         // }
 
         // unregister all
-        navigator.serviceWorker.getRegistrations().then(registrations => {
-            for (const registration of registrations) {
-                registration.unregister();
-            }
-        });
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        registrations.map(registration => registration.unregister());
     });
 }
 

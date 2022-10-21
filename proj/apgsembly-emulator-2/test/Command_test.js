@@ -76,7 +76,7 @@ test('Command parse unknown input', () => {
     if (typeof res === "string") {
         assertEquals(
             res,
-            'Unknown input "XXXXX" in "INITIAL; XXXXX; DIR0; INC U3". Expect "Z", "NZ", "ZZ", or "*"'
+            'Unknown input "XXXXX" in "INITIAL; XXXXX; DIR0; INC U3". Expect "Z", "NZ", "ZZ" or "*"'
         );
     } else {
         throw Error('expect parse error ' + str);

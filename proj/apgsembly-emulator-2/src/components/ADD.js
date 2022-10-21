@@ -1,6 +1,7 @@
 // @ts-check
 
 import { AddAction, ADD_A1, ADD_B0, ADD_B1 } from "../actions/AddAction.js";
+import { internalError } from "../actions/Action.js";
 
 /**
  * ADD
@@ -31,7 +32,7 @@ export class ADD {
                 this.value = [
                     0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001,
                     0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001, 0b1001
-                ][value] ?? this.error();
+                ][value] ?? internalError();
                 // @ts-ignore
                 return t;
             }
@@ -41,7 +42,7 @@ export class ADD {
                 this.value = [
                     0b0000, 0b0000, 0b0000, 0b0000, 0b1001, 0b1001, 0b0000, 0b0000,
                     0b1001, 0b1001, 0b0000, 0b0000, 0b1001, 0b1001, 0b1001, 0b1001
-                ][value] ?? this.error();
+                ][value] ?? internalError();
                 // @ts-ignore
                 return t;
             }
@@ -49,10 +50,10 @@ export class ADD {
                 this.value = [
                     0b0101, 0b0100, 0b0111, 0b0110, 0b0001, 0b0000, 0b0011, 0b0010,
                     0b1101, 0b1100, 0b1111, 0b1110, 0b1001, 0b1000, 0b1011, 0b1010
-                ][this.value] ?? this.error();
+                ][this.value] ?? internalError();
                 return undefined;
             }
-            default: throw Error('ADD action: internal');
+            default: internalError();
         }
     }
 
@@ -80,7 +81,7 @@ export class ADD {
     b0() {
         const t = this.action(new AddAction(ADD_B0));
         if (t === undefined) {
-            this.error();
+            internalError();
         }
         return t;
     }
@@ -92,17 +93,9 @@ export class ADD {
     b1() {
         const t = this.action(new AddAction(ADD_B1));
         if (t === undefined) {
-            this.error();
+            internalError();
         }
         return t;
-    }
-
-    /**
-     * @private
-     * @returns {never}
-     */
-    error() {
-        throw Error('ADD: internal');
     }
 
     /**
