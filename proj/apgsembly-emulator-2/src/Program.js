@@ -1,6 +1,7 @@
 // @ts-check
 
 import { Command, ComponentsHeader, RegistersHeader } from "./Command.js";
+import { Action } from "./actions/Action.js";
 import { BRegAction } from "./actions/BRegAction.js";
 import { LegacyTRegAction } from "./actions/LegacyTRegAction.js";
 import { URegAction } from "./actions/URegAction.js";
@@ -21,11 +22,12 @@ export class Program {
     constructor({
         programLines,
     }) {
+        const programLinesArray = programLines.getArray();
         /**
          * @readonly
          * @type {ReadonlyArray<Command>}
          */
-        this.commands = programLines.getArray().flatMap(x => {
+        this.commands = programLinesArray.flatMap(x => {
             if (x instanceof Command) {
                 return [x];
             } else {
@@ -38,7 +40,7 @@ export class Program {
          * @type {ComponentsHeader | undefined}
          */
         this.componentsHeader = undefined;
-        for (const x of programLines.getArray()) {
+        for (const x of programLinesArray) {
             if (x instanceof ComponentsHeader) {
                 if (this.componentsHeader !== undefined) {
                     throw Error(`Multiple ${ComponentsHeader.key}`);
@@ -53,7 +55,7 @@ export class Program {
          */
         this.registersHeader = undefined;
 
-        for (const x of programLines.getArray()) {
+        for (const x of programLinesArray) {
             if (x instanceof RegistersHeader) {
                 if (this.registersHeader !== undefined) {
                     throw Error(`Multiple ${RegistersHeader.key}`);
@@ -99,7 +101,7 @@ export class Program {
 
         try {
             return new Program({
-                programLines: programLines
+                programLines
             });
         } catch (error) {
             if (error instanceof Error) {
@@ -114,18 +116,24 @@ export class Program {
      * @returns {{ unary: number[], binary: number[], legacyT: number[] }}
      */
     extractRegisterNumbers() {
+        /** @type {readonly Action[]} */
         const actions = this.commands.flatMap(command => command.actions);
 
+        /**
+         * @template {Action & { regNumber: number }} T
+         * @param {new (...args: any[]) => T} klass
+         * @returns {number[]}
+         */
+        const getNumbers = (klass) => {
+            return sortNub(actions.flatMap(
+                action => action instanceof klass ? [action.regNumber] : []
+            ));
+        };
+
         return {
-            unary: sortNub(actions.flatMap(
-                action => action instanceof URegAction ? [action.regNumber] : []
-            )),
-            binary: sortNub(actions.flatMap(
-                action => action instanceof BRegAction ? [action.regNumber] : []
-            )),
-            legacyT: sortNub(actions.flatMap(
-                action => action instanceof LegacyTRegAction ? [action.regNumber] : []
-            ))
+            unary: getNumbers(URegAction),
+            binary: getNumbers(BRegAction),
+            legacyT: getNumbers(LegacyTRegAction)
         };
     }
 

@@ -145,16 +145,15 @@ export function commandsToLookupTable(commands) {
     /**
      * @returns {never}
      */
-    function error() {
+    const error = () => {
         throw Error("commandsToLookupTable internal error");
-    }
+    };
 
     // lookupを初期化
     for (const command of commands) {
         // 記録されていない場合追加
         if (!stateMap.has(command.state)) {
-            const n = stateMap.size;
-            stateMap.set(command.state, n);
+            stateMap.set(command.state, stateMap.size);
             lookup.push(new CompiledCommand(undefined, undefined));
         }
     }

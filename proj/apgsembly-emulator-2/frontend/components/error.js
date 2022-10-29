@@ -11,7 +11,7 @@ import { create } from '../util/create.js';
 export function renderErrorMessage($error, appState, errorMessage) {
     if (appState === "RuntimeError" || appState === "ParseError") {
         const messages = errorMessage.split('\n');
-        $error.innerHTML = "";
+        $error.replaceChildren();
         for (const message of messages) {
             $error.append(
                 create('span', "- " + message),

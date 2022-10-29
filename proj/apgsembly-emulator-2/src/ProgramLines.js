@@ -30,7 +30,7 @@ export class ProgramLines {
      * @returns {string}
      */
     pretty() {
-        return this.getArray().map(line => line.pretty()).join('\n');
+        return this.array.map(line => line.pretty()).join('\n');
     }
 
     /**

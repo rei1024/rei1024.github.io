@@ -50,6 +50,9 @@ function createRow(stateName, { z, nz }) {
  * UI for statistics
  */
 export class StatsUI {
+    /** @type {HTMLElement} */
+    #statsNumberOfStates;
+
     /**
      *
      * @param {HTMLElement} root
@@ -64,7 +67,7 @@ export class StatsUI {
         /**
          * @private
          */
-        this.statsNumberOfStates = statsNumberOfStates;
+        this.#statsNumberOfStates = statsNumberOfStates;
 
         /**
          * @type {{ $sum: Element, $z: Element, $nz: Element, $tr: HTMLElement }[]}
@@ -78,7 +81,7 @@ export class StatsUI {
      * @param {string[]} states
      */
     initialize(stateStats, states) {
-        this.statsNumberOfStates.textContent = states.length.toLocaleString();
+        this.#statsNumberOfStates.textContent = states.length.toLocaleString();
 
         this.cells = [];
         this.root.innerHTML = "";
@@ -92,7 +95,7 @@ export class StatsUI {
     }
 
     clear() {
-        this.statsNumberOfStates.innerHTML = '';
+        this.#statsNumberOfStates.innerHTML = '';
         this.cells = [];
         this.root.innerHTML = '';
     }

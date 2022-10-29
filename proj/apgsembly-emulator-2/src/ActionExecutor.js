@@ -109,6 +109,17 @@ export class ActionExecutor {
     }
 
     /**
+     * @param {Action} action
+     */
+    setCache(action) {
+        if (action instanceof BRegAction) {
+            action.registerCache = this.getBReg(action.regNumber);
+        } else if (action instanceof URegAction) {
+            action.registerCache = this.getUReg(action.regNumber);
+        }
+    }
+
+    /**
      * @private
      * @param {string} key
      * @param {unknown} value
@@ -200,7 +211,7 @@ export class ActionExecutor {
         } else if (action instanceof HaltOutAction) {
             return -1;
         }
-        throw Error(`execActionN: todo ${action.pretty()}`);
+        throw Error(`execActionN: ${action.pretty()}`);
     }
 
     /**

@@ -8,25 +8,17 @@ function getFrequencies() {
     const frequencyArray = [];
     const maxOrder = 6;
     for (let i = 0; i <= maxOrder; i++) {
-        const base = 10 ** i;
         for (let j = 1; j <= 9; j++) {
-            frequencyArray.push(base * j);
+            frequencyArray.push(j * (10 ** i));
         }
     }
 
     // 値を追加したらHTMLも変更すること
     frequencyArray.push(
-        ...[10, 15].map(x => x * 10 ** maxOrder)
+        10 * 10 ** maxOrder, 15 * 10 ** maxOrder
     );
 
     return frequencyArray;
-}
-
-/**
- * @returns {never}
- */
-function error() {
-    throw Error('error');
 }
 
 /**
@@ -42,9 +34,11 @@ export function setupFrequencyInput($frequencyInput, app) {
 
     $frequencyInput.addEventListener('input', () => {
         const value = parseInt($frequencyInput.value, 10);
-        const freq = frequencies[value] ?? error();
+        const freq = frequencies[value];
+        if (freq === undefined) {
+            throw Error('internal error');
+        }
         $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
         app.setFrequency(freq);
-        app.renderFrequencyOutput();
     });
 }

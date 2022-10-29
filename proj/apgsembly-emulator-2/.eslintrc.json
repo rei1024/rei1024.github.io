@@ -6,7 +6,7 @@
     "extends": "eslint:recommended",
     // "extends": "eslint:all",
     "parserOptions": {
-        "ecmaVersion": 11,
+        "ecmaVersion": 13,
         "sourceType": "module"
     },
     "ignorePatterns": ["cypress_default/**/*.js", "cypress/**/*.js", "doc/**/*.js", "frontend/index.dist.js"],

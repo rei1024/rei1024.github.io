@@ -235,10 +235,12 @@ export class BReg {
      */
     toObject() {
         this.extend();
+        const bits = this.bits;
+        const pointer = this.pointer;
         return {
-            prefix: this.bits.slice(0, this.pointer),
-            head: this.bits[this.pointer] ?? internalError(),
-            suffix: this.bits.slice(this.pointer + 1),
+            prefix: bits.slice(0, pointer),
+            head: bits[pointer] ?? internalError(),
+            suffix: bits.slice(pointer + 1),
         };
     }
 

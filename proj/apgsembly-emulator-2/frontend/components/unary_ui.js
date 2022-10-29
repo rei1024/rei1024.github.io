@@ -127,8 +127,7 @@ export class UnaryUI {
      */
     initialize(regs) {
         const { table, cells } = createTable(regs);
-        this.root.innerHTML = "";
-        this.root.append(table);
+        this.root.replaceChildren(table);
         this.cells = cells;
     }
 

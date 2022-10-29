@@ -309,5 +309,3 @@ if ("serviceWorker" in navigator) {
         registrations.map(registration => registration.unregister());
     });
 }
-
-export const _index = null;

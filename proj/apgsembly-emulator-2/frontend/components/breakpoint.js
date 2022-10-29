@@ -20,7 +20,6 @@ export function initializeBreakpointSelect($breakpointSelect, machine) {
 
     for (const [state, stateIndex] of machine.getStateMap()) {
         const option = create('option', state);
-        option.textContent = state;
         option.value = stateIndex.toString();
         $breakpointSelect.append(option);
     }
@@ -35,7 +34,10 @@ export function getBreakpointInput($breakpointInputSelect) {
     // -1: *
     // 0 : Z
     // 1 : NZ
-    const biStr = $breakpointInputSelect.value;
-    return biStr === "any" ? -1 :
-            biStr === "zero" ? 0 : 1;
+    switch ($breakpointInputSelect.value) {
+        case "*": return -1;
+        case "Z": return 0;
+        // "NZ"
+        default: return 1;
+    }
 }

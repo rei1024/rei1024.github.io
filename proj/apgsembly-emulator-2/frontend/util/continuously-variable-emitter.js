@@ -18,6 +18,8 @@ export class CVEEvent extends Event {
  * 連続可変エミッター
  */
 export class CVE extends EventTarget {
+    #fractionStep = 0;
+    #prevTime = -1;
     /**
      * 作成時は非活性状態
      * @param {{ frequency: number, signal?: AbortSignal }} param0
@@ -38,16 +40,6 @@ export class CVE extends EventTarget {
         this._enabled = false;
 
         /**
-         * @private
-         */
-        this._fractionStep = 0;
-
-        /**
-         * @private
-         */
-        this._prevTime = -1;
-
-        /**
          * requestAnimationFrameは0を返さない
          * https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animation-frames
          * @private
@@ -62,26 +54,24 @@ export class CVE extends EventTarget {
          * @param {number} time
          */
         const update = time => {
-            if (this._enabled && this._prevTime !== -1) {
-                const diff = time - this._prevTime;
-                const prevFractionStep = this._fractionStep;
+            if (this._enabled && this.#prevTime !== -1) {
+                const diff = time - this.#prevTime;
+                const prevFractionStep = this.#fractionStep;
                 const nextFractionStep = prevFractionStep + (diff / 1000) * this._frequency;
                 const value = Math.floor(nextFractionStep) - Math.floor(prevFractionStep);
-                this._fractionStep = nextFractionStep;
+                this.#fractionStep = nextFractionStep;
                 this.dispatchEvent(new CVEEvent(value));
             }
 
-            this._prevTime = time;
+            this.#prevTime = time;
             this._id = raf(update);
         };
 
         this._id = raf(update);
 
-        if (signal !== undefined) {
-            signal.addEventListener('abort', () => {
-                this.abort();
-            });
-        }
+        signal?.addEventListener('abort', () => {
+            this.abort();
+        });
     }
 
     abort() {
@@ -116,6 +106,6 @@ export class CVE extends EventTarget {
     }
 
     reset() {
-        this._fractionStep = 0;
+        this.#fractionStep = 0;
     }
 }

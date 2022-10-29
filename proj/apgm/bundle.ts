@@ -1,4 +1,4 @@
-import { bundle } from "https://deno.land/x/emit@0.9.0/mod.ts";
+import { bundle } from "https://deno.land/x/emit@0.10.0/mod.ts";
 
 import * as swc from "https://deno.land/x/swc@0.2.1/mod.ts";
 

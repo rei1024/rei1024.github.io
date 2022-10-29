@@ -34,7 +34,7 @@ async function init() {
      */
     const update = async time => {
         // console.log(time);
-        await app.run(1000000);
+        await app.run(2000000);
         await render();
         requestAnimationFrame(update);
     };

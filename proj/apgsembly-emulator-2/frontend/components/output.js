@@ -7,8 +7,7 @@
  */
 export function renderOutput($output, output) {
     output = output ?? "";
-    const oldValue = $output.value;
-    if (oldValue === output) {
+    if ($output.value === output) {
         return;
     }
 
