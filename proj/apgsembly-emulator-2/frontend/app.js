@@ -25,6 +25,7 @@ import {
     $toggle,
     $reset,
     $step,
+    $stepText,
     $currentState,
     $previousOutput,
     $freqencyOutput,
@@ -198,17 +199,23 @@ export class App {
         // show a spinner
         if (this.stepConfig >= 5000000) {
             const spinner = makeSpinner();
-
+            spinner.style.position = "absolute";
             $step.append(spinner);
-            $step.disabled = true;
 
+            // Stepの文字を透明にしてボタンの幅を維持する
+            $stepText.style.color = "transparent";
+            $step.disabled = true;
             // 他のボタンも一時的に無効化する app.runで有効化される
             $reset.disabled = true;
             $toggle.disabled = true;
 
             setTimeout(() => {
-                this.run(this.stepConfig);
-                $step.removeChild(spinner);
+                try {
+                    this.run(this.stepConfig);
+                } finally {
+                    $stepText.style.color = "";
+                    spinner.remove();
+                }
             }, 33); // 走らせるタイミングを遅らせることでスピナーの表示を確定させる
         } else {
             this.run(this.stepConfig);
@@ -313,8 +320,8 @@ export class App {
         if (this.#machine !== undefined && $binaryRegisterDetail.open) {
             this.#binaryUI.render(
                 this.#machine.actionExecutor.bRegMap,
-                binaryConfig.$hideBinary.checked,
-                binaryConfig.$reverseBinary.checked,
+                binaryConfig.$hideBits.checked,
+                binaryConfig.$reverseBits.checked,
                 binaryConfig.$showBinaryValueInDecimal.checked,
                 binaryConfig.$showBinaryValueInHex.checked
             );

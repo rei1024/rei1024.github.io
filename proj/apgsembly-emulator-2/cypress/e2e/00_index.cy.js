@@ -206,5 +206,6 @@ describe('Step', () => {
         assertToggleStart();
 
         assertError('');
+        assertRegister('B0', 'value = 1666672, pointer = 0000011100111011010011');
     });
 });

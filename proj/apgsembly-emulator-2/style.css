@@ -24,6 +24,14 @@
 }
 
 /**** App ****/
+
+/* Stepボタンのローディング表示 */
+#step {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* 広げる */
 #stats_modal .modal-dialog {
     max-width: 550px;

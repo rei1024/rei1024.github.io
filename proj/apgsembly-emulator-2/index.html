@@ -78,7 +78,7 @@
                 Reset
             </button>
             <button id="toggle" type="button" class="btn btn-primary" disabled>Start</button>
-            <button id="step" type="button" class="btn btn-primary" disabled>Step</button>
+            <button id="step" type="button" class="btn btn-primary" disabled><span id="step-text">Step</span></button>
             <button id="config_button" disabled data-test="config_button" type="button" class="btn btn-primary"
                 data-bs-toggle="modal" data-bs-target="#config_modal">
                 <!-- https://icons.getbootstrap.com/icons/gear/ -->
@@ -239,12 +239,12 @@
                         Binary registers:
                     </div>
                     <div class="form-check">
-                        <input type="checkbox" id="hide_binary" class="form-check-input">
-                        <label for="hide_binary" class="form-check-label">Hide binary</label>
+                        <input type="checkbox" id="hide_bits" class="form-check-input">
+                        <label for="hide_bits" class="form-check-label">Hide bits</label>
                     </div>
                     <div class="form-check">
-                        <input type="checkbox" id="reverse_binary" class="form-check-input">
-                        <label for="reverse_binary" class="form-check-label">Reverse binary</label>
+                        <input type="checkbox" id="reverse_bits" class="form-check-input">
+                        <label for="reverse_bits" class="form-check-label">Reverse bits</label>
                     </div>
                     <div>
                         <input type="checkbox" id="show_binary_value_in_decimal" class="form-check-input">

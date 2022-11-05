@@ -25,6 +25,7 @@ export const $reset = $type('#reset', HTMLButtonElement);
 
 // Step Button
 export const $step = $type('#step', HTMLButtonElement);
+export const $stepText = $type('#step-text', HTMLElement);
 
 // Config modal button
 export const $configButton = $type('#config_button', HTMLButtonElement);
@@ -103,9 +104,9 @@ export const $stepInput = $type('#step_input', HTMLInputElement);
 
 export const binaryConfig = {
     /** 2進数を非表示にする */
-    $hideBinary: $type('#hide_binary', HTMLInputElement),
+    $hideBits: $type('#hide_bits', HTMLInputElement),
     /** 2進数を逆順にする */
-    $reverseBinary: $type('#reverse_binary', HTMLInputElement),
+    $reverseBits: $type('#reverse_bits', HTMLInputElement),
     /** 10進数に変換して表示 */
     $showBinaryValueInDecimal: $type('#show_binary_value_in_decimal', HTMLInputElement),
     /** 16進数に変換して表示 */

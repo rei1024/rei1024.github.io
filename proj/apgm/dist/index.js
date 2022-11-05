@@ -57,7 +57,11 @@ export function showError(e) {
             endLineNumber: e.apgmSpan.end.line,
             endColumn: e.apgmSpan.end.column,
         });
-        editor.revealLine(e.apgmSpan.start.line);
+
+        // ウォッチモードではエラーで移動しない
+        if (!$watchMode.checked) {
+            editor.revealLine(e.apgmSpan.start.line);
+        }
     } catch (_e) {
         // ignore
     }

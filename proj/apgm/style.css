@@ -1,3 +1,6 @@
+h1 {
+    margin-bottom: 2px;
+}
 .font-x-large {
     font-size: x-large;
 }
@@ -22,7 +25,7 @@
 
 #apgm_input {
     width: 60%;
-    height: calc(100vh - 150px);
+    height: calc(100vh - 160px);
 }
 
 #output {

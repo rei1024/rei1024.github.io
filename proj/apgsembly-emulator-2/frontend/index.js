@@ -148,11 +148,11 @@ function setupCheckbox($checkbox, key) {
 }
 
 // バイナリを非表示にする
-const HIDE_BINARY_KEY = 'hide_binary';
-setupCheckbox(binaryConfig.$hideBinary, HIDE_BINARY_KEY);
+const HIDE_BITS_KEY = 'hide_binary';
+setupCheckbox(binaryConfig.$hideBits, HIDE_BITS_KEY);
 
-const REVERSE_BINARY_KEY = 'reverse_binary';
-setupCheckbox(binaryConfig.$reverseBinary, REVERSE_BINARY_KEY);
+const REVERSE_BITS_KEY = 'reverse_binary';
+setupCheckbox(binaryConfig.$reverseBits, REVERSE_BITS_KEY);
 
 const SHOW_BINARY_IN_DECIMAL_KEY = 'show_binary_in_decimal';
 setupCheckbox(binaryConfig.$showBinaryValueInDecimal, SHOW_BINARY_IN_DECIMAL_KEY);
@@ -270,8 +270,8 @@ idle(() => {
      */
     const items = [
         { key: B2D_FLIP_UPSIDE_DOWN_KEY, checkbox: $b2dFlipUpsideDown },
-        { key: REVERSE_BINARY_KEY, checkbox: binaryConfig.$reverseBinary },
-        { key: HIDE_BINARY_KEY, checkbox: binaryConfig.$hideBinary },
+        { key: REVERSE_BITS_KEY, checkbox: binaryConfig.$reverseBits },
+        { key: HIDE_BITS_KEY, checkbox: binaryConfig.$hideBits },
         { key: SHOW_BINARY_IN_DECIMAL_KEY, checkbox: binaryConfig.$showBinaryValueInDecimal },
         { key: SHOW_BINARY_IN_HEX_KEY, checkbox: binaryConfig.$showBinaryValueInHex },
     ];

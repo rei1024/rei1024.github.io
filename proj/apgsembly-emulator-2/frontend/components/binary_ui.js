@@ -131,12 +131,12 @@ export class BinaryUI {
     /**
      *
      * @param {ReadonlyMap<number, BReg>} regs
-     * @param {boolean} hideBinary
-     * @param {boolean} reverseBinary
+     * @param {boolean} hideBits
+     * @param {boolean} reverseBits
      * @param {boolean} showBinaryValueInDecimal
      * @param {boolean} showBinaryValueInHex
      */
-    render(regs, hideBinary, reverseBinary, showBinaryValueInDecimal, showBinaryValueInHex) {
+    render(regs, hideBits, reverseBits, showBinaryValueInDecimal, showBinaryValueInHex) {
         let i = 0;
         const cells = this.cells;
         for (const reg of regs.values()) {
@@ -149,11 +149,11 @@ export class BinaryUI {
                 $pointer,
             } = cells[i] ?? error();
 
-            if (hideBinary) {
+            if (hideBits) {
                 $prefix.innerHTML = '';
                 $head.innerHTML = '';
                 $suffix.innerHTML = '';
-            } else if (reverseBinary) {
+            } else if (reverseBits) {
                 const obj = reg.toObject();
                 // toObjectは新しい配列を返すため、reverseの副作用は無視する
                 $prefix.textContent = obj.suffix.reverse().join('');

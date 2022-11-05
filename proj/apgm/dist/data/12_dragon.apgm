@@ -1,20 +1,20 @@
 /*
-  # Dragon curve
-  https://en.wikipedia.org/wiki/Dragon_curve
+    # Dragon curve
+    https://en.wikipedia.org/wiki/Dragon_curve
 */
 
 /*
-  Lindenmayer systems
-  axiom: FX
-  rules: X -> X+YF+, Y -> -FX-Y
+    Lindenmayer systems
+    axiom: FX
+    rules: X -> X+YF+, Y -> -FX-Y
 
-  Symbols are encoded by the number of consecutive 1s
-  F + - X Y
-  1 2 3 4 5
+    Symbols are encoded by the number of consecutive 1s
+    F + - X Y
+    1 2 3 4 5
 */
 
 macro back_to_zero_b!(n) {
-  while_nz (tdec_b(n)) {}
+    while_nz (tdec_b(n)) {}
 }
 
 /* U0 number of iteration */
@@ -33,149 +33,149 @@ macro CURR!() 0
 macro NEXT!() 1
 
 macro next_to_curr!() {
-  back_to_zero_b!(CURR!());
-  back_to_zero_b!(NEXT!());
+    back_to_zero_b!(CURR!());
+    back_to_zero_b!(NEXT!());
 
-  /* break if 0 is appeared twice */
-  loop {
-    if_z (read_b(NEXT!())) {
-      inc_b(CURR!());
-      inc_b(NEXT!());
-      if_z (read_b(NEXT!())) {
-        break();
-      } else {
-        set_b(CURR!());
-        inc_b(CURR!());
-        inc_b(NEXT!());
-      }
-    } else {
-      set_b(CURR!());
-      inc_b(CURR!());
-      inc_b(NEXT!());
+    /* break if 0 is appeared twice */
+    loop {
+        if_z (read_b(NEXT!())) {
+            inc_b(CURR!());
+            inc_b(NEXT!());
+            if_z (read_b(NEXT!())) {
+                break();
+            } else {
+                set_b(CURR!());
+                inc_b(CURR!());
+                inc_b(NEXT!());
+            }
+        } else {
+            set_b(CURR!());
+            inc_b(CURR!());
+            inc_b(NEXT!());
+        }
     }
-  }
 
-  back_to_zero_b!(CURR!());
-  back_to_zero_b!(NEXT!());
+    back_to_zero_b!(CURR!());
+    back_to_zero_b!(NEXT!());
 }
 
 macro write!(i) {
-  repeat(i, {
-    set_b(NEXT!());
-    inc_b(NEXT!());
-  });
-  inc_b(NEXT!()); /* next */
+    repeat(i, {
+        set_b(NEXT!());
+        inc_b(NEXT!());
+    });
+    inc_b(NEXT!()); /* next */
 }
 
 macro write_F!() {
-  write!(1);
+    write!(1);
 }
 
 macro write_Plus!() {
-  write!(2);
+    write!(2);
 }
 
 macro write_Minus!() {
-  write!(3);
+    write!(3);
 }
 
 macro write_X!() {
-  write!(4);
+    write!(4);
 }
 
 macro write_Y!() {
-  write!(5);
+    write!(5);
 }
 
 macro check!() {
-  inc_b(CURR!());
-  read_b(CURR!());
+    inc_b(CURR!());
+    read_b(CURR!());
 }
 
 /* length of `F` */
 macro LEN!() 3
 
 macro safe_set_b2d!() {
-  read_b2d();
-  set_b2d();
+    read_b2d();
+    set_b2d();
 }
 
 macro b2d_plus_x!() {
-  repeat(LEN!(), {
-    safe_set_b2d!();
-    inc_b2dx();
-  });
+    repeat(LEN!(), {
+        safe_set_b2d!();
+        inc_b2dx();
+    });
 }
 
 macro b2d_plus_y!() {
-  repeat(LEN!(), {
-    safe_set_b2d!();
-    inc_b2dy();
-  });
+    repeat(LEN!(), {
+        safe_set_b2d!();
+        inc_b2dy();
+    });
 }
 
 macro b2d_minus_x!() {
-  repeat(LEN!(), {
-    safe_set_b2d!();
-    tdec_b2dx();
-  });
+    repeat(LEN!(), {
+        safe_set_b2d!();
+        tdec_b2dx();
+    });
 }
 
 macro b2d_minus_y!() {
-  repeat(LEN!(), {
-    safe_set_b2d!();
-    tdec_b2dy();
-  });
+    repeat(LEN!(), {
+        safe_set_b2d!();
+        tdec_b2dy();
+    });
 }
 
 #REGISTERS { "U0": 7, "U1": 40, "U2": 40, "B0": [0, "101111"] }
 
 /* generate next symbols */
 while_nz (tdec_u(NUMBER!())) {
-  /* write next symbols */
-  loop {
-    if_z (read_b(CURR!())) {
-      break();
-    } else if_z (check!()) {
-      /* F -> F */
-      write_F!();
-    } else if_z (check!()) {
-      /* + -> + */
-      write_Plus!();
-    } else if_z (check!()) {
-      /* - -> - */
-      write_Minus!();
-    } else if_z (check!()) {
-      /* X -> X+YF+ */
-      write_X!();
-      write_Plus!();
-      write_Y!();
-      write_F!();
-      write_Plus!();
-    } else if_z (check!()) {
-      /* Y -> -FX-Y */
-      write_Minus!();
-      write_F!();
-      write_X!();
-      write_Minus!();
-      write_Y!();
+    /* write next symbols */
+    loop {
+        if_z (read_b(CURR!())) {
+            break();
+        } else if_z (check!()) {
+            /* F -> F */
+            write_F!();
+        } else if_z (check!()) {
+            /* + -> + */
+            write_Plus!();
+        } else if_z (check!()) {
+            /* - -> - */
+            write_Minus!();
+        } else if_z (check!()) {
+            /* X -> X+YF+ */
+            write_X!();
+            write_Plus!();
+            write_Y!();
+            write_F!();
+            write_Plus!();
+        } else if_z (check!()) {
+            /* Y -> -FX-Y */
+            write_Minus!();
+            write_F!();
+            write_X!();
+            write_Minus!();
+            write_Y!();
+        }
+        inc_b(CURR!()); /* read next */
     }
-    inc_b(CURR!()); /* read next */
-  }
 
-  /* move content of next symbols to current symbols */
-  next_to_curr!();
+    /* move content of next symbols to current symbols */
+    next_to_curr!();
 }
 
 /* draw */
 
 /* set initial coordinate */
 while_nz (tdec_u(INITIAL_X!())) {
-  inc_b2dx();
+    inc_b2dx();
 }
 
 while_nz (tdec_u(INITIAL_Y!())) {
-  inc_b2dy();
+    inc_b2dy();
 }
 
 /*
@@ -185,49 +185,49 @@ y 0  1  0  -1
  */
 inc_u(1);
 loop {
-  if_z (read_b(CURR!())) {
-    break();
-  } else if_z (check!()) {
-    /* F */
-    if_nz (tdec_u(1)) {
-      b2d_plus_x!();
-      inc_u(1);
-    } else if_nz (tdec_u(2)) {
-      b2d_plus_y!();
-      inc_u(2);
-    } else if_nz (tdec_u(3)) {
-      b2d_minus_x!();
-      inc_u(3);
-    } else if_nz (tdec_u(4)) {
-      b2d_minus_y!();
-      inc_u(4);
+    if_z (read_b(CURR!())) {
+        break();
+    } else if_z (check!()) {
+        /* F */
+        if_nz (tdec_u(1)) {
+            b2d_plus_x!();
+            inc_u(1);
+        } else if_nz (tdec_u(2)) {
+            b2d_plus_y!();
+            inc_u(2);
+        } else if_nz (tdec_u(3)) {
+            b2d_minus_x!();
+            inc_u(3);
+        } else if_nz (tdec_u(4)) {
+            b2d_minus_y!();
+            inc_u(4);
+        }
+    } else if_z (check!()) {
+        /* + */
+        if_nz (tdec_u(1)) {
+            inc_u(2);
+        } else if_nz (tdec_u(2)) {
+            inc_u(3);
+        } else if_nz (tdec_u(3)) {
+            inc_u(4);
+        } else if_nz (tdec_u(4)) {
+            inc_u(1);
+        }
+    } else if_z (check!()) {
+        /* - */
+        if_nz (tdec_u(1)) {
+        inc_u(4);
+        } else if_nz (tdec_u(2)) {
+        inc_u(1);
+        } else if_nz (tdec_u(3)) {
+        inc_u(2);
+        } else if_nz (tdec_u(4)) {
+        inc_u(3);
+        }
+    } else if_z (check!()) {
+        /* nop */
+    } else if_z (check!()) {
+        /* nop */
     }
-  } else if_z (check!()) {
-    /* + */
-    if_nz (tdec_u(1)) {
-      inc_u(2);
-    } else if_nz (tdec_u(2)) {
-      inc_u(3);
-    } else if_nz (tdec_u(3)) {
-      inc_u(4);
-    } else if_nz (tdec_u(4)) {
-      inc_u(1);
-    }
-  } else if_z (check!()) {
-    /* - */
-    if_nz (tdec_u(1)) {
-      inc_u(4);
-    } else if_nz (tdec_u(2)) {
-      inc_u(1);
-    } else if_nz (tdec_u(3)) {
-      inc_u(2);
-    } else if_nz (tdec_u(4)) {
-      inc_u(3);
-    }
-  } else if_z (check!()) {
-    /* nop */
-  } else if_z (check!()) {
-    /* nop */
-  }
-  inc_b(CURR!()); /* read next */
+    inc_b(CURR!()); /* read next */
 }
