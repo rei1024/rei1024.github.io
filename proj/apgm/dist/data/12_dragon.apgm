@@ -216,13 +216,13 @@ loop {
     } else if_z (check!()) {
         /* - */
         if_nz (tdec_u(1)) {
-        inc_u(4);
+            inc_u(4);
         } else if_nz (tdec_u(2)) {
-        inc_u(1);
+            inc_u(1);
         } else if_nz (tdec_u(3)) {
-        inc_u(2);
+            inc_u(2);
         } else if_nz (tdec_u(4)) {
-        inc_u(3);
+            inc_u(3);
         }
     } else if_z (check!()) {
         /* nop */
