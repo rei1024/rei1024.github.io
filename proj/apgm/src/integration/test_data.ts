@@ -1,0 +1,329 @@
+export const pi = `/*
+# π Calculator
+    Decompiled from book https://conwaylife.com/book/
+*/
+
+/**
+* Copy Ua to Ub with help of Utemp
+*/
+macro copy_u!(a, b, temp) {
+    add_u!(a, b, temp);
+}
+
+/* Ub = Ua + Ub */
+macro add_u!(a, b, temp) {
+    while_nz (tdec_u(a)) {
+        inc_u(b);
+        inc_u(temp);
+    }
+    while_nz (tdec_u(temp)) {
+        inc_u(a);
+    }
+}
+
+/* safe SET Bn */
+macro safe_set_b!(n) {
+    read_b(n);
+    set_b(n);
+}
+
+/* move head to 0 */
+macro b_head_to_0!(n) {
+    while_nz (tdec_b(n)) {}
+}
+
+/* Reset Un to 0 */
+macro u_to_0!(n) {
+    while_nz (tdec_u(n)) {}
+}
+
+/**
+* copy bits from Bfrom to Bto
+*  temp_u1 is U9 on MULA
+*  temp_u2 is U7 on MULA
+*/
+macro copy_binary!(from, to, temp_u1, temp_u2) {
+    copy_u!(ALLOC_NUM!(), temp_u2, temp_u1);
+
+    while_nz (tdec_u(temp_u2)) {
+        if_z (read_b(from)) {
+            read_b(to);
+        } else {
+            set_b(from);
+            safe_set_b!(to);
+        }
+        inc_b(from);
+        inc_b(to);
+    }
+
+    b_head_to_0!(from);
+    b_head_to_0!(to);
+}
+
+/**
+* b1 = b1 - b2
+*/
+macro sub_b!(b1, b2, temp_u1, temp_u2) {
+    copy_u!(ALLOC_NUM!(), temp_u2, temp_u1);
+
+    while_nz (tdec_u(temp_u2)) {
+        if_nz (read_b(b1)) {
+            sub_a1();
+        }
+
+        if_nz (
+            if_z (read_b(b2)) {
+                sub_b0();
+            } else {
+                set_b(2);
+                sub_b1();
+            }
+        ) {
+            set_b(b1);
+        }
+        inc_b(b1);
+        inc_b(b2);
+    }
+
+    b_head_to_0!(b1);
+    b_head_to_0!(b2);
+}
+
+/*
+binary2 = binary2 + binary1
+*/
+macro add_b!(binary1, binary2, temp_u1, temp_u2) {
+    copy_u!(ALLOC_NUM!(), temp_u1, temp_u2);
+
+    while_nz (tdec_u(temp_u1)) {
+        if_nz (read_b(binary1)) {
+            set_b(binary1);
+            add_a1();
+        }
+
+        if_nz (
+            /* use value from add_b0 or add_b1 */
+            if_z (read_b(binary2)) {
+                add_b0();
+            } else {
+                add_b1();
+            }
+        ) {
+            set_b(binary2);
+        }
+
+        inc_b(binary1);
+        inc_b(binary2);
+    }
+
+    b_head_to_0!(binary1);
+    b_head_to_0!(binary2);
+}
+
+/**
+* binary2 = binary2 + (unary - 1) * binary1
+*/
+macro mul_b_u_pred!(binary1, binary2, unary, temp_u1, temp_u2, temp_u3) {
+    copy_u!(unary, temp_u2, temp_u1);
+
+    tdec_u(temp_u2);
+
+    while_nz (tdec_u(temp_u2)) {
+        add_b!(binary1, binary2, temp_u3, temp_u1);
+    }
+}
+
+/**
+* temp_binary = binary
+* binary = unary * binary
+*/
+macro mul_b_u_self!(binary, temp_binary, unary, temp_u1, temp_u2, temp_u3) {
+    copy_binary!(binary, temp_binary, temp_u1, temp_u3);
+    /* binary = binary + (unary - 1) * binary = unary * binary */
+    mul_b_u_pred!(temp_binary, binary, unary, temp_u1, temp_u2, temp_u3);
+}
+
+/**
+* binary2 = binary2 + unary * binary1
+*/
+macro mul_b_u!(binary1, binary2, unary, temp_u1, temp_u2, temp_u3) {
+    copy_u!(unary, temp_u2, temp_u1);
+
+    while_nz (tdec_u(temp_u2)) {
+        add_b!(binary1, binary2, temp_u3, temp_u1);
+    }
+}
+
+/**
+* b1 > b2 --> result_u = 1
+* b1 <= b2 --> result_u = 0
+*/
+macro compare_binary!(b1, b2, result_u, temp_u1, temp_u2) {
+    copy_u!(ALLOC_NUM!(), temp_u1, temp_u2);
+
+    while_nz (tdec_u(temp_u1)) {
+        inc_b(b1);
+        inc_b(b2);
+    }
+
+    loop {
+        if_z (read_b(b2)) {
+            if_z (read_b(b1)) {
+                tdec_b(b1);
+                if_z (tdec_b(b2)) {
+                    break();
+                }
+            } else {
+                set_b(b1);
+                /* b1 = 1, b2 = 0 --> b1 > b2 */
+                inc_u(result_u);
+                break();
+            }
+        } else {
+            set_b(b2);
+            if_z (read_b(b1)) {
+                /* b1 = 0, b2 = 1 --> b1 < b2 */
+                break();
+            } else {
+                set_b(b1);
+                tdec_b(b1);
+                if_z (tdec_b(b2)) {
+                    break();
+                }
+            }
+        }
+    }
+
+    b_head_to_0!(b1);
+    b_head_to_0!(b2);
+}
+
+macro b_mul_10!(binary, temp_u1, temp_u2) {
+    copy_u!(ALLOC_NUM!(), temp_u1, temp_u2);
+
+    while_nz (tdec_u(temp_u1)) {
+        if_nz (
+            if_z (read_b(binary)) {
+                mul_0();
+            } else {
+                mul_1();
+            }
+        ) {
+            set_b(binary);
+        }
+        inc_b(binary);
+    }
+
+    b_head_to_0!(binary);
+}
+
+/*
+* Print single digit of an Ux register
+*/
+macro print_digit_u!(x) {
+    if_z (tdec_u(x)) {
+        output("0");
+    } else if_z (tdec_u(x)) {
+        output("1");
+    } else if_z (tdec_u(x)) {
+        output("2");
+    } else if_z (tdec_u(x)) {
+        output("3");
+    } else if_z (tdec_u(x)) {
+        output("4");
+    } else if_z (tdec_u(x)) {
+        output("5");
+    } else if_z (tdec_u(x)) {
+        output("6");
+    } else if_z (tdec_u(x)) {
+        output("7");
+    } else if_z (tdec_u(x)) {
+        output("8");
+    } else {
+        output("9");
+    }
+}
+
+/* U6 */
+macro ALLOC_NUM!() 6
+
+/* U5 */
+macro ITERATION_TEMP!() 5
+
+/* U4 */
+macro ITERATION_COUNT!() 4
+
+/* U3 */
+macro DECIMAL_COUNT!() 3
+
+/* 3桁までに制限 */
+#REGISTERS {'U1':1, 'U6':6, 'B0':[0,'01'] , 'B2':[0,'1'], 'U15': 3 }
+
+/* Start */
+while_nz (tdec_u(15)) {
+    /* Iterate 4 times per digit. */
+    repeat(4, inc_u(ITERATION_TEMP!()));
+    while_nz (tdec_u(ITERATION_TEMP!())) {
+        /* Each iteration, set U0 = U0 + 1, U1 = U1 + 2. */
+        inc_u(0);
+        repeat(2, inc_u(1));
+
+        /* set B3 = B1, B1 = U1 * B1. */
+        mul_b_u_self!(1, 3, 1, 9, 8, 7);
+
+        /* set B3 = B0, B0 = U0 * B0. */
+        mul_b_u_self!(0, 3, 0, 9, 8, 7);
+
+        /* set B1 = B1 + (U1 * B0). */
+        /* B1 + (U1 * B3) */
+        mul_b_u!(3, 1, 1, 9, 8, 7);
+
+        /* set B2 = U1 * B2. */
+        mul_b_u_self!(2, 3, 1, 9, 8, 7);
+
+        inc_u(ITERATION_COUNT!());
+
+        /* ITER8 */
+        /* Increase the amount of memory */
+        add_u!(ITERATION_COUNT!(), ALLOC_NUM!(), 7);
+    }
+
+    /* Extract the units digit from (10^U3) * B1 / B2 */
+
+    /* Copy U3 to temporary register U8. */
+    copy_u!(DECIMAL_COUNT!(), 8, 7);
+
+    /* Copy B1 into B3, without erasing B1. */
+    copy_binary!(1, 3, 9, 7);
+
+    loop {
+        /* Now compare B2 with B3 to see which is bigger */
+        compare_binary!(2, 3, 10, 9, 7);
+        if_z (tdec_u(10)) {
+            /* Case: B2 <= B3 */
+            /* B3 = B3 - B2 */
+            sub_b!(3, 2, 9, 7);
+            inc_u(2);
+        } else {
+            /* Case: B2 > B3 */
+            if_z (tdec_u(8)) {
+                break();
+            } else {
+                /* Multiply B3 by 10 and reset U2 */
+                u_to_0!(2);
+                b_mul_10!(3, 9, 7);
+            }
+        }
+    }
+
+    print_digit_u!(2);
+
+    if_z (tdec_u(DECIMAL_COUNT!())) {
+        inc_u(DECIMAL_COUNT!());
+        output(".");
+    } else {
+        inc_u(DECIMAL_COUNT!());
+        inc_u(DECIMAL_COUNT!());
+    }
+}
+`;

@@ -1,40 +1,31 @@
-import { bundle } from "https://deno.land/x/emit@0.10.0/mod.ts";
+import * as esbuild from "https://deno.land/x/esbuild@v0.15.13/mod.js";
+import { denoPlugin } from "https://deno.land/x/esbuild_deno_loader@0.6.0/mod.ts";
 
-import * as swc from "https://deno.land/x/swc@0.2.1/mod.ts";
+// deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write=. --allow-run build.ts
 
-function minifyCode(code: string): string {
-    const { code: minify } = swc.print(
-        swc.parse(
-            code,
-            { syntax: "ecmascript", script: false, importAssertions: true },
-        ),
-        { minify: true },
-    );
-    return minify;
-}
+const entryPoint = "./src/integration/mod.ts";
+const outputPath = "./dist/integration.js";
 
-async function bundleOrCheck(
-    bundleEntryPath: string,
-    outputPath: string,
-    check: boolean,
-) {
-    const result = await bundle(bundleEntryPath);
+await esbuild.build({
+    plugins: [denoPlugin()],
+    entryPoints: [entryPoint],
+    outfile: outputPath,
+    bundle: true,
+    format: "esm",
+    minify: true,
+    target: ["chrome99", "firefox99", "safari15"],
+    treeShaking: true,
+});
 
-    const minify = minifyCode(result.code);
+esbuild.stop();
 
-    if (check) {
-        const current = await Deno.readTextFile(outputPath);
-        if (current.trim() !== minify.trim()) {
-            console.error("%cRun: deno task bundle", "color: red");
-            Deno.exit(1);
-        }
-    } else {
-        await Deno.writeTextFile(outputPath, minify);
-    }
-}
+const fileInfo = await Deno.stat(outputPath);
+const file = await Deno.open(outputPath);
+const compressed = await new Response(
+    file.readable.pipeThrough(new CompressionStream("gzip")),
+).arrayBuffer();
 
-await bundleOrCheck(
-    "./src/integration/mod.ts",
-    "./dist/integration.js",
-    Deno.args.includes("check"),
+console.log(
+    fileInfo.size.toLocaleString() + " bytes" +
+        `\n${compressed.byteLength.toLocaleString()} bytes (gzip)`,
 );

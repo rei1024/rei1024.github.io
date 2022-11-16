@@ -1,8 +1,12 @@
 /*
     # Macro declaration
 
-    ## syntax
-    macro <macro_name>(<macro_variable>*) <expression>
+    ## Syntax
+    ### Declare
+    macro <macro_name>!(<macro_variable>*) <expression>
+
+    ### Call
+    <macro_name>!(<expression>*)
 */
 
 /* macro declaration */

@@ -1,0 +1,11 @@
+const button = create('button', {
+    text: "Close",
+    classes: ["btn", "btn-outline-primary"]
+});
+button.style.position = "absolute";
+button.style.left = "2px";
+button.style.top = "2px";
+document.body.append(button);
+button.addEventListener('click', () => {
+    window.close();
+});

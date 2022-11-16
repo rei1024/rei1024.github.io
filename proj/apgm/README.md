@@ -6,6 +6,7 @@ APGsembly macro language
 
 ```mermaid
 graph TD
+    APGM0[APGM code] -->|Parse| APGM1[APGM + Macro]
     APGM1[APGM + Macro] -->|Expand macro| APGM2[APGM]
     APGM2[APGM] -->|Transpile| APGL1[APGL]
     APGL1[APGL] -->|Optimize sequence| APGL2[APGL]

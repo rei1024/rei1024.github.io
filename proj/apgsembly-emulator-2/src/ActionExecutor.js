@@ -231,6 +231,14 @@ export class ActionExecutor {
     getBReg(n) {
         return this.bRegMap.get(n);
     }
+
+    addSubMulToUIString() {
+        return `
+        ADD = ${this.add.toStringDetail()},
+        SUB = ${this.sub.toStringDetail()},
+        MUL = ${this.mul.toString()}
+        `;
+    }
 }
 
 /**

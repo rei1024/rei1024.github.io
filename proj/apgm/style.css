@@ -51,3 +51,38 @@ h1 {
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+/**** Dark mode ****/
+:root {
+    --dark-mode-color: #dddddd;
+    --dark-mode-background-color: #111111;
+}
+
+body[apge_dark="on"],
+body[apge_dark="on"] :is(
+    h1,
+    /* header for info */
+    td,
+    th,
+    /* generic */
+    .btn-primary,
+    textarea.form-control,
+    textarea.form-control:focus,
+    .binary_info,
+    /* modal */
+    .modal-content,
+    input[type=number],
+    input[type=number]:focus,
+    .form-select,
+    .form-select:focus,
+    .dropdown-item,
+    .dropdown-menu
+) {
+    background-color: var(--dark-mode-background-color);
+    color: var(--dark-mode-color);
+}
+
+/* 閉じるボタンを白くする */
+body[apge_dark="on"] .btn-close {
+    background-color: var(--dark-mode-color);
+}

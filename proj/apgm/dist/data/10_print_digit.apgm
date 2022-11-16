@@ -27,5 +27,8 @@ macro print_digit_u!(x) {
 
 #REGISTERS { "U0": 4, "U1": 2 }
 
+/* print U0 */
 print_digit_u!(0);
+
+/* print U1 */
 print_digit_u!(1);

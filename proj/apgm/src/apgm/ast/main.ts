@@ -10,9 +10,11 @@ export class Main {
     ) {
     }
 
-    pretty() {
-        return this.macros.map((m) => m.pretty()).join("\n") + "\n" +
-            this.headers.map((h) => h.toString()).join("\n") + "\n" +
-            this.seqExpr.prettyInner();
+    pretty(): string {
+        return [
+            this.macros.map((m) => m.pretty()).join("\n"),
+            this.headers.map((h) => h.toString()).join("\n"),
+            this.seqExpr.prettyInner(),
+        ].join("\n");
     }
 }

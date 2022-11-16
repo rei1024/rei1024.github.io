@@ -1,5 +1,6 @@
 import { assertEquals, runAPGsembly, test } from "../deps_test.ts";
 import { integration } from "./mod.ts";
+import { pi } from "./test_data.ts";
 
 function runAPGMMachine(src: string) {
     return runAPGsembly(integration(src).join("\n"));
@@ -137,4 +138,144 @@ print_digit_u!(0);
 print_digit_u!(1);
 `);
     assertEquals(output, "42");
+});
+
+test("integration 12", () => {
+    const output = runAPGM(`
+    #REGISTERS { "U0": 42 }
+    while_nz (tdec_u(0)) {}
+    if_z (tdec_u(0)) {
+        output("0");
+    } else {
+        output("1");
+    }
+`);
+    assertEquals(output, "0");
+});
+
+test("integration 12.5", () => {
+    const output = runAPGM(`
+    #REGISTERS { "U0": 42 }
+    while_nz ({ tdec_u(0); tdec_u(0); }) {}
+    if_z (tdec_u(0)) {
+        output("0");
+    } else {
+        output("1");
+    }
+`);
+    assertEquals(output, "0");
+});
+
+test("integration 12.6", () => {
+    const output = runAPGM(`
+    #REGISTERS { "U0": 42 }
+    while_z ({ tdec_u(0); tdec_u(0); }) {}
+    if_z (tdec_u(0)) {
+        output("0");
+    } else {
+        output("1");
+    }
+`);
+    assertEquals(output, "1");
+});
+
+test("integration 12.7", () => {
+    const output = runAPGM(`
+    #REGISTERS { "U0": 42 }
+    if_nz (tdec_u(1)) {
+        output(".");
+    }
+    while_nz ({ tdec_u(0); tdec_u(0); }) {}
+    if_z (tdec_u(0)) {
+        output("0");
+    } else {
+        output("1");
+    }
+`);
+    assertEquals(output, "0");
+});
+
+test("integration 12.8", () => {
+    const output = runAPGM(`
+    #REGISTERS { "U0": 42 }
+    if_nz (tdec_u(1)) {
+        output(".");
+    }
+    while_z ({ tdec_u(0); tdec_u(0); }) {}
+    if_z (tdec_u(0)) {
+        output("0");
+    } else {
+        output("1");
+    }
+`);
+    assertEquals(output, "1");
+});
+
+test("integration 13", () => {
+    const output = runAPGM(`
+    #REGISTERS { "U0": 42 }
+    if_z (tdec_u(1)) {
+        output("2");
+    } else {
+        output("3");
+    }
+    while_nz (tdec_u(0)) {}
+    if_z (tdec_u(0)) {
+        output("0");
+    } else {
+        output("1");
+    }
+`);
+    assertEquals(output, "20");
+});
+
+test("integration 14", () => {
+    const output = runAPGM(`
+    #REGISTERS { "U0": 42 }
+    if_nz (tdec_u(1)) {
+        output("2");
+    } else {
+        output("3");
+    }
+    while_nz (tdec_u(0)) {}
+    if_z (tdec_u(0)) {
+        output("0");
+    } else {
+        output("1");
+    }
+`);
+    assertEquals(output, "30");
+});
+
+test("integration 14.5", () => {
+    const output = runAPGM(`
+    while_nz (output("3")) {}
+`);
+    assertEquals(output, "3");
+});
+
+test("integration 15", () => {
+    const output = runAPGM(`
+    #REGISTERS { "U0": 2 }
+    while_z (tdec_u(0)) {}
+    if_z (tdec_u(0)) {
+        inc_u(0);
+        output("0");
+    } else {
+        output("1");
+    }
+
+    if_z (tdec_u(0)) {
+        inc_u(0);
+        output("0");
+    } else {
+        output("1");
+    }
+`);
+    assertEquals(output, "10");
+});
+
+test("integration 16", () => {
+    const output = runAPGM(pi);
+    assertEquals(output, "3.14");
 });

@@ -8,7 +8,6 @@ import { renderErrorMessage } from "./components/error.js";
 import { renderOutput } from "./components/output.js";
 import { UnaryUI } from "./components/unary_ui.js";
 import { BinaryUI } from "./components/binary_ui.js";
-import { renderAddSubMul } from "./components/render_add_sub_mul.js";
 import { renderB2D } from "./components/renderB2D.js";
 import { StatsUI } from "./components/stats_ui.js";
 import { initializeBreakpointSelect, getBreakpointInput } from "./components/breakpoint.js";
@@ -431,11 +430,17 @@ export class App {
         $previousOutput.textContent = machine?.getPreviousOutput() ?? "";
         $stepCount.textContent = machine?.stepCount.toLocaleString() ?? "";
 
+        if (this.stepConfig === 1) {
+            $stepText.textContent = 'Step';
+        } else {
+            $stepText.textContent = `${this.stepConfig.toLocaleString()} Steps`;
+        }
+
         this.#renderCommand();
         this.#renderOutput();
         this.renderUnary();
         this.renderBinary();
-        $addSubMul.textContent = renderAddSubMul(machine?.actionExecutor);
+        $addSubMul.textContent = machine?.actionExecutor.addSubMulToUIString() ?? '';
         this.renderB2D();
         this.renderStats();
 

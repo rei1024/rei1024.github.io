@@ -1,4 +1,5 @@
 # O(sqrt(log(t)))
+# https://conwaylife.com/book/ > 9.7 A 2D Printer > APGsembly 9.10
 #COMPONENTS B2D,NOP,U0-2
 #REGISTERS {}
 # State Input Next state Actions

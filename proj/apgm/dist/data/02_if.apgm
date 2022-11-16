@@ -1,7 +1,7 @@
 /*
-    # Conditionals
+    # Conditional
 
-    ## syntax
+    ## Syntax
     if_z (<expression>) <expression>
     if_z (<expression>) <expression> else <expression>
     if_nz (<expression>) <expression>
@@ -36,5 +36,6 @@ if_z (tdec_u(3)) {
     /* if tdec_u(3) returns Z */
     output("5");
 } else if_z(tdec_u(4)) {
+    /* if tdec_u(3) returns NZ and tdec_u(3) returns Z */
     output("6");
 }

@@ -10,3 +10,5 @@ cypress_default/**
 package-lock.json
 
 .eslintcache
+
+deno.lock

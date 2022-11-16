@@ -29,8 +29,8 @@ test("integration 0", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_END; OUTPUT 1, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_END; OUTPUT 1, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -43,8 +43,8 @@ test("integration optimize", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_END; INC U1, INC U2, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_END; INC U1, INC U2, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -62,8 +62,8 @@ test("integration optimize seq", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_END; INC U1, INC U2, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_END; INC U1, INC U2, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -85,8 +85,8 @@ test("integration optimize", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_END; INC U1, INC U2, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_END; INC U1, INC U2, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -101,8 +101,8 @@ test("integration optimize loop", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_1_INITIAL; INC U1, INC U2, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_1_INITIAL; INC U1, INC U2, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -117,8 +117,8 @@ test("integration 1 macro", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_END; OUTPUT 1, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_END; OUTPUT 1, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -136,8 +136,8 @@ test("integration 2 macro", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_END; OUTPUT 1, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_END; OUTPUT 1, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -153,9 +153,9 @@ test("integration actions", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_2; INC U0, TDEC U1, INC B2",
-        "STATE_2; *; STATE_END; TDEC B3",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_2; INC U0, TDEC U1, INC B2",
+        "STATE_2;  *; STATE_END; TDEC B3",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -171,10 +171,10 @@ test("integration if", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_2; TDEC U0",
-        "STATE_2; Z; STATE_END; OUTPUT 0, NOP",
+        "STATE_1_INITIAL;  *; STATE_2; TDEC U0",
+        "STATE_2;  Z; STATE_END; OUTPUT 0, NOP",
         "STATE_2; NZ; STATE_END; OUTPUT 1, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -191,12 +191,12 @@ test("integration if multi", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_2; NOP",
-        "STATE_2; Z; STATE_3; OUTPUT 1, NOP",
+        "STATE_1_INITIAL;  *; STATE_2; NOP",
+        "STATE_2;  Z; STATE_3; OUTPUT 1, NOP",
         "STATE_2; NZ; STATE_4; OUTPUT 3, NOP",
-        "STATE_3; *; STATE_END; OUTPUT 2, NOP",
-        "STATE_4; *; STATE_END; OUTPUT 4, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_3;  *; STATE_END; OUTPUT 2, NOP",
+        "STATE_4;  *; STATE_END; OUTPUT 4, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -211,11 +211,11 @@ test("integration loop if", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_2; NOP",
-        "STATE_2; Z; STATE_3; NOP",
+        "STATE_1_INITIAL;  *; STATE_2; NOP",
+        "STATE_2;  Z; STATE_3; NOP",
         "STATE_2; NZ; STATE_END; NOP",
-        "STATE_3; *; STATE_3; NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_3;  *; STATE_3; NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -243,8 +243,8 @@ test("integration break(2)", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_END; NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_END; NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 
@@ -285,9 +285,9 @@ test("integration repeat", () => {
     assertEquals(res, [
         ...comment,
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
-        "STATE_1_INITIAL; *; STATE_2; OUTPUT 1, NOP",
-        "STATE_2; *; STATE_END; OUTPUT 1, NOP",
-        "STATE_END; *; STATE_END; HALT_OUT",
+        "STATE_1_INITIAL;  *; STATE_2; OUTPUT 1, NOP",
+        "STATE_2;  *; STATE_END; OUTPUT 1, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });
 

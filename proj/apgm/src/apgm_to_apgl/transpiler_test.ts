@@ -40,6 +40,7 @@ function assertAction1(name: string, num: number, actions: string[]) {
 test("apgm_to_apgl actions", () => {
     assertAction1("read_b", 3, ["READ B3"]);
     assertAction1("set_b", 3, ["SET B3", "NOP"]);
+    assertAction1("tdec_u", 3, ["TDEC U3"]);
     assertAction0("halt_out", ["HALT_OUT"]);
     assertAction0("inc_b2dx", ["INC B2DX", "NOP"]);
     assertAction0("inc_b2dy", ["INC B2DY", "NOP"]);
@@ -53,6 +54,7 @@ test("apgm_to_apgl actions", () => {
     assertAction0("sub_a1", ["SUB A1", "NOP"]);
     assertAction0("sub_b0", ["SUB B0"]);
     assertAction0("sub_b1", ["SUB B1"]);
+    assertAction0("nop", ["NOP"]);
 });
 
 test("apgm_to_apgl output number throws", () => {

@@ -225,8 +225,10 @@ loop {
             inc_u(3);
         }
     } else if_z (check!()) {
+        /* X */
         /* nop */
     } else if_z (check!()) {
+        /* Y */
         /* nop */
     }
     inc_b(CURR!()); /* read next */

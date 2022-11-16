@@ -4,7 +4,7 @@ An emulator for APGsembly 2.0
 ## Development
 ### Requirements
 * `deno`
-    * https://deno.land/#installation
+    * https://deno.land/manual/getting_started/installation
 * `npm`
     * Run `$ npm install`
 

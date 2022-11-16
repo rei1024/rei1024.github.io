@@ -1,7 +1,7 @@
 /*
     # Infinite loop
 
-    ## syntax
+    ## Syntax
     loop <expression>
 
     break(<optional number>)

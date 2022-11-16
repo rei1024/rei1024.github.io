@@ -2,7 +2,7 @@ export {
     assertEquals,
     assertThrows,
     assertIsError
-} from "https://deno.land/std@0.161.0/testing/asserts.ts";
+} from "https://deno.land/std@0.164.0/testing/asserts.ts";
 
 /**
  * @returns {never}

@@ -1,7 +1,7 @@
 /*
     # Loop with condition
 
-    ## syntax
+    ## Syntax
     while_z (<expression>) <expression>
     while_nz (<expression>) <expression>
 */

@@ -72,9 +72,10 @@ export class Program {
      * プログラムまたはエラーメッセージ
      * Program or error message
      * @param {string} str
+     * @param {{ noValidate?: boolean }} param1
      * @returns {Program | string}
      */
-    static parse(str) {
+    static parse(str, { noValidate } = {}) {
         const programLines = ProgramLines.parse(str);
         if (typeof programLines === 'string') {
             return programLines;
@@ -90,13 +91,15 @@ export class Program {
         }
 
         // validation
-        if (commands.length === 0) {
-            return 'Program is empty';
-        }
+        if (!noValidate) {
+            if (commands.length === 0) {
+                return 'Program is empty';
+            }
 
-        const errorOrUndefined = validateAll(commands);
-        if (typeof errorOrUndefined === 'string') {
-            return errorOrUndefined;
+            const errorOrUndefined = validateAll(commands);
+            if (typeof errorOrUndefined === 'string') {
+                return errorOrUndefined;
+            }
         }
 
         try {

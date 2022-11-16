@@ -205,9 +205,11 @@ export class B2DAction extends Action {
      */
     isSameComponent(action) {
         if (action instanceof B2DAction) {
-            if (this.axis === B2D_B2DX && action.axis === B2D_B2DY) {
+            const thisAxis = this.axis;
+            const otherAxis = action.axis;
+            if (thisAxis === B2D_B2DX && otherAxis === B2D_B2DY) {
                 return false;
-            } else if (this.axis === B2D_B2DY && action.axis === B2D_B2DX) {
+            } else if (thisAxis === B2D_B2DY && otherAxis === B2D_B2DX) {
                 return false;
             }
             return true;

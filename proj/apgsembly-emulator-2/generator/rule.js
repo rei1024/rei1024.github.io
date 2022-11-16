@@ -102,9 +102,9 @@ export function generate(rule) {
 
     // Current cursor is on the cell that will be read
     bit2((i, j) => {
-        array.push(`NEXT_S${i}${j}_READ_1; *; NEXT_S${i}${j}_READ_2; READ B2D`);
-        array.push(`NEXT_S${i}${j}_READ_2; Z; NEXT_S${i}${j}0_WRITE_1; NOP`);
-        array.push(`NEXT_S${i}${j}_READ_2; NZ; NEXT_S${i}${j}1_WRITE_1; SET B2D, NOP`);
+        array.push(`NEXT_S${i}${j}_READ_1;  *;  NEXT_S${i}${j}_READ_2; READ B2D`);
+        array.push(`NEXT_S${i}${j}_READ_2;  Z;  NEXT_S${i}${j}0_WRITE_1; NOP`);
+        array.push(`NEXT_S${i}${j}_READ_2;  NZ; NEXT_S${i}${j}1_WRITE_1; SET B2D, NOP`);
     });
 
     // If the next cell is empty, skip writing
@@ -120,8 +120,8 @@ export function generate(rule) {
 
     // skip writing
     bit2((i, j) => {
-        array.push(`NEXT_S${i}${j}_CHECK0_1; *; NEXT_S${i}${j}_CHECK0_2; TDEC B2DY`);
-        array.push(`NEXT_S${i}${j}_CHECK0_2; Z; FINISH_S${i}${j}_WRITE_1; NOP`);
+        array.push(`NEXT_S${i}${j}_CHECK0_1; *;  NEXT_S${i}${j}_CHECK0_2; TDEC B2DY`);
+        array.push(`NEXT_S${i}${j}_CHECK0_2; Z;  FINISH_S${i}${j}_WRITE_1; NOP`);
         array.push(`NEXT_S${i}${j}_CHECK0_2; NZ; NEXT_S${i}${j}_READ_1; NOP`);
     });
 
@@ -131,7 +131,7 @@ export function generate(rule) {
         for (let k = 2; k <= n; k++) {
             array.push(`NEXT_S${i}${j}_CHECK_${k}; *; NEXT_S${i}${j}_CHECK_${k + 1}; TDEC B2DY`);
         }
-        array.push(`NEXT_S${i}${j}_CHECK_${n + 1}; Z; FINISH_S${i}${j}_WRITE_1; NOP`);
+        array.push(`NEXT_S${i}${j}_CHECK_${n + 1}; Z;  FINISH_S${i}${j}_WRITE_1; NOP`);
         array.push(`NEXT_S${i}${j}_CHECK_${n + 1}; NZ; NEXT_S${i}${j}_READ_1; NOP`);
 
         array.push(`FINISH_S${i}${j}_WRITE_1; *; FINISH_S${i}${j}_WRITE_2; INC B2DY, NOP`);

@@ -29,7 +29,7 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 
     <!-- importmapのpolyfill -->
-    <script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1.5.18/dist/es-module-shims.js" integrity="sha384-FXCvUyj5HWieYdbJEJaE7UVRElND632lM6dvyLorD1gIkf53ruZWv2xzORMNuf2u" crossorigin="anonymous"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1.6.2/dist/es-module-shims.js" integrity="sha256-mnpB06k7bHgm3Yk5T3J6YNQyfXGgPrq26i6ltyDyUH4=" crossorigin="anonymous"></script>
 
     <!-- Bootstrapのesm用 -->
     <script type="importmap">
@@ -41,14 +41,14 @@
     </script>
 
     <!-- Monaco -->
-    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/editor/editor.main.min.css">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css">
 
     <!-- no defer -->
     <script src="./define-require.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/editor/editor.main.nls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/editor/editor.main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.js"></script>
     <!-- End Monaco -->
 
     <!-- Bootstrap -->
@@ -66,6 +66,14 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+    <script>
+        const DARK_MODE_KEY = 'dark_mode';
+        try {
+            if (localStorage.getItem(DARK_MODE_KEY) === 'on') {
+                document.body.setAttribute('apge_dark', 'on');
+            }
+        } catch (_) {}
+    </script>
     <header class="mt-1 text-center">
         <h1 class="font-x-large">APGM - APGsembly macro language</h1>
     </header>
@@ -77,7 +85,7 @@
                 <button disabled type="button" class="btn btn-primary dropdown-toggle" id="examples" data-bs-toggle="dropdown" aria-expanded="false">Example</button>
                 <ul class="dropdown-menu" aria-labelledby="examples">
                     <li><button class="dropdown-item js_example" data-src="01_output.apgm">Simple program</button></li>
-                    <li><button class="dropdown-item js_example" data-src="02_if.apgm">Conditionals</button></li>
+                    <li><button class="dropdown-item js_example" data-src="02_if.apgm">Conditional</button></li>
                     <li><button class="dropdown-item js_example" data-src="03_loop.apgm">Infinite loop</button></li>
                     <li><button class="dropdown-item js_example" data-src="04_while.apgm">Loop with condition</button></li>
                     <li><button class="dropdown-item js_example" data-src="05_actions.apgm">Actions</button></li>
@@ -87,8 +95,11 @@
                     <li><button class="dropdown-item js_example" data-src="09_header.apgm">Header</button></li>
                     <li><button class="dropdown-item js_example" data-src="10_print_digit.apgm">Print digit</button></li>
                     <li><button class="dropdown-item js_example" data-src="11_repeat.apgm">Repeat macro</button></li>
+                    <hr>
                     <li><button class="dropdown-item js_example" data-src="12_dragon.apgm">Dragon curve</button></li>
                     <li><button class="dropdown-item js_example" data-src="14_o_sqrt_log_t.apgm">O(sqrt(log(t)))</button></li>
+                    <li><button class="dropdown-item js_example" data-src="15_pi.apgm">π Calculator</button></li>
+                    <li><button class="dropdown-item js_example" data-src="16_pi_bin.apgm">Faster π Calculator</button></li>
                 </ul>
                 <button disabled id="config_button" data-test="config_button" type="button" class="btn btn-primary"
                     data-bs-toggle="modal" data-bs-target="#config_modal">

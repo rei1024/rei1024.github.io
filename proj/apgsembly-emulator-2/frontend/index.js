@@ -15,7 +15,6 @@ import {} from "./components/breakpoint.js";
 import {} from "./components/toggle.js";
 import {} from "./components/error.js";
 import {} from "./components/output.js";
-import {} from "./components/render_add_sub_mul.js";
 
 import { setupFrequencyInput } from "./components/frequency_input.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
@@ -134,6 +133,7 @@ $stepInput.addEventListener('input', () => {
         removeCustomError($stepInput);
         app.stepConfig = n;
     }
+    app.render();
 });
 
 /**
@@ -248,7 +248,7 @@ $configButton.disabled = false;
 // first render
 app.render();
 
-// 初期コード
+// APGMからの初期コード
 idle(() => {
     const INIT_CODE = "initial_code";
     const initCode = localStorageGetItem(INIT_CODE);
