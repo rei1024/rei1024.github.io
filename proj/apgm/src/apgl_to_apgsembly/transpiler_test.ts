@@ -441,6 +441,27 @@ test("transpileAPGL while", () => {
     ]);
 });
 
+test("transpileAPGL while multiple return in cond", () => {
+    const expr = new WhileAPGLExpr(
+        "Z",
+        new SeqAPGLExpr([
+            new ActionAPGLExpr(["TDEC U0"]),
+            new ActionAPGLExpr(["TDEC U1"]),
+        ]),
+        new ActionAPGLExpr(["TDEC U2"]),
+    );
+
+    assertEquals(transpileAPGL(expr), [
+        "INITIAL; ZZ; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL;  *; STATE_3; TDEC U0",
+        "STATE_3;  *; STATE_2; TDEC U1",
+        "STATE_2;  Z; STATE_4_WHILE_BODY; NOP",
+        "STATE_2; NZ; STATE_END; NOP",
+        "STATE_4_WHILE_BODY;  *; STATE_1_INITIAL; TDEC U2",
+        "STATE_END;  *; STATE_END; HALT_OUT",
+    ]);
+});
+
 test("transpileAPGL while body", () => {
     const expr = new WhileAPGLExpr(
         "NZ",
@@ -454,8 +475,47 @@ test("transpileAPGL while body", () => {
         "INITIAL; ZZ; STATE_1_INITIAL; NOP",
         "STATE_1_INITIAL;  *; STATE_2; TDEC U0",
         "STATE_2;  Z; STATE_END; NOP",
+        "STATE_2; NZ; STATE_2; OUTPUT 1, TDEC U0",
+        "STATE_END;  *; STATE_END; HALT_OUT",
+    ]);
+});
+
+test("transpileAPGL while body no merge", () => {
+    const expr = new WhileAPGLExpr(
+        "NZ",
+        new ActionAPGLExpr(["TDEC U0"]),
+        new SeqAPGLExpr([
+            new ActionAPGLExpr(["INC U0", "NOP"]),
+        ]),
+    );
+
+    assertEquals(transpileAPGL(expr), [
+        "INITIAL; ZZ; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL;  *; STATE_2; TDEC U0",
+        "STATE_2;  Z; STATE_END; NOP",
         "STATE_2; NZ; STATE_3_WHILE_BODY; NOP",
-        "STATE_3_WHILE_BODY;  *; STATE_1_INITIAL; OUTPUT 1, NOP",
+        "STATE_3_WHILE_BODY;  *; STATE_1_INITIAL; INC U0, NOP",
+        "STATE_END;  *; STATE_END; HALT_OUT",
+    ]);
+});
+
+test("transpileAPGL while body 2", () => {
+    const expr = new WhileAPGLExpr(
+        "NZ",
+        new ActionAPGLExpr(["TDEC U0"]),
+        new SeqAPGLExpr([
+            new ActionAPGLExpr(["OUTPUT 1", "NOP"]),
+            new ActionAPGLExpr(["OUTPUT 2", "NOP"]),
+        ]),
+    );
+
+    assertEquals(transpileAPGL(expr), [
+        "INITIAL; ZZ; STATE_1_INITIAL; NOP",
+        "STATE_1_INITIAL;  *; STATE_2; TDEC U0",
+        "STATE_2;  Z; STATE_END; NOP",
+        "STATE_2; NZ; STATE_3_WHILE_BODY; NOP",
+        "STATE_3_WHILE_BODY;  *; STATE_4; OUTPUT 1, NOP",
+        "STATE_4;  *; STATE_1_INITIAL; OUTPUT 2, NOP",
         "STATE_END;  *; STATE_END; HALT_OUT",
     ]);
 });

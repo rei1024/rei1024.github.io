@@ -1,7 +1,7 @@
 import { APGLExpr, SeqAPGLExpr } from "../ast/mod.ts";
 
 /**
- * 最適化
+ * SeqAPGLExprの平坦化による最適化
  */
 export function optimizeSeq(expr: APGLExpr): APGLExpr {
     return expr.transform(optimizeOnce);

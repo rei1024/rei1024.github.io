@@ -1,4 +1,4 @@
-import { optimize } from "./mod.ts";
+import { mergeActionAPGLExpr, optimize } from "./mod.ts";
 import { assertEquals, test } from "../../deps_test.ts";
 import {
     ActionAPGLExpr,
@@ -263,3 +263,33 @@ test("optimize loop inner", () => {
 
 //     assertEquals(optimize(before), before);
 // });
+
+test("mergeActionAPGLExpr 1", () => {
+    assertEquals(
+        mergeActionAPGLExpr(
+            new ActionAPGLExpr(["INC U1", "NOP"]),
+            new ActionAPGLExpr(["INC U2", "NOP"]),
+        ),
+        new ActionAPGLExpr(["INC U1", "INC U2", "NOP"]),
+    );
+});
+
+test("mergeActionAPGLExpr 2", () => {
+    assertEquals(
+        mergeActionAPGLExpr(
+            new ActionAPGLExpr(["TDEC U1", "NOP"]),
+            new ActionAPGLExpr(["TDEC U2", "NOP"]),
+        ),
+        undefined,
+    );
+});
+
+test("mergeActionAPGLExpr 3", () => {
+    assertEquals(
+        mergeActionAPGLExpr(
+            new ActionAPGLExpr(["INC U1", "NOP"]),
+            new ActionAPGLExpr(["INC U1", "NOP"]),
+        ),
+        undefined,
+    );
+});

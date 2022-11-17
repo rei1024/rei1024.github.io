@@ -2,7 +2,7 @@ import { ActionAPGLExpr, APGLExpr, SeqAPGLExpr } from "../ast/mod.ts";
 import { Action, HaltOutAction, NopAction, parseAction } from "../../deps.ts";
 
 /**
- * 最適化
+ * アクションの統合による最適化
  */
 export function optimize(expr: APGLExpr): APGLExpr {
     return expr.transform(optimizeOnce);
@@ -10,6 +10,16 @@ export function optimize(expr: APGLExpr): APGLExpr {
 
 function optimizeOnce(expr: APGLExpr): APGLExpr {
     return expr instanceof SeqAPGLExpr ? optimizeSeqAPGLExpr(expr) : expr;
+}
+
+export function mergeActionAPGLExpr(
+    a: ActionAPGLExpr,
+    b: ActionAPGLExpr,
+): ActionAPGLExpr | undefined {
+    const mergedActions = merge(toActions(a), toActions(b));
+    return mergedActions === undefined
+        ? undefined
+        : new ActionAPGLExpr(mergedActions.map((action) => action.pretty()));
 }
 
 function merge(
