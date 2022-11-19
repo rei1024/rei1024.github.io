@@ -14,6 +14,7 @@ import { ErrorWithSpan } from "../apgm/ast/core.ts";
 
 export interface TranspilerOptions {
     prefix?: string;
+    noOptimize?: boolean;
 }
 
 export class Context {
@@ -66,9 +67,11 @@ export class Transpiler {
     private id = 0;
     readonly #loopFinalStates: string[] = [];
     private readonly prefix: string;
+    private readonly optimize: boolean;
 
     constructor(options: TranspilerOptions = {}) {
         this.prefix = options.prefix ?? "STATE_";
+        this.optimize = !(options.noOptimize ?? false);
     }
 
     getFreshName(): string {
@@ -188,7 +191,10 @@ export class Transpiler {
     }
 
     #transpileIfAPGLExpr(ctx: Context, ifExpr: IfAPGLExpr): Line[] {
-        if (isEmptyExpr(ifExpr.thenBody) && isEmptyExpr(ifExpr.elseBody)) {
+        if (
+            this.optimize && isEmptyExpr(ifExpr.thenBody) &&
+            isEmptyExpr(ifExpr.elseBody)
+        ) {
             return this.transpileExpr(ctx, ifExpr.cond);
         }
 
@@ -298,7 +304,8 @@ export class Transpiler {
     }
 
     #transpileWhileAPGLExpr(ctx: Context, whileExpr: WhileAPGLExpr): Line[] {
-        if (isEmptyExpr(whileExpr.body)) {
+        const optimize = this.optimize;
+        if (optimize && isEmptyExpr(whileExpr.body)) {
             const singleCondAction = extractSingleActionExpr(whileExpr.cond);
             if (singleCondAction !== undefined) {
                 return this.#transpileWhileAPGLExprSimpleCond(
@@ -318,7 +325,10 @@ export class Transpiler {
 
         const singleBody = extractSingleActionExpr(whileExpr.body);
         const singleCondAction = extractSingleActionExpr(whileExpr.cond);
-        if (singleCondAction !== undefined && singleBody !== undefined) {
+        if (
+            optimize && singleCondAction !== undefined &&
+            singleBody !== undefined
+        ) {
             const merged = mergeActionAPGLExpr(singleBody, singleCondAction);
             if (merged !== undefined) {
                 return this.#transpileWhileAPGLExprSimpleCond(

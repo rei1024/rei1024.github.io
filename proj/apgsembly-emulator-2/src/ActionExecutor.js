@@ -30,6 +30,9 @@ function throwNotFound(type, regNum) {
     throw Error(`Register ${type}${regNum} is not found.`);
 }
 
+const parseNum = Number.parseInt;
+const isNaNLocal = Number.isNaN;
+
 /**
  * #REGISTERSのJSON
  * Uの場合はnumberのみ
@@ -127,8 +130,8 @@ export class ActionExecutor {
      */
     setKeyValue(key, value) {
         if (key.startsWith('U')) {
-            const n = parseInt(key.slice(1), 10);
-            if (isNaN(n)) {
+            const n = parseNum(key.slice(1), 10);
+            if (isNaNLocal(n)) {
                 initError(key, value);
             }
             const reg = this.getUReg(n);
@@ -137,8 +140,8 @@ export class ActionExecutor {
             }
             reg.setByRegistersInit(key, value);
         } else if (key.startsWith('B')) {
-           const n = parseInt(key.slice(1), 10);
-            if (isNaN(n)) {
+           const n = parseNum(key.slice(1), 10);
+            if (isNaNLocal(n)) {
                 initError(key, value);
             }
             const reg = this.getBReg(n);

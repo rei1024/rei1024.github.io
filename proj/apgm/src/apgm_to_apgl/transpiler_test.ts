@@ -96,6 +96,7 @@ test("apgm_to_apgl if", () => {
             new FuncAPGMExpr("nop", [], undefined),
             new FuncAPGMExpr("nop", [], undefined),
             undefined,
+            undefined,
         ),
     );
 
@@ -115,6 +116,7 @@ test("apgm_to_apgl if nz", () => {
             "NZ",
             new FuncAPGMExpr("nop", [], undefined),
             new FuncAPGMExpr("nop", [], undefined),
+            undefined,
             undefined,
         ),
     );
@@ -136,6 +138,7 @@ test("apgm_to_apgl if nz", () => {
             new FuncAPGMExpr("nop", [], undefined),
             new FuncAPGMExpr("nop", [], undefined),
             new FuncAPGMExpr("nop", [], undefined),
+            undefined,
         ),
     );
 

@@ -1,4 +1,5 @@
 // @ts-check
+// deno-lint-ignore-file
 
 // Unbounded Spigot Algorithms for the Digits of Pi - Jeremy Gibbons
 // https://www.cs.ox.ac.uk/people/jeremy.gibbons/publications/spigot.pdf

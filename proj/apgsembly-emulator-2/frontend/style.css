@@ -186,4 +186,5 @@ body[apge_dark="on"] {
 
 footer {
     contain: content;
+    content-visibility: auto;
 }

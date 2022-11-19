@@ -1,4 +1,4 @@
-import { APGMExpr } from "./core.ts";
+import { APGMExpr, APGMSourceSpan } from "./core.ts";
 
 export class IfAPGMExpr extends APGMExpr {
     constructor(
@@ -6,6 +6,7 @@ export class IfAPGMExpr extends APGMExpr {
         public readonly cond: APGMExpr,
         public readonly thenBody: APGMExpr,
         public readonly elseBody: APGMExpr | undefined,
+        public readonly span: APGMSourceSpan | undefined,
     ) {
         super();
     }
@@ -19,6 +20,7 @@ export class IfAPGMExpr extends APGMExpr {
                 this.elseBody !== undefined
                     ? this.elseBody.transform(f)
                     : undefined,
+                this.span,
             ),
         );
     }

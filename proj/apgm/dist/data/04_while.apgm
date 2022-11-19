@@ -6,18 +6,19 @@
     while_nz (<expression>) <expression>
 */
 
-while_z (tdec_u(0)) { /* TDEC U0 */
+while_z (tdec_u(0)) {
     /* while tdec_u(0) returns Z */
     output("0");
 
-    inc_u(0); /* INC U0 */
+    inc_u(0);
 }
 
 output("1");
 
-inc_u(1); /* INC U1 */
+/* Increment U1 */
+inc_u(1);
 
-while_nz (tdec_u(1)) { /* TDEC U1 */
+while_nz (tdec_u(1)) {
     /* while tdec_u(1) returns NZ */
     output("2");
 }

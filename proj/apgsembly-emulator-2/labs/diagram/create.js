@@ -78,7 +78,7 @@ function encodeKey(str) {
 }
 
 /**
- * @typedef {{ from: string; to: string; note?: string | undefined | null}} Edge
+ * @typedef {{ from: string; to: string; note?: string | undefined | null }} Edge
  */
 
 /**

@@ -8,9 +8,10 @@
     if_nz (<expression>) <expression> else <expression>
 */
 
-inc_u(0); /* INC U0 */
+/* Increment U0 */
+inc_u(0);
 
-if_z (tdec_u(0)) { /* TDEC U0 */
+if_z (tdec_u(0)) {
     /* if tdec_u(0) returns Z */
     output("0");
 } else {

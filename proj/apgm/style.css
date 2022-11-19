@@ -25,7 +25,7 @@ h1 {
 
 #apgm_input {
     width: 60%;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 170px);
 }
 
 #output {
@@ -50,6 +50,15 @@ h1 {
         gap: 4px 0px;
         grid-template-columns: repeat(3, 1fr);
     }
+}
+
+/**** speedy animation ****/
+.fade {
+    transition: opacity .1s linear; /* 0.15s */
+}
+
+.modal.fade .modal-dialog {
+    transition: transform .2s ease-out; /* 0.3s */
 }
 
 /**** Dark mode ****/

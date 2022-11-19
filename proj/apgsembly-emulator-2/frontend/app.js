@@ -140,6 +140,14 @@ export class App {
         this.render();
     }
 
+    toggle() {
+        if (this.#appState === "Running") {
+            this.stop();
+        } else {
+            this.start();
+        }
+    }
+
     /**
      * スライディングレジスタ表示の初期化
      */
@@ -172,23 +180,6 @@ export class App {
         initializeBreakpointSelect($breakpointSelect, this.#machine);
     }
 
-    /**
-     * コードを変更してリセットする
-     * @param {string} text
-     */
-    setInputAndReset(text) {
-        $input.value = text;
-        this.reset();
-    }
-
-    toggle() {
-        if (this.#appState === "Running") {
-            this.stop();
-        } else {
-            this.start();
-        }
-    }
-
     doStep() {
         // 実行中の場合は停止する
         if (this.#appState === "Running") {
@@ -219,6 +210,15 @@ export class App {
         } else {
             this.run(this.stepConfig);
         }
+    }
+
+    /**
+     * コードを変更してリセットする
+     * @param {string} text
+     */
+    setInputAndReset(text) {
+        $input.value = text;
+        this.reset();
     }
 
     /**

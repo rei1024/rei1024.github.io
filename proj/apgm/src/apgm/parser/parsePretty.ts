@@ -1,14 +1,17 @@
 import { bnb } from "../../deps.ts";
-import { ErrorWithSpan } from "../ast/mod.ts";
+import { APGMSourceLocation, ErrorWithSpan } from "../ast/mod.ts";
 
 // parse error at line 8 column 9: expected comment, ,, )
 
-export function prettyError(fail: bnb.ParseFail, source: string): string {
+export function createErrorLines(
+    location: APGMSourceLocation,
+    source: string,
+): string[] {
     const lines = source.split(/\n|\r\n/);
-    const above = lines[fail.location.line - 2];
-    const errorLine = lines[fail.location.line - 1];
-    const below = lines[fail.location.line];
-    const arrowLine = " ".repeat(Math.max(0, fail.location.column - 1)) + "^";
+    const above = lines[location.line - 2];
+    const errorLine = lines[location.line - 1];
+    const below = lines[location.line];
+    const arrowLine = " ".repeat(Math.max(0, location.column - 1)) + "^";
 
     const aboveLines = [
         ...(above === undefined ? [] : [above]),
@@ -27,6 +30,11 @@ export function prettyError(fail: bnb.ParseFail, source: string): string {
         ...belowLines.map((x) => prefix + x),
     ];
 
+    return errorLines;
+}
+
+export function prettyError(fail: bnb.ParseFail, source: string): string {
+    const errorLines = createErrorLines(fail.location, source);
     return [
         `parse error at line ${fail.location.line} column ${fail.location.column}:`,
         `  expected ${fail.expected.join(", ")}`,

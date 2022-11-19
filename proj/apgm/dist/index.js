@@ -29,6 +29,8 @@ const $prefixInput = $$("#prefix_input", HTMLInputElement);
 
 const $watchMode = $$("#watch_mode", HTMLInputElement);
 
+const $disableOptimization = $$("#disable_optimization", HTMLInputElement);
+
 const $apgmInput = $$("#apgm_input", HTMLElement);
 
 const $configButton = $$("#config_button", HTMLButtonElement);
@@ -73,22 +75,34 @@ const resetError = () => {
     $compile.style.backgroundColor = "";
 };
 
+/** @type {string | undefined} */
+let prevInput = undefined;
+
 const compile = (withReaction = true) => {
+    const input = editor.getValue();
+    // skip compile
+    if (prevInput === input) {
+        return;
+    }
+    prevInput = input;
+
     $output.value = "";
     resetError();
     try {
         /**
-         * @type {{ prefix?: string }}
+         * @type {{ prefix?: string, noOptimize?: boolean }}
          */
         const options = {};
         if ($prefixInput.value.trim() !== "") {
             options.prefix = $prefixInput.value.trim();
         }
 
+        options.noOptimize = $disableOptimization.checked;
+
         /**
          * @type {string}
          */
-        const result = integration(editor.getValue(), options).join("\n");
+        const result = integration(input, options).join("\n");
         $output.value = result;
         $download.disabled = false;
         $copy.disabled = false;

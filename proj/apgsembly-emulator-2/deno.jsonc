@@ -5,7 +5,7 @@
         "w": "deno test --watch --no-check src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ labs/diagram/ generator/",
         "cy": "node ./node_modules/.bin/cypress open",
         "cy-run": "node ./node_modules/.bin/cypress run",
-        "lint": "./node_modules/.bin/eslint --cache .",
+        "lint": "deno lint",
         "chore": "deno upgrade && npm audit && git gc",
         "bench": "deno bench --unstable --no-check test/bench.js",
         "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run build.ts",
@@ -13,7 +13,10 @@
     },
     "lint": {
         "files": {
-            "exclude": ["node_modules/", "cypress_default/", "frontend/index.dist.js"]
+            "exclude": ["node_modules/", "cypress_default/", "frontend/index.dist.js", "doc/apgjson/"]
+        },
+        "rules": {
+            "exclude": ["ban-ts-comment", "no-unused-vars", "no-this-alias", "no-inferrable-types"]
         }
     },
     "fmt": {

@@ -223,6 +223,20 @@ test("integration 12.9", () => {
     assertEquals(output, "...");
 });
 
+test("integration 12.10", () => {
+    const output = runAPGM(`
+    #REGISTERS { "U0": 4 }
+    while_z (tdec_u(1)) {
+        if_z (tdec_u(0)) {
+            inc_u(1);
+        } else {
+            output(".");
+        }
+    }
+`);
+    assertEquals(output, "....");
+});
+
 test("integration 13", () => {
     const output = runAPGM(`
     #REGISTERS { "U0": 42 }

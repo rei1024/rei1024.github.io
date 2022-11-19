@@ -3,10 +3,10 @@
 
     ## Syntax
     ### Declare
-    macro <macro_name>!(<macro_variable>*) <expression>
+    macro <macro_name>!(<macro_variable>, ...) <expression>
 
     ### Call
-    <macro_name>!(<expression>*)
+    <macro_name>!(<expression>, ...)
 */
 
 /* macro declaration */

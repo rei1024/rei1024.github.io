@@ -1,5 +1,5 @@
 /*
-   Actions
+    # Actions
 */
 
 /* U */
@@ -42,3 +42,4 @@ nop(); /* NOP */
 
 /* OUTPUT */
 output("0"); /* OUTPUT 0 */
+output("."); /* OUTPUT . */

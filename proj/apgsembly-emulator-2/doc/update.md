@@ -1,8 +1,7 @@
 * `deno task chore`を走らせる
-* cypressとeslintを確認してpackage.jsonを更新
+* cypressを確認してpackage.jsonを更新
    * https://docs.cypress.io/guides/references/changelog
      * `~/Library/Caches/Cypress`に古いバージョンが残るので削除する
-   * https://eslint.org/blog/
 * Bootstrapの更新を確認する
    * https://blog.getbootstrap.com/
    * popperとBootstrapのJSが分かれている形式を選ぶ
