@@ -15,7 +15,8 @@ export function validateNoDuplicatedActionCommand(command) {
     }
     const actionStrs = actions.map(x => x.pretty());
     actionStrs.sort();
-    for (let i = 0; i < actionStrs.length - 1; i++) {
+    const maxIndex = actionStrs.length - 1;
+    for (let i = 0; i < maxIndex; i++) {
         const act1 = actionStrs[i];
         const act2 = actionStrs[i + 1];
         if (act1 === act2) {

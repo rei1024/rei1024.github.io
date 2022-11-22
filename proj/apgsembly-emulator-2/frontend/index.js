@@ -20,7 +20,7 @@ import { setupFrequencyInput } from "./components/frequency_input.js";
 import { setCustomError, removeCustomError } from "./util/validation_ui.js";
 import { importFileAsText } from "./util/import_file.js";
 import { idle } from "./util/idle.js";
-import { localStorageSetItem, localStorageGetItem } from "./util/local-storage.js";
+import { localStorageSetItem, localStorageGetItem, localStorageRemoveItem } from "./util/local-storage.js";
 import { hasFocus } from "./util/has-focus.js";
 
 import {
@@ -187,7 +187,12 @@ $viewStateDiagramButton.addEventListener('click', () => {
 const DARK_MODE_KEY = 'dark_mode';
 $darkMode.addEventListener('change', () => {
     const onOrOff = $darkMode.checked ? "on" : "off";
-    localStorageSetItem(DARK_MODE_KEY, onOrOff);
+    if (onOrOff === "on") {
+        localStorageSetItem(DARK_MODE_KEY, onOrOff);
+    } else {
+        localStorageRemoveItem(DARK_MODE_KEY);
+    }
+
     document.body.setAttribute('apge_dark', onOrOff);
 
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";

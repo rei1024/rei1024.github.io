@@ -36,5 +36,7 @@ jobs:
       #   run: deno fmt --check
       # - name: Build Deno Module
       #   run: deno run --reload mod.ts
+      - name: Run Lint
+        run: deno task lint
       - name: Run Test
         run: deno task t

@@ -16,6 +16,18 @@ export function localStorageSetItem(key, value) {
 /**
  * Cookieを許可しない場合例外が発生する
  * @param {string} key
+ */
+export function localStorageRemoveItem(key) {
+    try {
+        localStorage.removeItem(key);
+    } catch (_) {
+        // do nothing
+    }
+}
+
+/**
+ * Cookieを許可しない場合例外が発生する
+ * @param {string} key
  * @returns {string | null}
  */
 export function localStorageGetItem(key) {

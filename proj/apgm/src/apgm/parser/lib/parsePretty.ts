@@ -1,5 +1,5 @@
-import { bnb } from "../../deps.ts";
-import { APGMSourceLocation, ErrorWithSpan } from "../ast/mod.ts";
+import { bnb } from "../../../deps.ts";
+import { APGMSourceLocation, ErrorWithSpan } from "../../ast/mod.ts";
 
 // parse error at line 8 column 9: expected comment, ,, )
 

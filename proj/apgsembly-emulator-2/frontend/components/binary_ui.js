@@ -33,14 +33,15 @@ function error() {
 function createMetaElem() {
     const $decimal = create('span', { classes: ['decimal'] });
     const $hex = create('span', { classes: ['hex'] });
+    const $maxPointer = create('span', { classes: ['max_pointer'] });
     const $pointer = create('span', { classes: ['pointer'] });
 
     const metaData = create('code', {
         classes: ['binary_info', 'word-break-all'], // style.cssで設定
-        children: [$decimal, $hex, $pointer]
+        children: [$decimal, $hex, $maxPointer, $pointer]
     });
 
-    return { metaData, $decimal, $hex, $pointer };
+    return { metaData, $decimal, $hex, $maxPointer, $pointer };
 }
 
 /**
@@ -76,6 +77,7 @@ export class BinaryUI {
          * @type {{
          * $decimal: HTMLElement,
          * $hex: HTMLElement,
+         * $maxPointer: HTMLElement,
          * $pointer: HTMLElement,
          * $prefix: HTMLElement,
          * $head: HTMLElement,
@@ -98,7 +100,7 @@ export class BinaryUI {
             td.dataset['test'] = `B${key}`; // for e2e
 
             // meta
-            const { metaData, $decimal, $hex, $pointer } = createMetaElem();
+            const { metaData, $decimal, $hex, $maxPointer, $pointer } = createMetaElem();
             td.append(metaData, create('br'));
 
             // binary
@@ -110,6 +112,7 @@ export class BinaryUI {
             cells.push({
                 $decimal,
                 $hex,
+                $maxPointer,
                 $pointer,
                 $prefix,
                 $head,
@@ -146,6 +149,7 @@ export class BinaryUI {
                 $suffix,
                 $decimal,
                 $hex,
+                $maxPointer,
                 $pointer,
             } = cells[i] ?? error();
 
@@ -177,6 +181,8 @@ export class BinaryUI {
             } else {
                 $hex.innerHTML = "";
             }
+
+            $maxPointer.textContent = "max_pointer = " + (reg.getBits().length - 1) + ", ";
 
             $pointer.textContent = "pointer = " + reg.pointer.toString();
             i++;

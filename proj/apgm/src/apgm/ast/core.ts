@@ -53,7 +53,7 @@ export function formatLocationAt(
     location: APGMSourceLocation | undefined,
 ): string {
     if (location !== undefined) {
-        return ` at line ${location.line} column ${location.column}`;
+        return ` at ${formatLocation(location)}`;
     } else {
         return "";
     }

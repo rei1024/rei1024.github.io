@@ -1,4 +1,4 @@
-import { bnb } from "../../deps.ts";
+import { bnb } from "../../../deps.ts";
 
 interface NumberResult {
     raw: string;

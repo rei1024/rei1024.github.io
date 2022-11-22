@@ -1,5 +1,5 @@
 import { naturalNumberParser } from "./number.ts";
-import { assertEquals, test } from "../../deps_test.ts";
+import { assertEquals, test } from "../../../deps_test.ts";
 
 test("parser: number", () => {
     const array: [string, number][] = [

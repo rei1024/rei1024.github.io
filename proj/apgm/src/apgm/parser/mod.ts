@@ -1,7 +1,7 @@
 import { bnb } from "../../deps.ts";
 
-import { naturalNumberParser } from "./number.ts";
-import { createErrorLines, parsePretty } from "./parsePretty.ts";
+import { naturalNumberParser } from "./lib/number.ts";
+import { createErrorLines, parsePretty } from "./lib/parsePretty.ts";
 export { createErrorLines };
 
 import {
@@ -19,6 +19,8 @@ import {
     WhileAPGMExpr,
 } from "../ast/mod.ts";
 import { APGMSourceSpan } from "../ast/core.ts";
+import { createSpan } from "./lib/create_span.ts";
+import { stringLit } from "./lib/string.ts";
 
 // https://stackoverflow.com/questions/16160190/regular-expression-to-find-c-style-block-comments#:~:text=35-,Try%20using,-%5C/%5C*(%5C*(%3F!%5C/)%7C%5B%5E*%5D)*%5C*%5C/
 export const comment = bnb.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([] /* 無し */);
@@ -37,16 +39,6 @@ const identifierRexExp = /[a-zA-Z_][a-zA-Z_0-9]*/u;
 export const identifierOnly: bnb.Parser<string> = bnb.match(identifierRexExp)
     .desc(["identifier"]);
 
-function createSpan(start: bnb.SourceLocation, word: string): APGMSourceSpan {
-    return {
-        start: start,
-        end: {
-            index: start.index + word.length - 1,
-            line: start.line,
-            column: start.column + word.length,
-        },
-    };
-}
 export const identifier: bnb.Parser<string> = identifierOnly.wrap(_, _);
 export const identifierWithSpan: bnb.Parser<[string, APGMSourceSpan]> = _.chain(
     () => {
@@ -128,19 +120,7 @@ export const numberAPGMExpr: bnb.Parser<NumberAPGMExpr> = bnb.location.chain(
     },
 ).wrap(_, _);
 
-export const stringLit: bnb.Parser<{ value: string; span: APGMSourceSpan }> = _
-    .next(bnb.location).chain((loc) => {
-        return bnb.text(`"`).next(bnb.match(/[^"]*/)).skip(
-            bnb.text(`"`),
-        ).skip(_).desc(["string"]).map((str) => {
-            return {
-                value: str,
-                span: createSpan(loc, `"${str}"`),
-            };
-        });
-    });
-
-export const stringAPGMExpr = stringLit.map((x) =>
+export const stringAPGMExpr = stringLit.wrap(_, _).map((x) =>
     new StringAPGMExpr(x.value, x.span)
 );
 
@@ -185,14 +165,14 @@ export const ifKeyword: bnb.Parser<["Z" | "NZ", APGMSourceSpan]> = bnb.choice(
 ).map((x) => x[0] === "if_z" ? ["Z", x[1]] : ["NZ", x[1]]);
 
 export function ifAPGMExpr(): bnb.Parser<IfAPGMExpr> {
-    return ifKeyword.chain((mod) => {
+    return ifKeyword.chain(([mod, span]) => {
         return exprWithParen.chain((cond) => {
             return bnb.lazy(() => apgmExpr()).chain((body) => {
                 return bnb.choice(
                     token("else").next(bnb.lazy(() => apgmExpr())),
                     bnb.ok(undefined),
                 ).map((elseBody) => {
-                    return new IfAPGMExpr(mod[0], cond, body, elseBody, mod[1]);
+                    return new IfAPGMExpr(mod, cond, body, elseBody, span);
                 });
             });
         });

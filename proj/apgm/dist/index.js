@@ -75,22 +75,13 @@ const resetError = () => {
     $compile.style.backgroundColor = "";
 };
 
-/** @type {string | undefined} */
-let prevInput = undefined;
-
 const compile = (withReaction = true) => {
     const input = editor.getValue();
-    // skip compile
-    if (prevInput === input) {
-        return;
-    }
-    prevInput = input;
-
     $output.value = "";
     resetError();
     try {
         /**
-         * @type {{ prefix?: string, noOptimize?: boolean }}
+         * @type {import('../src/integration/mod').IntegrationOptions}
          */
         const options = {};
         if ($prefixInput.value.trim() !== "") {

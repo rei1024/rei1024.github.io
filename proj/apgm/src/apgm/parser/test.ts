@@ -8,10 +8,10 @@ import {
     ifAPGMExpr,
     macro,
     main,
-    stringLit,
 } from "./mod.ts";
 import { assertEquals, assertThrows, test } from "../../deps_test.ts";
 import { VarAPGMExpr } from "../ast/var.ts";
+import { stringLit } from "./lib/string.ts";
 
 test("parser: identifier", () => {
     const value = identifier.tryParse("abc");
@@ -103,11 +103,14 @@ test("parser: func", () => {
 });
 
 test("parser: stringLit", () => {
-    const value = stringLit.tryParse(`"abc"`);
+    const value = stringLit.wrap(_, _).tryParse(`"abc"`);
     assertEquals(value.value, "abc");
 
-    const value2 = stringLit.tryParse(`  "def"`);
+    const value2 = stringLit.wrap(_, _).tryParse(`  "def"`);
     assertEquals(value2.value, "def");
+
+    // const value3 = stringLit.wrap(_, _).tryParse(`  "d\"ef"`);
+    // assertEquals(value3.value, 'd"ef');
 });
 
 test("parser: main", () => {
