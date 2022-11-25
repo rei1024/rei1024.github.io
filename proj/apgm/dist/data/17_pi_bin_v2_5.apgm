@@ -377,14 +377,8 @@ macro U1_MAX!() 12
 
 /* Start */
 loop {
-    /* Iterate 3.5 times per digit. */
-    if_z (tdec_u(15)) {
-        repeat(4, inc_u(ITERATION_TEMP!()));
-        inc_u(15);
-    } else {
-        repeat(3, inc_u(ITERATION_TEMP!()));
-    }
-
+    /* Iterate 4 times per digit. */
+    repeat(4, inc_u(ITERATION_TEMP!()));
     while_nz (tdec_u(ITERATION_TEMP!())) {
         /* Each iteration, set U0 = U0 + 1, U1 = U1 + 2. */
         add_1_to_binary!(U0_BITS!(), U0_MAX!(), 9, 8);
@@ -424,21 +418,36 @@ loop {
     repeat(8, inc_u(13)); /* play safe */
 
     loop {
-        /* Now compare B2 with B3 to see which is bigger */
+        /* B2の4倍と比べる */
+        repeat(2, inc_b(3));
         compare_binary!(2, 3, 10, 9, 7, 13);
+
         if_z (tdec_u(10)) {
-            /* Case: B2 <= B3 */
-            /* B3 = B3 - B2 */
+            /* Case: B2 * 4 <= B3 */
+            /* B3 = B3 - B2 * 4 */
+            repeat(2, inc_b(3));
             sub_b!(3, 2, 9, 7, 13);
-            inc_u(2);
-        } else {
-            /* Case: B2 > B3 */
-            if_z (tdec_u(8)) {
-                break();
+            repeat(4, inc_u(2));
+        }
+
+        loop {
+            /* Now compare B2 with B3 to see which is bigger */
+            compare_binary!(2, 3, 10, 9, 7, 13);
+            if_z (tdec_u(10)) {
+                /* Case: B2 <= B3 */
+                /* B3 = B3 - B2 */
+                sub_b!(3, 2, 9, 7, 13);
+                inc_u(2);
             } else {
-                /* Multiply B3 by 10 and reset U2 */
-                u_to_0!(2);
-                b_mul_10!(3, 9, 7, 13);
+                /* Case: B2 > B3 */
+                if_z (tdec_u(8)) {
+                    break(2);
+                } else {
+                    /* Multiply B3 by 10 and reset U2 */
+                    u_to_0!(2);
+                    b_mul_10!(3, 9, 7, 13);
+                    break();
+                }
             }
         }
     }
