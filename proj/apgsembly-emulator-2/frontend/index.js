@@ -82,7 +82,7 @@ $exampleCodes.forEach(e => {
         try {
             const response = await fetch(DATA_DIR + src);
             if (!response.ok) {
-                throw 'error';
+                throw new Error('error');
             }
             app.setInputAndReset(await response.text());
             // スクロール

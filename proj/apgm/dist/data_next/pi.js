@@ -54,6 +54,20 @@ for (let i = 0; i < 100; i++) {
 
     while (true) {
         // console.log(b2, b3)
+
+        // higher level
+        // const [q, r] = [b3 / b2, b3 % b2];
+        // u2 = q;
+        // b3 = r;
+        // if (u8 === 0n) {
+        //     break;
+        // } else {
+        //     u8--;
+        //     u2 = 0n;
+        //     b3 *= 10n;
+        // }
+
+        // APGsembly
         if (b2 <= b3) {
             b3 = b3 - b2;
             u2++;
@@ -67,6 +81,8 @@ for (let i = 0; i < 100; i++) {
             }
         }
     }
+
+    // u2 = ((b1 * (10n ** u3)) / b2) % 10n;
 
     res += `${u2}`;
     u2 = 0n;

@@ -14,14 +14,13 @@ describe('Generator integration', () => {
     it('should load', () => {
         cy.visit(genURL);
         cy.contains('Code generator for elementary cellular automata');
-    });
-    it('should generate', () => {
+
+        // Generate
         cy.get('#rule').type(`{selectall}{backspace}110`);
         cy.get('#generate').click();
         cy.get('#copy').should('not.be.disabled');
-    });
 
-    it('should run', () => {
+        // Run
         cy.wait(50);
         cy.get('#output').then(x => {
             const prog = x.val();

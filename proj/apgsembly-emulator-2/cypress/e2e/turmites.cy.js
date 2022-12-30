@@ -14,16 +14,14 @@ describe('Turmites integration', () => {
     it('should load', () => {
         cy.visit(turmitesURL);
         cy.contains('Turmites');
-    });
 
-    it('should generate', () => {
+        // Generate
         cy.get('#samples').click();
         cy.contains('Langton').click();
         cy.get('#generate').click();
         cy.get('#copy').should('not.be.disabled');
-    });
 
-    it('should run', () => {
+        // Run
         cy.get('#output').then(x => {
             const prog = x.val();
             if (typeof prog !== 'string') {

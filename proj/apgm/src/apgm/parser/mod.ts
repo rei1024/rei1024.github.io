@@ -23,7 +23,9 @@ import { createSpan } from "./lib/create_span.ts";
 import { stringLit } from "./lib/string.ts";
 
 // https://stackoverflow.com/questions/16160190/regular-expression-to-find-c-style-block-comments#:~:text=35-,Try%20using,-%5C/%5C*(%5C*(%3F!%5C/)%7C%5B%5E*%5D)*%5C*%5C/
-export const comment = bnb.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc([] /* 無し */);
+export const comment = bnb.match(/\/\*(\*(?!\/)|[^*])*\*\//s).desc(
+    [], /* 無し */
+);
 
 /** 空白 */
 export const _: bnb.Parser<undefined> = bnb.match(/\s*/).desc(["space"]).sepBy(
@@ -228,20 +230,6 @@ export const header = bnb.text("#").next(bnb.match(/REGISTERS|COMPONENTS/))
 
 export const headers: bnb.Parser<Header[]> = header.wrap(_, _).repeat();
 
-export function main(): bnb.Parser<Main> {
-    return macro().repeat().chain((macros) => {
-        return headers.chain((h) => {
-            return seqAPGMExprRaw().wrap(_, _).map((x) => {
-                return new Main(macros, h, new SeqAPGMExpr(x));
-            });
-        });
-    });
-}
-
-export function parseMain(str: string): Main {
-    return parsePretty(main(), str);
-}
-
 export function apgmExpr(): bnb.Parser<APGMExpr> {
     return bnb.choice(
         loopAPGMExpr(),
@@ -268,4 +256,18 @@ export function statement(): bnb.Parser<APGMExpr> {
         ifAPGMExpr(),
         apgmExpr().skip(semicolon),
     );
+}
+
+export function main(): bnb.Parser<Main> {
+    return macro().repeat().chain((macros) => {
+        return headers.chain((h) => {
+            return seqAPGMExprRaw().wrap(_, _).map((x) => {
+                return new Main(macros, h, new SeqAPGMExpr(x));
+            });
+        });
+    });
+}
+
+export function parseMain(str: string): Main {
+    return parsePretty(main(), str);
 }

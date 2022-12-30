@@ -14,16 +14,14 @@ import {
 describe('TM to APG integration BB3', () => {
     it('should load', () => {
         cy.visit(tmToAPGURL);
-    });
 
-    it('should generate', () => {
+        // Generate
         cy.get('#example_button').click();
         cy.contains('BB(3)').click();
         cy.get('#generate').click();
         cy.get('#copy').should('not.be.disabled');
-    });
 
-    it('should run', () => {
+        // Run
         cy.wait(50);
         cy.get('#output').then(x => {
             const prog = x.val();
@@ -44,15 +42,14 @@ describe('TM to APG integration BB3', () => {
 describe('TM to APG integration BB4', () => {
     it('should load', () => {
         cy.visit(tmToAPGURL);
-    });
 
-    it('should generate', () => {
+        // Generate
         cy.get('#example_button').click();
         cy.contains('BB(4)').click();
         cy.get('#generate').click();
         cy.get('#copy').should('not.be.disabled');
-    });
-    it('should run', () => {
+
+        // Run
         cy.wait(50);
         cy.get('#output').then(x => {
             const prog = x.val();

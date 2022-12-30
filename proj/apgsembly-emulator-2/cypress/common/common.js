@@ -103,6 +103,10 @@ export function clickStep() {
     cy.get('#step').click();
 }
 
+export function clickReset() {
+    cy.get('#reset').click();
+}
+
 /**
  *
  * @param {string} program

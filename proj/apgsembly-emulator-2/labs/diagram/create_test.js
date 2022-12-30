@@ -1,3 +1,5 @@
+// @ts-check
+
 import { assertEquals, test } from "../../test/deps.js";
 import { create } from "./create.js";
 
