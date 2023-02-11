@@ -1,14 +1,16 @@
 ## Turing machine simulators
-* https://turingmachinesimulator.com/
-* https://morphett.info/turing/turing.html
-   * 巨大数Wikiもこの記法をよく使っているのでこれをinputとする
 
-* https://googology.wikia.org/wiki/User_blog:Ikosarakt1/My_Turing_machine_programs
-* https://googology.wikia.org/wiki/User_blog:SuperJedi224/Turing_Machines
-* https://googology.wikia.org/wiki/User_blog:Deedlit11/Okay,_more_Turing_machines
-* https://googology.wikia.org/wiki/User_blog:Wythagoras/The_nineteenth_Busy_Beaver_number_is_greater_than_Graham%27s_Number!
+- https://turingmachinesimulator.com/
+- https://morphett.info/turing/turing.html
+  - 巨大数Wikiもこの記法をよく使っているのでこれをinputとする
+
+- https://googology.wikia.org/wiki/User_blog:Ikosarakt1/My_Turing_machine_programs
+- https://googology.wikia.org/wiki/User_blog:SuperJedi224/Turing_Machines
+- https://googology.wikia.org/wiki/User_blog:Deedlit11/Okay,_more_Turing_machines
+- https://googology.wikia.org/wiki/User_blog:Wythagoras/The_nineteenth_Busy_Beaver_number_is_greater_than_Graham%27s_Number!
 
 ## 設計
+
 1. 現在の状態が停止状態が調べる
    1. 停止状態ならHALT_OUT
    2. 停止状態でないなら次へ進む
@@ -44,6 +46,6 @@
       1. 現在の状態をnewStateとする
 6. 1へ戻る
 
-* U0: NEGATIVE_FLAG
-* B0: NEGATIVE_TAPE
-* B1: POSITIVE_TAPE
+- U0: NEGATIVE_FLAG
+- B0: NEGATIVE_TAPE
+- B1: POSITIVE_TAPE

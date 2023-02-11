@@ -14,7 +14,6 @@ export class OUTPUT {
     }
 
     /**
-     *
      * @param {OutputAction} act
      * @returns {void}
      */
@@ -24,7 +23,6 @@ export class OUTPUT {
     }
 
     /**
-     *
      * @returns {string}
      */
     getString() {
@@ -32,7 +30,6 @@ export class OUTPUT {
     }
 
     /**
-     *
      * @param {string} x
      */
     output(x) {

@@ -3,7 +3,6 @@
 import { Program } from "../../src/exports.js";
 
 /**
- *
  * @param {string} apgsemblySource
  * @returns {string} graph definition
  */
@@ -14,7 +13,7 @@ export function create(apgsemblySource) {
     }
 
     /** @type {Edge[]} */
-    const data = program.commands.map(command => ({
+    const data = program.commands.map((command) => ({
         from: command.state,
         to: command.nextState,
         note: command.input === "*" ? null : command.input,
@@ -25,7 +24,6 @@ export function create(apgsemblySource) {
 
 // https://github.com/mermaid-js/mermaid/blob/9ac3992fd2e9b679d79b9e798c0918253d42f608/packages/mermaid/src/diagrams/flowchart/parser/flow.jison#L566
 /**
- *
  * @param {string} char
  */
 function isSimpleChar(char) {
@@ -64,12 +62,11 @@ function isSimpleChar(char) {
 }
 
 /**
- *
  * @param {string} str
  */
 function encodeKey(str) {
     return [...str]
-        .map(c => {
+        .map((c) => {
             if (isSimpleChar(c)) {
                 return c;
             } else {
@@ -95,7 +92,7 @@ function createGraphDefinition(data) {
     return (
         `graph TB\n` +
         data
-            .map(item => {
+            .map((item) => {
                 const from = `${encodeKey(item.from)}["${item.from}"]`;
                 const to = `${encodeKey(item.to)}["${item.to}"]`;
                 const note = item.note ? `|"${item.note}"|` : "";

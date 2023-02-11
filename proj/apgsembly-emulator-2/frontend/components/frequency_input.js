@@ -15,7 +15,8 @@ function getFrequencies() {
 
     // 値を追加したらHTMLも変更すること
     frequencyArray.push(
-        10 * 10 ** maxOrder, 15 * 10 ** maxOrder
+        10 * 10 ** maxOrder,
+        15 * 10 ** maxOrder,
     );
 
     return frequencyArray;
@@ -32,11 +33,11 @@ export function setupFrequencyInput($frequencyInput, app) {
     $frequencyInput.min = "0";
     $frequencyInput.max = (frequencies.length - 1).toString();
 
-    $frequencyInput.addEventListener('input', () => {
+    $frequencyInput.addEventListener("input", () => {
         const value = parseInt($frequencyInput.value, 10);
         const freq = frequencies[value];
         if (freq === undefined) {
-            throw Error('internal error');
+            throw Error("internal error");
         }
         $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
         app.setFrequency(freq);

@@ -1,22 +1,28 @@
 // @ts-check
 
-import { ActionExecutor } from '../src/ActionExecutor.js';
-import { BRegAction, B_INC, B_SET, B_TDEC, B_READ } from '../src/actions/BRegAction.js';
-import { URegAction, U_INC, U_TDEC } from "../src/actions/URegAction.js";
+import { ActionExecutor } from "../src/ActionExecutor.js";
+import {
+    B_INC,
+    B_READ,
+    B_SET,
+    B_TDEC,
+    BRegAction,
+} from "../src/actions/BRegAction.js";
+import { U_INC, U_TDEC, URegAction } from "../src/actions/URegAction.js";
 
-import { assertEquals, test, assertThrows } from './deps.js';
+import { assertEquals, assertThrows, test } from "./deps.js";
 
-test('ActionExecutor output', () => {
+test("ActionExecutor output", () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [],
         binaryRegisterNumbers: [],
         legacyTRegisterNumbers: [],
     });
-    x.output.output('3');
-    assertEquals(x.output.getString(), '3');
+    x.output.output("3");
+    assertEquals(x.output.getString(), "3");
 });
 
-test('ActionExecutor setByRegistersInit empty', () => {
+test("ActionExecutor setByRegistersInit empty", () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [],
         binaryRegisterNumbers: [],
@@ -25,7 +31,7 @@ test('ActionExecutor setByRegistersInit empty', () => {
     x.setByRegistersInit({});
 });
 
-test('ActionExecutor constructor', () => {
+test("ActionExecutor constructor", () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0],
         binaryRegisterNumbers: [1],
@@ -36,7 +42,7 @@ test('ActionExecutor constructor', () => {
     assertEquals(x.legecyTRegMap.get(2) !== undefined, true);
 });
 
-test('ActionExecutor setByRegistersInit', () => {
+test("ActionExecutor setByRegistersInit", () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0, 1],
         binaryRegisterNumbers: [0, 1],
@@ -49,30 +55,30 @@ test('ActionExecutor setByRegistersInit', () => {
     const bReg0 = x.getBReg(0);
 
     if (bReg0 === undefined) {
-        throw Error('is undefined');
+        throw Error("is undefined");
     }
 
     const bReg1 = x.getBReg(1);
 
     if (bReg1 === undefined) {
-        throw Error('is undefined');
+        throw Error("is undefined");
     }
 
     const uReg0 = x.getUReg(0);
 
     if (uReg0 === undefined) {
-        throw Error('is undefined');
+        throw Error("is undefined");
     }
 
-    x.setByRegistersInit({ B0: [0, '11010001'], B1: [2, '110'], U0: 8 });
+    x.setByRegistersInit({ B0: [0, "11010001"], B1: [2, "110"], U0: 8 });
     assertEquals(
-        [...bReg0.toBinaryString()].reverse().join(''),
-        '11010001'
+        [...bReg0.toBinaryString()].reverse().join(""),
+        "11010001",
     );
     assertEquals(bReg0.pointer, 0);
     assertEquals(
-        [...bReg1.toBinaryString()].reverse().join(''),
-        '110'
+        [...bReg1.toBinaryString()].reverse().join(""),
+        "110",
     );
     assertEquals(bReg1.pointer, 2);
     assertEquals(uReg0.getValue(), 8);
@@ -81,7 +87,7 @@ test('ActionExecutor setByRegistersInit', () => {
     assertEquals(uReg0.getValue(), 9);
 });
 
-test('ActionExecutor setByRegistersInit 2', () => {
+test("ActionExecutor setByRegistersInit 2", () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0, 1],
         binaryRegisterNumbers: [0, 1],
@@ -94,16 +100,16 @@ test('ActionExecutor setByRegistersInit 2', () => {
     x.setByRegistersInit({ B0: 11 });
     const bReg0 = x.getBReg(0);
     if (bReg0 == undefined) {
-        throw Error('bReg0 is undefined');
+        throw Error("bReg0 is undefined");
     }
     assertEquals(
-        [...bReg0.toBinaryString()].reverse().join(''),
-        '1101'
+        [...bReg0.toBinaryString()].reverse().join(""),
+        "1101",
     );
     assertEquals(bReg0.pointer, 0);
 });
 
-test('ActionExecutor setByRegistersInit error', () => {
+test("ActionExecutor setByRegistersInit error", () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0, 1],
         binaryRegisterNumbers: [0, 1],
@@ -114,7 +120,7 @@ test('ActionExecutor setByRegistersInit error', () => {
     assertEquals(x.bRegMap.size, 2);
 
     assertThrows(() => {
-        x.setByRegistersInit({ U0: [0, '11'] });
+        x.setByRegistersInit({ U0: [0, "11"] });
     });
 
     assertThrows(() => {
@@ -142,7 +148,7 @@ test('ActionExecutor setByRegistersInit error', () => {
 
     assertThrows(() => {
         // @ts-ignore expect type error
-        x.setByRegistersInit({ B0: ['3', '11'] });
+        x.setByRegistersInit({ B0: ["3", "11"] });
     });
 
     assertThrows(() => {
@@ -151,8 +157,7 @@ test('ActionExecutor setByRegistersInit error', () => {
     });
 });
 
-
-test('ActionExecutor register not found error', () => {
+test("ActionExecutor register not found error", () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [0],
         binaryRegisterNumbers: [0],
@@ -167,7 +172,7 @@ test('ActionExecutor register not found error', () => {
     });
 });
 
-test('ActionExecutor BReg', () => {
+test("ActionExecutor BReg", () => {
     const x = new ActionExecutor({
         unaryRegisterNumbers: [],
         binaryRegisterNumbers: [0],

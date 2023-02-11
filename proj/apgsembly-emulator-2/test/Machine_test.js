@@ -7,7 +7,7 @@ import {
     program9_1,
     program9_2,
     program9_3,
-    program9_4
+    program9_4,
 } from "./Program_test.js";
 import { piCalculator } from "./pi_calculator.js";
 import { assertEquals, assertThrows, test } from "./deps.js";
@@ -20,14 +20,18 @@ import { assertEquals, assertThrows, test } from "./deps.js";
 function assertNewMachineThrows(src, ErrorClass, msgIncludes) {
     const program = Program.parse(src);
     if (!(program instanceof Program)) {
-        throw Error('parse error ' + src);
+        throw Error("parse error " + src);
     }
-    assertThrows(() => {
-        new Machine(program);
-    }, ErrorClass, msgIncludes);
+    assertThrows(
+        () => {
+            new Machine(program);
+        },
+        ErrorClass,
+        msgIncludes,
+    );
 }
 
-test('Machine duplicated command', () => {
+test("Machine duplicated command", () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3, NOP
 INITIAL; ZZ; ID0; OUTPUT 3, NOP
@@ -36,7 +40,7 @@ ID0; ZZ; ID0; NOP
     assertNewMachineThrows(str);
 });
 
-test('Machine duplicated command * *', () => {
+test("Machine duplicated command * *", () => {
     const str = `
 INITIAL; *; ID0; OUTPUT 3, NOP
 INITIAL; *; ID0; OUTPUT 3, NOP
@@ -45,14 +49,14 @@ ID0; ZZ; ID0; NOP
     assertNewMachineThrows(str);
 });
 
-test('Machine INITIAL is not exist', () => {
+test("Machine INITIAL is not exist", () => {
     const str = `
     ID0; ZZ; ID0; NOP
     `;
-    assertNewMachineThrows(str, Error, 'INITIAL state is not present');
+    assertNewMachineThrows(str, Error, "INITIAL state is not present");
 });
 
-test('Machine register header: single quotation support', () => {
+test("Machine register header: single quotation support", () => {
     const str = `
 #REGISTERS {'U3': 2}
 INITIAL; ZZ; A0; TDEC U3
@@ -60,13 +64,13 @@ A0; *; A0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
+        throw Error("parse error " + str);
     }
     const machine = new Machine(program);
     assertEquals(machine.actionExecutor.getUReg(3)?.getValue(), 2);
 });
 
-test('Machine register header: single quotation support for binary', () => {
+test("Machine register header: single quotation support for binary", () => {
     const str = `
 #REGISTERS {'B0': [0, '110']}
 INITIAL; ZZ; A0; TDEC B0
@@ -74,13 +78,13 @@ A0; *; A0; NOP
     `;
     const program = Program.parse(str);
     if (!(program instanceof Program)) {
-        throw Error('parse error ' + str);
+        throw Error("parse error " + str);
     }
     const machine = new Machine(program);
     assertEquals(machine.actionExecutor.getBReg(0)?.getBits(), [1, 1, 0]);
 });
 
-test('Machine register header error: register is not exist', () => {
+test("Machine register header error: register is not exist", () => {
     const str = `
 #REGISTERS {"U3": 2}
 INITIAL; ZZ; A0; NOP
@@ -89,7 +93,7 @@ A0; *; A0; NOP
     assertNewMachineThrows(str);
 });
 
-test('Machine register header error: is not an object: number', () => {
+test("Machine register header error: is not an object: number", () => {
     const str = `
 #REGISTERS 2
 INITIAL; ZZ; A0; NOP
@@ -98,7 +102,7 @@ A0; *; A0; NOP
     assertNewMachineThrows(str);
 });
 
-test('Machine register header error: is not an object: null', () => {
+test("Machine register header error: is not an object: null", () => {
     const str = `
 #REGISTERS null
 INITIAL; ZZ; A0; NOP
@@ -107,31 +111,31 @@ A0; *; A0; NOP
     assertNewMachineThrows(str);
 });
 
-test('Machine next state is not found', () => {
+test("Machine next state is not found", () => {
     const str = `
 INITIAL; ZZ; NON_EXIST; NOP
     `;
     assertNewMachineThrows(str);
 });
 
-test('Machine program9_1 new Machine', () => {
+test("Machine program9_1 new Machine", () => {
     const program = Program.parse(program9_1);
     if (!(program instanceof Program)) {
-        throw Error('parse error program9_1');
+        throw Error("parse error program9_1");
     }
     const machine = new Machine(program);
     assertEquals(machine.getCurrentState(), "INITIAL");
 });
 
-test('Machine program9_1 fromString', () => {
+test("Machine program9_1 fromString", () => {
     const machine = Machine.fromString(program9_1);
     assertEquals(machine.getCurrentState(), "INITIAL");
 });
 
-test('Machine program9_2', () => {
+test("Machine program9_2", () => {
     const program = Program.parse(program9_2);
     if (!(program instanceof Program)) {
-        throw Error('parse error program9_2');
+        throw Error("parse error program9_2");
     }
     const machine = new Machine(program);
 
@@ -166,10 +170,10 @@ test('Machine program9_2', () => {
     assertEquals(machine.stepCount, 9);
 });
 
-test('Machine program9_3', () => {
+test("Machine program9_3", () => {
     const program = Program.parse(program9_3);
     if (!(program instanceof Program)) {
-        throw Error('parse error program9_3');
+        throw Error("parse error program9_3");
     }
     const machine = new Machine(program);
     assertEquals([...machine.actionExecutor.uRegMap.keys()], [0, 1, 2, 3]);
@@ -206,10 +210,10 @@ test('Machine program9_3', () => {
     ]);
 });
 
-test('Machine program9_4', () => {
+test("Machine program9_4", () => {
     const program = Program.parse(program9_4);
     if (!(program instanceof Program)) {
-        throw Error('parse error program9_4');
+        throw Error("parse error program9_4");
     }
     const machine = new Machine(program);
     assertEquals(machine.actionExecutor.getBReg(0)?.toBinaryString(), "0");
@@ -222,14 +226,14 @@ test('Machine program9_4', () => {
     }
     assertEquals(
         machine.actionExecutor.getBReg(0)?.toBinaryString(),
-        "10001011"
+        "10001011",
     );
 });
 
-test('Machine program9_4 exec', () => {
+test("Machine program9_4 exec", () => {
     const program = Program.parse(program9_4);
     if (!(program instanceof Program)) {
-        throw Error('parse error program9_4');
+        throw Error("parse error program9_4");
     }
     const machine = new Machine(program);
     assertEquals(machine.actionExecutor.getBReg(0)?.toBinaryString(), "0");
@@ -238,11 +242,11 @@ test('Machine program9_4 exec', () => {
 
     assertEquals(
         machine.actionExecutor.getBReg(0)?.toBinaryString(),
-        "10001011"
+        "10001011",
     );
 });
 
-test('Machine exec', () => {
+test("Machine exec", () => {
     const program = Program.parse(`
 #REGISTERS { "U0": 42 }
 INITIAL; ZZ; A_Z; INC B0, NOP
@@ -252,7 +256,7 @@ A0; NZ; A0; TDEC U0, INC U1
 A1; *; A1; HALT_OUT
     `);
     if (!(program instanceof Program)) {
-        throw Error('parse error: ' + program);
+        throw Error("parse error: " + program);
     }
 
     for (const cond of [true, false]) {
@@ -267,7 +271,7 @@ A1; *; A1; HALT_OUT
             }
         } else {
             const result = machine.exec(N, false, -1, 0);
-            assertEquals(result, 'Halted');
+            assertEquals(result, "Halted");
         }
         assertEquals(machine.stepCount, 47);
         assertEquals(machine.actionExecutor.getUReg(0)?.getValue(), 0);
@@ -276,10 +280,10 @@ A1; *; A1; HALT_OUT
     }
 });
 
-test('Machine PI Calculator', () => {
+test("Machine PI Calculator", () => {
     const program = Program.parse(piCalculator);
     if (!(program instanceof Program)) {
-        throw Error('parse error PI Calculator');
+        throw Error("parse error PI Calculator");
     }
     let normalStats;
     let execStats;
@@ -309,7 +313,7 @@ test('Machine PI Calculator', () => {
     assertEquals(normalStats, execStats);
 });
 
-test('Machine exec opt', () => {
+test("Machine exec opt", () => {
     const program = Program.parse(`
     #REGISTERS { "U0": 3 }
 INITIAL; ZZ; A_Z; INC B0, NOP
@@ -321,7 +325,7 @@ END_0; *; END_1; NOP
 END_1; *; END_1; HALT_OUT
     `);
     if (!(program instanceof Program)) {
-        throw Error('parse error');
+        throw Error("parse error");
     }
 
     const res = [];
@@ -333,7 +337,7 @@ END_1; *; END_1; HALT_OUT
             actionExecutor.getUReg(0)?.getValue(),
             actionExecutor.getUReg(1)?.getValue(),
             machine.stepCount,
-            machine.getStateStats()[machine.getStateMap().get('A0') ?? '']
+            machine.getStateStats()[machine.getStateMap().get("A0") ?? ""],
         ]);
     }
 
@@ -348,14 +352,13 @@ END_1; *; END_1; HALT_OUT
     ]);
 });
 
-test('Machine PI Calculator steps', () => {
+test("Machine PI Calculator steps", () => {
     const program = Program.parse(piCalculator);
     if (!(program instanceof Program)) {
-        throw Error('parse error PI Calculator');
+        throw Error("parse error PI Calculator");
     }
 
     /**
-     *
      * @param {Machine} machine
      */
     function getStats(machine) {
@@ -396,7 +399,7 @@ test('Machine PI Calculator steps', () => {
     assertEquals(resNormal, resExec);
 });
 
-test('Machine double', () => {
+test("Machine double", () => {
     // U0 -> U1, U2
     // U2 -> U1
     // U1 -> U0, U2
@@ -418,7 +421,7 @@ D0; NZ; D0; TDEC U2, INC U0
     `;
     const program = Program.parse(source);
     if (!(program instanceof Program)) {
-        throw Error('parse error');
+        throw Error("parse error");
     }
 
     const machine = new Machine(program);

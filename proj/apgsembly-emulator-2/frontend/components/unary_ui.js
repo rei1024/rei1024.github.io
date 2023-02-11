@@ -28,29 +28,26 @@ function groupNumber(size) {
 }
 
 /**
- *
  * @param {number} key
  */
 function createHeaderCell(key) {
-    return create('th', `U${key}`);
+    return create("th", `U${key}`);
 }
 
 /**
- *
  * @param {number} key
  * @param {UReg} value
  */
 function createDataCell(key, value) {
-    return create('td', {
+    return create("td", {
         text: value.getValue().toString(),
-        fn: td => {
-            td.dataset['test'] = `U${key}`;
-        }
+        fn: (td) => {
+            td.dataset["test"] = `U${key}`;
+        },
     });
 }
 
 /**
- *
  * @param {ReadonlyMap<number, UReg>} regs
  * @returns {{ table: HTMLTableElement, cells: HTMLElement[] }}
  */
@@ -66,8 +63,8 @@ function createTable(regs) {
     const num = groupNumber(regs.size);
 
     for (const entries of chunk(regs, num)) {
-        const header = create('tr');
-        const data = create('tr');
+        const header = create("tr");
+        const data = create("tr");
         for (const [key, value] of entries) {
             header.append(createHeaderCell(key));
 
@@ -79,12 +76,12 @@ function createTable(regs) {
         rows.push({ header, data });
     }
 
-    const table = create('table');
+    const table = create("table");
     for (const row of rows) {
         table.append(row.header, row.data);
     }
 
-    table.classList.add('table');
+    table.classList.add("table");
 
     // 幅を均等にする
     table.style.tableLayout = "fixed";
@@ -94,7 +91,7 @@ function createTable(regs) {
 
     return {
         table,
-        cells
+        cells,
     };
 }
 
@@ -104,7 +101,6 @@ function createTable(regs) {
  */
 export class UnaryUI {
     /**
-     *
      * @param {HTMLElement} root
      */
     constructor(root) {
@@ -133,7 +129,7 @@ export class UnaryUI {
 
     clear() {
         this.cells = [];
-        this.root.innerHTML = '';
+        this.root.innerHTML = "";
     }
 
     /**
@@ -145,7 +141,7 @@ export class UnaryUI {
         for (const reg of regs.values()) {
             const item = cells[i];
             if (!item) {
-                throw Error('internal error');
+                throw Error("internal error");
             }
             item.textContent = reg.getValue().toString();
             i++;

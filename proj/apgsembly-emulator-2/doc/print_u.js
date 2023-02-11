@@ -29,7 +29,6 @@ function print(n) {
 }
 
 /**
- *
  * @param {number} n
  * @returns {[number_of_digits: number, largestUnit: number]}
  */
@@ -69,10 +68,9 @@ function print2(n) {
     }
 }
 
-print2(123)
+print2(123);
 
 /**
- *
  * @param {number} n
  * @returns {number}
  */
@@ -127,7 +125,6 @@ function largestUnit2(n) {
 // print2(123);
 
 /**
- *
  * @param {string} prefix
  * @param {string} start 最初の状態 prefixが前に付く
  * @param {string} end 最後の状態 prefixが前に付く
@@ -137,7 +134,15 @@ function largestUnit2(n) {
  * @param {number} tempRegNum 中で0にしてから使用する
  * @returns
  */
-export function forEach(prefix, start, end, innerStart, innerEnd, regNum, tempRegNum) {
+export function forEach(
+    prefix,
+    start,
+    end,
+    innerStart,
+    innerEnd,
+    regNum,
+    tempRegNum,
+) {
     /**
      * @type {string[]}
      */
@@ -145,16 +150,22 @@ export function forEach(prefix, start, end, innerStart, innerEnd, regNum, tempRe
     array.push(`${prefix}${start}; *; ${prefix}FOR_ZERO_1; NOP`);
 
     // tempRegNum = 0
-    array.push(`${prefix}FOR_ZERO_1; Z; ${prefix}FOR_COPY_1; TDEC U${tempRegNum}`);
+    array.push(
+        `${prefix}FOR_ZERO_1; Z; ${prefix}FOR_COPY_1; TDEC U${tempRegNum}`,
+    );
     array.push(`${prefix}FOR_ZERO_1; NZ; ${prefix}FOR_ZERO_1; NOP`);
 
     // move regNum to tempRegNum
     array.push(`${prefix}FOR_COPY_1; *; ${prefix}FOR_COPY_2; TDEC U${regNum}`);
     array.push(`${prefix}FOR_COPY_2; Z; ${prefix}FOR_BODY_1; NOP`);
-    array.push(`${prefix}FOR_COPY_2; NZ; ${prefix}FOR_COPY_1; INC U${tempRegNum}, NOP`);
+    array.push(
+        `${prefix}FOR_COPY_2; NZ; ${prefix}FOR_COPY_1; INC U${tempRegNum}, NOP`,
+    );
 
     // for
-    array.push(`${prefix}FOR_BODY_1; *; ${prefix}FOR_BODY_2; TDEC U${tempRegNum}`);
+    array.push(
+        `${prefix}FOR_BODY_1; *; ${prefix}FOR_BODY_2; TDEC U${tempRegNum}`,
+    );
     array.push(`${prefix}FOR_BODY_2; Z; ${prefix}${end}; NOP`);
     array.push(`${prefix}FOR_BODY_2; NZ; ${prefix}${innerStart}; NOP`);
     array.push(`${prefix}${innerEnd}; *; ${prefix}FOR_BODY_1; NOP`);
@@ -174,23 +185,38 @@ export function forEach(prefix, start, end, innerStart, innerEnd, regNum, tempRe
  * @param {string} [prefix]
  * @returns {string}
  */
-export function makeAPG(regNum, tempRegNum1, tempRegNum2, tempRegNum3, tenRegNum, prefix = "") {
+export function makeAPG(
+    regNum,
+    tempRegNum1,
+    tempRegNum2,
+    tempRegNum3,
+    tenRegNum,
+    prefix = "",
+) {
     /**
      * @type {string[]}
      */
     const array = [];
 
-    array.push(`${prefix}PRINT_START; *; ${prefix}LARGEST_UNIT_1; INC U${tempRegNum2}, NOP`);
+    array.push(
+        `${prefix}PRINT_START; *; ${prefix}LARGEST_UNIT_1; INC U${tempRegNum2}, NOP`,
+    );
 
     const tenRegNumTemp = tempRegNum1;
 
     {
-        array.push(`${prefix}LARGEST_UNIT_1; *; ${prefix}LARGEST_UNIT_2; TDEC U${tenRegNum}, INC U${tenRegNumTemp}`);
-        array.push(`${prefix}LARGEST_UNIT_2; Z; ${prefix}LARGEST_UNIT_MUL_STEP_1; NOP`);
-        array.push(`${prefix}LARGEST_UNIT_2; NZ; ${prefix}LARGEST_UNIT_SUB_1; TDEC U${tenRegNum}, INC U${tempRegNum1}`);
+        array.push(
+            `${prefix}LARGEST_UNIT_1; *; ${prefix}LARGEST_UNIT_2; TDEC U${tenRegNum}, INC U${tenRegNumTemp}`,
+        );
+        array.push(
+            `${prefix}LARGEST_UNIT_2; Z; ${prefix}LARGEST_UNIT_MUL_STEP_1; NOP`,
+        );
+        array.push(
+            `${prefix}LARGEST_UNIT_2; NZ; ${prefix}LARGEST_UNIT_SUB_1; TDEC U${tenRegNum}, INC U${tempRegNum1}`,
+        );
     }
 
     array.push(`${prefix}PRINT_END`);
 
-    return array.join('\n');
+    return array.join("\n");
 }

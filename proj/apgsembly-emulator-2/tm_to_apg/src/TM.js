@@ -4,7 +4,6 @@ import { Line } from "./Line.js";
 
 export class TM {
     /**
-     *
      * @param {ReadonlyArray<Line>} lines
      */
     constructor(lines) {
@@ -16,7 +15,6 @@ export class TM {
     }
 
     /**
-     *
      * @param {string} str
      * @returns {TM | Error}
      */

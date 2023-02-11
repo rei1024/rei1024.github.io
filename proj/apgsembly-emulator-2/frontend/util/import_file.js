@@ -5,7 +5,7 @@
  * @param {(_: string) => void} callback
  */
 export function importFileAsText($file, callback) {
-    $file.addEventListener('input', () => {
+    $file.addEventListener("input", () => {
         const file = $file.files?.item(0);
         if (file == undefined) {
             return;

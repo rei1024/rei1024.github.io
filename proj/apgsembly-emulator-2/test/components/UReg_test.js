@@ -2,7 +2,7 @@
 
 import { URegAction } from "../../src/actions/URegAction.js";
 import { UReg } from "../../src/components/UReg.js";
-import { assertEquals, test, assertThrows } from "../deps.js";
+import { assertEquals, assertThrows, test } from "../deps.js";
 
 test("UReg tdec", () => {
     const x = new UReg();
@@ -68,7 +68,6 @@ test("UReg action TDEC", () => {
     x.action(URegAction.parse("INC U0"));
     assertEquals(x.getValue(), 2);
 
-
     const res3 = x.action(URegAction.parse("TDEC U0"));
 
     assertEquals(x.getValue(), 1);
@@ -77,28 +76,28 @@ test("UReg action TDEC", () => {
 
 test("UReg setBy", () => {
     const x = new UReg();
-    x.setByRegistersInit('1', 0);
+    x.setByRegistersInit("1", 0);
     assertEquals(x.getValue(), 0);
-    x.setByRegistersInit('1', 3);
+    x.setByRegistersInit("1", 3);
     assertEquals(x.getValue(), 3);
 
     assertThrows(() => {
-        x.setByRegistersInit('1', []);
+        x.setByRegistersInit("1", []);
     });
 
     assertThrows(() => {
-        x.setByRegistersInit('1', 3.3);
+        x.setByRegistersInit("1", 3.3);
     });
 
     assertThrows(() => {
-        x.setByRegistersInit('1', NaN);
+        x.setByRegistersInit("1", NaN);
     });
 
     assertThrows(() => {
-        x.setByRegistersInit('1', true);
+        x.setByRegistersInit("1", true);
     });
 
     assertThrows(() => {
-        x.setByRegistersInit('1', 'a');
+        x.setByRegistersInit("1", "a");
     });
 });

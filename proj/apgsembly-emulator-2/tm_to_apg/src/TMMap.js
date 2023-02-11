@@ -2,11 +2,15 @@
 
 import { Line } from "./Line.js";
 import { TM } from "./TM.js";
-import { extractSingle, group, mapValueMaybe, MapValueMaybeError } from "./util.js";
+import {
+    extractSingle,
+    group,
+    mapValueMaybe,
+    MapValueMaybeError,
+} from "./util.js";
 
 export class TMMap {
     /**
-     *
      * @param {Map<string, Map<string, Line | undefined>>} map
      * @param {string[]} states
      * @param {string[]} symbols
@@ -47,7 +51,6 @@ export class TMMap {
     }
 
     /**
-     *
      * @param {string} state
      * @param {string} symbol
      * @returns {Line | undefined}
@@ -57,41 +60,53 @@ export class TMMap {
     }
 
     /**
-     *
      * @param {TM} tm
      * @returns {TMMap | Error}
      */
     static fromTM(tm) {
-        const knownSymbolLines = tm.lines.filter(x => x.currentSymbol !== undefined);
-        const unknownSymbolLines = tm.lines.filter(x => x.currentSymbol === undefined);
+        const knownSymbolLines = tm.lines.filter((x) =>
+            x.currentSymbol !== undefined
+        );
+        const unknownSymbolLines = tm.lines.filter((x) =>
+            x.currentSymbol === undefined
+        );
 
         /**
          * @type {MapValueMaybeError<string | undefined, Line[]> | Map<string | undefined, Map<string | undefined, Line>>}
          */
-        const knownSymbolMapOrError = mapValueMaybe(group(knownSymbolLines, x => x.currentState), lines => {
-            const map = group(lines, x => x.currentSymbol);
-            const e = mapValueMaybe(map, extractSingle);
-            if (e instanceof MapValueMaybeError) {
-                return undefined;
-            }
-            return e;
-        });
+        const knownSymbolMapOrError = mapValueMaybe(
+            group(knownSymbolLines, (x) => x.currentState),
+            (lines) => {
+                const map = group(lines, (x) => x.currentSymbol);
+                const e = mapValueMaybe(map, extractSingle);
+                if (e instanceof MapValueMaybeError) {
+                    return undefined;
+                }
+                return e;
+            },
+        );
 
         if (knownSymbolMapOrError instanceof MapValueMaybeError) {
-            return Error(`duplicate transition for state "${ knownSymbolMapOrError.key }"`);
+            return Error(
+                `duplicate transition for state "${knownSymbolMapOrError.key}"`,
+            );
         }
 
-        const unknownSymbolMapOrError = mapValueMaybe(group(unknownSymbolLines, x => x.currentState), extractSingle);
+        const unknownSymbolMapOrError = mapValueMaybe(
+            group(unknownSymbolLines, (x) => x.currentState),
+            extractSingle,
+        );
 
         if (unknownSymbolMapOrError instanceof MapValueMaybeError) {
-            return Error(`duplicate transition for state "${ unknownSymbolMapOrError.key }"`);
+            return Error(
+                `duplicate transition for state "${unknownSymbolMapOrError.key}"`,
+            );
         }
 
         const knownSymbolMap = knownSymbolMapOrError;
         const unknownSymbolMap = unknownSymbolMapOrError;
 
         /**
-         *
          * @param {string} state
          * @param {string} symbol
          * @returns {Line | Error}
@@ -120,7 +135,7 @@ export class TMMap {
                 return fourth;
             }
 
-            return Error('transition is incomplete');
+            return Error("transition is incomplete");
         }
 
         const states = tm.getStates();
@@ -128,16 +143,19 @@ export class TMMap {
 
         const map = new Map(
             states.map(
-                state => [
+                (state) => [
                     state,
                     new Map(symbols.map(
-                        symbol => {
+                        (symbol) => {
                             const line = getLineBy(state, symbol);
-                            return [symbol, (line instanceof Error) ? undefined : line];
-                        }
-                    ))
-                ]
-            )
+                            return [
+                                symbol,
+                                (line instanceof Error) ? undefined : line,
+                            ];
+                        },
+                    )),
+                ],
+            ),
         );
 
         return new TMMap(map, states, symbols);

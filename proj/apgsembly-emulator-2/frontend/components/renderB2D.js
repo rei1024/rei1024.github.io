@@ -41,7 +41,7 @@ export function renderB2D(context, b2d, hidePointer, flipUpsideDown) {
     for (let j = 0; j <= maxY; j++) {
         const row = array[j];
         if (row === undefined) {
-            throw Error('renderB2D: internal error');
+            throw Error("renderB2D: internal error");
         }
         const jMultCell = j * cellSize;
         for (let i = 0; i <= maxX; i++) {
@@ -57,6 +57,11 @@ export function renderB2D(context, b2d, hidePointer, flipUpsideDown) {
     if (!hidePointer) {
         context.strokeStyle = "#03A9F4";
         context.lineWidth = 4;
-        context.strokeRect(b2d.x * cellSize, b2d.y * cellSize, cellSize, cellSize);
+        context.strokeRect(
+            b2d.x * cellSize,
+            b2d.y * cellSize,
+            cellSize,
+            cellSize,
+        );
     }
 }

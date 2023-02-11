@@ -1,46 +1,54 @@
 ### Un
-* `inc_u(n)`
-* `tdec_u(n)`
+
+- `inc_u(n)`
+- `tdec_u(n)`
 
 ### Bn
-* `inc_b(n)`
-* `tdec_b(n)`
-* `set_b(n)`
-* `read_b(n)`
+
+- `inc_b(n)`
+- `tdec_b(n)`
+- `set_b(n)`
+- `read_b(n)`
 
 ### B2D
-* `inc_b2dx()`
-* `inc_b2dx()`
 
-* `tdec_b2dx()`
-* `tdec_b2dy()`
+- `inc_b2dx()`
+- `inc_b2dx()`
 
-* `read_b2d()`
-* `set_b2d()`
+- `tdec_b2dx()`
+- `tdec_b2dy()`
+
+- `read_b2d()`
+- `set_b2d()`
 
 ### ADD
-* `add_b1()`
+
+- `add_b1()`
 
 ### MUL
-* `mul_0()`
-* `mul_1()`
+
+- `mul_0()`
+- `mul_1()`
 
 ### OUTPUT
-* `output("1")`
 
-* `output("1", "2")`
+- `output("1")`
+
+- `output("1", "2")`
 
 ### NOP
-* `nop()`
+
+- `nop()`
 
 ### HALT_OUT
-* `halt_out()`
+
+- `halt_out()`
 
 ## if文とwhile文のalternativeな表記
-* これに変更する
+
+- これに変更する
 
 ```
-
 if_zero(read_b(3)) {
 
 }
@@ -58,7 +66,6 @@ while_non_zero(read_b(3)) {
 loop {
 
 }
-
 ```
 
 ```
@@ -67,6 +74,7 @@ goto("START");
 ```
 
 ### git hooks
+
 ```
 cp git_hooks_sample/pre-commit .git/hooks/pre-commit
 chmod a+x .git/hooks/pre-commit

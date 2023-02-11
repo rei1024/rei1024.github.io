@@ -24,30 +24,36 @@ const B_STRING = "B";
  */
 
 /**
- *
  * @param {BOp} op
  * @returns {BOpString}
  */
 function prettyOp(op) {
     switch (op) {
-        case B_INC: return B_INC_STRING;
-        case B_TDEC: return B_TDEC_STRING;
-        case B_READ: return B_READ_STRING;
-        case B_SET: return B_SET_STRING;
+        case B_INC:
+            return B_INC_STRING;
+        case B_TDEC:
+            return B_TDEC_STRING;
+        case B_READ:
+            return B_READ_STRING;
+        case B_SET:
+            return B_SET_STRING;
     }
 }
 
 /**
- *
  * @param {BOpString} op
  * @returns {BOp}
  */
 function parseOp(op) {
     switch (op) {
-        case B_INC_STRING: return B_INC;
-        case B_TDEC_STRING: return B_TDEC;
-        case B_READ_STRING: return B_READ;
-        case B_SET_STRING: return B_SET;
+        case B_INC_STRING:
+            return B_INC;
+        case B_TDEC_STRING:
+            return B_TDEC;
+        case B_READ_STRING:
+            return B_READ;
+        case B_SET_STRING:
+            return B_SET;
     }
 }
 
@@ -56,7 +62,6 @@ function parseOp(op) {
  */
 export class BRegAction extends Action {
     /**
-     *
      * @param {BOp} op
      * @param {number} regNumber
      */
@@ -100,8 +105,10 @@ export class BRegAction extends Action {
         if (op === undefined || reg === undefined) {
             return undefined;
         }
-        if (op === B_INC_STRING || op === B_TDEC_STRING ||
-            op === B_READ_STRING || op === B_SET_STRING) {
+        if (
+            op === B_INC_STRING || op === B_TDEC_STRING ||
+            op === B_READ_STRING || op === B_SET_STRING
+        ) {
             if (reg.startsWith(B_STRING)) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/u.test(str)) {
@@ -117,15 +124,18 @@ export class BRegAction extends Action {
      */
     doesReturnValue() {
         switch (this.op) {
-            case B_INC: return false;
-            case B_TDEC: return true;
-            case B_READ: return true;
-            case B_SET: return false;
+            case B_INC:
+                return false;
+            case B_TDEC:
+                return true;
+            case B_READ:
+                return true;
+            case B_SET:
+                return false;
         }
     }
 
     /**
-     *
      * @override
      * @param {Action} action
      * @returns {boolean}

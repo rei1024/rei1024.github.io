@@ -9,15 +9,17 @@ self.addEventListener("install", function (event) {
 const CACHE_PREFIX = "apge-";
 const CACHE_VERSION = CACHE_PREFIX + "2022-10-28";
 
-self.addEventListener('activate', function (event) {
+self.addEventListener("activate", function (event) {
     const _self = self;
     async function handleCache() {
         try {
             await _self.clients.claim();
         } catch (error) { /* nop */ }
 
-        const oldCacheNames = (await caches.keys()).filter(x => x !== CACHE_VERSION);
-        await Promise.all(oldCacheNames.map(name => caches.delete(name)));
+        const oldCacheNames = (await caches.keys()).filter((x) =>
+            x !== CACHE_VERSION
+        );
+        await Promise.all(oldCacheNames.map((name) => caches.delete(name)));
 
         const cache = await caches.open(CACHE_VERSION);
         // deno eval 'console.log([...Deno.readDirSync("./frontend/data")].map(x => x.name).filter(x => x.endsWith(".apg")).map(x => "./frontend/data/" + x ) )'
@@ -34,7 +36,7 @@ self.addEventListener('activate', function (event) {
             "./frontend/data/primes.apg",
             "./frontend/data/sqrt_log_t.apg",
             "./frontend/data/rule90.apg",
-            "./frontend/data/99.apg"
+            "./frontend/data/99.apg",
         ]);
     }
 
@@ -53,21 +55,23 @@ async function getCachedResponse(cache, request) {
     }
 
     const url = new URL(request.url);
-    if (url.pathname.endsWith('/index.html')) {
-        const cacheResponse =
-            await cache.match(new Request(
-                { ...request, url: url.href.slice(0, -"index.html".length) }
-            ));
+    if (url.pathname.endsWith("/index.html")) {
+        const cacheResponse = await cache.match(
+            new Request(
+                { ...request, url: url.href.slice(0, -"index.html".length) },
+            ),
+        );
         if (cacheResponse) {
             return cacheResponse;
         }
     }
 
-    if (url.pathname.endsWith('/')) {
-        const cacheResponse =
-            await cache.match(new Request(
-                { ...request, url: url.href + "index.html" }
-            ));
+    if (url.pathname.endsWith("/")) {
+        const cacheResponse = await cache.match(
+            new Request(
+                { ...request, url: url.href + "index.html" },
+            ),
+        );
         if (cacheResponse) {
             return cacheResponse;
         }
@@ -76,9 +80,8 @@ async function getCachedResponse(cache, request) {
     return "not found";
 }
 
-self.addEventListener('fetch', function (event) {
+self.addEventListener("fetch", function (event) {
     /**
-     *
      * @returns {Promise<Response>}
      */
     async function getResponse() {
@@ -91,18 +94,26 @@ self.addEventListener('fetch', function (event) {
         // network first
         // FIXME: no-corsの場合SRIが通らない no-corsでないとcross-originをキャッシュから取り出せない
         try {
-            const response = await fetch(request, { credentials: "omit", mode: 'no-cors' });
+            const response = await fetch(request, {
+                credentials: "omit",
+                mode: "no-cors",
+            });
             const url = new URL(request.url);
             const status = response.status;
             const protocol = url.protocol;
-            if (200 <= status &&
-                status < 400 &&
-                protocol === 'https:' || protocol === 'http:') {
+            if (
+                200 <= status &&
+                    status < 400 &&
+                    protocol === "https:" || protocol === "http:"
+            ) {
                 event.waitUntil(cache.put(request, response.clone()));
             }
             return response;
         } catch (e) {
-            const cachedResponse = await getCachedResponse(cache, request.clone());
+            const cachedResponse = await getCachedResponse(
+                cache,
+                request.clone(),
+            );
             if (cachedResponse !== "not found") {
                 return cachedResponse;
             }

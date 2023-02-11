@@ -2,30 +2,30 @@
 /// <reference types="cypress" />
 
 import {
-    turmitesURL,
     APGsemblyEmulatorURL,
-    setStep,
+    assertSteps,
     clickStep,
     setProgram,
-    assertSteps,
+    setStep,
+    turmitesURL,
 } from "../common/common.js";
 
-describe('Turmites integration', () => {
-    it('should load', () => {
+describe("Turmites integration", () => {
+    it("should load", () => {
         cy.visit(turmitesURL);
-        cy.contains('Turmites');
+        cy.contains("Turmites");
 
         // Generate
-        cy.get('#samples').click();
-        cy.contains('Langton').click();
-        cy.get('#generate').click();
-        cy.get('#copy').should('not.be.disabled');
+        cy.get("#samples").click();
+        cy.contains("Langton").click();
+        cy.get("#generate").click();
+        cy.get("#copy").should("not.be.disabled");
 
         // Run
-        cy.get('#output').then(x => {
+        cy.get("#output").then((x) => {
             const prog = x.val();
-            if (typeof prog !== 'string') {
-                throw Error('prog is not a string');
+            if (typeof prog !== "string") {
+                throw Error("prog is not a string");
             }
             cy.visit(APGsemblyEmulatorURL);
 

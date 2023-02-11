@@ -1,27 +1,25 @@
 // @ts-check
 
 /**
- * 
- * @param {number} n 
- * @returns 
+ * @param {number} n
+ * @returns
  */
 function num(n) {
-    return { kind: 'number', value: n };
+    return { kind: "number", value: n };
 }
 
 /**
- * 
- * @param {number} n 
+ * @param {number} n
  */
 function output(n) {
-    return { kind: 'function', name: 'output', args: [num(n)] };
+    return { kind: "function", name: "output", args: [num(n)] };
 }
 
 function main() {
     return [
         ifZero(tdec_u(0), [], []),
         output(3),
-        tdec_u(1)
+        tdec_u(1),
     ];
 }
 
@@ -51,32 +49,29 @@ function main() {
 
 class Emitter {
     constructor() {
-
     }
 
     /**
-     * 
-     * @param {StateName} input 
+     * @param {StateName} input
      * @param {Expr} expr
      * @returns {StateName}
      */
     emitExpr(input, expr) {
         switch (expr.kind) {
-            case 'function': return this.emitFunction(input, expr);
+            case "function":
+                return this.emitFunction(input, expr);
         }
     }
 
     /**
-     * 
-     * @param {StateName} input 
+     * @param {StateName} input
      * @param {CallExpr} expr
      * @returns {StateName}
      */
     emitFunction(input, expr) {
         switch (expr.name) {
-            
         }
     }
 }
 
-export {}
+export {};

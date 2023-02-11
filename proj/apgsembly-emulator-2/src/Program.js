@@ -13,7 +13,6 @@ import { validateAll } from "./validate.js";
  */
 export class Program {
     /**
-     *
      * @param {{
      *   programLines: ProgramLines
      * }} param0
@@ -27,7 +26,7 @@ export class Program {
          * @readonly
          * @type {ReadonlyArray<Command>}
          */
-        this.commands = programLinesArray.flatMap(x => {
+        this.commands = programLinesArray.flatMap((x) => {
             if (x instanceof Command) {
                 return [x];
             } else {
@@ -77,7 +76,7 @@ export class Program {
      */
     static parse(str, { noValidate } = {}) {
         const programLines = ProgramLines.parse(str);
-        if (typeof programLines === 'string') {
+        if (typeof programLines === "string") {
             return programLines;
         }
 
@@ -93,18 +92,18 @@ export class Program {
         // validation
         if (!noValidate) {
             if (commands.length === 0) {
-                return 'Program is empty';
+                return "Program is empty";
             }
 
             const errorOrUndefined = validateAll(commands);
-            if (typeof errorOrUndefined === 'string') {
+            if (typeof errorOrUndefined === "string") {
                 return errorOrUndefined;
             }
         }
 
         try {
             return new Program({
-                programLines
+                programLines,
             });
         } catch (error) {
             if (error instanceof Error) {
@@ -120,7 +119,7 @@ export class Program {
      */
     extractRegisterNumbers() {
         /** @type {readonly Action[]} */
-        const actions = this.commands.flatMap(command => command.actions);
+        const actions = this.commands.flatMap((command) => command.actions);
 
         /**
          * @template {Action & { regNumber: number }} T
@@ -129,14 +128,14 @@ export class Program {
          */
         const getNumbers = (klass) => {
             return sortNub(actions.flatMap(
-                action => action instanceof klass ? [action.regNumber] : []
+                (action) => action instanceof klass ? [action.regNumber] : [],
             ));
         };
 
         return {
             unary: getNumbers(URegAction),
             binary: getNumbers(BRegAction),
-            legacyT: getNumbers(LegacyTRegAction)
+            legacyT: getNumbers(LegacyTRegAction),
         };
     }
 

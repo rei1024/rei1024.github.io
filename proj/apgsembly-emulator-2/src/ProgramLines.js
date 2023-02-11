@@ -1,13 +1,12 @@
 // @ts-check
 
-import { ProgramLine, parseProgramLine } from "./Command.js";
+import { parseProgramLine, ProgramLine } from "./Command.js";
 
 /**
  * プログラムの行の配列
  */
 export class ProgramLines {
     /**
-     *
      * @param {ReadonlyArray<ProgramLine>} array
      */
     constructor(array) {
@@ -19,7 +18,6 @@ export class ProgramLines {
     }
 
     /**
-     *
      * @returns {ReadonlyArray<ProgramLine>}
      */
     getArray() {
@@ -30,7 +28,7 @@ export class ProgramLines {
      * @returns {string}
      */
     pretty() {
-        return this.array.map(line => line.pretty()).join('\n');
+        return this.array.map((line) => line.pretty()).join("\n");
     }
 
     /**
@@ -43,17 +41,19 @@ export class ProgramLines {
     static parse(str) {
         const lines = str.split(/\r\n|\n|\r/u);
 
-        const programLineWithErrorArray = lines.map((line, index) => parseProgramLine(line, index + 1));
+        const programLineWithErrorArray = lines.map((line, index) =>
+            parseProgramLine(line, index + 1)
+        );
 
         const errors = programLineWithErrorArray
-            .flatMap(x => typeof x === 'string' ? [x] : []);
+            .flatMap((x) => typeof x === "string" ? [x] : []);
 
         if (errors.length > 0) {
-            return errors.join('\n');
+            return errors.join("\n");
         }
 
         const programLines = programLineWithErrorArray
-            .flatMap(x => typeof x !== 'string' ? [x] : []);
+            .flatMap((x) => typeof x !== "string" ? [x] : []);
 
         return new ProgramLines(programLines);
     }

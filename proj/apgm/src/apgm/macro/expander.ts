@@ -107,6 +107,9 @@ export class MacroExpander {
     }
 }
 
+/**
+ * Expand macro
+ */
 export function expand(main: Main): APGMExpr {
     return new MacroExpander(main).expand();
 }

@@ -57,19 +57,19 @@ export const maybeBB6 = `0 _ 1 r 1
  */
 export const list = [
     {
-        name: 'BB(3)',
+        name: "BB(3)",
         prog: bb3,
     },
     {
-        name: 'BB(4)',
+        name: "BB(4)",
         prog: bb4,
     },
     {
-        name: 'maybe BB(5)',
-        prog: maybeBB5
+        name: "maybe BB(5)",
+        prog: maybeBB5,
     },
     {
-        name: 'maybe BB(6)',
-        prog: maybeBB6
-    }
+        name: "maybe BB(6)",
+        prog: maybeBB6,
+    },
 ];

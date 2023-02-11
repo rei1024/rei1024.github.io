@@ -41,55 +41,65 @@ const B2D_LEGACY_B2DY_STRING = "SQY";
 const B2D_LEGACY_B2D_STRING = "SQ";
 
 /**
- *
  * @param {B2DOpString} op
  * @returns {B2DOp}
  */
 function parseOp(op) {
     switch (op) {
-        case B2D_INC_STRING: return B2D_INC;
-        case B2D_TDEC_STRING: return B2D_TDEC;
-        case B2D_READ_STRING: return B2D_READ;
-        case B2D_SET_STRING: return B2D_SET;
+        case B2D_INC_STRING:
+            return B2D_INC;
+        case B2D_TDEC_STRING:
+            return B2D_TDEC;
+        case B2D_READ_STRING:
+            return B2D_READ;
+        case B2D_SET_STRING:
+            return B2D_SET;
     }
 }
 
 /**
- *
  * @param {B2DOp} op
  * @returns {B2DOpString}
  */
 function prettyOp(op) {
     switch (op) {
-        case B2D_INC: return B2D_INC_STRING;
-        case B2D_TDEC: return B2D_TDEC_STRING;
-        case B2D_READ: return B2D_READ_STRING;
-        case B2D_SET: return B2D_SET_STRING;
+        case B2D_INC:
+            return B2D_INC_STRING;
+        case B2D_TDEC:
+            return B2D_TDEC_STRING;
+        case B2D_READ:
+            return B2D_READ_STRING;
+        case B2D_SET:
+            return B2D_SET_STRING;
     }
 }
 /**
- *
  * @param {B2DAxisString} op
  * @returns {B2DAxis}
  */
 function parseAxis(op) {
     switch (op) {
-        case B2D_B2DX_STRING: return B2D_B2DX;
-        case B2D_B2DY_STRING: return B2D_B2DY;
-        case B2D_B2D_STRING: return B2D_B2D;
+        case B2D_B2DX_STRING:
+            return B2D_B2DX;
+        case B2D_B2DY_STRING:
+            return B2D_B2DY;
+        case B2D_B2D_STRING:
+            return B2D_B2D;
     }
 }
 
 /**
- *
  * @param {B2DAxis} op
  * @returns {B2DAxisString}
  */
 function prettyAxis(op) {
     switch (op) {
-        case B2D_B2DX: return B2D_B2DX_STRING;
-        case B2D_B2DY: return B2D_B2DY_STRING;
-        case B2D_B2D: return B2D_B2D_STRING;
+        case B2D_B2DX:
+            return B2D_B2DX_STRING;
+        case B2D_B2DY:
+            return B2D_B2DY_STRING;
+        case B2D_B2D:
+            return B2D_B2D_STRING;
     }
 }
 
@@ -98,7 +108,6 @@ function prettyAxis(op) {
  */
 export class B2DAction extends Action {
     /**
-     *
      * @param {B2DOp} op
      * @param {B2DAxis} axis
      */
@@ -126,7 +135,6 @@ export class B2DAction extends Action {
     }
 
     /**
-     *
      * @param {string} str
      */
     static parse(str) {
@@ -155,7 +163,8 @@ export class B2DAction extends Action {
                         return new B2DAction(B2D_INC, B2D_B2DX);
                     case B2D_LEGACY_B2DY_STRING:
                         return new B2DAction(B2D_INC, B2D_B2DY);
-                    default: return undefined;
+                    default:
+                        return undefined;
                 }
             }
             case B2D_LEGACY_TDEC_STRING: {
@@ -164,21 +173,24 @@ export class B2DAction extends Action {
                         return new B2DAction(B2D_TDEC, B2D_B2DX);
                     case B2D_LEGACY_B2DY_STRING:
                         return new B2DAction(B2D_TDEC, B2D_B2DY);
-                    default: return undefined;
+                    default:
+                        return undefined;
                 }
             }
             case B2D_READ_STRING: {
                 switch (axis) {
                     case B2D_LEGACY_B2D_STRING:
                         return new B2DAction(B2D_READ, B2D_B2D);
-                    default: return undefined;
+                    default:
+                        return undefined;
                 }
             }
             case B2D_SET_STRING: {
                 switch (axis) {
                     case B2D_LEGACY_B2D_STRING:
                         return new B2DAction(B2D_SET, B2D_B2D);
-                    default: return undefined;
+                    default:
+                        return undefined;
                 }
             }
         }
@@ -190,15 +202,18 @@ export class B2DAction extends Action {
      */
     doesReturnValue() {
         switch (this.op) {
-            case B2D_INC: return false;
-            case B2D_TDEC: return true;
-            case B2D_READ: return true;
-            case B2D_SET: return false;
+            case B2D_INC:
+                return false;
+            case B2D_TDEC:
+                return true;
+            case B2D_READ:
+                return true;
+            case B2D_SET:
+                return false;
         }
     }
 
     /**
-     *
      * @override
      * @param {Action} action
      * @returns {boolean}

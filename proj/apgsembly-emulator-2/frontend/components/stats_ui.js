@@ -3,7 +3,7 @@
 import { create } from "../util/create.js";
 
 /* style.cssで設定 */
-const CURRENT_STATE_CLASS = 'stats_current_state';
+const CURRENT_STATE_CLASS = "stats_current_state";
 
 /**
  * @typedef {{ z: number, nz: number }} StatsItem
@@ -14,33 +14,33 @@ const CURRENT_STATE_CLASS = 'stats_current_state';
  * @param {StatsItem} stat
  */
 function createRow(stateName, { z, nz }) {
-    const $name = create('td', {
-        fn: $name => {
+    const $name = create("td", {
+        fn: ($name) => {
             $name.colSpan = 2;
         },
-        children: [create('code', stateName)]
+        children: [create("code", stateName)],
     });
 
-    const numClass = 'num';
+    const numClass = "num";
 
-    const $sum = create('td', {
+    const $sum = create("td", {
         text: (z + nz).toLocaleString(),
-        classes: [numClass]
+        classes: [numClass],
     });
 
-    const $z = create('td', {
+    const $z = create("td", {
         text: z.toLocaleString(),
-        classes: [numClass]
+        classes: [numClass],
     });
 
-    const $nz = create('td', {
+    const $nz = create("td", {
         text: nz.toLocaleString(),
-        classes: [numClass]
+        classes: [numClass],
     });
 
     // row
-    const $tr = create('tr', {
-        children: [$name, $sum, $z, $nz]
+    const $tr = create("tr", {
+        children: [$name, $sum, $z, $nz],
     });
 
     return { $tr, $sum, $z, $nz };
@@ -54,7 +54,6 @@ export class StatsUI {
     #statsNumberOfStates;
 
     /**
-     *
      * @param {HTMLElement} root
      * @param {HTMLElement} statsNumberOfStates
      */
@@ -95,9 +94,9 @@ export class StatsUI {
     }
 
     clear() {
-        this.#statsNumberOfStates.innerHTML = '';
+        this.#statsNumberOfStates.innerHTML = "";
         this.cells = [];
-        this.root.innerHTML = '';
+        this.root.innerHTML = "";
     }
 
     /**
@@ -129,5 +128,5 @@ export class StatsUI {
  * @returns {never}
  */
 function error() {
-    throw Error('error');
+    throw Error("error");
 }

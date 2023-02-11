@@ -20,26 +20,28 @@ const R_STRING = "R";
  */
 
 /**
- *
  * @param {UOp} op
  * @returns {UOpString}
  */
 function prettyOp(op) {
     switch (op) {
-        case U_INC: return U_INC_STRING;
-        case U_TDEC: return U_TDEC_STRING;
+        case U_INC:
+            return U_INC_STRING;
+        case U_TDEC:
+            return U_TDEC_STRING;
     }
 }
 
 /**
- *
  * @param {UOpString} op
  * @returns {UOp}
  */
 function parseOp(op) {
     switch (op) {
-        case U_INC_STRING: return U_INC;
-        case U_TDEC_STRING: return U_TDEC;
+        case U_INC_STRING:
+            return U_INC;
+        case U_TDEC_STRING:
+            return U_TDEC;
     }
 }
 
@@ -48,7 +50,6 @@ function parseOp(op) {
  */
 export class URegAction extends Action {
     /**
-     *
      * @param {UOp} op
      * @param {number} regNumber
      */
@@ -80,7 +81,6 @@ export class URegAction extends Action {
     }
 
     /**
-     *
      * @param {string} str
      * @returns {URegAction | undefined}
      */
@@ -113,13 +113,14 @@ export class URegAction extends Action {
      */
     doesReturnValue() {
         switch (this.op) {
-            case U_INC: return false;
-            case U_TDEC: return true;
+            case U_INC:
+                return false;
+            case U_TDEC:
+                return true;
         }
     }
 
     /**
-     *
      * @override
      * @param {Action} action
      * @returns {boolean}

@@ -21,28 +21,32 @@ const SUB_STRING = "SUB";
  */
 
 /**
- *
  * @param {SubOp} op
  * @returns {SubOpString}
  */
 function prettyOp(op) {
     switch (op) {
-        case SUB_A1: return SUB_A1_STRING;
-        case SUB_B0: return SUB_B0_STRING;
-        case SUB_B1: return SUB_B1_STRING;
+        case SUB_A1:
+            return SUB_A1_STRING;
+        case SUB_B0:
+            return SUB_B0_STRING;
+        case SUB_B1:
+            return SUB_B1_STRING;
     }
 }
 
 /**
- *
  * @param {SubOpString} op
  * @returns {SubOp}
  */
 function parseOp(op) {
     switch (op) {
-        case SUB_A1_STRING: return SUB_A1;
-        case SUB_B0_STRING: return SUB_B0;
-        case SUB_B1_STRING: return SUB_B1;
+        case SUB_A1_STRING:
+            return SUB_A1;
+        case SUB_B0_STRING:
+            return SUB_B0;
+        case SUB_B1_STRING:
+            return SUB_B1;
     }
 }
 
@@ -51,7 +55,6 @@ function parseOp(op) {
  */
 export class SubAction extends Action {
     /**
-     *
      * @param {SubOp} op
      */
     constructor(op) {
@@ -72,7 +75,6 @@ export class SubAction extends Action {
     }
 
     /**
-     *
      * @param {string} str
      * @returns {SubAction | undefined}
      */
@@ -87,7 +89,10 @@ export class SubAction extends Action {
             return undefined;
         }
 
-        if (reg === SUB_A1_STRING || reg === SUB_B0_STRING || reg === SUB_B1_STRING) {
+        if (
+            reg === SUB_A1_STRING || reg === SUB_B0_STRING ||
+            reg === SUB_B1_STRING
+        ) {
             return new SubAction(parseOp(reg));
         }
 
@@ -95,19 +100,20 @@ export class SubAction extends Action {
     }
 
     /**
-     *
      * @returns @override
      */
     doesReturnValue() {
         switch (this.op) {
-            case SUB_A1: return false;
-            case SUB_B0: return true;
-            case SUB_B1: return true;
+            case SUB_A1:
+                return false;
+            case SUB_B0:
+                return true;
+            case SUB_B1:
+                return true;
         }
     }
 
     /**
-     *
      * @override
      * @param {Action} action
      * @returns {boolean}

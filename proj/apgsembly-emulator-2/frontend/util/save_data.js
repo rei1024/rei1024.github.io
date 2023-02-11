@@ -13,7 +13,10 @@ export function getSaveData() {
         // @ts-ignore
         navigator.webkitConnection;
 
-    if (connection !== undefined && connection !== null && typeof connection === 'object') {
+    if (
+        connection !== undefined && connection !== null &&
+        typeof connection === "object"
+    ) {
         // @ts-ignore
         const saveData = connection.saveData;
         return saveData;

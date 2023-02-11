@@ -181,7 +181,7 @@ export function ifAPGMExpr(): bnb.Parser<IfAPGMExpr> {
     });
 }
 
-// macro f!(a, b)
+/** macro f!(a, b) */
 export function macroHead(): bnb.Parser<
     { span: APGMSourceSpan; name: string; args: VarAPGMExpr[] }
 > {

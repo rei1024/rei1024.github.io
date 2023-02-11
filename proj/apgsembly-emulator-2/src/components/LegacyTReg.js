@@ -2,11 +2,11 @@
 
 import {
     LegacyTRegAction,
-    T_INC,
     T_DEC,
+    T_INC,
     T_READ,
+    T_RESET,
     T_SET,
-    T_RESET
 } from "../actions/LegacyTRegAction.js";
 import { internalError } from "../actions/Action.js";
 
@@ -22,22 +22,26 @@ export class LegacyTReg {
          * @type {(0 | 1 | -1)[]}
          */
         this.bits = [0];
-
     }
 
     /**
-     *
      * @param {LegacyTRegAction} act
      * @returns {0 | 1 | void}
      */
     action(act) {
         switch (act.op) {
-            case T_INC: return this.inc();
-            case T_READ: return this.read();
-            case T_DEC: return this.dec();
-            case T_SET: return this.set();
-            case T_RESET: return this.reset();
-            default: internalError();
+            case T_INC:
+                return this.inc();
+            case T_READ:
+                return this.read();
+            case T_DEC:
+                return this.dec();
+            case T_SET:
+                return this.set();
+            case T_RESET:
+                return this.reset();
+            default:
+                internalError();
         }
     }
 
@@ -95,7 +99,7 @@ export class LegacyTReg {
             this.bits[pointer] = -1;
             return 1;
         } else if (bit === -1) {
-            throw Error('Error: reading empty space of T register');
+            throw Error("Error: reading empty space of T register");
         } else {
             internalError();
         }

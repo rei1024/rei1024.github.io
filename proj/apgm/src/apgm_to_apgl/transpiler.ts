@@ -83,7 +83,9 @@ function transpileStringArgFunc(
 }
 
 export const emptyArgFuncs: Map<string, APGLExpr> = new Map([
+    // NOP
     ["nop", A.nop()],
+
     // B2D
     ["inc_b2dx", A.incB2DX()],
     ["inc_b2dy", A.incB2DY()],
@@ -91,17 +93,21 @@ export const emptyArgFuncs: Map<string, APGLExpr> = new Map([
     ["tdec_b2dy", A.tdecB2DY()],
     ["read_b2d", A.readB2D()],
     ["set_b2d", A.setB2D()],
+
     // ADD
     ["add_a1", A.addA1()],
     ["add_b0", A.addB0()],
     ["add_b1", A.addB1()],
+
     // SUB
     ["sub_a1", A.subA1()],
     ["sub_b0", A.subB0()],
     ["sub_b1", A.subB1()],
+
     // MUL
     ["mul_0", A.mul0()],
     ["mul_1", A.mul1()],
+
     // HALT_OUT
     ["halt_out", A.haltOUT()],
 ]);
@@ -110,6 +116,7 @@ export const numArgFuncs: Map<string, (_: number) => APGLExpr> = new Map([
     // U
     ["inc_u", A.incU],
     ["tdec_u", A.tdecU],
+
     // B
     ["inc_b", A.incB],
     ["tdec_b", A.tdecB],
@@ -225,6 +232,8 @@ export function transpileAPGMExpr(e: APGMExpr): APGLExpr {
             }`,
             e.span,
         );
+    } else if (e instanceof WhileAPGMExpr) {
+        return new WhileAPGLExpr(e.modifier, t(e.cond), t(e.body));
     } else if (e instanceof VarAPGMExpr) {
         throw new ErrorWithSpan(
             `macro variable is not allowed: variable "${e.name}"${
@@ -232,8 +241,6 @@ export function transpileAPGMExpr(e: APGMExpr): APGLExpr {
             }`,
             e.span,
         );
-    } else if (e instanceof WhileAPGMExpr) {
-        return new WhileAPGLExpr(e.modifier, t(e.cond), t(e.body));
     }
 
     throw Error("internal error");

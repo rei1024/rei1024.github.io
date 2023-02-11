@@ -1,23 +1,23 @@
 {
-  "private": true,
-  "name": "apgsembly-emulator-2",
-  "version": "0.1.0",
-  "description": "Emulator for APGsembly",
-  "main": "frontend/index.js",
-  "type": "module",
-  "directories": {
-    "doc": "doc",
-    "test": "test"
-  },
-  "scripts": {
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/TanakaSatoshiTC/apgsembly-emulator-2.git"
-  },
-  "author": "Rei",
-  "license": "MIT",
-  "devDependencies": {
-    "cypress": "12.1.0"
-  }
+    "private": true,
+    "name": "apgsembly-emulator-2",
+    "version": "0.1.0",
+    "description": "Emulator for APGsembly",
+    "main": "frontend/index.js",
+    "type": "module",
+    "directories": {
+        "doc": "doc",
+        "test": "test"
+    },
+    "scripts": {
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/TanakaSatoshiTC/apgsembly-emulator-2.git"
+    },
+    "author": "Rei",
+    "license": "MIT",
+    "devDependencies": {
+        "cypress": "12.4.0"
+    }
 }

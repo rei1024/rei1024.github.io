@@ -13,14 +13,16 @@ export function validateNoDuplicatedActionCommand(command) {
     if (actions.length <= 1) {
         return undefined;
     }
-    const actionStrs = actions.map(x => x.pretty());
+    const actionStrs = actions.map((x) => x.pretty());
     actionStrs.sort();
     const maxIndex = actionStrs.length - 1;
     for (let i = 0; i < maxIndex; i++) {
         const act1 = actionStrs[i];
         const act2 = actionStrs[i + 1];
         if (act1 === act2) {
-            return `Duplicated actions "${act1}" in "${command.pretty()}"${addLineNumber(command)}`;
+            return `Duplicated actions "${act1}" in "${command.pretty()}"${
+                addLineNumber(command)
+            }`;
         }
     }
     return undefined;

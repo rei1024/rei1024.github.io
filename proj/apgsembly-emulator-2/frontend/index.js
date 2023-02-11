@@ -3,7 +3,7 @@
 // critical path
 import {} from "./util/selector.js";
 import {} from "./util/create.js";
-import {} from "./util/continuously-variable-emitter.js";
+import {} from "./util/valve.js";
 import {} from "./util/get-message.js";
 import {} from "./util/chunk.js";
 import {} from "./util/spinner.js";
@@ -17,38 +17,40 @@ import {} from "./components/error.js";
 import {} from "./components/output.js";
 
 import { setupFrequencyInput } from "./components/frequency_input.js";
-import { setCustomError, removeCustomError } from "./util/validation_ui.js";
+import { removeCustomError, setCustomError } from "./util/validation_ui.js";
 import { importFileAsText } from "./util/import_file.js";
 import { idle } from "./util/idle.js";
-import { localStorageSetItem, localStorageGetItem, localStorageRemoveItem } from "./util/local-storage.js";
+import {
+    localStorageGetItem,
+    localStorageRemoveItem,
+    localStorageSetItem,
+} from "./util/local-storage.js";
 import { hasFocus } from "./util/has-focus.js";
 
 import {
-    $input,
-    $toggle,
-    $reset,
-    $step,
-    $configButton,
-    $frequencyInput,
     $b2dDetail,
-    $unaryRegisterDetail,
+    $b2dFlipUpsideDown,
+    $b2dHidePointer,
     $binaryRegisterDetail,
-    $fileImport,
-    $exampleCodes,
-    $examples,
-
+    $configButton,
     // Modal
     $configModalContent,
-    $stepInput,
-    binaryConfig,
     $darkMode,
     $darkModeLabel,
-    $b2dHidePointer,
-    $b2dFlipUpsideDown,
-
+    $exampleCodes,
+    $examples,
+    $fileImport,
+    $frequencyInput,
+    $input,
+    $reset,
     // Stats
     $statsModal,
+    $step,
+    $stepInput,
+    $toggle,
+    $unaryRegisterDetail,
     $viewStateDiagramButton,
+    binaryConfig,
 } from "./bind.js";
 
 import { App } from "./app.js";
@@ -60,29 +62,29 @@ const DATA_DIR = "./frontend/data/";
 const app = new App();
 
 // Reset button
-$reset.addEventListener('click', () => {
+$reset.addEventListener("click", () => {
     app.reset();
 });
 
 // Toggle button
-$toggle.addEventListener('click', () => {
+$toggle.addEventListener("click", () => {
     app.toggle();
 });
 
 // Step button
-$step.addEventListener('click', () => {
+$step.addEventListener("click", () => {
     app.doStep();
 });
 
 // サンプル
-$exampleCodes.forEach(e => {
-    e.addEventListener('click', async () => {
+$exampleCodes.forEach((e) => {
+    e.addEventListener("click", async () => {
         $examples.style.opacity = "0.5";
-        const src = e.dataset['src'];
+        const src = e.dataset["src"];
         try {
             const response = await fetch(DATA_DIR + src);
             if (!response.ok) {
-                throw new Error('error');
+                throw new Error("error");
             }
             app.setInputAndReset(await response.text());
             // スクロール
@@ -99,15 +101,15 @@ $exampleCodes.forEach(e => {
 setupFrequencyInput($frequencyInput, app);
 
 // 開閉で描画
-$b2dDetail.addEventListener('toggle', () => {
+$b2dDetail.addEventListener("toggle", () => {
     app.renderB2D();
 });
 
-$binaryRegisterDetail.addEventListener('toggle', () => {
+$binaryRegisterDetail.addEventListener("toggle", () => {
     app.renderBinary();
 });
 
-$unaryRegisterDetail.addEventListener('toggle', () => {
+$unaryRegisterDetail.addEventListener("toggle", () => {
     app.renderUnary();
 });
 
@@ -116,7 +118,7 @@ const scrollToTop = () => {
 };
 
 // ファイルインポート
-importFileAsText($fileImport, result => {
+importFileAsText($fileImport, (result) => {
     app.setInputAndReset(result);
     // スクロール
     scrollToTop();
@@ -124,10 +126,10 @@ importFileAsText($fileImport, result => {
 
 // ** Modal ** //
 
-$stepInput.addEventListener('input', () => {
+$stepInput.addEventListener("input", () => {
     const n = Number($stepInput.value);
     if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
-        setCustomError($stepInput, 'Enter a positive integer');
+        setCustomError($stepInput, "Enter a positive integer");
         app.stepConfig = 1;
     } else {
         removeCustomError($stepInput);
@@ -148,44 +150,51 @@ function setupCheckbox($checkbox, key) {
 }
 
 // バイナリを非表示にする
-const HIDE_BITS_KEY = 'hide_binary';
+const HIDE_BITS_KEY = "hide_binary";
 setupCheckbox(binaryConfig.$hideBits, HIDE_BITS_KEY);
 
-const REVERSE_BITS_KEY = 'reverse_binary';
+const REVERSE_BITS_KEY = "reverse_binary";
 setupCheckbox(binaryConfig.$reverseBits, REVERSE_BITS_KEY);
 
-const SHOW_BINARY_IN_DECIMAL_KEY = 'show_binary_in_decimal';
-setupCheckbox(binaryConfig.$showBinaryValueInDecimal, SHOW_BINARY_IN_DECIMAL_KEY);
+const SHOW_BINARY_IN_DECIMAL_KEY = "show_binary_in_decimal";
+setupCheckbox(
+    binaryConfig.$showBinaryValueInDecimal,
+    SHOW_BINARY_IN_DECIMAL_KEY,
+);
 
-const SHOW_BINARY_IN_HEX_KEY = 'show_binary_in_hex';
+const SHOW_BINARY_IN_HEX_KEY = "show_binary_in_hex";
 setupCheckbox(binaryConfig.$showBinaryValueInHex, SHOW_BINARY_IN_HEX_KEY);
 
 // B2D
-$b2dHidePointer.addEventListener('change', () => {
+$b2dHidePointer.addEventListener("change", () => {
     app.renderB2D();
 });
 
-const B2D_FLIP_UPSIDE_DOWN_KEY = 'b2d_flip_upside_down';
+const B2D_FLIP_UPSIDE_DOWN_KEY = "b2d_flip_upside_down";
 setupCheckbox($b2dFlipUpsideDown, B2D_FLIP_UPSIDE_DOWN_KEY);
 
 // showの場合クラスが追加されない
-$statsModal.addEventListener('shown.bs.modal', () => {
+$statsModal.addEventListener("shown.bs.modal", () => {
     app.renderStats();
 });
 
-$viewStateDiagramButton.addEventListener('click', () => {
+$viewStateDiagramButton.addEventListener("click", () => {
     // 1MB以上は無し
     if ($input.value.length >= 10 ** 6) {
         return;
     }
-    localStorageSetItem('state-diagram-input', $input.value);
-    window.open('./labs/diagram/index.html', undefined, 'noreferrer=yes,noopener=yes');
+    localStorageSetItem("state-diagram-input", $input.value);
+    window.open(
+        "./labs/diagram/index.html",
+        undefined,
+        "noreferrer=yes,noopener=yes",
+    );
 });
 
 // ダークモード
 // bodyタグ直下で設定してDark mode flashingを防ぐ
-const DARK_MODE_KEY = 'dark_mode';
-$darkMode.addEventListener('change', () => {
+const DARK_MODE_KEY = "dark_mode";
+$darkMode.addEventListener("change", () => {
     const onOrOff = $darkMode.checked ? "on" : "off";
     if (onOrOff === "on") {
         localStorageSetItem(DARK_MODE_KEY, onOrOff);
@@ -193,7 +202,7 @@ $darkMode.addEventListener('change', () => {
         localStorageRemoveItem(DARK_MODE_KEY);
     }
 
-    document.body.setAttribute('apge_dark', onOrOff);
+    document.body.setAttribute("apge_dark", onOrOff);
 
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
 
@@ -211,7 +220,7 @@ $darkMode.addEventListener('change', () => {
 // keyboard input
 // Enter: toggle Start and Stop
 // Space: Step
-document.addEventListener('keydown', e => {
+document.addEventListener("keydown", (e) => {
     // 入力中は無し
     if (hasFocus() || e.isComposing) {
         return;
@@ -277,8 +286,14 @@ idle(() => {
         { key: B2D_FLIP_UPSIDE_DOWN_KEY, checkbox: $b2dFlipUpsideDown },
         { key: REVERSE_BITS_KEY, checkbox: binaryConfig.$reverseBits },
         { key: HIDE_BITS_KEY, checkbox: binaryConfig.$hideBits },
-        { key: SHOW_BINARY_IN_DECIMAL_KEY, checkbox: binaryConfig.$showBinaryValueInDecimal },
-        { key: SHOW_BINARY_IN_HEX_KEY, checkbox: binaryConfig.$showBinaryValueInHex },
+        {
+            key: SHOW_BINARY_IN_DECIMAL_KEY,
+            checkbox: binaryConfig.$showBinaryValueInDecimal,
+        },
+        {
+            key: SHOW_BINARY_IN_HEX_KEY,
+            checkbox: binaryConfig.$showBinaryValueInHex,
+        },
     ];
 
     for (const { key, checkbox } of items) {
@@ -290,7 +305,7 @@ idle(() => {
     // ダークモードについてはbodyタグ直下でも設定する
     // チェックボタンはここで処理する
     if (localStorageGetItem(DARK_MODE_KEY) === "on") {
-        document.body.setAttribute('apge_dark', "on");
+        document.body.setAttribute("apge_dark", "on");
         $darkMode.checked = true;
         $darkModeLabel.textContent = "On";
     }
@@ -311,6 +326,6 @@ if ("serviceWorker" in navigator) {
 
         // unregister all
         const registrations = await navigator.serviceWorker.getRegistrations();
-        registrations.map(registration => registration.unregister());
+        registrations.map((registration) => registration.unregister());
     });
 }

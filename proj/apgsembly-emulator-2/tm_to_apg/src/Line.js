@@ -4,43 +4,47 @@
  */
 
 /**
- *
  * @param {string} str
  * @returns {Direction | undefined}
  */
 export function parseDirection(str) {
     switch (str) {
-        case "l": return str;
-        case "L": return "l";
-        case "r": return str;
-        case "R": return "r";
-        case "*": return str;
-        default: return undefined;
+        case "l":
+            return str;
+        case "L":
+            return "l";
+        case "r":
+            return str;
+        case "R":
+            return "r";
+        case "*":
+            return str;
+        default:
+            return undefined;
     }
 }
 
 /**
  * <current symbol> or <current state>
-*/
-export const WILDCARD = '*';
+ */
+export const WILDCARD = "*";
 
 /**
  * <new symbol> or <new state>
  */
-export const NO_CHANGE = '*';
+export const NO_CHANGE = "*";
 
-export const BLANK_SYMBOL = '_';
+export const BLANK_SYMBOL = "_";
 
 /**
  * @returns {never}
  */
 function internalError() {
-    throw Error('internal error');
+    throw Error("internal error");
 }
 
 export class Line {
     /**
-     *
      * @param {{
      *  currentState: string | undefined; // undefined for wildcard
      *  currentSymbol: string | undefined; // undefined for wildcard
@@ -50,7 +54,16 @@ export class Line {
      *  breakpoint?: boolean | undefined // default is false
      * }} param0
      */
-    constructor({ currentState, currentSymbol, newSymbol, direction, newState, breakpoint }) {
+    constructor(
+        {
+            currentState,
+            currentSymbol,
+            newSymbol,
+            direction,
+            newState,
+            breakpoint,
+        },
+    ) {
         /**
          * @type {string | undefined}
          * @readonly
@@ -89,7 +102,6 @@ export class Line {
     }
 
     /**
-     *
      * @param {string | undefined} currentState
      * @param {string | undefined} currentSymbol
      * @param {string | undefined} newSymbol
@@ -98,27 +110,44 @@ export class Line {
      * @param {boolean | undefined} breakpoint
      * @returns {Line}
      */
-    static make(currentState, currentSymbol, newSymbol, direction, newState, breakpoint = undefined) {
-        return new Line({ currentState, currentSymbol, newSymbol, direction, newState, breakpoint });
+    static make(
+        currentState,
+        currentSymbol,
+        newSymbol,
+        direction,
+        newState,
+        breakpoint = undefined,
+    ) {
+        return new Line({
+            currentState,
+            currentSymbol,
+            newSymbol,
+            direction,
+            newState,
+            breakpoint,
+        });
     }
 
     /**
-     *
      * @param {string} str
      * @returns {Line | Error | undefined}
      */
     static parse(str) {
-        const withoutComment = str.includes(';') ? str.slice(0, str.indexOf(';')) : str;
+        const withoutComment = str.includes(";")
+            ? str.slice(0, str.indexOf(";"))
+            : str;
         const trimmed = withoutComment.trim();
 
-        const array = trimmed.split(/\s+/u).filter(x => x !== '');
+        const array = trimmed.split(/\s+/u).filter((x) => x !== "");
 
         if (array.length === 0) {
             return undefined;
         }
 
         if (array.length < 5) {
-            return Error(`must have 5 components but it has ${array.length} at "${str}".`);
+            return Error(
+                `must have 5 components but it has ${array.length} at "${str}".`,
+            );
         }
 
         let [
@@ -163,7 +192,9 @@ export class Line {
             if (breakpoint === "!") {
                 breakpointBoolean = true;
             } else {
-                return Error(`breakpoint is "!" but it is "${breakpoint}" at "${str}".`);
+                return Error(
+                    `breakpoint is "!" but it is "${breakpoint}" at "${str}".`,
+                );
             }
         }
 
@@ -173,7 +204,7 @@ export class Line {
             newSymbol,
             direction,
             newState,
-            breakpoint: breakpointBoolean
+            breakpoint: breakpointBoolean,
         });
     }
 
@@ -181,15 +212,18 @@ export class Line {
      * @returns {string}
      */
     pretty() {
-        return `${this.currentState ?? WILDCARD} ${this.currentSymbol ?? WILDCARD} ${this.newSymbol ?? NO_CHANGE} ${this.direction} ${this.newState ?? NO_CHANGE}`;
+        return `${this.currentState ?? WILDCARD} ${
+            this.currentSymbol ?? WILDCARD
+        } ${this.newSymbol ?? NO_CHANGE} ${this.direction} ${
+            this.newState ?? NO_CHANGE
+        }`;
     }
 }
 
 /**
- *
  * @param {string} state
  * @returns {boolean}
  */
 export function isHaltState(state) {
-    return state.toLowerCase().startsWith('halt');
+    return state.toLowerCase().startsWith("halt");
 }

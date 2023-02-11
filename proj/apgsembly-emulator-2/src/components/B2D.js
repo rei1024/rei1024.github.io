@@ -1,14 +1,14 @@
 // @ts-check
 
 import {
-    B2DAction,
-    B2D_INC,
-    B2D_TDEC,
-    B2D_SET,
-    B2D_READ,
     B2D_B2D,
     B2D_B2DX,
     B2D_B2DY,
+    B2D_INC,
+    B2D_READ,
+    B2D_SET,
+    B2D_TDEC,
+    B2DAction,
 } from "../actions/B2DAction.js";
 import { internalError } from "../actions/Action.js";
 
@@ -36,13 +36,12 @@ function generateArray(n, f) {
  */
 export class B2D {
     /**
-     *
      * @param {number} x
      * @param {number} y
      */
     constructor(x = 0, y = 0) {
         if (x < 0 || y < 0) {
-            throw RangeError('B2D constructor: negative');
+            throw RangeError("B2D constructor: negative");
         }
         this.x = x;
         this.y = y;
@@ -74,7 +73,6 @@ export class B2D {
     }
 
     /**
-     *
      * @returns {number}
      */
     getMaxX() {
@@ -82,7 +80,6 @@ export class B2D {
     }
 
     /**
-     *
      * @returns {number}
      */
     getMaxY() {
@@ -90,7 +87,6 @@ export class B2D {
     }
 
     /**
-     *
      * @param {B2DAction} act
      * @returns {0 | 1 | void}
      */
@@ -98,35 +94,46 @@ export class B2D {
         switch (act.op) {
             case B2D_INC: {
                 switch (act.axis) {
-                    case B2D_B2DX: return this.incB2DX();
-                    case B2D_B2DY: return this.incB2DY();
-                    case B2D_B2D: internalError();
+                    case B2D_B2DX:
+                        return this.incB2DX();
+                    case B2D_B2DY:
+                        return this.incB2DY();
+                    case B2D_B2D:
+                        internalError();
                 }
                 break;
             }
             case B2D_TDEC: {
                 switch (act.axis) {
-                    case B2D_B2DX: return this.tdecB2DX();
-                    case B2D_B2DY: return this.tdecB2DY();
-                    case B2D_B2D: internalError();
+                    case B2D_B2DX:
+                        return this.tdecB2DX();
+                    case B2D_B2DY:
+                        return this.tdecB2DY();
+                    case B2D_B2D:
+                        internalError();
                 }
                 break;
             }
             case B2D_READ: {
                 switch (act.axis) {
-                    case B2D_B2D: return this.read();
-                    default: internalError();
+                    case B2D_B2D:
+                        return this.read();
+                    default:
+                        internalError();
                 }
                 break;
             }
             case B2D_SET: {
                 switch (act.axis) {
-                    case B2D_B2D: return this.set();
-                    default: internalError();
+                    case B2D_B2D:
+                        return this.set();
+                    default:
+                        internalError();
                 }
                 break;
             }
-            default: internalError();
+            default:
+                internalError();
         }
     }
 
@@ -209,16 +216,17 @@ export class B2D {
             internalError();
         }
         if (arrayY[this.x] === 1) {
-            throw Error(`SET B2D: Tried to set when it was already 1. x = ${this.x}, y = ${this.y}`);
+            throw Error(
+                `SET B2D: Tried to set when it was already 1. x = ${this.x}, y = ${this.y}`,
+            );
         }
         arrayY[this.x] = 1;
     }
 
     /**
-     *
      * @returns {string}
      */
     toString() {
-        return this.array.map(a => a.join("")).join("\n");
+        return this.array.map((a) => a.join("")).join("\n");
     }
 }

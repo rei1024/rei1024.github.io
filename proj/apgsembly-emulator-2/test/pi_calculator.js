@@ -302,4 +302,4 @@ OUTD2; NZ; OUTD3; INC U3, NOP
 OUTD3; ZZ; ITER1; INC U3, NOP
 `;
 
-export const piCalculator = [part1, part2, part3, part4].join('');
+export const piCalculator = [part1, part2, part3, part4].join("");

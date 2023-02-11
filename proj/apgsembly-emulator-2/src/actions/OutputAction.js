@@ -6,7 +6,6 @@ const OUTPUT_STRING = "OUTPUT";
 
 export class OutputAction extends Action {
     /**
-     *
      * @param {string} digit
      */
     constructor(digit) {
@@ -27,7 +26,6 @@ export class OutputAction extends Action {
     }
 
     /**
-     *
      * @param {string} str
      * @returns {OutputAction | undefined}
      */
@@ -54,7 +52,6 @@ export class OutputAction extends Action {
     }
 
     /**
-     *
      * @override
      * @param {Action} action
      * @returns {boolean}

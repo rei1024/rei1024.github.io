@@ -49,7 +49,7 @@ export function validateAll(commands) {
     }
 
     if (errors.length > 0) {
-        return errors.join('\n');
+        return errors.join("\n");
     }
 
     return undefined;

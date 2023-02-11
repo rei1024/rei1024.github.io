@@ -21,7 +21,6 @@ export class NopAction extends Action {
     }
 
     /**
-     *
      * @param {string} str
      * @returns {NopAction | undefined}
      */
@@ -38,7 +37,6 @@ export class NopAction extends Action {
     }
 
     /**
-     *
      * @returns @override
      */
     doesReturnValue() {
@@ -46,7 +44,6 @@ export class NopAction extends Action {
     }
 
     /**
-     *
      * @override
      * @param {Action} action
      * @returns {boolean}

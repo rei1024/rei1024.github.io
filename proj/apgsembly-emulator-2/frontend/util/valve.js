@@ -1,30 +1,17 @@
 // @ts-check
 
-export class CVEEvent extends Event {
-    /**
-     * @param {number} value
-     */
-    constructor(value) {
-        super("emit");
-
-        /**
-         * integer
-         */
-        this.value = value;
-    }
-}
-
 /**
- * 連続可変エミッター
+ * 流量調節
  */
-export class CVE extends EventTarget {
+export class Valve extends EventTarget {
     #fractionStep = 0;
     #prevTime = -1;
     /**
      * 作成時は非活性状態
+     * @param {(value: number) => void} handler
      * @param {{ frequency: number, signal?: AbortSignal }} param0
      */
-    constructor({ frequency, signal }) {
+    constructor(handler, { frequency, signal }) {
         super();
 
         /**
@@ -50,17 +37,18 @@ export class CVE extends EventTarget {
         const raf = requestAnimationFrame;
 
         /**
-         *
          * @param {number} time
          */
-        const update = time => {
+        const update = (time) => {
             if (this._enabled && this.#prevTime !== -1) {
                 const diff = time - this.#prevTime;
                 const prevFractionStep = this.#fractionStep;
-                const nextFractionStep = prevFractionStep + (diff / 1000) * this._frequency;
-                const value = Math.floor(nextFractionStep) - Math.floor(prevFractionStep);
+                const nextFractionStep = prevFractionStep +
+                    (diff / 1000) * this._frequency;
+                const value = Math.floor(nextFractionStep) -
+                    Math.floor(prevFractionStep);
                 this.#fractionStep = nextFractionStep;
-                this.dispatchEvent(new CVEEvent(value));
+                handler(value);
             }
 
             this.#prevTime = time;
@@ -69,7 +57,7 @@ export class CVE extends EventTarget {
 
         this._id = raf(update);
 
-        signal?.addEventListener('abort', () => {
+        signal?.addEventListener("abort", () => {
             this.abort();
         });
     }

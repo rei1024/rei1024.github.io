@@ -10,47 +10,46 @@ import { UnaryUI } from "./components/unary_ui.js";
 import { BinaryUI } from "./components/binary_ui.js";
 import { renderB2D } from "./components/renderB2D.js";
 import { StatsUI } from "./components/stats_ui.js";
-import { initializeBreakpointSelect, getBreakpointInput } from "./components/breakpoint.js";
+import {
+    getBreakpointInput,
+    initializeBreakpointSelect,
+} from "./components/breakpoint.js";
 
-import { CVE, CVEEvent } from "./util/continuously-variable-emitter.js";
+import { Valve } from "./util/valve.js";
 import { getMessage } from "./util/get-message.js";
 import { makeSpinner } from "./util/spinner.js";
 
 import {
-    $error,
-    $input,
-    $output,
-    $stepCount,
-    $toggle,
-    $reset,
-    $step,
-    $stepText,
-    $currentState,
-    $previousOutput,
-    $freqencyOutput,
-    $command,
-    $canvas,
-    context,
-    $b2dPos,
+    $addSubMul,
     $b2dDetail,
-    $unaryRegister,
-    $unaryRegisterDetail,
+    $b2dFlipUpsideDown,
+    $b2dHidePointer,
+    $b2dPos,
     $binaryRegister,
     $binaryRegisterDetail,
-    $addSubMul,
-
-    // Modal
-    binaryConfig,
-    $breakpointSelect,
     $breakpointInputSelect,
-    $b2dHidePointer,
-    $b2dFlipUpsideDown,
-
-    // Stats
-    $statsModal,
+    $breakpointSelect,
+    $canvas,
+    $command,
+    $currentState,
+    $error,
+    $freqencyOutput,
+    $input,
+    $output,
+    $previousOutput,
+    $reset,
     $statsBody,
-    $statsNumberOfStates,
     $statsButton,
+    $statsModal,
+    $statsNumberOfStates,
+    $step,
+    $stepCount,
+    $stepText,
+    $toggle,
+    $unaryRegister,
+    $unaryRegisterDetail,
+    binaryConfig,
+    context,
 } from "./bind.js";
 
 /** index.htmlと同期すること */
@@ -68,7 +67,7 @@ export class App {
     /** @type {AppState | undefined} */
     #prevAppState;
     /** エラーメッセージ */
-    #errorMessage = '';
+    #errorMessage = "";
     /** @type {Machine | undefined} */
     #machine;
     /** @type {undefined | number} */
@@ -80,7 +79,7 @@ export class App {
     /** @readonly */
     #statsUI = new StatsUI($statsBody, $statsNumberOfStates);
     /** @readonly */
-    #cve;
+    #valve;
     /**
      * アプリ状態
      * @type {AppState}
@@ -90,20 +89,16 @@ export class App {
         /** ステップ数設定 */
         this.stepConfig = 1;
 
-        this.#cve = new CVE({ frequency: DEFUALT_FREQUENCY });
-        const this_ = this;
-        this.#cve.addEventListener('emit', function listener(ev) {
-            if (ev instanceof CVEEvent) {
-                this_.run(ev.value);
-            }
-        });
+        this.#valve = new Valve((value) => {
+            this.run(value);
+        }, { frequency: DEFUALT_FREQUENCY });
     }
 
     /**
      * @param {number} freq
      */
     setFrequency(freq) {
-        this.#cve.frequency = freq;
+        this.#valve.frequency = freq;
         this.#renderFrequencyOutput();
     }
 
@@ -125,7 +120,7 @@ export class App {
                 break;
             }
             default: {
-                throw Error('start: unreachable');
+                throw Error("start: unreachable");
             }
         }
         this.render();
@@ -228,9 +223,8 @@ export class App {
     reset() {
         this.#errorMessage = "";
         this.#machine = undefined;
-        this.#cve.reset();
+        this.#valve.reset();
 
-        // Parse success
         try {
             this.#machine = Machine.fromString($input.value);
             this.#onMachineSet();
@@ -250,7 +244,7 @@ export class App {
      * 周波数の表示
      */
     #renderFrequencyOutput() {
-        const currentFreqeucy = this.#cve.frequency;
+        const currentFreqeucy = this.#valve.frequency;
         if (this.#prevFrequency !== currentFreqeucy) {
             $freqencyOutput.textContent = currentFreqeucy.toLocaleString();
         }
@@ -294,11 +288,11 @@ export class App {
             context,
             b2d,
             $b2dHidePointer.checked,
-            $b2dFlipUpsideDown.checked
+            $b2dFlipUpsideDown.checked,
         );
 
         // 描画に時間がかかっている場合閉じる
-        if (this.#appState === 'Running' && performance.now() - start >= 200) {
+        if (this.#appState === "Running" && performance.now() - start >= 200) {
             $b2dDetail.open = false;
         }
     }
@@ -322,7 +316,7 @@ export class App {
                 binaryConfig.$hideBits.checked,
                 binaryConfig.$reverseBits.checked,
                 binaryConfig.$showBinaryValueInDecimal.checked,
-                binaryConfig.$showBinaryValueInHex.checked
+                binaryConfig.$showBinaryValueInHex.checked,
             );
         }
     }
@@ -336,12 +330,15 @@ export class App {
         if (this.#machine === undefined) {
             this.#statsUI.clear();
         } else {
-            this.#statsUI.initialize(this.#machine.getStateStats(), this.#machine.states);
+            this.#statsUI.initialize(
+                this.#machine.getStateStats(),
+                this.#machine.states,
+            );
         }
     }
 
     renderStats() {
-        if (!$statsModal.classList.contains('show')) {
+        if (!$statsModal.classList.contains("show")) {
             return;
         }
         if (this.#machine === undefined) {
@@ -350,7 +347,7 @@ export class App {
         }
         this.#statsUI.render(
             this.#machine.getStateStats(),
-            this.#machine.currentStateIndex
+            this.#machine.currentStateIndex,
         );
     }
 
@@ -405,9 +402,9 @@ export class App {
      * 全体を描画する
      */
     render() {
-        // cve
         const appState = this.#appState;
-        this.#cve.disabled = appState !== "Running";
+        // set valve
+        this.#valve.disabled = appState !== "Running";
 
         // Stop状態はStepで変化する可能性がある
         if (this.#prevAppState !== appState || appState === "Stop") {
@@ -415,9 +412,9 @@ export class App {
 
             // ParseErrorのときにエラー表示
             if (appState === "ParseError") {
-                $input.classList.add('is-invalid');
+                $input.classList.add("is-invalid");
             } else {
-                $input.classList.remove('is-invalid');
+                $input.classList.remove("is-invalid");
             }
         }
 
@@ -431,7 +428,7 @@ export class App {
         $stepCount.textContent = machine?.stepCount.toLocaleString() ?? "";
 
         if (this.stepConfig === 1) {
-            $stepText.textContent = 'Step';
+            $stepText.textContent = "Step";
         } else {
             $stepText.textContent = `${this.stepConfig.toLocaleString()} Steps`;
         }
@@ -440,7 +437,9 @@ export class App {
         this.#renderOutput();
         this.renderUnary();
         this.renderBinary();
-        $addSubMul.textContent = machine?.actionExecutor.addSubMulToUIString() ?? '';
+        $addSubMul.textContent =
+            machine?.actionExecutor.addSubMulToUIString() ??
+                "";
         this.renderB2D();
         this.renderStats();
 
@@ -483,7 +482,7 @@ export class App {
                 steps,
                 isRunning,
                 breakpointIndex,
-                breakpointInputValue
+                breakpointInputValue,
             );
             if (resultState !== undefined) {
                 this.#appState = resultState;

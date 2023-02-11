@@ -1,11 +1,11 @@
 // @ts-check
 
 import {
-    BRegAction,
     B_INC,
-    B_TDEC,
+    B_READ,
     B_SET,
-    B_READ
+    B_TDEC,
+    BRegAction,
 } from "../actions/BRegAction.js";
 import { internalError } from "../actions/Action.js";
 
@@ -16,10 +16,10 @@ import { internalError } from "../actions/Action.js";
  * @throws
  */
 function parseBits(str) {
-    return [...str].map(c => {
-        if (c === '0') {
+    return [...str].map((c) => {
+        if (c === "0") {
             return 0;
-        } else if (c === '1') {
+        } else if (c === "1") {
             return 1;
         } else {
             throw Error(`Invalid #REGISTERS: "${str}"`);
@@ -27,7 +27,7 @@ function parseBits(str) {
     });
 }
 
-const hasBigInt = typeof BigInt !== 'undefined';
+const hasBigInt = typeof BigInt !== "undefined";
 
 /**
  * Bn: Binary Register
@@ -45,7 +45,6 @@ export class BReg {
     }
 
     /**
-     *
      * @param {BRegAction} act
      * @returns {0 | 1 | void}
      */
@@ -95,18 +94,18 @@ export class BReg {
                 const value = bits[pointer];
                 if (value === 1) {
                     throw Error(
-                        `The bit of the binary register B${ act.regNumber } is already 1`
+                        `The bit of the binary register B${act.regNumber} is already 1`,
                     );
                 }
                 bits[pointer] = 1;
                 break;
             }
-            default: throw Error('BReg action: ' + act.op);
+            default:
+                throw Error("BReg action: " + act.op);
         }
     }
 
     /**
-     *
      * @param {BRegAction} act
      * @param {number} n
      */
@@ -122,7 +121,7 @@ export class BReg {
                 break;
             }
             default: {
-                throw Error('todo');
+                throw Error("todo");
             }
         }
     }
@@ -135,7 +134,6 @@ export class BReg {
     }
 
     /**
-     *
      * @param {(0 | 1)[]} bits
      */
     setBits(bits) {
@@ -210,7 +208,6 @@ export class BReg {
     }
 
     /**
-     *
      * @returns {string}
      */
     toBinaryString() {
@@ -245,21 +242,19 @@ export class BReg {
     }
 
     /**
-     *
      * @param {string} key
      * @param {unknown} value
      */
     setByRegistersInit(key, value) {
         /**
-         *
          * @param {string} msg
          */
-        const error = msg => {
+        const error = (msg) => {
             throw Error(`Invalid #REGISTERS ${msg}`);
         };
         const debugStr = `"${key}": ${JSON.stringify(value)}`;
         // 数字の場合の処理は数字をバイナリにして配置する TODO 必要か確認
-        if (typeof value === 'number') {
+        if (typeof value === "number") {
             this.setBits(parseBits(value.toString(2)).reverse());
             this.extend();
         } else if (!Array.isArray(value) || value.length !== 2) {
@@ -270,7 +265,7 @@ export class BReg {
             /** @type {unknown} */
             const value1 = value[1];
 
-            if (typeof value0 !== 'number' || typeof value1 !== 'string') {
+            if (typeof value0 !== "number" || typeof value1 !== "string") {
                 error(debugStr);
             } else if (value0 < 0 || !Number.isInteger(value0)) {
                 error(debugStr);

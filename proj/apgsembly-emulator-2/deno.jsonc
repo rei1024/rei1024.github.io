@@ -1,6 +1,6 @@
 {
     "tasks": {
-        "up": "deno run --allow-net --allow-read https://deno.land/std@0.170.0/http/file_server.ts . -p 1123",
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.177.0/http/file_server.ts . -p 1123",
         "t": "deno test --no-check --parallel src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ labs/diagram/ generator/",
         "w": "deno test --watch --no-check src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ labs/diagram/ generator/",
         "cy": "node ./node_modules/.bin/cypress open",
@@ -9,20 +9,37 @@
         "chore": "deno upgrade && npm audit && git gc",
         "bench": "deno bench --no-check test/bench.js",
         "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run build.ts",
-        "pre-commit": "deno task lint && deno task t"
+        "pre-commit": "deno fmt --check && deno task lint && deno task t"
     },
     "lint": {
         "files": {
-            "exclude": ["node_modules/", "cypress_default/", "frontend/index.dist.js", "doc/apgjson/"]
+            "exclude": [
+                "node_modules/",
+                "cypress_default/",
+                "frontend/index.dist.js",
+                "doc/apgjson/"
+            ]
         },
         "rules": {
             "include": ["no-throw-literal", "no-sparse-arrays", "no-eval"],
-            "exclude": ["ban-ts-comment", "no-unused-vars", "no-this-alias", "no-inferrable-types"]
+            "exclude": [
+                "ban-ts-comment",
+                "no-unused-vars",
+                "no-this-alias",
+                "no-inferrable-types"
+            ]
         }
     },
     "fmt": {
+        "options": {
+            "indentWidth": 4
+        },
         "files": {
-            "exclude": ["node_modules/", "cypress_default/", "frontend/index.dist.js"]
+            "exclude": [
+                "node_modules/",
+                "cypress_default/",
+                "frontend/index.dist.js"
+            ]
         }
     }
 }

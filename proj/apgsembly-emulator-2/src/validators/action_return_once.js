@@ -1,7 +1,7 @@
 // @ts-check
 
 import { HaltOutAction } from "../actions/HaltOutAction.js";
-import { Command, addLineNumber } from "../Command.js";
+import { addLineNumber, Command } from "../Command.js";
 
 /**
  * アクションが値を一度だけ返すか検査する
@@ -12,20 +12,20 @@ import { Command, addLineNumber } from "../Command.js";
 export function validateActionReturnOnceCommand(command) {
     // FIXME: HALT_OUTが含まれる場合は一旦無視
     const actions = command.actions;
-    if (actions.some(x => x instanceof HaltOutAction)) {
+    if (actions.some((x) => x instanceof HaltOutAction)) {
         return undefined;
     }
 
-    const valueReturnActions = actions.filter(x => x.doesReturnValue());
+    const valueReturnActions = actions.filter((x) => x.doesReturnValue());
     if (valueReturnActions.length === 1) {
         return undefined;
     } else if (valueReturnActions.length === 0) {
-        return `Does not produce the return value in "${command.pretty()}"${addLineNumber(command)}`;
+        return `Does not produce the return value in "${command.pretty()}"${
+            addLineNumber(command)
+        }`;
     } else {
-        return `Does not contain exactly one action that produces a return value in "${
-            command.pretty()
-        }": Actions that produce value are ${
-            valueReturnActions.map(x => `"${x.pretty()}"`).join(', ')
+        return `Does not contain exactly one action that produces a return value in "${command.pretty()}": Actions that produce value are ${
+            valueReturnActions.map((x) => `"${x.pretty()}"`).join(", ")
         }${addLineNumber(command)}`;
     }
 }

@@ -11,14 +11,12 @@ export const App = {
      */
     _machine: undefined,
     /**
-     *
      * @param {string} src
      */
     initialize(src) {
         this._machine = Machine.fromString(src);
     },
     /**
-     *
      * @param {number} n
      * @returns
      */
@@ -34,7 +32,7 @@ export const App = {
     },
     getSteps() {
         return this._machine?.stepCount;
-    }
+    },
 };
 
 Comlink.expose(App);

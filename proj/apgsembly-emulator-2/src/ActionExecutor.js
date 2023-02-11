@@ -22,7 +22,7 @@ import { UReg } from "./components/UReg.js";
 import { LegacyTReg } from "./components/LegacyTReg.js";
 
 /**
- * @param {string} type
+ * @param {"B" | "U" | "T"} type
  * @param {number} regNum
  * @returns {never}
  */
@@ -53,21 +53,29 @@ export class ActionExecutor {
      *    legacyTRegisterNumbers: ReadonlyArray<number>;
      * }} param0
      */
-    constructor({ unaryRegisterNumbers, binaryRegisterNumbers, legacyTRegisterNumbers }) {
+    constructor(
+        { unaryRegisterNumbers, binaryRegisterNumbers, legacyTRegisterNumbers },
+    ) {
         /**
          * @readonly
          */
-        this.uRegMap = new Map(unaryRegisterNumbers.map(n => [n, new UReg()]));
+        this.uRegMap = new Map(
+            unaryRegisterNumbers.map((n) => [n, new UReg()]),
+        );
 
         /**
          * @readonly
          */
-        this.bRegMap = new Map(binaryRegisterNumbers.map(n => [n, new BReg()]));
+        this.bRegMap = new Map(
+            binaryRegisterNumbers.map((n) => [n, new BReg()]),
+        );
 
         /**
          * @readonly
          */
-        this.legecyTRegMap = new Map(legacyTRegisterNumbers.map(n => [n, new LegacyTReg()]));
+        this.legecyTRegMap = new Map(
+            legacyTRegisterNumbers.map((n) => [n, new LegacyTReg()]),
+        );
 
         /**
          * @readonly
@@ -129,28 +137,32 @@ export class ActionExecutor {
      * @throws
      */
     setKeyValue(key, value) {
-        if (key.startsWith('U')) {
+        if (key.startsWith("U")) {
             const n = parseNum(key.slice(1), 10);
             if (isNaNLocal(n)) {
-                initError(key, value);
+                throwInitError(key, value);
             }
             const reg = this.getUReg(n);
             if (reg === undefined) {
-                throw Error(`Invalid #REGISTERS: U${n} isn't used in the program`);
+                throw Error(
+                    `Invalid #REGISTERS: U${n} isn't used in the program`,
+                );
             }
             reg.setByRegistersInit(key, value);
-        } else if (key.startsWith('B')) {
-           const n = parseNum(key.slice(1), 10);
+        } else if (key.startsWith("B")) {
+            const n = parseNum(key.slice(1), 10);
             if (isNaNLocal(n)) {
-                initError(key, value);
+                throwInitError(key, value);
             }
             const reg = this.getBReg(n);
             if (reg === undefined) {
-                throw Error(`Invalid #REGISTERS: B${n} isn't used in the program`);
+                throw Error(
+                    `Invalid #REGISTERS: B${n} isn't used in the program`,
+                );
             }
             reg.setByRegistersInit(key, value);
         } else {
-            initError(key, value);
+            throwInitError(key, value);
         }
     }
 
@@ -170,10 +182,14 @@ export class ActionExecutor {
         // SUB   2251968
         // NOP   3771596
         if (action instanceof BRegAction) {
-            const bReg = action.registerCache ?? this.bRegMap.get(action.regNumber) ?? throwNotFound("B", action.regNumber);
+            const bReg = action.registerCache ??
+                this.bRegMap.get(action.regNumber) ??
+                throwNotFound("B", action.regNumber);
             return bReg.action(action);
         } else if (action instanceof URegAction) {
-            const uReg = action.registerCache ?? this.uRegMap.get(action.regNumber) ?? throwNotFound("U", action.regNumber);
+            const uReg = action.registerCache ??
+                this.uRegMap.get(action.regNumber) ??
+                throwNotFound("U", action.regNumber);
             return uReg.action(action);
         } else if (action instanceof AddAction) {
             return this.add.action(action);
@@ -190,7 +206,8 @@ export class ActionExecutor {
         } else if (action instanceof HaltOutAction) {
             return -1;
         } else if (action instanceof LegacyTRegAction) {
-            const tReg = this.legecyTRegMap.get(action.regNumber) ?? throwNotFound("T", action.regNumber);
+            const tReg = this.legecyTRegMap.get(action.regNumber) ??
+                throwNotFound("T", action.regNumber);
             return tReg.action(action);
         }
         throw Error(`execAction: unknown action ${action.pretty()}`);
@@ -206,10 +223,14 @@ export class ActionExecutor {
      */
     execActionN(action, n) {
         if (action instanceof URegAction) {
-            const uReg = action.registerCache ?? this.uRegMap.get(action.regNumber) ?? throwNotFound("U", action.regNumber);
+            const uReg = action.registerCache ??
+                this.uRegMap.get(action.regNumber) ??
+                throwNotFound("U", action.regNumber);
             return uReg.actionN(action, n);
         } else if (action instanceof BRegAction) {
-            const bReg = action.registerCache ?? this.bRegMap.get(action.regNumber) ?? throwNotFound("B", action.regNumber);
+            const bReg = action.registerCache ??
+                this.bRegMap.get(action.regNumber) ??
+                throwNotFound("B", action.regNumber);
             return bReg.actionN(action, n);
         } else if (action instanceof HaltOutAction) {
             return -1;
@@ -218,7 +239,6 @@ export class ActionExecutor {
     }
 
     /**
-     *
      * @param {number} n
      * @returns {UReg | undefined}
      */
@@ -227,7 +247,6 @@ export class ActionExecutor {
     }
 
     /**
-     *
      * @param {number} n
      * @returns {BReg | undefined}
      */
@@ -245,12 +264,11 @@ export class ActionExecutor {
 }
 
 /**
- *
  * @param {string} key
  * @param {unknown} value
  * @returns {never}
  */
-function initError(key, value) {
+function throwInitError(key, value) {
     const debugStr = `"${key}": ${JSON.stringify(value)}`;
     throw Error(`Invalid #REGISTERS ${debugStr}`);
 }

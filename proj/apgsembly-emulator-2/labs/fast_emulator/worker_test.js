@@ -3,8 +3,8 @@ import { assertEquals, test } from "../../test/deps.js";
 
 import { App } from "./worker.js";
 
-test('fast_emulator', () => {
-     App.initialize(`#REGISTERS {"U0":7, "U1":5}
+test("fast_emulator", () => {
+    App.initialize(`#REGISTERS {"U0":7, "U1":5}
 INITIAL; ZZ; ID1; TDEC U0
 # Loop over U0, TDECing it until it hits 0, and then halt.
 ID1; Z; ID1; HALT_OUT

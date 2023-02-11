@@ -19,11 +19,16 @@ export const HALT = "";
  */
 export function rotateDir(dir) {
     switch (dir) {
-        case WEST: return NORTH;
-        case EAST: return SOUTH;
-        case NORTH: return EAST;
-        case SOUTH: return WEST;
-        case HALT: return HALT;
+        case WEST:
+            return NORTH;
+        case EAST:
+            return SOUTH;
+        case NORTH:
+            return EAST;
+        case SOUTH:
+            return WEST;
+        case HALT:
+            return HALT;
     }
 }
 
@@ -32,11 +37,16 @@ export function rotateDir(dir) {
  */
 export function flipDir(dir) {
     switch (dir) {
-        case WEST: return EAST;
-        case EAST: return WEST;
-        case NORTH: return NORTH;
-        case SOUTH: return SOUTH;
-        case HALT: return HALT;
+        case WEST:
+            return EAST;
+        case EAST:
+            return WEST;
+        case NORTH:
+            return NORTH;
+        case SOUTH:
+            return SOUTH;
+        case HALT:
+            return HALT;
     }
 }
 
@@ -50,7 +60,6 @@ export const allDirs = [NORTH, EAST, WEST, SOUTH, HALT];
  */
 
 /**
- *
  * @param {string} x
  * @returns {Dir | undefined}
  */
@@ -65,7 +74,6 @@ export function parseDir(x) {
 
 export class Next {
     /**
-     *
      * @param {Color} nextColor
      * @param {Dir} nextDir
      * @param {State} nextState
@@ -81,7 +89,6 @@ export class Next {
     }
 
     /**
-     *
      * @param {number} x
      * @param {string} y
      * @param {number} z
@@ -99,14 +106,13 @@ export class Next {
         return {
             nextColor: this.nextColor,
             nextOp: this.nextOp,
-            nextState: this.nextState
+            nextState: this.nextState,
         };
     }
 }
 
 export class AbsTurmites {
     /**
-     *
      * @param {Next[][]} array
      */
     constructor(array) {
@@ -114,12 +120,11 @@ export class AbsTurmites {
     }
 
     /**
-     *
      * @param {unknown[]} array
      * @returns {AbsTurmites}
      */
     static fromObject(array) {
-        const error = Error('Failed to parse');
+        const error = Error("Failed to parse");
 
         /**
          * @type {unknown[]}
@@ -129,7 +134,7 @@ export class AbsTurmites {
         /**
          * @type {Next[][]}
          */
-        const array2 = content.map(v => {
+        const array2 = content.map((v) => {
             if (!Array.isArray(v)) {
                 throw error;
             }
@@ -160,13 +165,17 @@ export class AbsTurmites {
     }
 
     /**
-     *
      * @param {string} str
      * @returns {AbsTurmites}
      */
     static fromObjectString(str) {
         try {
-            const obj = JSON.parse(str.replace(/\{/ug, '[').replace(/\}/ug, ']').replace(/'/ug, '"'));
+            const obj = JSON.parse(
+                str.replace(/\{/ug, "[").replace(/\}/ug, "]").replace(
+                    /'/ug,
+                    '"',
+                ),
+            );
             if (Array.isArray(obj)) {
                 return AbsTurmites.fromObject(obj);
             } else {
@@ -184,9 +193,9 @@ export class AbsTurmites {
         const middle = this.array.map((array) => {
             return "{" + array.map((next) => {
                 return `{${next.nextColor},'${next.nextOp}',${next.nextState}}`;
-            }).join(',') + "}";
+            }).join(",") + "}";
         });
 
-        return `{${middle.join(',')}}`;
+        return `{${middle.join(",")}}`;
     }
 }

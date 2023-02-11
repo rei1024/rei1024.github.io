@@ -6,16 +6,16 @@ import { Program } from "../src/Program.js";
 import { assertEquals, test } from "./deps.js";
 import { program9_2, program9_3 } from "./Program_test.js";
 
-test('Compile empty', () => {
+test("Compile empty", () => {
     const obj = commandsToLookupTable([]);
     assertEquals(obj, { lookup: [], stateMap: new Map(), states: [] });
 });
 
-test('Compile program9_2', () => {
+test("Compile program9_2", () => {
     const program = Program.parse(program9_2);
 
     if (!(program instanceof Program)) {
-        throw TypeError('parse error program');
+        throw TypeError("parse error program");
     }
 
     const obj = commandsToLookupTable(program.commands);
@@ -30,11 +30,11 @@ test('Compile program9_2', () => {
     assertEquals(obj.stateMap.get("ID1"), 1);
 });
 
-test('Compile program9_3', () => {
+test("Compile program9_3", () => {
     const program = Program.parse(program9_3);
 
     if (!(program instanceof Program)) {
-        throw TypeError('parse error program');
+        throw TypeError("parse error program");
     }
 
     const obj = commandsToLookupTable(program.commands);

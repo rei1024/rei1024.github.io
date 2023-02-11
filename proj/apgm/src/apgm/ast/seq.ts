@@ -18,6 +18,9 @@ export class SeqAPGMExpr extends APGMExpr {
         return `{${this.prettyInner()}}`;
     }
 
+    /**
+     * 山括弧なし
+     */
     prettyInner(): string {
         return this.exprs.map((x) => {
             if (x instanceof IfAPGMExpr) {

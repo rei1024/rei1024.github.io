@@ -1,11 +1,11 @@
 // @ts-check
 
 import {
-    BRegAction,
     B_INC,
-    B_TDEC,
     B_READ,
-    B_SET
+    B_SET,
+    B_TDEC,
+    BRegAction,
 } from "../../src/actions/BRegAction.js";
 import { BReg } from "../../src/components/BReg.js";
 import { assertEquals, assertThrows, test } from "../deps.js";
@@ -17,7 +17,7 @@ test("BReg read initial", () => {
     assertEquals(x.read(), 0);
 });
 
-test('BReg set inc', () => {
+test("BReg set inc", () => {
     const x = new BReg();
     assertEquals(x.getBits(), [0]);
     assertEquals(x.pointer, 0);
@@ -113,7 +113,7 @@ test("BReg toNumberString", () => {
     assertEquals(x.toNumberString(16), "100000");
 });
 
-test('BReg toObject', () => {
+test("BReg toObject", () => {
     const x = new BReg();
     assertEquals(x.toBinaryString(), "0");
     x.inc();
@@ -124,11 +124,11 @@ test('BReg toObject', () => {
     assertEquals(x.toObject(), {
         prefix: [0],
         head: 1,
-        suffix: [0]
+        suffix: [0],
     });
 });
 
-test('BReg set error', () => {
+test("BReg set error", () => {
     const x = new BReg();
     x.set();
     assertThrows(() => {
@@ -136,7 +136,7 @@ test('BReg set error', () => {
     });
 });
 
-test('BReg action', () => {
+test("BReg action", () => {
     const x = new BReg();
     assertEquals(x.action(new BRegAction(B_INC, 0)), undefined);
     assertEquals(x.pointer, 1);
@@ -148,42 +148,42 @@ test('BReg action', () => {
     assertEquals(x.action(new BRegAction(B_READ, 0)), 0);
 });
 
-test('BReg setBy', () => {
+test("BReg setBy", () => {
     const x = new BReg();
-    x.setByRegistersInit('B1', 3);
+    x.setByRegistersInit("B1", 3);
     assertEquals(x.getBits(), [1, 1]);
 
-    x.setByRegistersInit('B1', 6);
+    x.setByRegistersInit("B1", 6);
 
     assertEquals(x.getBits(), [0, 1, 1]);
 
-    x.setByRegistersInit('B1', [1, '01100']);
+    x.setByRegistersInit("B1", [1, "01100"]);
 
     assertEquals(x.getBits(), [0, 1, 1, 0, 0]);
 
     assertEquals(x.pointer, 1);
 
     assertThrows(() => {
-        x.setByRegistersInit('B1', []);
+        x.setByRegistersInit("B1", []);
     });
 
     assertThrows(() => {
-        x.setByRegistersInit('B0', [1.1, '']);
+        x.setByRegistersInit("B0", [1.1, ""]);
     });
 
     assertThrows(() => {
-        x.setByRegistersInit('B0', [NaN, '']);
+        x.setByRegistersInit("B0", [NaN, ""]);
     });
 
     assertThrows(() => {
-        x.setByRegistersInit('B1', true);
+        x.setByRegistersInit("B1", true);
     });
 
     assertThrows(() => {
-        x.setByRegistersInit('B1', null);
+        x.setByRegistersInit("B1", null);
     });
 
     assertThrows(() => {
-        x.setByRegistersInit('B1', [-3, '0110']);
+        x.setByRegistersInit("B1", [-3, "0110"]);
     });
 });

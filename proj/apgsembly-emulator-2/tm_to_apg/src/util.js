@@ -55,7 +55,6 @@ export function mapValue(map, f) {
  */
 export class MapValueMaybeError extends Error {
     /**
-     *
      * @param {T} key
      * @param {U} value
      */

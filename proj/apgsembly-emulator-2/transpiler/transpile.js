@@ -10,7 +10,6 @@ import { Program } from "../src/Program.js";
 // import { validateNoSameComponentCommand } from "../src/validators/no_same_component.js";
 
 /**
- *
  * @param {Program} program
  * @returns {Program}
  */
@@ -117,7 +116,6 @@ function transpileT(program) {
 // }
 
 /**
- *
  * @param {string} input
  * @returns {string | Error}
  */

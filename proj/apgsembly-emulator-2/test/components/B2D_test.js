@@ -4,7 +4,7 @@ import { B2DAction } from "../../src/actions/B2DAction.js";
 import { B2D } from "../../src/components/B2D.js";
 import { assertEquals, assertThrows, test } from "../deps.js";
 
-test('B2D constructor', () => {
+test("B2D constructor", () => {
     const x = new B2D(1, 2);
     assertEquals(x.getArray(), [[0, 0], [0, 0], [0, 0]]);
 });
@@ -64,7 +64,6 @@ test("B2D tdec Y", () => {
     assertEquals(x.x, 0);
     assertEquals(x.y, 0);
 });
-
 
 test("B2D tdec 0", () => {
     const x = new B2D();
@@ -126,46 +125,46 @@ test("B2D toString", () => {
 // action
 test("B2D action INC B2DX", () => {
     const x = new B2D();
-    x.action(B2DAction.parse('INC B2DX'));
+    x.action(B2DAction.parse("INC B2DX"));
     assertEquals(x.x, 1);
     assertEquals(x.y, 0);
 });
 
 test("B2D action INC B2DY", () => {
     const x = new B2D();
-    x.action(B2DAction.parse('INC B2DY'));
+    x.action(B2DAction.parse("INC B2DY"));
     assertEquals(x.x, 0);
     assertEquals(x.y, 1);
 });
 
 test("B2D action TDEC B2DX", () => {
     const x = new B2D();
-    const res = x.action(B2DAction.parse('TDEC B2DX'));
+    const res = x.action(B2DAction.parse("TDEC B2DX"));
     assertEquals(res, 0);
-    const inc = B2DAction.parse('INC B2DX');
+    const inc = B2DAction.parse("INC B2DX");
     x.action(inc);
     x.action(inc);
     assertEquals(x.x, 2);
-    const res2 = x.action(B2DAction.parse('TDEC B2DX'));
+    const res2 = x.action(B2DAction.parse("TDEC B2DX"));
     assertEquals(res2, 1);
     assertEquals(x.x, 1);
 });
 
 test("B2D action TDEC B2DY", () => {
     const x = new B2D();
-    const res = x.action(B2DAction.parse('TDEC B2DY'));
+    const res = x.action(B2DAction.parse("TDEC B2DY"));
     assertEquals(res, 0);
 });
 
 test("B2D action READ B2D", () => {
     const x = new B2D();
-    const res = x.action(B2DAction.parse('READ B2D'));
+    const res = x.action(B2DAction.parse("READ B2D"));
     assertEquals(res, 0);
 });
 
 test("B2D action SET B2D", () => {
     const x = new B2D();
-    const res = x.action(B2DAction.parse('SET B2D'));
+    const res = x.action(B2DAction.parse("SET B2D"));
     assertEquals(res, undefined);
     assertEquals(x.read(), 1);
 });

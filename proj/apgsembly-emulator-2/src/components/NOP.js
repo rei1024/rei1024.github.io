@@ -1,4 +1,3 @@
-
 // @ts-check
 
 /**
@@ -6,7 +5,6 @@
  */
 export class NOP {
     constructor() {
-
     }
 
     /**

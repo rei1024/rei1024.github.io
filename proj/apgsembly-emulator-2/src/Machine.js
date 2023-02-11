@@ -4,16 +4,21 @@
 import { ActionExecutor } from "./ActionExecutor.js";
 import {
     commandsToLookupTable,
-    CompiledCommandWithNextState
+    CompiledCommandWithNextState,
 } from "./compile.js";
 import { Program } from "./Program.js";
-import { INITIAL_STATE, RegistersHeader, addLineNumber, Command } from "./Command.js";
+import {
+    addLineNumber,
+    Command,
+    INITIAL_STATE,
+    RegistersHeader,
+} from "./Command.js";
 export { INITIAL_STATE };
 
 /**
  * @returns {never}
  */
-function error(msg = 'error') {
+function error(msg = "error") {
     throw Error(msg);
 }
 
@@ -27,13 +32,12 @@ function error(msg = 'error') {
  */
 export class Machine {
     /**
-     *
      * @param {Program} program
      * @throws {Error} #REGISTERSでの初期化に失敗
      */
     constructor(program) {
         if (!(program instanceof Program)) {
-            throw TypeError('program is not a Program');
+            throw TypeError("program is not a Program");
         }
 
         /**
@@ -59,8 +63,9 @@ export class Machine {
          */
         this.program = program;
 
-        const { states, stateMap, lookup } =
-            commandsToLookupTable(program.commands);
+        const { states, stateMap, lookup } = commandsToLookupTable(
+            program.commands,
+        );
 
         /**
          * @readonly
@@ -82,7 +87,7 @@ export class Machine {
         // set cache
         for (const compiledCommand of lookup) {
             const actions = (compiledCommand.z?.command.actions ?? []).concat(
-                compiledCommand.nz?.command.actions ?? []
+                compiledCommand.nz?.command.actions ?? [],
             );
             for (const action of actions) {
                 this.actionExecutor.setCache(action);
@@ -120,6 +125,7 @@ export class Machine {
      * 文字列から作成する
      * @param {string} source
      * @returns {Machine}
+     * @throws エラー
      */
     static fromString(source) {
         const program = Program.parse(source);
@@ -144,7 +150,7 @@ export class Machine {
         for (let i = 0; i < len; i += 2) {
             result.push({
                 z: array[i] ?? error(),
-                nz: array[i + 1] ?? error()
+                nz: array[i + 1] ?? error(),
             });
         }
 
@@ -166,7 +172,7 @@ export class Machine {
         } catch (_e) {
             error(`Invalid #REGISTERS: is not a valid JSON: "${str}"`);
         }
-        if (parsed === null || typeof parsed !== 'object') {
+        if (parsed === null || typeof parsed !== "object") {
             error(`Invalid #REGISTERS: "${str}" is not an object`);
         }
 
@@ -181,7 +187,7 @@ export class Machine {
     getCurrentState() {
         const name = this.states[this.currentStateIndex];
         if (name === undefined) {
-            error('State name is not found');
+            error("State name is not found");
         }
         return name;
     }
@@ -221,8 +227,10 @@ export class Machine {
         const compiledCommand = this.lookup[currentStateIndex];
 
         if (compiledCommand === undefined) {
-            error(`Internal Error: Next command is not found: ` +
-                        `Current state index: ${currentStateIndex}`);
+            error(
+                `Internal Error: Next command is not found: ` +
+                    `Current state index: ${currentStateIndex}`,
+            );
         }
 
         const prevOutput = this.prevOutput;
@@ -239,8 +247,11 @@ export class Machine {
             }
         }
 
-        error('Next command is not found: Current state = ' +
-            this.getCurrentState() + ', output = ' + this.getPreviousOutput());
+        error(
+            "Next command is not found: Current state = " +
+                this.getCurrentState() + ", output = " +
+                this.getPreviousOutput(),
+        );
     }
 
     /**
@@ -262,7 +273,8 @@ export class Machine {
                 throw error;
             }
         }
-        this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] += num;
+        this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] +=
+            num;
         this.stepCount += num;
     }
 
@@ -272,7 +284,8 @@ export class Machine {
      * @param {boolean} isRunning 実行中は重い場合途中で止める
      * @param {number} breakpointIndex -1はブレークポイントなし
      * @param {-1 | 0 | 1} breakpointInputValue -1はZとNZ両方
-     * @returns {"Halted" | "Stop" | undefined} HALT_OUTによる停止は"Halted"、ブレークポイントによる停止は"Stop"
+     * @returns {"Halted" | "Stop" | undefined}
+     *   HALT_OUTによる停止は"Halted"、ブレークポイントによる停止は"Stop"、実行途中はundefined
      * @throws {Error} 実行時エラー
      */
     exec(n, isRunning, breakpointIndex, breakpointInputValue) {
@@ -321,13 +334,17 @@ export class Machine {
             if (
                 hasBreakpoint &&
                 this.currentStateIndex === breakpointIndex &&
-                (breakpointInputValue === -1 || breakpointInputValue === this.prevOutput)
+                (breakpointInputValue === -1 ||
+                    breakpointInputValue === this.prevOutput)
             ) {
                 return "Stop";
             }
 
             // 1フレームに50ms以上時間が掛かっていたら、残りはスキップする
-            if (isRunning && (i + 1) % 500000 === 0 && (performance.now() - start >= 50)) {
+            if (
+                isRunning && (i + 1) % 500000 === 0 &&
+                (performance.now() - start >= 50)
+            ) {
                 return undefined;
             }
         }
@@ -342,7 +359,7 @@ export class Machine {
     throwError(err) {
         const command = this.getNextCommand().command;
         const line = addLineNumber(command);
-        error(err.message + ` in "${command.pretty()}"` + line);
+        return error(err.message + ` in "${command.pretty()}"` + line);
     }
 
     /**
@@ -371,16 +388,22 @@ export class Machine {
                 if (result === -1) {
                     result = actionResult;
                 } else {
-                    error(`Return value twice: ` +
-                        `line = ${command.pretty()}${addLineNumber(command)}`);
+                    error(
+                        `Return value twice: ` +
+                            `line = ${command.pretty()}${
+                                addLineNumber(command)
+                            }`,
+                    );
                 }
             }
         }
 
         if (result === -1) {
-            error(`No return value: line = ${
-                command.pretty()
-            }${addLineNumber(command)}`);
+            error(
+                `No return value: line = ${command.pretty()}${
+                    addLineNumber(command)
+                }`,
+            );
         }
 
         const nextStateIndex = compiledCommand.nextState;
@@ -398,9 +421,9 @@ export class Machine {
     /**
      * 次のコマンドを実行する
      * エラーが発生した場合は例外を投げる
-     * -1はHALT_OUT
-     * voidは正常
      * @returns {-1 | void}
+     * - -1はHALT_OUT
+     * - voidは正常
      * @throws {Error} 実行時エラー
      */
     execCommand() {

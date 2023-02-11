@@ -13,8 +13,8 @@ const N = 10000000;
 
 for (let k = 0; k < 10; k++) {
     const program = Program.parse(piCalculator);
-    if (typeof program === 'string') {
-        throw Error('error');
+    if (typeof program === "string") {
+        throw Error("error");
     }
     const machine = new Machine(program);
     const start = performance.now();
@@ -38,10 +38,10 @@ for (let k = 0; k < 10; k++) {
         }
     }
     const end = performance.now();
-    const exp = '3.1415926';
+    const exp = "3.1415926";
     const act = machine.actionExecutor.output.getString();
     if (exp !== act) {
-        throw Error('error' + act);
+        throw Error("error" + act);
     }
     // console.log(machine.actionExecutor.output.getString());
     console.log((end - start) + "ms");

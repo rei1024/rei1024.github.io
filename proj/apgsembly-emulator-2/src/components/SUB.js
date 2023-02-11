@@ -1,6 +1,6 @@
 // @ts-check
 
-import { SubAction, SUB_A1, SUB_B0, SUB_B1 } from "../actions/SubAction.js";
+import { SUB_A1, SUB_B0, SUB_B1, SubAction } from "../actions/SubAction.js";
 import { internalError } from "../actions/Action.js";
 
 /**
@@ -16,7 +16,6 @@ export class SUB {
     }
 
     /**
-     *
      * @param {SubAction} act
      */
     action(act) {
@@ -24,15 +23,18 @@ export class SUB {
             // A1  176960
             // B0 1902824
             // B1  172184
-            case SUB_B0: return this.b0();
-            case SUB_A1: return this.a1();
-            case SUB_B1: return this.b1();
-            default: internalError();
+            case SUB_B0:
+                return this.b0();
+            case SUB_A1:
+                return this.a1();
+            case SUB_B1:
+                return this.b1();
+            default:
+                internalError();
         }
     }
 
     /**
-     *
      * @returns {number}
      */
     getValue() {
@@ -47,6 +49,7 @@ export class SUB {
         /**
          * `-1` is `"FAILURE"`
          */
+        // deno-fmt-ignore
         const subLookupA1 =
             [
                 3, 2, -1, -1, 7, 6, -1, -1, 11, 10, -1, -1, 15, 14, -1, -1,
@@ -65,6 +68,7 @@ export class SUB {
      */
     b0() {
         const t = this.value % 2;
+        // deno-fmt-ignore
         const subLookupB0 =
             [
                 0, 0, 0, 0, 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17,
@@ -81,6 +85,7 @@ export class SUB {
      */
     b1() {
         const t = 1 - this.value % 2;
+        // deno-fmt-ignore
         const subLookupB1 =
             [
                 17, 17, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 0, 0, 0, 0,
@@ -92,20 +97,18 @@ export class SUB {
     }
 
     /**
-     *
      * @returns {string}
      */
     toString() {
-        return this.value.toString(2).padStart(5, '0');
+        return this.value.toString(2).padStart(5, "0");
     }
 
     /**
-     *
      * @returns {string}
      */
     toStringDetail() {
         const str = this.toString();
         return str.slice(0, 3) + " stopper" + str.slice(3, 4) +
-                " bit" + str.slice(4);
+            " bit" + str.slice(4);
     }
 }

@@ -18,9 +18,12 @@
 export function create(tag, textOrOptions) {
     const e = document.createElement(tag);
 
-    if (typeof textOrOptions === 'string') {
+    if (typeof textOrOptions === "string") {
         e.textContent = textOrOptions;
-    } else if (textOrOptions !== undefined && textOrOptions !== null && typeof textOrOptions === 'object') {
+    } else if (
+        textOrOptions !== undefined && textOrOptions !== null &&
+        typeof textOrOptions === "object"
+    ) {
         if (textOrOptions.text) {
             e.textContent = textOrOptions.text;
         }

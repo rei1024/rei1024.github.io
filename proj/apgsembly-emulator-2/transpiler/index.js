@@ -4,48 +4,48 @@ import { transpile } from "./transpile.js";
 
 // Transpiler
 
-const $input = document.querySelector('#input');
+const $input = document.querySelector("#input");
 if (!($input instanceof HTMLTextAreaElement)) {
-    throw Error('input is not a HTMLTextAreaElement');
+    throw Error("input is not a HTMLTextAreaElement");
 }
 
-const $output = document.querySelector('#output');
+const $output = document.querySelector("#output");
 if (!($output instanceof HTMLTextAreaElement)) {
-    throw Error('output is not a HTMLTextAreaElement');
+    throw Error("output is not a HTMLTextAreaElement");
 }
 
-const $transpile = document.querySelector('#transpile');
+const $transpile = document.querySelector("#transpile");
 if (!($transpile instanceof HTMLElement)) {
-    throw Error('transpile is not a HTMLElement');
+    throw Error("transpile is not a HTMLElement");
 }
 
-const $copy = document.querySelector('#copy');
+const $copy = document.querySelector("#copy");
 if (!($copy instanceof HTMLButtonElement)) {
-    throw Error('copy is not a HTMLButtonElement');
+    throw Error("copy is not a HTMLButtonElement");
 }
 
-$transpile.addEventListener('click', () => {
+$transpile.addEventListener("click", () => {
     const result = transpile($input.value);
-    if (typeof result === 'string') {
-        $input.classList.remove('is-invalid');
+    if (typeof result === "string") {
+        $input.classList.remove("is-invalid");
         $copy.disabled = false;
         $output.value = result;
     } else {
-        $input.classList.add('is-invalid');
+        $input.classList.add("is-invalid");
         $copy.disabled = true;
         $output.value = result.message;
     }
 });
 
-$copy.addEventListener('click', () => {
+$copy.addEventListener("click", () => {
     navigator.clipboard.writeText($output.value.trim()).then(() => {
         $copy.textContent = "Copied";
-        $copy.classList.add('btn-success');
-        $copy.classList.remove('btn-primary');
+        $copy.classList.add("btn-success");
+        $copy.classList.remove("btn-primary");
         setTimeout(() => {
             $copy.textContent = "Copy";
-            $copy.classList.remove('btn-success');
-            $copy.classList.add('btn-primary');
+            $copy.classList.remove("btn-success");
+            $copy.classList.add("btn-primary");
         }, 1000);
     });
 });

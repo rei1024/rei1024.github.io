@@ -1,9 +1,9 @@
 // @ts-check
 
-import { Command, addLineNumber } from "./Command.js";
+import { addLineNumber, Command } from "./Command.js";
 import { Action } from "./actions/Action.js";
-import { BRegAction, B_INC, B_TDEC } from "./actions/BRegAction.js";
-import { URegAction, U_TDEC } from "./actions/URegAction.js";
+import { B_INC, B_TDEC, BRegAction } from "./actions/BRegAction.js";
+import { U_TDEC, URegAction } from "./actions/URegAction.js";
 import { HaltOutAction } from "./exports.js";
 
 /**
@@ -31,12 +31,14 @@ function getOptimizedTdecU(command) {
     // - 次の状態が自分自身であること
     // - HALT_OUTを含まないこと
     // - ActionはUまたはB_INCのみであること
-    if (command.input === "NZ" &&
+    if (
+        command.input === "NZ" &&
         command.state === command.nextState &&
-        command.actions.every(action => !(action instanceof HaltOutAction)) &&
-        command.actions.every(action =>
-        action instanceof URegAction ||
-        isBInc(action))
+        command.actions.every((action) => !(action instanceof HaltOutAction)) &&
+        command.actions.every((action) =>
+            action instanceof URegAction ||
+            isBInc(action)
+        )
     ) {
         const tdecU = command.actions.find(isUTdec);
         if (tdecU && tdecU instanceof URegAction) {
@@ -51,19 +53,21 @@ function getOptimizedTdecU(command) {
  * @param {Command} command
  * @returns {undefined | { tdecB: BRegAction }}
  */
-function getOptimizedtdecB(command) {
+function getOptimizedTdecB(command) {
     // - 前の入力がNZであること
     // - 次の状態が自分自身であること
     // - HALT_OUTを含まないこと
     // - ActionはTDEC Bのみであること
-    if (command.input === "NZ" &&
+    if (
+        command.input === "NZ" &&
         command.state === command.nextState &&
-        command.actions.every(action => !(action instanceof HaltOutAction)) &&
+        command.actions.every((action) => !(action instanceof HaltOutAction)) &&
         command.actions.length === 1 &&
-        command.actions.every(action =>
-        action instanceof BRegAction)
+        command.actions.every((action) => action instanceof BRegAction)
     ) {
-        const tdecB = command.actions.find(action => action instanceof BRegAction && action.op === B_TDEC);
+        const tdecB = command.actions.find((action) =>
+            action instanceof BRegAction && action.op === B_TDEC
+        );
         if (tdecB && tdecB instanceof BRegAction) {
             return { tdecB };
         }
@@ -77,7 +81,6 @@ function getOptimizedtdecB(command) {
  */
 export class CompiledCommandWithNextState {
     /**
-     *
      * @param {Command} command
      * @param {number} nextState
      */
@@ -94,13 +97,12 @@ export class CompiledCommandWithNextState {
         this.nextState = nextState;
 
         this.tdecuOptimize = getOptimizedTdecU(command);
-        this.tdecbOptimize = getOptimizedtdecB(command);
+        this.tdecbOptimize = getOptimizedTdecB(command);
     }
 }
 
 export class CompiledCommand {
     /**
-     *
      * @param {CompiledCommandWithNextState | undefined} z Zの場合
      * @param {CompiledCommandWithNextState | undefined} nz NZの場合
      */
@@ -118,12 +120,15 @@ export class CompiledCommand {
 }
 
 /**
- *
  * @param {Command} oldCommand
  * @param {Command} command
  */
 function throwDuplicated(oldCommand, command) {
-    throw Error(`Duplicated command: "${oldCommand.pretty()}" and "${command.pretty()}"${addLineNumber(command)}`);
+    throw Error(
+        `Duplicated command: "${oldCommand.pretty()}" and "${command.pretty()}"${
+            addLineNumber(command)
+        }`,
+    );
 }
 
 /**
@@ -136,7 +141,10 @@ function throwDuplicated(oldCommand, command) {
  * }}
  */
 export function commandsToLookupTable(commands) {
-    /** @type {Map<string, number>} */
+    /**
+     * 状態名から添字へのMap
+     * @type {Map<string, number>}
+     */
     const stateMap = new Map();
 
     /** @type {CompiledCommand[]} */
@@ -159,17 +167,26 @@ export function commandsToLookupTable(commands) {
     }
 
     for (const command of commands) {
-        const compiledCommand = lookup[stateMap.get(command.state) ?? error()] ?? error();
+        const compiledCommand =
+            lookup[stateMap.get(command.state) ?? error()] ??
+                error();
         const nextState = stateMap.get(command.nextState);
         // 次の状態が見つからない場合はエラー
         if (nextState === undefined) {
-            throw Error(`Unknown state: "${command.nextState}" at "${command.pretty()}"${addLineNumber(command)}`);
+            throw Error(
+                `Unknown state: "${command.nextState}" at "${command.pretty()}"${
+                    addLineNumber(command)
+                }`,
+            );
         }
         switch (command.input) {
             case "Z": {
                 if (compiledCommand.z === undefined) {
                     // 新しく作成する
-                    compiledCommand.z = new CompiledCommandWithNextState(command, nextState);
+                    compiledCommand.z = new CompiledCommandWithNextState(
+                        command,
+                        nextState,
+                    );
                 } else {
                     throwDuplicated(compiledCommand.z.command, command);
                 }
@@ -178,7 +195,10 @@ export function commandsToLookupTable(commands) {
             case "NZ": {
                 if (compiledCommand.nz === undefined) {
                     // 新しく作成する
-                    compiledCommand.nz = new CompiledCommandWithNextState(command, nextState);
+                    compiledCommand.nz = new CompiledCommandWithNextState(
+                        command,
+                        nextState,
+                    );
                 } else {
                     throwDuplicated(compiledCommand.nz.command, command);
                 }
@@ -186,9 +206,16 @@ export function commandsToLookupTable(commands) {
             }
             case "ZZ": {
                 if (compiledCommand.nz !== undefined) {
-                    throw Error(`Invalid input: ZZ with NZ or *: "${command.pretty()}" and "${compiledCommand.nz.command.pretty()}"${addLineNumber(command)}`);
+                    throw Error(
+                        `Invalid input: ZZ with NZ or *: "${command.pretty()}" and "${compiledCommand.nz.command.pretty()}"${
+                            addLineNumber(command)
+                        }`,
+                    );
                 } else if (compiledCommand.z === undefined) {
-                    compiledCommand.z = new CompiledCommandWithNextState(command, nextState);
+                    compiledCommand.z = new CompiledCommandWithNextState(
+                        command,
+                        nextState,
+                    );
                 } else {
                     throwDuplicated(compiledCommand.z.command, command);
                 }
@@ -196,11 +223,22 @@ export function commandsToLookupTable(commands) {
             }
             case "*": {
                 if (compiledCommand.nz !== undefined) {
-                    throw Error(`Invalid input: * "${command.pretty()}" and "${compiledCommand.nz.command.pretty()}"${addLineNumber(command)}`);
+                    throw Error(
+                        `Invalid input: * "${command.pretty()}" and "${compiledCommand.nz.command.pretty()}"${
+                            addLineNumber(command)
+                        }`,
+                    );
                 } else if (compiledCommand.z !== undefined) {
-                    throw Error(`Invalid input: * "${command.pretty()}" and "${compiledCommand.z.command.pretty()}"${addLineNumber(command)}`);
+                    throw Error(
+                        `Invalid input: * "${command.pretty()}" and "${compiledCommand.z.command.pretty()}"${
+                            addLineNumber(command)
+                        }`,
+                    );
                 } else {
-                    const c = new CompiledCommandWithNextState(command, nextState);
+                    const c = new CompiledCommandWithNextState(
+                        command,
+                        nextState,
+                    );
                     compiledCommand.z = c;
                     compiledCommand.nz = c;
                 }
@@ -218,6 +256,6 @@ export function commandsToLookupTable(commands) {
     return {
         states: [...stateMap.keys()],
         stateMap,
-        lookup
+        lookup,
     };
 }

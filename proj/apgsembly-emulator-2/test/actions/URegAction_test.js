@@ -1,6 +1,6 @@
 // @ts-check
 
-import { URegAction, U_INC, U_TDEC } from "../../src/actions/URegAction.js";
+import { U_INC, U_TDEC, URegAction } from "../../src/actions/URegAction.js";
 import { assertEquals, never, test } from "../deps.js";
 
 test("URegAction parse", () => {
@@ -18,7 +18,7 @@ test("URegAction parse", () => {
     assertEquals(URegAction.parse("TDEC U12"), new URegAction(U_TDEC, 12));
 });
 
-test('URegAction APGsembly 1.0', () => {
+test("URegAction APGsembly 1.0", () => {
     assertEquals(URegAction.parse("TDEC R12"), new URegAction(U_TDEC, 12));
 });
 
@@ -44,15 +44,21 @@ test("URegAction pretty", () => {
 
 test("URegAction isSameComponent", () => {
     assertEquals(
-        URegAction.parse('INC U2')?.isSameComponent(URegAction.parse('INC U2') ?? never()),
-        true
+        URegAction.parse("INC U2")?.isSameComponent(
+            URegAction.parse("INC U2") ?? never(),
+        ),
+        true,
     );
     assertEquals(
-        URegAction.parse('INC U1')?.isSameComponent(URegAction.parse('INC U2') ?? never()),
-        false
+        URegAction.parse("INC U1")?.isSameComponent(
+            URegAction.parse("INC U2") ?? never(),
+        ),
+        false,
     );
     assertEquals(
-        URegAction.parse('TDEC U1')?.isSameComponent(URegAction.parse('INC U2') ?? never()),
-        false
+        URegAction.parse("TDEC U1")?.isSameComponent(
+            URegAction.parse("INC U2") ?? never(),
+        ),
+        false,
     );
 });

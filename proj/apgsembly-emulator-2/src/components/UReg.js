@@ -1,6 +1,6 @@
 // @ts-check
 
-import { URegAction, U_INC, U_TDEC } from "../actions/URegAction.js";
+import { U_INC, U_TDEC, URegAction } from "../actions/URegAction.js";
 import { internalError } from "../actions/Action.js";
 
 /**
@@ -15,7 +15,6 @@ export class UReg {
     }
 
     /**
-     *
      * @param {URegAction} act
      * @returns {0 | 1 | void}
      */
@@ -45,8 +44,8 @@ export class UReg {
     actionN(act, n) {
         switch (act.op) {
             case U_TDEC: {
-               this.value -= n;
-               break;
+                this.value -= n;
+                break;
             }
             case U_INC: {
                 this.value += n;
@@ -63,7 +62,6 @@ export class UReg {
     }
 
     /**
-     *
      * @param {number} v
      */
     setValue(v) {
@@ -91,12 +89,13 @@ export class UReg {
     }
 
     /**
-     *
      * @param {string} key
      * @param {unknown} value
      */
     setByRegistersInit(key, value) {
-        if (typeof value !== "number" || value < 0 || !Number.isInteger(value)) {
+        if (
+            typeof value !== "number" || value < 0 || !Number.isInteger(value)
+        ) {
             initError(key, value);
         }
         this.setValue(value);
@@ -104,7 +103,6 @@ export class UReg {
 }
 
 /**
- *
  * @param {string} key
  * @param {unknown} value
  * @returns {never}

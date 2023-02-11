@@ -17,7 +17,7 @@ export interface TranspilerOptions {
     noOptimize?: boolean;
 }
 
-export class Context {
+class Context {
     constructor(
         /**
          * inputから始まるコマンドを出力する
@@ -45,38 +45,40 @@ export class Line {
         },
     ) {
         if (this.inner.actions.length === 0) {
-            throw Error("action must be nonempty");
+            throw Error("actions must be nonempty");
         }
     }
 
     toLineString(): string {
-        const prevOutput = this.inner.prevOutput;
+        const inner = this.inner;
+        const prevOutput = inner.prevOutput;
         let prevOutputWithSpace: string = prevOutput;
 
+        // 見た目を整えるため
         if (prevOutput === "*" || prevOutput === "Z") {
             prevOutputWithSpace = " " + prevOutput;
         }
 
-        return `${this.inner.currentState}; ${prevOutputWithSpace}; ${this.inner.nextState}; ${
-            this.inner.actions.join(", ")
+        return `${inner.currentState}; ${prevOutputWithSpace}; ${inner.nextState}; ${
+            inner.actions.join(", ")
         }`;
     }
 }
 
 export class Transpiler {
-    private id = 0;
+    #id = 0;
     readonly #loopFinalStates: string[] = [];
-    private readonly prefix: string;
-    private readonly optimize: boolean;
+    readonly #prefix: string;
+    readonly #optimize: boolean;
 
     constructor(options: TranspilerOptions = {}) {
-        this.prefix = options.prefix ?? "STATE_";
-        this.optimize = !(options.noOptimize ?? false);
+        this.#prefix = options.prefix ?? "STATE_";
+        this.#optimize = !(options.noOptimize ?? false);
     }
 
     getFreshName(): string {
-        this.id++;
-        return `${this.prefix}${this.id}`;
+        this.#id++;
+        return `${this.#prefix}${this.#id}`;
     }
 
     emitTransition(
@@ -97,7 +99,7 @@ export class Transpiler {
         const secondState = this.getFreshName() + "_INITIAL";
         const initial = this.emitTransition(initialState, secondState, "ZZ");
 
-        const endState = this.prefix + "END";
+        const endState = this.#prefix + "END";
 
         const body = this.transpileExpr(
             new Context(secondState, endState, "*"),
@@ -192,7 +194,7 @@ export class Transpiler {
 
     #transpileIfAPGLExpr(ctx: Context, ifExpr: IfAPGLExpr): Line[] {
         if (
-            this.optimize && isEmptyExpr(ifExpr.thenBody) &&
+            this.#optimize && isEmptyExpr(ifExpr.thenBody) &&
             isEmptyExpr(ifExpr.elseBody)
         ) {
             return this.transpileExpr(ctx, ifExpr.cond);
@@ -304,7 +306,7 @@ export class Transpiler {
     }
 
     #transpileWhileAPGLExpr(ctx: Context, whileExpr: WhileAPGLExpr): Line[] {
-        const optimize = this.optimize;
+        const optimize = this.#optimize;
         if (optimize && isEmptyExpr(whileExpr.body)) {
             const singleCondAction = extractSingleActionExpr(whileExpr.cond);
             if (singleCondAction !== undefined) {
@@ -421,6 +423,9 @@ export class Transpiler {
     }
 }
 
+/**
+ * Transpile APGL to lines of APGsembly code
+ */
 export function transpileAPGL(
     expr: APGLExpr,
     options: TranspilerOptions = {},

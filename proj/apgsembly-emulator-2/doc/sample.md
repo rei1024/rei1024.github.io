@@ -1,1 +1,1 @@
-* sqrt_log_t: Program 9.10
+- sqrt_log_t: Program 9.10

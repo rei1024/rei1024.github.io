@@ -5,11 +5,11 @@
 import { create } from "./create.js";
 import { $type } from "../../frontend/util/selector.js";
 
-$type('#close', HTMLElement).addEventListener('click', () => {
+$type("#close", HTMLElement).addEventListener("click", () => {
     globalThis.close();
 });
 
-const diagram = $type('#diagram', HTMLElement);
+const diagram = $type("#diagram", HTMLElement);
 
 /**
  * @param {string} graphDefinition
@@ -17,32 +17,32 @@ const diagram = $type('#diagram', HTMLElement);
 function render(graphDefinition) {
     // @ts-ignore
     mermaid.mermaidAPI.render(
-        'svg',
+        "svg",
         graphDefinition,
         /**
-         *
          * @param {string} svgString
          */
         function (svgString) {
-        diagram.innerHTML = svgString;
-    });
+            diagram.innerHTML = svgString;
+        },
+    );
 }
 
-const KEY = 'state-diagram-input';
+const KEY = "state-diagram-input";
 
 const string = localStorage.getItem(KEY);
 
 if (string == null) {
-    diagram.innerHTML = '';
+    diagram.innerHTML = "";
 
-    const span = document.createElement('span');
-    span.textContent = 'Go To ';
+    const span = document.createElement("span");
+    span.textContent = "Go To ";
 
-    const a = document.createElement('a');
-    a.href = '../../index.html';
-    a.textContent = 'APGsembly Emulator';
+    const a = document.createElement("a");
+    a.href = "../../index.html";
+    a.textContent = "APGsembly Emulator";
 
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     div.append(span, a);
     diagram.append(div);
 } else {
@@ -50,24 +50,28 @@ if (string == null) {
     render(create(string));
 }
 
-const input = $type('#input', HTMLTextAreaElement);
+const input = $type("#input", HTMLTextAreaElement);
 
-input.addEventListener('input', () => {
+input.addEventListener("input", () => {
     try {
         render(create(input.value));
-        input.classList.remove('is-invalid');
+        input.classList.remove("is-invalid");
     } catch (error) {
         if (error instanceof Error) {
             const lines = error.message.split("\n");
-            diagram.innerHTML = '';
-            diagram.append(...lines.flatMap(line => [line, document.createElement('br')]));
+            diagram.innerHTML = "";
+            diagram.append(
+                ...lines.flatMap((
+                    line,
+                ) => [line, document.createElement("br")]),
+            );
         }
-        input.classList.add('is-invalid');
+        input.classList.add("is-invalid");
     }
 });
 
 function enableInput() {
-    input.parentElement?.classList.remove('d-none');
+    input.parentElement?.classList.remove("d-none");
 }
 
 // @ts-ignore

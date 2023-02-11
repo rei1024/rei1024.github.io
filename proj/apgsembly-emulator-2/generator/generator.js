@@ -1,17 +1,16 @@
 // @ts-check
 
-import { $type } from '../frontend/util/selector.js';
-import { generate } from './rule.js';
+import { $type } from "../frontend/util/selector.js";
+import { generate } from "./rule.js";
 
 const rule = $type("#rule", HTMLInputElement);
 const generateButton = $type("#generate", HTMLButtonElement);
 const code = $type("#output", HTMLTextAreaElement);
 
 // 出力をコピーする
-const copy = $type('#copy', HTMLButtonElement);
+const copy = $type("#copy", HTMLButtonElement);
 
 /**
- *
  * @param {number} n
  * @returns {number | undefined}
  */
@@ -39,7 +38,7 @@ function validateNum(n) {
 function parseNum(str) {
     str = str.trim();
     // remove _
-    str = [...str].filter(x => x !== "_").join("");
+    str = [...str].filter((x) => x !== "_").join("");
 
     if (str.startsWith("0b")) {
         const n = parseInt(str.slice(2), 2);
@@ -55,32 +54,32 @@ function parseNum(str) {
     return validateNum(n);
 }
 
-rule.addEventListener('input', () => {
+rule.addEventListener("input", () => {
     generateButton.disabled = parseNum(rule.value) === undefined;
 });
 
 generateButton.addEventListener("click", () => {
-    rule.classList.remove('is-invalid');
+    rule.classList.remove("is-invalid");
     code.value = "";
     copy.disabled = true;
     const n = parseNum(rule.value);
     if (n === undefined) {
-        rule.classList.add('is-invalid');
+        rule.classList.add("is-invalid");
         return;
     }
     code.value = generate(n);
     copy.disabled = false;
 });
 
-copy.addEventListener('click', () => {
+copy.addEventListener("click", () => {
     navigator.clipboard.writeText(code.value).then(() => {
         copy.textContent = "Copied";
-        copy.classList.add('btn-success');
-        copy.classList.remove('btn-primary');
+        copy.classList.add("btn-success");
+        copy.classList.remove("btn-primary");
         setTimeout(() => {
             copy.textContent = "Copy";
-            copy.classList.remove('btn-success');
-            copy.classList.add('btn-primary');
+            copy.classList.remove("btn-success");
+            copy.classList.add("btn-primary");
         }, 1000);
     });
 });

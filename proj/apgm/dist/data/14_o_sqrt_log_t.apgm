@@ -13,7 +13,7 @@ macro copy_u!(a, b, temp) {
     }
 }
 
-/* move to (0,0) */
+/* Move to (0, 0) */
 macro move_to_0_0!() {
     while_nz (tdec_b2dx()) {}
     while_nz (tdec_b2dy()) {}
@@ -33,7 +33,7 @@ loop {
 
         move_to_0_0!();
 
-        /* set U0 = U1 = 0 */
+        /* Set U0 = U1 = 0 */
         set_u_0!(0);
         set_u_0!(1);
     } else {

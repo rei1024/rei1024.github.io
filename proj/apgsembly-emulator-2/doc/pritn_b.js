@@ -6,7 +6,6 @@
 // divmod by 10
 // (12, 3)
 
-
 // 1230
 // 120
 
@@ -17,7 +16,6 @@ class Bits {
 }
 
 function printB(bits) {
-
 }
 
 /*

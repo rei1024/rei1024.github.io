@@ -24,32 +24,40 @@ const T_RESET_STRING = "RESET";
  */
 
 /**
- *
  * @param {TOp} op
  * @returns {TOpString}
  */
 function prettyOp(op) {
     switch (op) {
-        case T_INC: return T_INC_STRING;
-        case T_DEC: return T_DEC_STRING;
-        case T_READ: return T_READ_STRING;
-        case T_SET: return T_SET_STRING;
-        case T_RESET: return T_RESET_STRING;
+        case T_INC:
+            return T_INC_STRING;
+        case T_DEC:
+            return T_DEC_STRING;
+        case T_READ:
+            return T_READ_STRING;
+        case T_SET:
+            return T_SET_STRING;
+        case T_RESET:
+            return T_RESET_STRING;
     }
 }
 
 /**
- *
  * @param {TOpString} op
  * @returns {TOp}
  */
 function parseOp(op) {
     switch (op) {
-        case T_INC_STRING: return T_INC;
-        case T_DEC_STRING: return T_DEC;
-        case T_READ_STRING: return T_READ;
-        case T_SET_STRING: return T_SET;
-        case T_RESET_STRING: return T_RESET;
+        case T_INC_STRING:
+            return T_INC;
+        case T_DEC_STRING:
+            return T_DEC;
+        case T_READ_STRING:
+            return T_READ;
+        case T_SET_STRING:
+            return T_SET;
+        case T_RESET_STRING:
+            return T_RESET;
     }
 }
 
@@ -58,7 +66,6 @@ function parseOp(op) {
  */
 export class LegacyTRegAction extends Action {
     /**
-     *
      * @param {TOp} op
      * @param {number} regNumber
      */
@@ -97,8 +104,10 @@ export class LegacyTRegAction extends Action {
         if (op === undefined || reg === undefined) {
             return undefined;
         }
-        if (op === T_INC_STRING || op === T_DEC_STRING ||
-            op === T_READ_STRING || op === T_SET_STRING || op === T_RESET_STRING) {
+        if (
+            op === T_INC_STRING || op === T_DEC_STRING ||
+            op === T_READ_STRING || op === T_SET_STRING || op === T_RESET_STRING
+        ) {
             if (reg.startsWith("T")) {
                 const str = reg.slice(1);
                 if (/^[0-9]+$/u.test(str)) {
@@ -114,16 +123,20 @@ export class LegacyTRegAction extends Action {
      */
     doesReturnValue() {
         switch (this.op) {
-            case T_INC: return true;
-            case T_DEC: return true;
-            case T_READ: return true;
-            case T_SET: return false;
-            case T_RESET: return false;
+            case T_INC:
+                return true;
+            case T_DEC:
+                return true;
+            case T_READ:
+                return true;
+            case T_SET:
+                return false;
+            case T_RESET:
+                return false;
         }
     }
 
     /**
-     *
      * @override
      * @param {Action} action
      * @returns {boolean}

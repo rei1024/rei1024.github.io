@@ -21,28 +21,32 @@ const ADD_STRING = "ADD";
  */
 
 /**
- *
  * @param {AddOp} op
  * @returns {AddOpString}
  */
 function prettyOp(op) {
     switch (op) {
-        case ADD_A1: return ADD_A1_STRING;
-        case ADD_B0: return ADD_B0_STRING;
-        case ADD_B1: return ADD_B1_STRING;
+        case ADD_A1:
+            return ADD_A1_STRING;
+        case ADD_B0:
+            return ADD_B0_STRING;
+        case ADD_B1:
+            return ADD_B1_STRING;
     }
 }
 
 /**
- *
  * @param {AddOpString} op
  * @returns {AddOp}
  */
 function parseOp(op) {
     switch (op) {
-        case ADD_A1_STRING: return ADD_A1;
-        case ADD_B0_STRING: return ADD_B0;
-        case ADD_B1_STRING: return ADD_B1;
+        case ADD_A1_STRING:
+            return ADD_A1;
+        case ADD_B0_STRING:
+            return ADD_B0;
+        case ADD_B1_STRING:
+            return ADD_B1;
     }
 }
 
@@ -51,7 +55,6 @@ function parseOp(op) {
  */
 export class AddAction extends Action {
     /**
-     *
      * @param {AddOp} op
      */
     constructor(op) {
@@ -85,7 +88,10 @@ export class AddAction extends Action {
         if (add !== ADD_STRING) {
             return undefined;
         }
-        if (reg === ADD_A1_STRING || reg === ADD_B0_STRING || reg === ADD_B1_STRING) {
+        if (
+            reg === ADD_A1_STRING || reg === ADD_B0_STRING ||
+            reg === ADD_B1_STRING
+        ) {
             return new AddAction(parseOp(reg));
         }
         return undefined;
@@ -96,14 +102,16 @@ export class AddAction extends Action {
      */
     doesReturnValue() {
         switch (this.op) {
-            case ADD_A1: return false;
-            case ADD_B0: return true;
-            case ADD_B1: return true;
+            case ADD_A1:
+                return false;
+            case ADD_B0:
+                return true;
+            case ADD_B1:
+                return true;
         }
     }
 
     /**
-     *
      * @override
      * @param {Action} action
      * @returns {boolean}

@@ -1,6 +1,6 @@
 // @ts-check
 
-import { MulAction, MUL_0, MUL_1 } from "../actions/MulAction.js";
+import { MUL_0, MUL_1, MulAction } from "../actions/MulAction.js";
 
 /**
  * `MUL`
@@ -15,7 +15,6 @@ export class MUL {
     }
 
     /**
-     *
      * @param {MulAction} act
      * @returns {0 | 1}
      */
@@ -23,14 +22,16 @@ export class MUL {
         switch (act.op) {
             // MUL0 200740
             // MUL1  21110
-            case MUL_0: return this.mul0();
-            case MUL_1: return this.mul1();
-            default: throw Error('MUL: action');
+            case MUL_0:
+                return this.mul0();
+            case MUL_1:
+                return this.mul1();
+            default:
+                throw Error("MUL: action");
         }
     }
 
     /**
-     *
      * @returns {number}
      */
     getValue() {
@@ -38,7 +39,6 @@ export class MUL {
     }
 
     /**
-     *
      * @returns {0 | 1}
      */
     mul0() {
@@ -49,7 +49,6 @@ export class MUL {
     }
 
     /**
-     *
      * @returns {0 | 1}
      */
     mul1() {
@@ -66,10 +65,9 @@ export class MUL {
     }
 
     /**
-     *
      * @returns {string}
      */
     toString() {
-        return this.value.toString(2).padStart(5, '0');
+        return this.value.toString(2).padStart(5, "0");
     }
 }

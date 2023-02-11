@@ -4,7 +4,7 @@
  * @returns {never}
  */
 export function internalError() {
-    throw Error('internal error');
+    throw Error("internal error");
 }
 
 /**

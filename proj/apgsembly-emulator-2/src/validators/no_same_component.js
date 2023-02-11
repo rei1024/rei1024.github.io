@@ -7,7 +7,7 @@ import { HaltOutAction } from "../actions/HaltOutAction.js";
  * @returns {never}
  */
 function internalError() {
-    throw Error('internal error');
+    throw Error("internal error");
 }
 
 /**
@@ -19,7 +19,7 @@ function internalError() {
 export function validateNoSameComponentCommand(command) {
     // HALT_OUTの場合は一旦無視
     // FIXME
-    if (command.actions.find(x => x instanceof HaltOutAction) !== undefined) {
+    if (command.actions.find((x) => x instanceof HaltOutAction) !== undefined) {
         return undefined;
     }
     const actions = command.actions;
@@ -37,11 +37,9 @@ export function validateNoSameComponentCommand(command) {
             const a = actions[i] ?? internalError();
             const b = actions[j] ?? internalError();
             if (a.isSameComponent(b)) {
-                return `Actions "${
-                    a.pretty()
-                }" and "${
-                    b.pretty()
-                }" use same component in "${command.pretty()}"${addLineNumber(command)}`;
+                return `Actions "${a.pretty()}" and "${b.pretty()}" use same component in "${command.pretty()}"${
+                    addLineNumber(command)
+                }`;
             }
         }
     }

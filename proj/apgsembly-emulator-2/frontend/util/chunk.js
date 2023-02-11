@@ -9,7 +9,7 @@
  */
 export function* chunk(
     iterable,
-    size
+    size,
 ) {
     if (!Number.isInteger(size)) {
         throw RangeError("size is not an integer");

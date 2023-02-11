@@ -1,12 +1,12 @@
 // @ts-check
 
-import { generate } from './src/generate_apg.js';
-import { generate as absGenerate } from './src/abs_generate_apg.js';
+import { generate } from "./src/generate_apg.js";
+import { generate as absGenerate } from "./src/abs_generate_apg.js";
 
-import { Turmites } from './src/turmites.js';
-import { AbsTurmites } from './src/abs_turmites.js';
+import { Turmites } from "./src/turmites.js";
+import { AbsTurmites } from "./src/abs_turmites.js";
 
-import { peggLibrary, timLibrary, absLibrary } from './lib.js';
+import { absLibrary, peggLibrary, timLibrary } from "./lib.js";
 
 import { $type } from "../frontend/util/selector.js";
 
@@ -19,47 +19,46 @@ const $samplesButton = $type("#samples", HTMLButtonElement);
 const code = $type("#output", HTMLTextAreaElement);
 
 // 出力をコピーする
-const copy = $type('#copy', HTMLButtonElement);
+const copy = $type("#copy", HTMLButtonElement);
 
-const $x = $type('#x', HTMLInputElement);
-const $y = $type('#y', HTMLInputElement);
+const $x = $type("#x", HTMLInputElement);
+const $y = $type("#y", HTMLInputElement);
 
-const $dir = $type('#dir', HTMLSelectElement);
+const $dir = $type("#dir", HTMLSelectElement);
 
-const $flip = $type('#flip', HTMLInputElement);
+const $flip = $type("#flip", HTMLInputElement);
 
-const $sampleList = $type('#sample_list', HTMLElement);
+const $sampleList = $type("#sample_list", HTMLElement);
 
-const $ruleInvalid = $type('#rule_invalid', HTMLElement);
+const $ruleInvalid = $type("#rule_invalid", HTMLElement);
 
 // サンプルの名前を保持する
-let comment = '';
+let comment = "";
 
 // https://sourceforge.net/p/golly/code/ci/57e0b46e117c8bfa605f0d61d22307ca5c5383d9/tree/Scripts/Python/Rule-Generators/Turmite-gen.py
 
 /**
- *
  * @param {string} ruleString
  * @param {string} desc
  */
 const addSample = (ruleString, desc) => {
     // <button class="dropdown-item">Text</button>
-    const button = document.createElement('button');
-    button.classList.add('dropdown-item');
+    const button = document.createElement("button");
+    button.classList.add("dropdown-item");
     button.textContent = desc;
-    button.addEventListener('click', () => {
+    button.addEventListener("click", () => {
         code.value = "";
         rule.value = ruleString;
         comment = desc;
     });
-    const li = document.createElement('li');
+    const li = document.createElement("li");
     li.append(button);
     $sampleList.append(li);
 };
 
 // 何かしら変化したらコメント削除
-rule.addEventListener('input', () => {
-    comment = '';
+rule.addEventListener("input", () => {
+    comment = "";
 });
 
 const allRules = peggLibrary.concat(timLibrary, absLibrary);
@@ -87,11 +86,13 @@ function getInput() {
 }
 
 generateButton.addEventListener("click", () => {
-    rule.classList.remove('is-invalid');
+    rule.classList.remove("is-invalid");
     copy.disabled = true;
 
     const { x, y, dir } = getInput();
-    const header = `${comment === '' ? '' : `# ${comment}\n`}# Turmite ${rule.value}\n#COMPONENTS NOP,B2D,U0-2\n`;
+    const header = `${
+        comment === "" ? "" : `# ${comment}\n`
+    }# Turmite ${rule.value}\n#COMPONENTS NOP,B2D,U0-2\n`;
     try {
         const tur = Turmites.fromObjectString(rule.value);
         code.value = header + generate(tur, x, y, dir);
@@ -103,7 +104,7 @@ generateButton.addEventListener("click", () => {
             copy.disabled = false;
         } catch (e) {
             code.value = "";
-            rule.classList.add('is-invalid');
+            rule.classList.add("is-invalid");
             if (e instanceof Error) {
                 $ruleInvalid.textContent = e.message;
             } else {
@@ -113,15 +114,15 @@ generateButton.addEventListener("click", () => {
     }
 });
 
-copy.addEventListener('click', () => {
+copy.addEventListener("click", () => {
     navigator.clipboard.writeText(code.value).then(() => {
         copy.textContent = "Copied";
-        copy.classList.add('btn-success');
-        copy.classList.remove('btn-primary');
+        copy.classList.add("btn-success");
+        copy.classList.remove("btn-primary");
         setTimeout(() => {
             copy.textContent = "Copy";
-            copy.classList.remove('btn-success');
-            copy.classList.add('btn-primary');
+            copy.classList.remove("btn-success");
+            copy.classList.add("btn-primary");
         }, 1000);
     });
 });

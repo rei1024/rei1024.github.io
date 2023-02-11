@@ -1,7 +1,7 @@
 import { transpile } from "./transpile.js";
-import { test, assertEquals } from "../test/deps.js";
+import { assertEquals, test } from "../test/deps.js";
 
-test('transpile', () => {
+test("transpile", () => {
     const strOrError = transpile(`#COMPONENTS U0-3,HALT_OUT
     #REGISTERS {"U0":7, "U1":5}
     # State Input Next state Actions
@@ -21,7 +21,6 @@ test('transpile', () => {
     ID3; NZ; ID3; TDEC U3, INC U1, INC U2`);
     assertEquals(strOrError instanceof Error, false);
 });
-
 
 // test('transpile 2', () => {
 //     const strOrError = transpile(

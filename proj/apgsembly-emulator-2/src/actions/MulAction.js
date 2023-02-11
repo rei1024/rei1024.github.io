@@ -19,26 +19,28 @@ const MUL_STRING = "MUL";
  */
 
 /**
- *
  * @param {MulOpString} op
  * @returns {MulOp}
  */
 function parseOp(op) {
     switch (op) {
-        case MUL_0_STRING: return MUL_0;
-        case MUL_1_STRING: return MUL_1;
+        case MUL_0_STRING:
+            return MUL_0;
+        case MUL_1_STRING:
+            return MUL_1;
     }
 }
 
 /**
- *
  * @param {MulOp} op
  * @returns {MulOpString}
  */
 function prettyOp(op) {
     switch (op) {
-        case MUL_0: return MUL_0_STRING;
-        case MUL_1: return MUL_1_STRING;
+        case MUL_0:
+            return MUL_0_STRING;
+        case MUL_1:
+            return MUL_1_STRING;
     }
 }
 
@@ -47,7 +49,6 @@ function prettyOp(op) {
  */
 export class MulAction extends Action {
     /**
-     *
      * @param {MulOp} op
      */
     constructor(op) {
@@ -68,7 +69,6 @@ export class MulAction extends Action {
     }
 
     /**
-     *
      * @param {string} str
      * @returns {MulAction | undefined}
      */
@@ -98,7 +98,6 @@ export class MulAction extends Action {
     }
 
     /**
-     *
      * @override
      * @param {Action} action
      * @returns {boolean}

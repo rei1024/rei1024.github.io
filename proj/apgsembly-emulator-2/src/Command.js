@@ -26,7 +26,6 @@ export class ProgramLine {
  */
 export class ComponentsHeader extends ProgramLine {
     /**
-     *
      * @param {string} content
      */
     constructor(content) {
@@ -46,7 +45,6 @@ export class ComponentsHeader extends ProgramLine {
     }
 
     /**
-     *
      * @returns {string}
      * @override
      */
@@ -60,7 +58,6 @@ export class ComponentsHeader extends ProgramLine {
  */
 export class RegistersHeader extends ProgramLine {
     /**
-     *
      * @param {string} content
      */
     constructor(content) {
@@ -93,7 +90,6 @@ export class RegistersHeader extends ProgramLine {
  */
 export class Comment extends ProgramLine {
     /**
-     *
      * @param {string} str with #
      */
     constructor(str) {
@@ -140,17 +136,21 @@ export class EmptyLine extends ProgramLine {
 }
 
 /**
- *
  * @param {string} inputStr
  * @returns {"Z" | "NZ" | "ZZ" | "*" | undefined}
  */
 function parseInput(inputStr) {
     switch (inputStr) {
-        case "Z": return inputStr;
-        case "NZ": return inputStr;
-        case "ZZ": return inputStr;
-        case "*": return inputStr;
-        default: return undefined;
+        case "Z":
+            return inputStr;
+        case "NZ":
+            return inputStr;
+        case "ZZ":
+            return inputStr;
+        case "*":
+            return inputStr;
+        default:
+            return undefined;
     }
 }
 
@@ -159,7 +159,6 @@ function parseInput(inputStr) {
  */
 export class Command extends ProgramLine {
     /**
-     *
      * @param {{
      *    state: string;
      *    input: "Z" | "NZ" | "ZZ" | "*";
@@ -203,7 +202,9 @@ export class Command extends ProgramLine {
          * @readonly
          * @private
          */
-        this._string = `${this.state}; ${this.input}; ${this.nextState}; ${this.actions.map(a => a.pretty()).join(", ")}`;
+        this._string = `${this.state}; ${this.input}; ${this.nextState}; ${
+            this.actions.map((a) => a.pretty()).join(", ")
+        }`;
     }
 
     /**
@@ -221,7 +222,7 @@ export class Command extends ProgramLine {
  * @returns {never}
  */
 function error() {
-    throw Error('internal error');
+    throw Error("internal error");
 }
 
 /**
@@ -238,9 +239,13 @@ export function parseProgramLine(str, line) {
     if (trimmedStr.startsWith("#")) {
         // ヘッダーをパースする
         if (trimmedStr.startsWith(ComponentsHeader.key)) {
-            return new ComponentsHeader(trimmedStr.slice(ComponentsHeader.key.length).trim());
+            return new ComponentsHeader(
+                trimmedStr.slice(ComponentsHeader.key.length).trim(),
+            );
         } else if (trimmedStr.startsWith(RegistersHeader.key)) {
-            return new RegistersHeader(trimmedStr.slice(RegistersHeader.key.length).trim());
+            return new RegistersHeader(
+                trimmedStr.slice(RegistersHeader.key.length).trim(),
+            );
         }
         return new Comment(str);
     }
@@ -260,21 +265,27 @@ export function parseProgramLine(str, line) {
     const nextState = array[2] ?? error();
     const actionsStr = array[3] ?? error();
     // 空文字を除く
-    const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter(x => x !== "");
+    const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter((x) =>
+        x !== ""
+    );
 
     /** @type {Action[]} */
     const actions = [];
     for (const actionsStr of actionStrs) {
         const result = parseAction(actionsStr);
         if (result === undefined) {
-            return `Unknown action "${actionsStr}" in "${str}"${lineNumberMessage(line)}`;
+            return `Unknown action "${actionsStr}" in "${str}"${
+                lineNumberMessage(line)
+            }`;
         }
         actions.push(result);
     }
 
     const input = parseInput(inputStr);
     if (input === undefined) {
-        return `Unknown input "${inputStr}" in "${str}"${lineNumberMessage(line)}. Expect "Z", "NZ", "ZZ" or "*"`;
+        return `Unknown input "${inputStr}" in "${str}"${
+            lineNumberMessage(line)
+        }. Expect "Z", "NZ", "ZZ" or "*"`;
     }
 
     return new Command({
@@ -282,12 +293,11 @@ export function parseProgramLine(str, line) {
         input: input,
         nextState: nextState,
         actions: actions,
-        line: line
+        line: line,
     });
 }
 
 /**
- *
  * @param {number | undefined} line
  * @returns {string}
  */
@@ -300,7 +310,6 @@ function lineNumberMessage(line) {
 }
 
 /**
- *
  * @param {Command} command
  * @returns {string}
  */

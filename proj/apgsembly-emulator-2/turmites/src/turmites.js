@@ -38,7 +38,6 @@ export const LeftTurnOp = 8;
  */
 
 /**
- *
  * @param {number} x
  * @returns {Op | undefined}
  */
@@ -52,38 +51,50 @@ export function getOp(x) {
 }
 
 /**
- *
  * @param {Op} op
  * @param {Dir} dir
  * @returns {Dir}
  */
 export function actionOp(op, dir) {
     switch (op) {
-        case NoTurnOp: return dir;
+        case NoTurnOp:
+            return dir;
         case RightTurnOp: {
             switch (dir) {
-                case UP: return RIGHT;
-                case RIGHT: return DOWN;
-                case DOWN: return LEFT;
-                case LEFT: return UP;
+                case UP:
+                    return RIGHT;
+                case RIGHT:
+                    return DOWN;
+                case DOWN:
+                    return LEFT;
+                case LEFT:
+                    return UP;
             }
             break;
         }
         case UTurnOp: {
             switch (dir) {
-                case UP: return DOWN;
-                case RIGHT: return LEFT;
-                case DOWN: return UP;
-                case LEFT: return RIGHT;
+                case UP:
+                    return DOWN;
+                case RIGHT:
+                    return LEFT;
+                case DOWN:
+                    return UP;
+                case LEFT:
+                    return RIGHT;
             }
             break;
         }
         case LeftTurnOp: {
             switch (dir) {
-                case UP: return LEFT;
-                case RIGHT: return UP;
-                case DOWN: return RIGHT;
-                case LEFT: return DOWN;
+                case UP:
+                    return LEFT;
+                case RIGHT:
+                    return UP;
+                case DOWN:
+                    return RIGHT;
+                case LEFT:
+                    return DOWN;
             }
         }
     }
@@ -91,7 +102,6 @@ export function actionOp(op, dir) {
 
 export class Next {
     /**
-     *
      * @param {Color} nextColor
      * @param {Op} nextOp
      * @param {State} nextState
@@ -107,7 +117,6 @@ export class Next {
     }
 
     /**
-     *
      * @param {number} x
      * @param {number} y
      * @param {number} z
@@ -129,8 +138,13 @@ export class Next {
         if (str.length !== 3) {
             return undefined;
         }
-        const [ nextColor, nextOpNum, nextState ] = [...str].map(x => parseInt(x, 10));
-        if (nextColor === undefined || nextOpNum === undefined || nextState === undefined) {
+        const [nextColor, nextOpNum, nextState] = [...str].map((x) =>
+            parseInt(x, 10)
+        );
+        if (
+            nextColor === undefined || nextOpNum === undefined ||
+            nextState === undefined
+        ) {
             return undefined;
         }
         return Next.fromNumbers(nextColor, nextOpNum, nextState);
@@ -140,14 +154,13 @@ export class Next {
         return {
             nextColor: this.nextColor,
             nextOp: this.nextOp,
-            nextState: this.nextState
+            nextState: this.nextState,
         };
     }
 }
 
 export class Turmites {
     /**
-     *
      * @param {Next[][]} array
      */
     constructor(array) {
@@ -155,12 +168,11 @@ export class Turmites {
     }
 
     /**
-     *
      * @param {unknown[]} array
      * @returns {Turmites}
      */
     static fromObject(array) {
-        const error = Error('Failed to parse');
+        const error = Error("Failed to parse");
 
         /**
          * @type {unknown[]}
@@ -170,7 +182,7 @@ export class Turmites {
         /**
          * @type {Next[][]}
          */
-        const array2 = content.map(v => {
+        const array2 = content.map((v) => {
             if (!Array.isArray(v)) {
                 throw error;
             }
@@ -185,7 +197,7 @@ export class Turmites {
                 if (nextObj.length !== 3) {
                     throw error;
                 }
-                if (!nextObj.every(x => typeof x === 'number')) {
+                if (!nextObj.every((x) => typeof x === "number")) {
                     throw error;
                 }
                 const [x, y, z] = nextObj;
@@ -202,17 +214,18 @@ export class Turmites {
     }
 
     /**
-     *
      * @param {string} str "{{{1,2,0},{0,4,1}},{{1,2,1},{0,1,0}}}"
      * @returns {Turmites}
      */
     static fromObjectString(str) {
         try {
-            const obj = JSON.parse(str.replace(/\{/ug, '[').replace(/\}/ug, ']'));
+            const obj = JSON.parse(
+                str.replace(/\{/ug, "[").replace(/\}/ug, "]"),
+            );
             if (Array.isArray(obj)) {
                 return Turmites.fromObject(obj);
             } else {
-                throw Error('Failed to parse');
+                throw Error("Failed to parse");
             }
         } catch (_e) {
             throw Error(`Failed to parse "${str}"`);
@@ -226,9 +239,9 @@ export class Turmites {
         const middle = this.array.map((array) => {
             return "{" + array.map((next) => {
                 return `{${next.nextColor},${next.nextOp},${next.nextState}}`;
-            }).join(',') + "}";
+            }).join(",") + "}";
         });
 
-        return `{${middle.join(',')}}`;
+        return `{${middle.join(",")}}`;
     }
 }

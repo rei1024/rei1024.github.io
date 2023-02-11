@@ -6,11 +6,10 @@ import { Command } from "../Command.js";
  * @returns {never}
  */
 function internalError() {
-    throw Error('internal error');
+    throw Error("internal error");
 }
 
 /**
- *
  * @param {Command} command1
  * @param {Command} [command2]
  * @returns {string}
@@ -29,13 +28,15 @@ function addLineNumberTwo(command1, command2) {
  * @param {ReadonlyArray<Command>} commands
  * @returns {string[] | undefined}
  */
- export function validateZAndNZ(commands) {
+export function validateZAndNZ(commands) {
     /**
-     *
      * @param {Command} c1
      * @param {Command} [c2]
      */
-    const errMsg = (c1, c2) => `Need Z line followed by NZ line in "${c1.pretty()}"${addLineNumberTwo(c1, c2)}`;
+    const errMsg = (c1, c2) =>
+        `Need Z line followed by NZ line in "${c1.pretty()}"${
+            addLineNumberTwo(c1, c2)
+        }`;
 
     const lastIndex = commands.length - 1;
 
@@ -45,12 +46,12 @@ function addLineNumberTwo(command1, command2) {
         const inputA = a.input;
         const inputB = b.input;
         // Zならば次がNZである必要がある
-        if (inputA === "Z" && inputB !== 'NZ') {
+        if (inputA === "Z" && inputB !== "NZ") {
             return [errMsg(a, b)];
         }
 
         // NZならば前がZである必要がある
-        if (inputB === "NZ" && inputA !== 'Z') {
+        if (inputB === "NZ" && inputA !== "Z") {
             return [errMsg(a, b)];
         }
 
@@ -63,7 +64,7 @@ function addLineNumberTwo(command1, command2) {
     // 最後の行がZで終わっている場合
     const lastLine = commands[commands.length - 1];
     if (lastLine !== undefined) {
-        if (lastLine.input === 'Z') {
+        if (lastLine.input === "Z") {
             return [errMsg(lastLine)];
         }
     }

@@ -12,7 +12,7 @@ loop {
     break(); /* break from loop */
 }
 
-/* break level */
+/* break from nested loop */
 loop { /* outer loop */
     loop { /* inner loop */
         break(2); /* break from outer loop */

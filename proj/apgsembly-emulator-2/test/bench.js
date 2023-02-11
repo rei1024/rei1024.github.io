@@ -10,8 +10,8 @@ import { piCalculator } from "./pi_calculator.js";
 const N = 1000000;
 
 const program = Program.parse(piCalculator);
-if (typeof program === 'string') {
-    throw Error('error');
+if (typeof program === "string") {
+    throw Error("error");
 }
 
 function run() {
@@ -28,10 +28,10 @@ function run() {
         }
     }
 
-    const exp = '3.141';
+    const exp = "3.141";
     const act = machine.actionExecutor.output.getString();
     if (exp !== act) {
-        throw Error('error' + act);
+        throw Error("error" + act);
     }
 }
 
@@ -39,18 +39,18 @@ function run2() {
     const machine = new Machine(program);
     machine.exec(N, false, -1, -1);
 
-    const exp = '3.141';
+    const exp = "3.141";
     const act = machine.actionExecutor.output.getString();
     if (exp !== act) {
-        throw Error('error' + act);
+        throw Error("error" + act);
     }
 }
 
-Deno.bench('pi normal', { group: 'pi' }, () => {
+Deno.bench("pi normal", { group: "pi" }, () => {
     run();
 });
 
-Deno.bench('pi exec', { group: 'pi' }, () => {
+Deno.bench("pi exec", { group: "pi" }, () => {
     run2();
 });
 

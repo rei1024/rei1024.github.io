@@ -3,7 +3,7 @@
 import { assertEquals, test } from "../../test/deps.js";
 import { create } from "./create.js";
 
-test('diagram', () => {
+test("diagram", () => {
     const diagram = create(`
     # State    Input    Next state    Actions
     # ---------------------------------------
@@ -13,10 +13,13 @@ test('diagram', () => {
     STATE_3; *; STATE_END; OUTPUT 3, NOP
     STATE_END; *; STATE_END; HALT_OUT
     `);
-    assertEquals(diagram, `graph TB
+    assertEquals(
+        diagram,
+        `graph TB
 INITIAL["INITIAL"]-->|"ZZ"|STATE_1_INITIAL["STATE_1_INITIAL"]
 STATE_1_INITIAL["STATE_1_INITIAL"]-->STATE_2["STATE_2"]
 STATE_2["STATE_2"]-->STATE_3["STATE_3"]
 STATE_3["STATE_3"]-->STATE_END["STATE_END"]
-STATE_END["STATE_END"]-->STATE_END["STATE_END"]`);
+STATE_END["STATE_END"]-->STATE_END["STATE_END"]`,
+    );
 });
