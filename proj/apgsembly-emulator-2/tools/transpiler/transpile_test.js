@@ -1,5 +1,7 @@
+// @ts-check
+
 import { transpile } from "./transpile.js";
-import { assertEquals, test } from "../test/deps.js";
+import { assertEquals, test } from "../../test/deps.js";
 
 test("transpile", () => {
     const strOrError = transpile(`#COMPONENTS U0-3,HALT_OUT

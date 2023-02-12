@@ -2,7 +2,7 @@
 
 /**
  * @param {HTMLInputElement} $file
- * @param {(_: string) => void} callback
+ * @param {(fileText: string) => void} callback
  */
 export function importFileAsText($file, callback) {
     $file.addEventListener("input", () => {

@@ -1,6 +1,6 @@
 // @ts-check
 
-import { $type } from "../frontend/util/selector.js";
+import { $type } from "../../frontend/util/selector.js";
 import { generate } from "./rule.js";
 
 const rule = $type("#rule", HTMLInputElement);
@@ -15,15 +15,14 @@ const copy = $type("#copy", HTMLButtonElement);
  * @returns {number | undefined}
  */
 function validateNum(n) {
-    if (isNaN(n)) {
-        return undefined;
-    }
     if (!Number.isInteger(n)) {
         return undefined;
     }
+
     if (n < 0) {
         return undefined;
     }
+
     if (n > 255) {
         return undefined;
     }
@@ -62,6 +61,7 @@ generateButton.addEventListener("click", () => {
     rule.classList.remove("is-invalid");
     code.value = "";
     copy.disabled = true;
+
     const n = parseNum(rule.value);
     if (n === undefined) {
         rule.classList.add("is-invalid");
@@ -71,15 +71,15 @@ generateButton.addEventListener("click", () => {
     copy.disabled = false;
 });
 
-copy.addEventListener("click", () => {
-    navigator.clipboard.writeText(code.value).then(() => {
-        copy.textContent = "Copied";
-        copy.classList.add("btn-success");
-        copy.classList.remove("btn-primary");
-        setTimeout(() => {
-            copy.textContent = "Copy";
-            copy.classList.remove("btn-success");
-            copy.classList.add("btn-primary");
-        }, 1000);
-    });
+copy.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(code.value);
+
+    copy.textContent = "Copied";
+    copy.classList.add("btn-success");
+    copy.classList.remove("btn-primary");
+    setTimeout(() => {
+        copy.textContent = "Copy";
+        copy.classList.remove("btn-success");
+        copy.classList.add("btn-primary");
+    }, 1000);
 });

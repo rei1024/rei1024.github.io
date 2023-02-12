@@ -16,7 +16,7 @@ import {
 } from "./components/breakpoint.js";
 
 import { Valve } from "./util/valve.js";
-import { getMessage } from "./util/get-message.js";
+import { getMessageFromError } from "./util/get-message-from-error.js";
 import { makeSpinner } from "./util/spinner.js";
 
 import {
@@ -231,7 +231,7 @@ export class App {
             this.#appState = "Stop";
         } catch (e) {
             this.#appState = "ParseError";
-            this.#errorMessage = getMessage(e);
+            this.#errorMessage = getMessageFromError(e);
             this.render();
             return false;
         }
@@ -451,8 +451,7 @@ export class App {
      * @param {number} steps
      */
     run(steps) {
-        const appState = this.#appState;
-        switch (appState) {
+        switch (this.#appState) {
             case "Initial": {
                 // エラーであれば走らせない
                 if (!this.reset()) {
@@ -471,7 +470,7 @@ export class App {
             return;
         }
 
-        const isRunning = appState === "Running";
+        const isRunning = this.#appState === "Running";
 
         // ブレークポイントの処理
         const breakpointIndex = parseInt($breakpointSelect.value, 10);
@@ -489,7 +488,7 @@ export class App {
             }
         } catch (error) {
             this.#appState = "RuntimeError";
-            this.#errorMessage = getMessage(error);
+            this.#errorMessage = getMessageFromError(error);
         } finally {
             this.render();
         }

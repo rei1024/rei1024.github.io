@@ -8,7 +8,7 @@ import { AbsTurmites } from "./src/abs_turmites.js";
 
 import { absLibrary, peggLibrary, timLibrary } from "./lib.js";
 
-import { $type } from "../frontend/util/selector.js";
+import { $type } from "../../frontend/util/selector.js";
 
 const rule = $type("#rule", HTMLInputElement);
 

@@ -26,11 +26,8 @@
     },
     "include": [
         "src/**/*.js",
+        "tools/**/*.js",
         "frontend/**/*.js",
-        "generator/**/*.js",
-        "transpiler/**/*.js",
-        "turmites/**/*.js",
-        "tm_to_apg/**/*.js",
         "labs/diagram/**/*.js"
     ]
 }

@@ -5,6 +5,7 @@ import { Program } from "../../src/exports.js";
 /**
  * @param {string} apgsemblySource
  * @returns {string} graph definition
+ * @throws Parse error
  */
 export function create(apgsemblySource) {
     const program = Program.parse(apgsemblySource);
@@ -85,19 +86,22 @@ function encodeKey(str) {
  */
 
 /**
+ * @param {Edge} item
+ */
+function renderEdge(item) {
+    const from = `${encodeKey(item.from)}["${item.from}"]`;
+    const to = `${encodeKey(item.to)}["${item.to}"]`;
+    const note = item.note ? `|"${item.note}"|` : "";
+    return `${from}-->${note}${to}`;
+}
+
+/**
  * @param {Edge[]} data
  * @returns {string}
  */
 function createGraphDefinition(data) {
-    return (
-        `graph TB\n` +
-        data
-            .map((item) => {
-                const from = `${encodeKey(item.from)}["${item.from}"]`;
-                const to = `${encodeKey(item.to)}["${item.to}"]`;
-                const note = item.note ? `|"${item.note}"|` : "";
-                return `${from}-->${note}${to}`;
-            })
-            .join("\n")
-    );
+    return [
+        `graph TB`,
+        data.map(renderEdge).join("\n"),
+    ].join("\n");
 }

@@ -6,7 +6,7 @@ import { create } from "./create.js";
 import { $type } from "../../frontend/util/selector.js";
 
 $type("#close", HTMLElement).addEventListener("click", () => {
-    globalThis.close();
+    close();
 });
 
 const diagram = $type("#diagram", HTMLElement);

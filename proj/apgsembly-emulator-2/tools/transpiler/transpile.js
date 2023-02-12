@@ -1,6 +1,6 @@
 // @ts-check
 
-import { Program } from "../src/Program.js";
+import { Program } from "../../src/Program.js";
 // import { ProgramLines } from "../src/ProgramLines.js";
 // import { Command, ProgramLine } from "../src/Command.js";
 // import { LegacyTRegAction, T_DEC, T_INC, T_READ, T_RESET, T_SET } from "../src/actions/LegacyTRegAction.js";

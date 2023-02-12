@@ -3,7 +3,7 @@
 /**
  * 流量調節
  */
-export class Valve extends EventTarget {
+export class Valve {
     #fractionStep = 0;
     #prevTime = -1;
     /**
@@ -12,8 +12,6 @@ export class Valve extends EventTarget {
      * @param {{ frequency: number, signal?: AbortSignal }} param0
      */
     constructor(handler, { frequency, signal }) {
-        super();
-
         /**
          * frequency of update
          * 周波数[Hz]

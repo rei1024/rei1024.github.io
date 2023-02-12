@@ -6,11 +6,11 @@ export const baseURL = "http://localhost:1123";
 
 export const APGsemblyEmulatorURL = baseURL + "/";
 
-export const genURL = baseURL + "/generator/index.html";
+export const genURL = baseURL + "/tools/eca-generator/index.html";
 
-export const turmitesURL = baseURL + "/turmites/index.html";
+export const turmitesURL = baseURL + "/tools/turmites/index.html";
 
-export const tmToAPGURL = baseURL + "/tm_to_apg/index.html";
+export const tmToAPGURL = baseURL + "/tools/tm-to-apg/index.html";
 
 export const toggleSel = "#toggle";
 

@@ -1,4 +1,6 @@
-import { assertEquals, assertIsError, test } from "../../test/deps.js";
+// @ts-check
+
+import { assertEquals, assertIsError, test } from "./test_deps.js";
 import { isHaltState, Line } from "./Line.js";
 
 test("parse Line", () => {

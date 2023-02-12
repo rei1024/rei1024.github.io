@@ -1,4 +1,6 @@
-import { assertEquals, test } from "../../test/deps.js";
+// @ts-check
+
+import { assertEquals, test } from "./test_deps.js";
 import { TM } from "./TM.js";
 import { Line } from "./Line.js";
 import { TMMap } from "./TMMap.js";
@@ -33,7 +35,7 @@ test("TMMap fromTM tm21", () => {
     }
 
     assertEquals(
-        tmMap.map.get("21").get("1"),
+        tmMap.map.get("21")?.get("1"),
         new Line({
             currentState: "21",
             currentSymbol: "1",
@@ -44,7 +46,7 @@ test("TMMap fromTM tm21", () => {
     );
 
     assertEquals(
-        tmMap.map.get("21").get("_"),
+        tmMap.map.get("21")?.get("_"),
         new Line({
             currentState: "21",
             currentSymbol: "_",

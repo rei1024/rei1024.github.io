@@ -17,7 +17,9 @@ export function getSaveData() {
         connection !== undefined && connection !== null &&
         typeof connection === "object"
     ) {
-        // @ts-ignore
+        /**
+         * @type {boolean}
+         */
         const saveData = connection.saveData;
         return saveData;
     }

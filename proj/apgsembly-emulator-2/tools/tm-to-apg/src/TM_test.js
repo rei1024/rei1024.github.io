@@ -1,4 +1,6 @@
-import { assertEquals, test } from "../../test/deps.js";
+// @ts-check
+
+import { assertEquals, test } from "./test_deps.js";
 import { TM } from "./TM.js";
 import { Line } from "./Line.js";
 import { palindrome } from "./test_data_test.js";

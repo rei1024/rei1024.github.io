@@ -1,8 +1,8 @@
 {
     "tasks": {
         "up": "deno run --allow-net --allow-read https://deno.land/std@0.177.0/http/file_server.ts . -p 1123",
-        "t": "deno test --no-check --parallel src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ labs/diagram/ generator/",
-        "w": "deno test --watch --no-check src/ test/ turmites/ tm_to_apg/ transpiler/ labs/fast_emulator/ labs/diagram/ generator/",
+        "t": "deno test --no-check --parallel src/ test/ tools/ labs/fast_emulator/ labs/diagram/",
+        "w": "deno test --watch --no-check src/ test/ labs/fast_emulator/ labs/diagram/",
         "cy": "node ./node_modules/.bin/cypress open",
         "cy-run": "node ./node_modules/.bin/cypress run",
         "lint": "deno lint",

@@ -1,6 +1,6 @@
 // @ts-check
 import { generate } from "./rule.js";
-import { assertEquals, test } from "../test/deps.js";
+import { assertEquals, test } from "../../test/deps.js";
 
 test("rule", () => {
     const apg = generate(90);

@@ -164,18 +164,27 @@ $examples.forEach((example) => {
     });
 });
 
+const watchMode = "apgm_watch_mode";
+
 /** @type {number | undefined} */
 let id = undefined;
-$watchMode.addEventListener("change", () => {
+
+function updateWatchMode() {
     if ($watchMode.checked) {
         id = setInterval(() => {
             compile(false);
         }, 500);
         $compile.disabled = true;
+        localStorage.setItem(watchMode, "on");
     } else {
         clearInterval(id);
         $compile.disabled = false;
+        localStorage.removeItem(watchMode);
     }
+}
+
+$watchMode.addEventListener("change", () => {
+    updateWatchMode();
 });
 
 $compile.disabled = false;
@@ -184,3 +193,12 @@ $examplesButton.disabled = false;
 $configButton.disabled = false;
 $copy.disabled = false;
 $download.disabled = false;
+
+try {
+    if (localStorage.getItem(watchMode) == "on") {
+        $watchMode.checked = true;
+        updateWatchMode();
+    }
+} catch (error) {
+    console.error(error);
+}

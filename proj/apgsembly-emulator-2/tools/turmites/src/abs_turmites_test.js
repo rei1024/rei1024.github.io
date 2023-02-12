@@ -1,7 +1,7 @@
 // @ts-check
 
 import { AbsTurmites } from "./abs_turmites.js";
-import { assertEquals, test } from "../../test/deps.js";
+import { assertEquals, test } from "../../../test/deps.js";
 
 test("AbsTurmites fromObjectString", () => {
     const str =

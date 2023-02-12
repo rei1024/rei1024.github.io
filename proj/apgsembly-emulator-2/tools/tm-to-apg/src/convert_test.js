@@ -1,4 +1,6 @@
-import { assertEquals, test } from "../../test/deps.js";
+// @ts-check
+
+import { test } from "./test_deps.js";
 import { TM } from "./TM.js";
 import { Line } from "./Line.js";
 import { TMMap } from "./TMMap.js";
@@ -40,7 +42,7 @@ const test1 = `
 15 1 * r 5
 `;
 
-test("tm_to_apg convert", () => {
+test("tm-to-apg convert", () => {
     let tm = TM.parse(test1);
 
     if (tm instanceof Error) {

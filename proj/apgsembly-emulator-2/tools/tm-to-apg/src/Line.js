@@ -150,6 +150,9 @@ export class Line {
             );
         }
 
+        /**
+         * @type {(string | undefined)[]}
+         */
         let [
             currentState,
             currentSymbol,

@@ -6,4 +6,4 @@ export {
     NopAction,
     parseAction,
     runAPGsembly,
-} from "https://rei1024.github.io/proj/apgsembly-emulator-2/src/exports.js?2022_11_16";
+} from "https://rei1024.github.io/proj/apgsembly-emulator-2/src/exports.js?2023_02_12";
