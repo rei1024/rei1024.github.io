@@ -2,7 +2,7 @@
 
 import { MulAction } from "../../src/actions/MulAction.js";
 import { MUL } from "../../src/components/MUL.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, test, throwError } from "../deps.js";
 
 test("MUL 0", () => {
     const x = new MUL();
@@ -20,12 +20,12 @@ test("MUL 1", () => {
 
 test("MUL action 0", () => {
     const x = new MUL();
-    x.action(MulAction.parse("MUL 0"));
+    x.action(MulAction.parse("MUL 0") ?? throwError());
     assertEquals(x.getValue(), 0);
 });
 
 test("MUL action 1", () => {
     const x = new MUL();
-    x.action(MulAction.parse("MUL 1"));
+    x.action(MulAction.parse("MUL 1") ?? throwError());
     assertEquals(x.getValue(), 5);
 });

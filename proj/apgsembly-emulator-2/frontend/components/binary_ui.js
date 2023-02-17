@@ -93,6 +93,8 @@ export class BinaryUI {
      * @param {ReadonlyMap<number, BReg>} regs
      */
     initialize(regs) {
+        this.clear();
+
         const cells = [];
         const table = create("table");
         for (const key of regs.keys()) {
@@ -123,9 +125,7 @@ export class BinaryUI {
             });
         }
 
-        this.root.innerHTML = "";
         this.root.append(table);
-
         this.cells = cells;
     }
 

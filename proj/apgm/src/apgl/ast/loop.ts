@@ -8,7 +8,7 @@ export class LoopAPGLExpr extends APGLExpr {
         super();
     }
 
-    override transform(f: (_: APGLExpr) => APGLExpr): APGLExpr {
+    override transform(f: (expr: APGLExpr) => APGLExpr): APGLExpr {
         return f(new LoopAPGLExpr(this.body.transform(f)));
     }
 }

@@ -41,5 +41,5 @@ halt_out(); /* HALT_OUT */
 nop(); /* NOP */
 
 /* OUTPUT */
-output("0"); /* OUTPUT 0 */
-output("."); /* OUTPUT . */
+output("0"); /* OUTPUT 0, NOP */
+output("."); /* OUTPUT ., NOP */

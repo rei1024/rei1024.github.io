@@ -11,7 +11,7 @@ function internalError() {
 
 /**
  * @param {Command} command1
- * @param {Command} [command2]
+ * @param {Command | undefined} [command2]
  * @returns {string}
  */
 function addLineNumberTwo(command1, command2) {
@@ -29,9 +29,13 @@ function addLineNumberTwo(command1, command2) {
  * @returns {string[] | undefined}
  */
 export function validateZAndNZ(commands) {
+    if (commands.length === 0) {
+        return undefined;
+    }
+
     /**
      * @param {Command} c1
-     * @param {Command} [c2]
+     * @param {Command | undefined} [c2]
      */
     const errMsg = (c1, c2) =>
         `Need Z line followed by NZ line in "${c1.pretty()}"${
@@ -45,28 +49,23 @@ export function validateZAndNZ(commands) {
         const b = commands[i + 1] ?? internalError();
         const inputA = a.input;
         const inputB = b.input;
-        // Zならば次がNZである必要がある
-        if (inputA === "Z" && inputB !== "NZ") {
-            return [errMsg(a, b)];
-        }
-
-        // NZならば前がZである必要がある
-        if (inputB === "NZ" && inputA !== "Z") {
-            return [errMsg(a, b)];
-        }
-
-        // Zの次がNZの時、入力状態は同じである必要がある
-        if (inputA === "Z" && inputB === "NZ" && a.state !== b.state) {
+        if (
+            // Zならば次がNZである必要がある
+            (inputA === "Z" && inputB !== "NZ") ||
+            // NZならば前がZである必要がある
+            (inputB === "NZ" && inputA !== "Z") ||
+            // Zの次がNZの時、入力状態は同じである必要がある
+            (inputA === "Z" && inputB === "NZ" && a.state !== b.state)
+        ) {
             return [errMsg(a, b)];
         }
     }
 
     // 最後の行がZで終わっている場合
-    const lastLine = commands[commands.length - 1];
-    if (lastLine !== undefined) {
-        if (lastLine.input === "Z") {
-            return [errMsg(lastLine)];
-        }
+    const lastLine = commands[lastIndex];
+
+    if (lastLine?.input === "Z") {
+        return [errMsg(lastLine)];
     }
 
     return undefined;

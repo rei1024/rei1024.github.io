@@ -1,6 +1,6 @@
 // @ts-check
 
-import { Program } from "../../src/exports.js";
+import { Program } from "../../src/Program.js";
 
 /**
  * @param {string} apgsemblySource

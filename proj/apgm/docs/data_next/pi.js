@@ -1,6 +1,6 @@
 // @ts-check
 
-// deno run dist/data_next/pi.js
+// deno run docs/data_next/pi.js
 
 let u0 = 0n;
 let u1 = 1n;

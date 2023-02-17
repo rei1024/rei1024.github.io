@@ -5,5 +5,8 @@ export abstract class APGLExpr {
     constructor() {
     }
 
-    abstract transform(f: (_: APGLExpr) => APGLExpr): APGLExpr;
+    /**
+     * Apply recursive transform
+     */
+    abstract transform(f: (expr: APGLExpr) => APGLExpr): APGLExpr;
 }

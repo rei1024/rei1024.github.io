@@ -9,7 +9,7 @@ export class SeqAPGLExpr extends APGLExpr {
         super();
     }
 
-    override transform(f: (_: APGLExpr) => APGLExpr): APGLExpr {
+    override transform(f: (expr: APGLExpr) => APGLExpr): APGLExpr {
         return f(new SeqAPGLExpr(this.exprs.map((x) => x.transform(f))));
     }
 }

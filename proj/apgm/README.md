@@ -2,6 +2,10 @@
 
 APGsembly macro language
 
+Since finite state machines are difficult to write by hand, we have implemented
+a language that can generate APGsembly through structured programming and
+macros.
+
 ## Pipeline
 
 ```mermaid
@@ -18,7 +22,7 @@ graph TD
 
 ### Requirements
 
-- `deno` above 1.24.0
+- `deno` above 1.30.3
   - https://deno.land/#installation
 
 ### Usage

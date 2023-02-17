@@ -15,10 +15,11 @@ export class Action {
     /**
      * Convert to string
      * 文字列化する
+     * @abstract
      * @returns {string}
      */
     pretty() {
-        return "unimplemented";
+        return ``;
     }
 
     /**

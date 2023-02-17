@@ -17,34 +17,38 @@ export function validateAll(commands) {
     /** @type {string[]} */
     let errors = [];
 
-    /**
-     * @type {((_: Command) => string | undefined)[]}
-     */
-    const singleCommandValidators = [
-        validateNoDuplicatedActionCommand,
-        validateActionReturnOnceCommand,
-        validateNoSameComponentCommand,
-        validateNextStateIsNotINITIALCommand,
-    ];
+    {
+        /**
+         * @type {((_: Command) => string | undefined)[]}
+         */
+        const singleCommandValidators = [
+            validateNoDuplicatedActionCommand,
+            validateActionReturnOnceCommand,
+            validateNoSameComponentCommand,
+            validateNextStateIsNotINITIALCommand,
+        ];
 
-    for (const command of commands) {
-        for (const validator of singleCommandValidators) {
-            const errorOrUndefined = validator(command);
-            if (typeof errorOrUndefined === "string") {
-                errors.push(errorOrUndefined);
+        for (const command of commands) {
+            for (const validator of singleCommandValidators) {
+                const errorOrUndefined = validator(command);
+                if (typeof errorOrUndefined === "string") {
+                    errors.push(errorOrUndefined);
+                }
             }
         }
     }
 
-    /**
-     * @type {((_: ReadonlyArray<Command>) => string[] | undefined)[]}
-     */
-    const validators = [validateZAndNZ];
+    {
+        /**
+         * @type {((_: ReadonlyArray<Command>) => string[] | undefined)[]}
+         */
+        const validators = [validateZAndNZ];
 
-    for (const validator of validators) {
-        const errorsOrUndefined = validator(commands);
-        if (errorsOrUndefined !== undefined) {
-            errors = errors.concat(errorsOrUndefined);
+        for (const validator of validators) {
+            const errorsOrUndefined = validator(commands);
+            if (errorsOrUndefined !== undefined) {
+                errors = errors.concat(errorsOrUndefined);
+            }
         }
     }
 

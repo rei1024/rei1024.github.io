@@ -1,10 +1,12 @@
 // @ts-check
 
-import { integration } from "./integration.js";
-import { downloadBlob } from "./download.js";
+import { $$ } from "./util/selector.js";
+import { downloadBlob } from "./util/download.js";
+
 import { initEditor, initMonaco } from "./apgm_monaco/init.js";
 import { setupCopy } from "./copy.js";
-import { $$ } from "./selector.js";
+
+import { integration } from "./integration.js";
 
 initMonaco();
 
@@ -38,11 +40,7 @@ const $configButton = $$("#config_button", HTMLButtonElement);
 const editor = initEditor($apgmInput);
 
 /**
- * @typedef {{ line: number, column: number }} Loc
- */
-
-/**
- * @param {Error & { apgmSpan?: { start: Loc, end: Loc } }} e
+ * @param {Error & { apgmSpan?: import('../src/apgm/ast/core').APGMSourceSpan }} e
  */
 export function showError(e) {
     try {

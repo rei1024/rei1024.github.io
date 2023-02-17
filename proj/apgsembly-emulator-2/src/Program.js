@@ -115,31 +115,6 @@ export class Program {
     }
 
     /**
-     * @returns {{ unary: number[], binary: number[], legacyT: number[] }}
-     */
-    extractRegisterNumbers() {
-        /** @type {readonly Action[]} */
-        const actions = this.commands.flatMap((command) => command.actions);
-
-        /**
-         * @template {Action & { regNumber: number }} T
-         * @param {new (...args: any[]) => T} klass
-         * @returns {number[]}
-         */
-        const getNumbers = (klass) => {
-            return sortNub(actions.flatMap(
-                (action) => action instanceof klass ? [action.regNumber] : [],
-            ));
-        };
-
-        return {
-            unary: getNumbers(URegAction),
-            binary: getNumbers(BRegAction),
-            legacyT: getNumbers(LegacyTRegAction),
-        };
-    }
-
-    /**
      * 文字列化する
      * @returns {string}
      */
@@ -155,4 +130,31 @@ export class Program {
  */
 function sortNub(array) {
     return [...new Set(array)].sort((a, b) => a - b);
+}
+
+/**
+ * プログラムから使用されているレジスタ番号を抽出
+ * @param {Program} program
+ * @returns {{ unary: number[], binary: number[], legacyT: number[] }}
+ */
+export function extractRegisterNumbers(program) {
+    /** @type {readonly Action[]} */
+    const actions = program.commands.flatMap((command) => command.actions);
+
+    /**
+     * @template {Action & { regNumber: number }} T
+     * @param {new (...args: any[]) => T} klass
+     * @returns {number[]}
+     */
+    const getNumbers = (klass) => {
+        return sortNub(actions.flatMap(
+            (action) => action instanceof klass ? [action.regNumber] : [],
+        ));
+    };
+
+    return {
+        unary: getNumbers(URegAction),
+        binary: getNumbers(BRegAction),
+        legacyT: getNumbers(LegacyTRegAction),
+    };
 }

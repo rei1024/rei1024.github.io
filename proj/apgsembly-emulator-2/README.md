@@ -20,3 +20,9 @@ An emulator for APGsembly 2.0
 - `$ deno task lint` Linting
 - `$ deno task cy` E2E tests
 - `$ deno task bundle` Bundle
+
+### Structure
+
+- `src/` an emulator for APGsembly
+- `frontend/` UI of the emulator
+- `cypress/` E2E testing

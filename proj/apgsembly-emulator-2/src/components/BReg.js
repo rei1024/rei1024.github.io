@@ -11,8 +11,8 @@ import { internalError } from "../actions/Action.js";
 
 /**
  * バイナリの文字列を0と1の配列に変換する
- * @param {string} str '01011101'
- * @returns {(0 | 1)[]}
+ * @param {string} str `'01011'`
+ * @returns {(0 | 1)[]} `[0, 1, 0, 1, 1]`
  * @throws
  */
 function parseBits(str) {
@@ -270,8 +270,9 @@ export class BReg {
             } else if (value0 < 0 || !Number.isInteger(value0)) {
                 error(debugStr);
             } else {
+                const bits = parseBits(value1);
                 this.pointer = value0;
-                this.setBits(parseBits(value1));
+                this.setBits(bits);
                 this.extend();
             }
         }

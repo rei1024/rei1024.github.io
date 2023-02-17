@@ -1,11 +1,11 @@
 // @ts-check
 
 /**
- * sizeごとに配列にする。
+ * sizeごとに配列にする。余りも出力する。
  * @template A
  * @param {Iterable<A>} iterable
  * @param {number} size
- * @returns
+ * @returns {Generator<A[], void, unknown>}
  */
 export function* chunk(
     iterable,

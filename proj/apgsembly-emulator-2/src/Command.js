@@ -10,14 +10,17 @@ import { parseAction } from "./actionParse.js";
 export const INITIAL_STATE = "INITIAL";
 
 /**
+ * Represents a line of source code
  * @abstract
  */
 export class ProgramLine {
     /**
+     * Convert to string
+     * @abstract
      * @returns {string}
      */
     pretty() {
-        return `unimplemented`;
+        return ``;
     }
 }
 
@@ -226,10 +229,10 @@ function error() {
 }
 
 /**
- * CommandまたはCommentまたは空行またはエラーメッセージ
+ * Parse a line of source code
  * @param {string} str
- * @param {number} [line]
- * @returns {Command | RegistersHeader | ComponentsHeader | Comment | EmptyLine | string}
+ * @param {number | undefined} [line] 1 based line number
+ * @returns {ProgramLine | string} {@link ProgramLine} またはエラーメッセージ
  */
 export function parseProgramLine(str, line) {
     const trimmedStr = str.trim();
@@ -259,12 +262,12 @@ export function parseProgramLine(str, line) {
         }
         return `Invalid line "${str}"${lineNumberMessage(line)}`;
     }
-    // arrayの長さは4
+    // assert: length of array is 4
     const state = array[0] ?? error();
     const inputStr = array[1] ?? error();
     const nextState = array[2] ?? error();
     const actionsStr = array[3] ?? error();
-    // 空文字を除く
+    // Remove empty string
     const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter((x) =>
         x !== ""
     );
@@ -302,7 +305,7 @@ export function parseProgramLine(str, line) {
  * @returns {string}
  */
 function lineNumberMessage(line) {
-    if (line !== null && line !== undefined) {
+    if (line !== undefined) {
         return ` at line ${line}`;
     } else {
         return "";

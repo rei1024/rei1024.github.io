@@ -17,9 +17,7 @@ export function mergeActionAPGLExpr(
     b: ActionAPGLExpr,
 ): ActionAPGLExpr | undefined {
     const mergedActions = merge(toActions(a), toActions(b));
-    return mergedActions === undefined
-        ? undefined
-        : new ActionAPGLExpr(mergedActions.map((action) => action.pretty()));
+    return mergedActions === undefined ? undefined : fromActions(mergedActions);
 }
 
 function merge(
@@ -85,6 +83,10 @@ function toActions(actionExpr: ActionAPGLExpr): Action[] {
     });
 }
 
+function fromActions(actions: Action[]): ActionAPGLExpr {
+    return new ActionAPGLExpr(actions.map((action) => action.pretty()));
+}
+
 function optimizeSeqAPGLExpr(seqExpr: SeqAPGLExpr): SeqAPGLExpr {
     const newExprs: APGLExpr[] = [];
 
@@ -92,7 +94,7 @@ function optimizeSeqAPGLExpr(seqExpr: SeqAPGLExpr): SeqAPGLExpr {
 
     const putItems = () => {
         if (items.length !== 0) {
-            newExprs.push(new ActionAPGLExpr(items.map((x) => x.pretty())));
+            newExprs.push(fromActions(items));
             items = [];
         }
     };

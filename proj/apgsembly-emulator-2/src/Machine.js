@@ -6,7 +6,7 @@ import {
     commandsToLookupTable,
     CompiledCommandWithNextState,
 } from "./compile.js";
-import { Program } from "./Program.js";
+import { extractRegisterNumbers, Program } from "./Program.js";
 import {
     addLineNumber,
     Command,
@@ -45,7 +45,7 @@ export class Machine {
          */
         this.stepCount = 0;
 
-        const registerNumbers = program.extractRegisterNumbers();
+        const registerNumbers = extractRegisterNumbers(program);
         /**
          * @readonly
          */
@@ -100,12 +100,12 @@ export class Machine {
         this.currentStateIndex = stateMap.get(INITIAL_STATE) ??
             error(`${INITIAL_STATE} state is not present`);
 
-        /**
-         * @type {number}
-         * @readonly
-         * @private
-         */
-        this.initialIndex = this.currentStateIndex;
+        // /**
+        //  * @type {number}
+        //  * @readonly
+        //  * @private
+        //  */
+        // this.initialIndex = this.currentStateIndex;
 
         /**
          * 統計
@@ -162,6 +162,7 @@ export class Machine {
      * @throws
      */
     #setByRegistersHeader(regHeader) {
+        // Pythonのevalと合わせるためシングルクォーテーションを変換
         /** @type {string} */
         const str = regHeader.content.replace(/'/ug, `"`);
 
@@ -268,7 +269,7 @@ export class Machine {
             }
         } catch (error) {
             if (error instanceof Error) {
-                this.throwError(error);
+                this.#throwError(error);
             } else {
                 throw error;
             }
@@ -324,7 +325,7 @@ export class Machine {
                 }
             } catch (error) {
                 if (error instanceof Error) {
-                    this.throwError(error);
+                    this.#throwError(error);
                 } else {
                     throw error;
                 }
@@ -353,10 +354,9 @@ export class Machine {
     }
 
     /**
-     * @private
      * @param {Error} err
      */
-    throwError(err) {
+    #throwError(err) {
         const command = this.getNextCommand().command;
         const line = addLineNumber(command);
         return error(err.message + ` in "${command.pretty()}"` + line);

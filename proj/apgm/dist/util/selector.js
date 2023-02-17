@@ -1,4 +1,5 @@
 /**
+ * Get an element from selector and validate class
  * @type {<T extends Element>(selector: string, klass: new () => T) => T}
  * @throws {Error}
  */

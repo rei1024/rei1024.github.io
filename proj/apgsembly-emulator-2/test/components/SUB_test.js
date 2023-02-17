@@ -2,7 +2,7 @@
 
 import { SubAction } from "../../src/actions/SubAction.js";
 import { SUB } from "../../src/components/SUB.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, test, throwError } from "../deps.js";
 
 test("SUB a1", () => {
     const x = new SUB();
@@ -25,18 +25,18 @@ test("SUB b1", () => {
 // action
 test("SUB action a1", () => {
     const x = new SUB();
-    x.action(SubAction.parse("SUB A1"));
+    x.action(SubAction.parse("SUB A1") ?? throwError());
     assertEquals(x.getValue(), 3);
 });
 
 test("SUB action b0", () => {
     const x = new SUB();
-    x.action(SubAction.parse("SUB B0"));
+    x.action(SubAction.parse("SUB B0") ?? throwError());
     assertEquals(x.getValue(), 0);
 });
 
 test("SUB action b1", () => {
     const x = new SUB();
-    x.action(SubAction.parse("SUB B1"));
+    x.action(SubAction.parse("SUB B1") ?? throwError());
     assertEquals(x.getValue(), 17);
 });

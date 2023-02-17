@@ -2,7 +2,7 @@
 
 import { URegAction } from "../../src/actions/URegAction.js";
 import { UReg } from "../../src/components/UReg.js";
-import { assertEquals, assertThrows, test } from "../deps.js";
+import { assertEquals, assertThrows, test, throwError } from "../deps.js";
 
 test("UReg tdec", () => {
     const x = new UReg();
@@ -40,35 +40,35 @@ test("UReg inc twice", () => {
 test("UReg action INC", () => {
     const x = new UReg();
     assertEquals(x.getValue(), 0);
-    x.action(URegAction.parse("INC U0"));
+    x.action(URegAction.parse("INC U0") ?? throwError());
     assertEquals(x.getValue(), 1);
-    x.action(URegAction.parse("INC U0"));
+    x.action(URegAction.parse("INC U0") ?? throwError());
     assertEquals(x.getValue(), 2);
-    x.action(URegAction.parse("INC U0"));
+    x.action(URegAction.parse("INC U0") ?? throwError());
     assertEquals(x.getValue(), 3);
 });
 
 test("UReg action TDEC", () => {
     const x = new UReg();
     assertEquals(x.getValue(), 0);
-    const res = x.action(URegAction.parse("TDEC U0"));
+    const res = x.action(URegAction.parse("TDEC U0") ?? throwError());
     assertEquals(x.getValue(), 0);
     assertEquals(res, 0);
 
-    x.action(URegAction.parse("INC U0"));
+    x.action(URegAction.parse("INC U0") ?? throwError());
     assertEquals(x.getValue(), 1);
 
-    const res2 = x.action(URegAction.parse("TDEC U0"));
+    const res2 = x.action(URegAction.parse("TDEC U0") ?? throwError());
 
     assertEquals(x.getValue(), 0);
     assertEquals(res2, 1);
 
-    x.action(URegAction.parse("INC U0"));
+    x.action(URegAction.parse("INC U0") ?? throwError());
     assertEquals(x.getValue(), 1);
-    x.action(URegAction.parse("INC U0"));
+    x.action(URegAction.parse("INC U0") ?? throwError());
     assertEquals(x.getValue(), 2);
 
-    const res3 = x.action(URegAction.parse("TDEC U0"));
+    const res3 = x.action(URegAction.parse("TDEC U0") ?? throwError());
 
     assertEquals(x.getValue(), 1);
     assertEquals(res3, 1);

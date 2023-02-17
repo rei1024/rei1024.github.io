@@ -17,12 +17,14 @@ function internalError() {
  * @returns {string | undefined}
  */
 export function validateNoSameComponentCommand(command) {
+    const actions = command.actions;
+
     // HALT_OUTの場合は一旦無視
     // FIXME
-    if (command.actions.find((x) => x instanceof HaltOutAction) !== undefined) {
+    if (actions.find((x) => x instanceof HaltOutAction) !== undefined) {
         return undefined;
     }
-    const actions = command.actions;
+
     const len = actions.length;
 
     if (len <= 1) {
@@ -30,11 +32,11 @@ export function validateNoSameComponentCommand(command) {
     }
 
     for (let i = 0; i < len; i++) {
+        const a = actions[i] ?? internalError();
         for (let j = i + 1; j < len; j++) {
             // if (i === j) {
             //     continue;
             // }
-            const a = actions[i] ?? internalError();
             const b = actions[j] ?? internalError();
             if (a.isSameComponent(b)) {
                 return `Actions "${a.pretty()}" and "${b.pretty()}" use same component in "${command.pretty()}"${

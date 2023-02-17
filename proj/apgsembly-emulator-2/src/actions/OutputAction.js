@@ -4,6 +4,9 @@ import { Action } from "./Action.js";
 
 const OUTPUT_STRING = "OUTPUT";
 
+/**
+ * `OUTPUT`
+ */
 export class OutputAction extends Action {
     /**
      * @param {string} digit

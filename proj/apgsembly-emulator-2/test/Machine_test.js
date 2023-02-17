@@ -10,11 +10,12 @@ import {
     program9_4,
 } from "./Program_test.js";
 import { piCalculator } from "./pi_calculator.js";
-import { assertEquals, assertThrows, test } from "./deps.js";
+import { assertEquals, assertThrows, test, throwError } from "./deps.js";
 
 /**
+ * @template {new (...args: any[]) => Error} E
  * @param {string} src
- * @param {unknown} [ErrorClass]
+ * @param {E | undefined} [ErrorClass]
  * @param {string} [msgIncludes]
  */
 function assertNewMachineThrows(src, ErrorClass, msgIncludes) {
@@ -26,6 +27,7 @@ function assertNewMachineThrows(src, ErrorClass, msgIncludes) {
         () => {
             new Machine(program);
         },
+        // @ts-ignore
         ErrorClass,
         msgIncludes,
     );
@@ -337,7 +339,10 @@ END_1; *; END_1; HALT_OUT
             actionExecutor.getUReg(0)?.getValue(),
             actionExecutor.getUReg(1)?.getValue(),
             machine.stepCount,
-            machine.getStateStats()[machine.getStateMap().get("A0") ?? ""],
+            machine
+                .getStateStats()[
+                    machine.getStateMap().get("A0") ?? throwError()
+                ],
         ]);
     }
 

@@ -12,8 +12,12 @@ const interactiveTags = new Set([
     "option",
     "a",
     "area",
+    "modal",
 ]);
 
+/**
+ * インタラクティブな要素にフォーカスがあるか？
+ */
 export function hasFocus() {
     const activeElementTagName =
         document.activeElement?.tagName.toLowerCase() ??

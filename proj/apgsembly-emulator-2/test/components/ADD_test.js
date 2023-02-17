@@ -2,7 +2,7 @@
 
 import { ADD_A1, AddAction } from "../../src/actions/AddAction.js";
 import { ADD } from "../../src/components/ADD.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, test, throwError } from "../deps.js";
 
 test("ADD a1", () => {
     const x = new ADD();
@@ -64,8 +64,8 @@ test("ADD action", () => {
     x.action(act);
 
     assertEquals(x.getValue(), 5);
-    x.action(AddAction.parse("ADD B1"));
-    x.action(AddAction.parse("ADD A1"));
+    x.action(AddAction.parse("ADD B1") ?? throwError());
+    x.action(AddAction.parse("ADD A1") ?? throwError());
 
     assertEquals(x.getValue(), 12);
 });

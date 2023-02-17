@@ -7,6 +7,13 @@ export {
 /**
  * @returns {never}
  */
+export function throwError() {
+    throw new Error("unexpected");
+}
+
+/**
+ * @returns {never}
+ */
 export function never() {
     throw Error("never");
 }

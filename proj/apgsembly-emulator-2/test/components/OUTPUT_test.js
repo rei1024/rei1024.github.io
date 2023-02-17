@@ -2,7 +2,7 @@
 
 import { OutputAction } from "../../src/actions/OutputAction.js";
 import { OUTPUT } from "../../src/components/OUTPUT.js";
-import { assertEquals, test } from "../deps.js";
+import { assertEquals, test, throwError } from "../deps.js";
 
 test("OUTPUT initial", () => {
     const x = new OUTPUT();
@@ -25,7 +25,7 @@ test("OUTPUT output twice", () => {
 // action
 test("OUTPUT action", () => {
     const x = new OUTPUT();
-    x.action(OutputAction.parse("OUTPUT 3"));
-    x.action(OutputAction.parse("OUTPUT 4"));
+    x.action(OutputAction.parse("OUTPUT 3") ?? throwError());
+    x.action(OutputAction.parse("OUTPUT 4") ?? throwError());
     assertEquals(x.getString(), "34");
 });

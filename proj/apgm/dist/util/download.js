@@ -15,6 +15,7 @@ export function downloadURL(url, fileName = "") {
 }
 
 /**
+ * ダウンロードする
  * @param {Blob} blob
  * @param {string} [fileName]
  * @param {number} [timeout]

@@ -15,7 +15,7 @@
  * HTML要素を作成する
  * @type {<K extends keyof HTMLElementTagNameMap>(tagName: K, textOrOptions?: (string | CreateOptions<K>)) => HTMLElementTagNameMap[K]}
  */
-export function create(tag, textOrOptions) {
+export function create(tag, textOrOptions = undefined) {
     const e = document.createElement(tag);
 
     if (typeof textOrOptions === "string") {

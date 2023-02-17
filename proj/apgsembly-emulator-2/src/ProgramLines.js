@@ -32,11 +32,9 @@ export class ProgramLines {
     }
 
     /**
-     * 1行をパース
-     * stringはエラーメッセージ
-     * string is an error
+     * Parse a source code
      * @param {string} str
-     * @returns {ProgramLines | string}
+     * @returns {ProgramLines | string} string is an error
      */
     static parse(str) {
         const lines = str.split(/\r\n|\n|\r/u);

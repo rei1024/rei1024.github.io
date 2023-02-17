@@ -176,6 +176,10 @@ test("BReg setBy", () => {
     });
 
     assertThrows(() => {
+        x.setByRegistersInit("B0", [1, "abc"]);
+    });
+
+    assertThrows(() => {
         x.setByRegistersInit("B1", true);
     });
 

@@ -1,8 +1,8 @@
 {
     "private": true,
     "name": "apgsembly-emulator-2",
-    "version": "0.1.0",
-    "description": "Emulator for APGsembly",
+    "version": "1.0.0",
+    "description": "An emulator for APGsembly",
     "main": "frontend/index.js",
     "type": "module",
     "directories": {

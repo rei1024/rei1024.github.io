@@ -185,7 +185,7 @@ $viewStateDiagramButton.addEventListener("click", () => {
     }
     localStorageSetItem("state-diagram-input", $input.value);
     window.open(
-        "./labs/diagram/index.html",
+        "./tools/diagram/index.html",
         undefined,
         "noreferrer=yes,noopener=yes",
     );

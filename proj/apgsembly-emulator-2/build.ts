@@ -32,6 +32,7 @@ const compressed = await new Response(
     file.readable.pipeThrough(new CompressionStream("gzip")),
 ).arrayBuffer();
 
+console.log(`${entryPoint} -> ${outputPath}`);
 console.log(
     fileInfo.size.toLocaleString() + " bytes" +
         `\n${compressed.byteLength.toLocaleString()} bytes (gzip)`,

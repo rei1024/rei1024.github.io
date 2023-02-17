@@ -247,8 +247,8 @@ export class App {
         const currentFreqeucy = this.#valve.frequency;
         if (this.#prevFrequency !== currentFreqeucy) {
             $freqencyOutput.textContent = currentFreqeucy.toLocaleString();
+            this.#prevFrequency = currentFreqeucy;
         }
-        this.#prevFrequency = currentFreqeucy;
     }
 
     /**

@@ -14,7 +14,7 @@ export class IfAPGLExpr extends APGLExpr {
         super();
     }
 
-    override transform(f: (_: APGLExpr) => APGLExpr): APGLExpr {
+    override transform(f: (expr: APGLExpr) => APGLExpr): APGLExpr {
         return f(
             new IfAPGLExpr(
                 this.cond.transform(f),

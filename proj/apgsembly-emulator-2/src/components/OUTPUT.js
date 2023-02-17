@@ -6,12 +6,8 @@ import { OutputAction } from "../actions/OutputAction.js";
  * `OUTPUT x`
  */
 export class OUTPUT {
-    constructor() {
-        /**
-         * @private
-         */
-        this.string = "";
-    }
+    #string = "";
+    constructor() {}
 
     /**
      * @param {OutputAction} act
@@ -26,13 +22,13 @@ export class OUTPUT {
      * @returns {string}
      */
     getString() {
-        return this.string;
+        return this.#string;
     }
 
     /**
      * @param {string} x
      */
     output(x) {
-        this.string += x;
+        this.#string += x;
     }
 }

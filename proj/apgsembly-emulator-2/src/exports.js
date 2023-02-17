@@ -1,14 +1,14 @@
 // @ts-check
 
-export { Action } from "./actions/Action.js";
+import { Action } from "./actions/Action.js";
 import {} from "./actions/AddAction.js";
 import {} from "./actions/B2DAction.js";
 import {} from "./actions/BRegAction.js";
-export { HaltOutAction } from "./actions/HaltOutAction.js";
+import { HaltOutAction } from "./actions/HaltOutAction.js";
 import {} from "./actions/MulAction.js";
-export { NopAction } from "./actions/NopAction.js";
+import { NopAction } from "./actions/NopAction.js";
 import {} from "./actions/OutputAction.js";
-export { parseAction } from "./actionParse.js";
+import { parseAction } from "./actionParse.js";
 import {} from "./actions/SubAction.js";
 import {} from "./actions/URegAction.js";
 import {} from "./actions/LegacyTRegAction.js";
@@ -33,12 +33,12 @@ import {} from "./ActionExecutor.js";
 import {} from "./Command.js";
 import {} from "./compile.js";
 import { Machine } from "./Machine.js";
-import { Program } from "./Program.js";
+import {} from "./Program.js";
 import {} from "./ProgramLines.js";
 import {} from "./validate.js";
 
-// diagram
-export { Program };
+// for APGM
+export { Action, HaltOutAction, NopAction, parseAction };
 
 /**
  * used by APGM testing

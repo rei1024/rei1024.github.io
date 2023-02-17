@@ -115,7 +115,7 @@ export class ActionExecutor {
      */
     setByRegistersInit(regInit) {
         for (const [key, value] of Object.entries(regInit)) {
-            this.setKeyValue(key, value);
+            this.#setKeyValue(key, value);
         }
     }
 
@@ -131,12 +131,11 @@ export class ActionExecutor {
     }
 
     /**
-     * @private
      * @param {string} key
      * @param {unknown} value
      * @throws
      */
-    setKeyValue(key, value) {
+    #setKeyValue(key, value) {
         if (key.startsWith("U")) {
             const n = parseNum(key.slice(1), 10);
             if (isNaNLocal(n)) {
@@ -168,7 +167,7 @@ export class ActionExecutor {
 
     /**
      * `-1`が正常終了
-     * `-1` is success
+     * `-1` is HALT_OUT
      * @param {Action} action
      * @returns {0 | 1 | -1 | void}
      * @throws
@@ -215,7 +214,7 @@ export class ActionExecutor {
 
     /**
      * `-1`が正常終了
-     * `-1` is success
+     * `-1` is HALT_OUT
      * @param {Action} action
      * @param {number} n
      * @returns {0 | 1 | -1 | void}

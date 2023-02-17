@@ -8,7 +8,7 @@ import {
     parseProgramLine,
     RegistersHeader,
 } from "../src/Command.js";
-import { assertEquals, test } from "./deps.js";
+import { assertEquals, test, throwError } from "./deps.js";
 
 test("Command parse", () => {
     const str = `INITIAL; ZZ; DIR0; TDEC U2`;
@@ -17,7 +17,9 @@ test("Command parse", () => {
         assertEquals(res.state, "INITIAL");
         assertEquals(res.input, "ZZ");
         assertEquals(res.nextState, "DIR0");
-        assertEquals(res.actions, [URegAction.parse("TDEC U2")]);
+        assertEquals(res.actions, [
+            URegAction.parse("TDEC U2") ?? throwError(),
+        ]);
     } else {
         throw Error("parse error " + str);
     }
@@ -50,7 +52,10 @@ test("Command parse multi action", () => {
         assertEquals(res.nextState, "DIR0");
         assertEquals(
             res.actions,
-            [URegAction.parse("TDEC U2"), URegAction.parse("INC U3")],
+            [
+                URegAction.parse("TDEC U2") ?? throwError(),
+                URegAction.parse("INC U3") ?? throwError(),
+            ],
         );
     } else {
         throw Error("parse error " + str);

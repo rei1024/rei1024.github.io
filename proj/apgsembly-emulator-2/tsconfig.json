@@ -27,7 +27,6 @@
     "include": [
         "src/**/*.js",
         "tools/**/*.js",
-        "frontend/**/*.js",
-        "labs/diagram/**/*.js"
+        "frontend/**/*.js"
     ]
 }

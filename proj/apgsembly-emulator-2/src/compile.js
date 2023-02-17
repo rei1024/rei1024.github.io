@@ -24,7 +24,7 @@ function isUTdec(action) {
 
 /**
  * @param {Command} command
- * @returns {undefined | { tdecU: URegAction }}
+ * @returns {undefined | { readonly tdecU: URegAction }}
  */
 function getOptimizedTdecU(command) {
     // - 前の入力がNZであること
@@ -51,7 +51,7 @@ function getOptimizedTdecU(command) {
 
 /**
  * @param {Command} command
- * @returns {undefined | { tdecB: BRegAction }}
+ * @returns {undefined | { readonly tdecB: BRegAction }}
  */
 function getOptimizedTdecB(command) {
     // - 前の入力がNZであること
@@ -135,9 +135,9 @@ function throwDuplicated(oldCommand, command) {
  * 速く実行できる形式へ変換する
  * @param {ReadonlyArray<Command>} commands
  * @returns {{
- *   states: string[];
- *   stateMap: Map<string, number>;
- *   lookup: CompiledCommand[];
+ *   readonly states: string[];
+ *   readonly stateMap: Map<string, number>;
+ *   readonly lookup: CompiledCommand[];
  * }}
  */
 export function commandsToLookupTable(commands) {

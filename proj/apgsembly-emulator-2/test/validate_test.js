@@ -80,6 +80,29 @@ test("validateZAndNZ ZZ and NZ", () => {
     );
 });
 
+test("validateZAndNZ empty", () => {
+    const err = validateZAndNZ([]);
+    assertEquals(
+        err,
+        undefined,
+    );
+});
+
+test("validateZAndNZ Z", () => {
+    const err = validateZAndNZ([
+        new Command({
+            state: "INITIAL",
+            input: "Z",
+            nextState: "A0",
+            actions: [new NopAction()],
+        }),
+    ]);
+    assertEquals(
+        err,
+        ['Need Z line followed by NZ line in "INITIAL; Z; A0; NOP"'],
+    );
+});
+
 test("validateNoDuplicatedAction NOP NOP", () => {
     const err = validateNoDuplicatedActionCommand(
         new Command({

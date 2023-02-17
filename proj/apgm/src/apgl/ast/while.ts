@@ -9,7 +9,7 @@ export class WhileAPGLExpr extends APGLExpr {
         super();
     }
 
-    override transform(f: (_: APGLExpr) => APGLExpr): APGLExpr {
+    override transform(f: (expr: APGLExpr) => APGLExpr): APGLExpr {
         return f(
             new WhileAPGLExpr(
                 this.modifier,

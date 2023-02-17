@@ -10,6 +10,9 @@ import {
 } from "../actions/LegacyTRegAction.js";
 import { internalError } from "../actions/Action.js";
 
+/**
+ * Compatibility for APGsembly 1.0
+ */
 export class LegacyTReg {
     constructor() {
         /**
