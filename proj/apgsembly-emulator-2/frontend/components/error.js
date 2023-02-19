@@ -8,9 +8,9 @@ import { create } from "../util/create.js";
  * @param {string} errorMessage
  */
 export function renderErrorMessage($error, appState, errorMessage) {
+    $error.replaceChildren();
     if (appState === "RuntimeError" || appState === "ParseError") {
         const messages = errorMessage.split("\n");
-        $error.replaceChildren();
         for (const message of messages) {
             $error.append(
                 create("span", "- " + message),

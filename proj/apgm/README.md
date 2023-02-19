@@ -2,9 +2,8 @@
 
 APGsembly macro language
 
-Since finite state machines are difficult to write by hand, we have implemented
-a language that can generate APGsembly through structured programming and
-macros.
+APGM is a language created to output APGsembly. It uses structured programming
+and macros.
 
 ## Pipeline
 

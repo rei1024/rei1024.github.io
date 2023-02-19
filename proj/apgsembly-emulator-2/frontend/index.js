@@ -92,7 +92,7 @@ $exampleCodes.forEach((e) => {
         } catch (e) {
             console.error(`Fetch: ${src}`);
         } finally {
-            $examples.style.opacity = "1";
+            $examples.removeAttribute("style");
         }
     });
 });
@@ -191,18 +191,20 @@ $viewStateDiagramButton.addEventListener("click", () => {
     );
 });
 
+const DARK_ATTR_KEY = "apge_dark";
+const ON = "on";
+
 // ダークモード
 // bodyタグ直下で設定してDark mode flashingを防ぐ
 const DARK_MODE_KEY = "dark_mode";
 $darkMode.addEventListener("change", () => {
-    const onOrOff = $darkMode.checked ? "on" : "off";
-    if (onOrOff === "on") {
-        localStorageSetItem(DARK_MODE_KEY, onOrOff);
+    if ($darkMode.checked) {
+        localStorageSetItem(DARK_MODE_KEY, ON);
+        document.body.setAttribute(DARK_ATTR_KEY, ON);
     } else {
         localStorageRemoveItem(DARK_MODE_KEY);
+        document.body.removeAttribute(DARK_ATTR_KEY);
     }
-
-    document.body.setAttribute("apge_dark", onOrOff);
 
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
 
@@ -304,8 +306,8 @@ idle(() => {
 
     // ダークモードについてはbodyタグ直下でも設定する
     // チェックボタンはここで処理する
-    if (localStorageGetItem(DARK_MODE_KEY) === "on") {
-        document.body.setAttribute("apge_dark", "on");
+    if (localStorageGetItem(DARK_MODE_KEY) === ON) {
+        document.body.setAttribute(DARK_ATTR_KEY, ON);
         $darkMode.checked = true;
         $darkModeLabel.textContent = "On";
     }
