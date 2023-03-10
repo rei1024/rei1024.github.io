@@ -46,12 +46,12 @@ function internalError() {
 export class Line {
     /**
      * @param {{
-     *  currentState: string | undefined; // undefined for wildcard
-     *  currentSymbol: string | undefined; // undefined for wildcard
-     *  newSymbol: string | undefined // undefined for no change
-     *  direction: Direction
-     *  newState: string | undefined // undefined for no change
-     *  breakpoint?: boolean | undefined // default is false
+     *  readonly currentState: string | undefined; // undefined for wildcard
+     *  readonly currentSymbol: string | undefined; // undefined for wildcard
+     *  readonly newSymbol: string | undefined // undefined for no change
+     *  readonly direction: Direction
+     *  readonly newState: string | undefined // undefined for no change
+     *  readonly breakpoint?: boolean | undefined // default is false
      * }} param0
      */
     constructor(

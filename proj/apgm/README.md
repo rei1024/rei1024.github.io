@@ -5,6 +5,8 @@ APGsembly macro language
 APGM is a language created to output APGsembly. It uses structured programming
 and macros.
 
+[APGM - APGsembly macro language](https://rei1024.github.io/proj/apgm/)
+
 ## Pipeline
 
 ```mermaid
@@ -21,7 +23,7 @@ graph TD
 
 ### Requirements
 
-- `deno` above 1.30.3
+- `deno` above 1.31.1
   - https://deno.land/#installation
 
 ### Usage

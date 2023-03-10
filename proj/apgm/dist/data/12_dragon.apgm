@@ -178,10 +178,10 @@ while_nz (tdec_u(INITIAL_Y!())) {
     inc_b2dy();
 }
 
-/*
-  U1 U2 U3 U4
-x 1  0  -1 0
-y 0  1  0  -1
+/**
+ * U1 U2 U3 U4
+ * x 1  0  -1 0
+ * y 0  1  0  -1
  */
 inc_u(1);
 loop {

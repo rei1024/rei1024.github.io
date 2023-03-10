@@ -1,5 +1,7 @@
 /*
     # O(sqrt(log(t))) by APGM
+
+    - https://conwaylife.com/book/ > 9.7 A 2D Printer
 */
 
 /* Copy Ua to Ub */

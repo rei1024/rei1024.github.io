@@ -54,15 +54,16 @@ function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
     });
 }
 
+const MAX_COUNT = 100000;
+
 export class MacroExpander {
-    private readonly macroMap: Map<string, Macro>;
-    private count = 0;
-    private readonly maxCount: number = 100000;
+    readonly #macroMap: Map<string, Macro>;
+    #count = 0;
     public readonly main: Main;
     constructor(main: Main) {
         this.main = main;
-        this.macroMap = new Map(main.macros.map((m) => [m.name, m]));
-        if (this.macroMap.size < main.macros.length) {
+        this.#macroMap = new Map(main.macros.map((m) => [m.name, m]));
+        if (this.#macroMap.size < main.macros.length) {
             const ds = dups(main.macros.map((x) => x.name));
             const d = ds[0];
             const span = main.macros.slice().reverse().find((x) => x.name === d)
@@ -77,30 +78,30 @@ export class MacroExpander {
     }
 
     expand(): APGMExpr {
-        return this.expandExpr(this.main.seqExpr);
+        return this.#expandExpr(this.main.seqExpr);
     }
 
-    private expandExpr(expr: APGMExpr): APGMExpr {
-        if (this.maxCount < this.count) {
+    #expandExpr(expr: APGMExpr): APGMExpr {
+        if (MAX_COUNT < this.#count) {
             throw Error("too many macro expansion");
         }
-        this.count++;
-        return expr.transform((x) => this.expandOnce(x));
+        this.#count++;
+        return expr.transform((x) => this.#expandOnce(x));
     }
 
-    private expandOnce(x: APGMExpr): APGMExpr {
+    #expandOnce(x: APGMExpr): APGMExpr {
         if (x instanceof FuncAPGMExpr) {
-            return this.expandFuncAPGMExpr(x);
+            return this.#expandFuncAPGMExpr(x);
         } else {
             return x;
         }
     }
 
-    private expandFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGMExpr {
-        const macro = this.macroMap.get(funcExpr.name);
+    #expandFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGMExpr {
+        const macro = this.#macroMap.get(funcExpr.name);
         if (macro !== undefined) {
             const expanded = replaceVarInBoby(macro, funcExpr);
-            return this.expandExpr(expanded);
+            return this.#expandExpr(expanded);
         } else {
             return funcExpr;
         }

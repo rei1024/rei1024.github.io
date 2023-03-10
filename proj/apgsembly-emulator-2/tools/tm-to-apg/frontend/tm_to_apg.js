@@ -69,15 +69,11 @@ $generate.addEventListener("click", () => {
         `# ---------------------------------------`,
     ];
 
-    if (comment !== "") {
-        $output.value = [
-            `# ${comment}`,
-            ...header,
-            apg,
-        ].join("\n");
-    } else {
-        $output.value = [...header, apg].join("\n");
-    }
+    $output.value = [
+        ...comment !== "" ? [`# ${comment}`] : [],
+        ...header,
+        apg,
+    ].join("\n");
 });
 
 $copy.addEventListener("click", () => {

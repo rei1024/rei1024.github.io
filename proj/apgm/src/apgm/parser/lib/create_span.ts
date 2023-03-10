@@ -5,12 +5,13 @@ export function createSpan(
     start: bnb.SourceLocation,
     word: string,
 ): APGMSourceSpan {
+    const len = word.length;
     return {
         start: start,
         end: {
-            index: start.index + word.length - 1,
+            index: start.index + len - 1,
             line: start.line,
-            column: start.column + word.length,
+            column: start.column + len,
         },
     };
 }

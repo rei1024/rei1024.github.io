@@ -81,7 +81,7 @@ export class Transpiler {
         return `${this.#prefix}${this.#id}`;
     }
 
-    emitTransition(
+    createTransition(
         current: string,
         next: string,
         inputZNZ: "*" | "Z" | "NZ" | "ZZ" = "*",
@@ -97,7 +97,7 @@ export class Transpiler {
     transpile(expr: APGLExpr): string[] {
         const initialState = "INITIAL";
         const secondState = this.getFreshName() + "_INITIAL";
-        const initial = this.emitTransition(initialState, secondState, "ZZ");
+        const initial = this.createTransition(initialState, secondState, "ZZ");
 
         const endState = this.#prefix + "END";
 
@@ -149,7 +149,7 @@ export class Transpiler {
     #transpileSeqAPGLExpr(ctx: Context, seqExpr: SeqAPGLExpr): Line[] {
         // length === 0
         if (isEmptyExpr(seqExpr)) {
-            return [this.emitTransition(ctx.input, ctx.output, ctx.inputZNZ)];
+            return [this.createTransition(ctx.input, ctx.output, ctx.inputZNZ)];
         }
 
         if (seqExpr.exprs.length === 1) {
@@ -164,14 +164,7 @@ export class Transpiler {
         let state = ctx.input;
         const lastIndex = seqExpr.exprs.length - 1;
         for (const [i, expr] of seqExpr.exprs.entries()) {
-            if (i === 0) {
-                const outputState = this.getFreshName();
-                seq = seq.concat(this.transpileExpr(
-                    new Context(state, outputState, ctx.inputZNZ),
-                    expr,
-                ));
-                state = outputState;
-            } else if (i === lastIndex) {
+            if (i === lastIndex) {
                 // 最後はoutput
                 seq = seq.concat(this.transpileExpr(
                     new Context(state, ctx.output, "*"),
@@ -179,12 +172,14 @@ export class Transpiler {
                 ));
             } else {
                 const outputState = this.getFreshName();
-                seq = seq.concat(
-                    this.transpileExpr(
-                        new Context(state, outputState, "*"),
-                        expr,
+                seq = seq.concat(this.transpileExpr(
+                    new Context(
+                        state,
+                        outputState,
+                        i === 0 ? ctx.inputZNZ : "*",
                     ),
-                );
+                    expr,
+                ));
                 state = outputState;
             }
         }
@@ -387,7 +382,7 @@ export class Transpiler {
             : this.getFreshName();
         const fromZOrNZ: Line[] = ctx.inputZNZ === "*"
             ? []
-            : [this.emitTransition(ctx.input, startState, ctx.inputZNZ)];
+            : [this.createTransition(ctx.input, startState, ctx.inputZNZ)];
 
         return { startState, fromZOrNZ };
     }
@@ -419,7 +414,7 @@ export class Transpiler {
             }
         }
 
-        return [this.emitTransition(ctx.input, finalState, ctx.inputZNZ)];
+        return [this.createTransition(ctx.input, finalState, ctx.inputZNZ)];
     }
 }
 
