@@ -1,6 +1,6 @@
 {
     "tasks": {
-        "up": "deno run --allow-net --allow-read https://deno.land/std@0.178.0/http/file_server.ts . -p 1123",
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.185.0/http/file_server.ts . -p 1123",
         "t": "deno test --parallel src/ test/ tools/ labs/fast_emulator",
         "w": "deno test --watch src/ test/ tools/ labs/fast_emulator/",
         "cy": "node ./node_modules/.bin/cypress open",
@@ -13,14 +13,12 @@
         "pre-commit": "deno fmt --check && deno task lint && deno task t"
     },
     "lint": {
-        "files": {
-            "exclude": [
-                "node_modules/",
-                "cypress_default/",
-                "frontend/index.dist.js",
-                "doc/apgjson/"
-            ]
-        },
+        "exclude": [
+            "node_modules/",
+            "cypress_default/",
+            "frontend/index.dist.js",
+            "doc/apgjson/"
+        ],
         "rules": {
             "include": ["no-throw-literal", "no-sparse-arrays", "no-eval"],
             "exclude": [
@@ -32,15 +30,11 @@
         }
     },
     "fmt": {
-        "options": {
-            "indentWidth": 4
-        },
-        "files": {
-            "exclude": [
-                "node_modules/",
-                "cypress_default/",
-                "frontend/index.dist.js"
-            ]
-        }
+        "indentWidth": 4,
+        "exclude": [
+            "node_modules/",
+            "cypress_default/",
+            "frontend/index.dist.js"
+        ]
     }
 }

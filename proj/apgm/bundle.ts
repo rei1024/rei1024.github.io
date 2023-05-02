@@ -1,5 +1,5 @@
-import * as esbuild from "https://deno.land/x/esbuild@v0.15.14/mod.js";
-import { denoPlugin } from "https://deno.land/x/esbuild_deno_loader@0.6.0/mod.ts";
+import * as esbuild from "https://deno.land/x/esbuild@v0.17.18/mod.js";
+import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.7.0/mod.ts";
 
 // deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write=. --allow-run build.ts
 
@@ -7,7 +7,7 @@ const entryPoint = "./src/integration/mod.ts";
 const outputPath = "./dist/integration.js";
 
 await esbuild.build({
-    plugins: [denoPlugin()],
+    plugins: [...denoPlugins()],
     entryPoints: [entryPoint],
     outfile: outputPath,
     bundle: true,

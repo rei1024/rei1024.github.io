@@ -4,6 +4,7 @@
 
 import { create } from "./create.js";
 import { $type } from "../../frontend/util/selector.js";
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.1.0/dist/mermaid.esm.min.mjs";
 
 $type("#close", HTMLElement).addEventListener("click", () => {
     close();
@@ -14,18 +15,12 @@ const diagram = $type("#diagram", HTMLElement);
 /**
  * @param {string} graphDefinition
  */
-function render(graphDefinition) {
-    // @ts-ignore
-    mermaid.mermaidAPI.render(
+async function render(graphDefinition) {
+    const { svg } = await mermaid.render(
         "svg",
         graphDefinition,
-        /**
-         * @param {string} svgString
-         */
-        function (svgString) {
-            diagram.innerHTML = svgString;
-        },
     );
+    diagram.innerHTML = svg;
 }
 
 const KEY = "state-diagram-input";

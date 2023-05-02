@@ -7,52 +7,52 @@ import { piCalculator } from "./pi_calculator.js";
 // deno run --allow-hrtime test/benchmark.js
 // node test/benchmark.js
 
-const N = 1000000;
+// const N = 1000000;
 
-const program = Program.parse(piCalculator);
-if (typeof program === "string") {
-    throw Error("error");
-}
+// const program = Program.parse(piCalculator);
+// if (typeof program === "string") {
+//     throw Error("error");
+// }
 
-function run() {
-    const machine = new Machine(program);
-    for (let i = 0; i < N; i++) {
-        try {
-            const res = machine.execCommand();
-            if (res === -1) {
-                break;
-            }
-        } catch (e) {
-            console.log(e);
-            throw e;
-        }
-    }
+// function run() {
+//     const machine = new Machine(program);
+//     for (let i = 0; i < N; i++) {
+//         try {
+//             const res = machine.execCommand();
+//             if (res === -1) {
+//                 break;
+//             }
+//         } catch (e) {
+//             console.log(e);
+//             throw e;
+//         }
+//     }
 
-    const exp = "3.141";
-    const act = machine.actionExecutor.output.getString();
-    if (exp !== act) {
-        throw Error("error" + act);
-    }
-}
+//     const exp = "3.141";
+//     const act = machine.actionExecutor.output.getString();
+//     if (exp !== act) {
+//         throw Error("error" + act);
+//     }
+// }
 
-function run2() {
-    const machine = new Machine(program);
-    machine.exec(N, false, -1, -1);
+// function run2() {
+//     const machine = new Machine(program);
+//     machine.exec(N, false, -1, -1);
 
-    const exp = "3.141";
-    const act = machine.actionExecutor.output.getString();
-    if (exp !== act) {
-        throw Error("error" + act);
-    }
-}
+//     const exp = "3.141";
+//     const act = machine.actionExecutor.output.getString();
+//     if (exp !== act) {
+//         throw Error("error" + act);
+//     }
+// }
 
-Deno.bench("pi normal", { group: "pi" }, () => {
-    run();
-});
+// Deno.bench("pi normal", { group: "pi" }, () => {
+//     run();
+// });
 
-Deno.bench("pi exec", { group: "pi" }, () => {
-    run2();
-});
+// Deno.bench("pi exec", { group: "pi" }, () => {
+//     run2();
+// });
 
 // const obj = { x: { y: 1 }, y: { y: 1 }, z: { y: 1 } };
 // const map = new Map([[1, { y: 1 } ], [2, { y: 1 } ], [3, { y: 1 } ]]);
