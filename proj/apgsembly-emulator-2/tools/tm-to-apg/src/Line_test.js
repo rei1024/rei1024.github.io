@@ -47,7 +47,13 @@ test("parse Line", () => {
     assertIsError(
         Line.parse("a b ; a"),
         Error,
-        'must have 5 components but it has 2 at "a b ; a".',
+        'must have 5 components but it has 2 components at "a b ; a".',
+    );
+
+    assertIsError(
+        Line.parse("a"),
+        Error,
+        'must have 5 components but it has 1 component at "a".',
     );
 
     assertIsError(

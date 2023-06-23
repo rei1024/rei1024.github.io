@@ -24,10 +24,10 @@ function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
     const exprs = funcExpr.args;
     if (exprs.length !== macro.args.length) {
         throw new ErrorWithSpan(
-            `argument length mismatch: "${macro.name}"` +
-                ` expect ${argumentsMessage(macro.args.length)} but given ${
-                    argumentsMessage(exprs.length)
-                }${formatLocationAt(funcExpr.span?.start)}`,
+            `Error at "${macro.name}": this macro takes ${
+                argumentsMessage(macro.args.length)
+            } but ${argumentsMessage(exprs.length)} was supplied` +
+                +`${formatLocationAt(funcExpr.span?.start)}`,
             funcExpr.span,
         );
     }
@@ -60,10 +60,14 @@ export class MacroExpander {
     readonly #macroMap: Map<string, Macro>;
     #count = 0;
     public readonly main: Main;
-    constructor(main: Main) {
+    constructor(main: Main, macroMap: Map<string, Macro>) {
         this.main = main;
-        this.#macroMap = new Map(main.macros.map((m) => [m.name, m]));
-        if (this.#macroMap.size < main.macros.length) {
+        this.#macroMap = macroMap;
+    }
+
+    static make(main: Main): MacroExpander {
+        const macroMap = new Map(main.macros.map((m) => [m.name, m]));
+        if (macroMap.size < main.macros.length) {
             const ds = dups(main.macros.map((x) => x.name));
             const d = ds[0];
             const span = main.macros.slice().reverse().find((x) => x.name === d)
@@ -75,6 +79,7 @@ export class MacroExpander {
                 span,
             );
         }
+        return new MacroExpander(main, macroMap);
     }
 
     expand(): APGMExpr {
@@ -112,5 +117,5 @@ export class MacroExpander {
  * Expand macro
  */
 export function expand(main: Main): APGMExpr {
-    return new MacroExpander(main).expand();
+    return MacroExpander.make(main).expand();
 }

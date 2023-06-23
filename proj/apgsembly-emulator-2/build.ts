@@ -1,10 +1,12 @@
-import * as esbuild from "https://deno.land/x/esbuild@v0.17.18/mod.js";
-import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.7.0/mod.ts";
+import * as esbuild from "https://deno.land/x/esbuild@v0.17.19/mod.js";
+import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.8.1/mod.ts";
 
 // deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write=. --allow-run build.ts
 
 const entryPoint = "./frontend/index.js";
 const outputPath = "./frontend/index.dist.js";
+
+const target = ["chrome99", "firefox99", "safari15"];
 
 await esbuild.build({
     plugins: [...denoPlugins()],
@@ -13,7 +15,7 @@ await esbuild.build({
     bundle: true,
     format: "esm",
     minify: true,
-    target: ["chrome99", "firefox99", "safari15"],
+    target: target,
     treeShaking: true,
 });
 
@@ -21,7 +23,7 @@ await esbuild.build({
     entryPoints: ["./frontend/style.css"],
     outfile: "./frontend/style.min.css",
     minify: true,
-    target: ["chrome99", "firefox99", "safari15"],
+    target: target,
 });
 
 esbuild.stop();

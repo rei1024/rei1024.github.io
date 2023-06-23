@@ -95,7 +95,7 @@ test("arguments length macro", () => {
             expand(new Main(macros, [], body));
         },
         Error,
-        `argument length mismatch: "f!" expect 1 argument but given 2 arguments`,
+        `Error at "f!": this macro takes 1 argument but 2 arguments was supplied`,
     );
 });
 
@@ -125,7 +125,7 @@ test("macro while error", () => {
             expand(new Main(macros, [], new SeqAPGMExpr([whileExpr])));
         },
         Error,
-        `argument length mismatch: "f!" expect 1 argument but given 2 arguments`,
+        `Error at "f!": this macro takes 1 argument but 2 arguments was supplied`,
     );
 });
 

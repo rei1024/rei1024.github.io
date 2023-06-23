@@ -139,14 +139,16 @@ export class Line {
         const trimmed = withoutComment.trim();
 
         const array = trimmed.split(/\s+/u).filter((x) => x !== "");
-
-        if (array.length === 0) {
+        const arrayLen = array.length;
+        if (arrayLen === 0) {
             return undefined;
         }
 
-        if (array.length < 5) {
+        if (arrayLen < 5) {
             return Error(
-                `must have 5 components but it has ${array.length} at "${str}".`,
+                `must have 5 components but it has ${arrayLen} component${
+                    arrayLen === 1 ? "" : "s"
+                } at "${str}".`,
             );
         }
 

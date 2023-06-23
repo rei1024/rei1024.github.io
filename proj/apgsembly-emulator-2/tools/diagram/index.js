@@ -4,7 +4,7 @@
 
 import { create } from "./create.js";
 import { $type } from "../../frontend/util/selector.js";
-import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.1.0/dist/mermaid.esm.min.mjs";
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.2.2/dist/mermaid.esm.min.mjs";
 
 $type("#close", HTMLElement).addEventListener("click", () => {
     close();
@@ -49,8 +49,8 @@ const input = $type("#input", HTMLTextAreaElement);
 
 input.addEventListener("input", () => {
     try {
-        render(create(input.value));
         input.classList.remove("is-invalid");
+        render(create(input.value));
     } catch (error) {
         if (error instanceof Error) {
             const lines = error.message.split("\n");

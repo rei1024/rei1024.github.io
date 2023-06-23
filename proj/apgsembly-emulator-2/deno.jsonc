@@ -1,6 +1,6 @@
 {
     "tasks": {
-        "up": "deno run --allow-net --allow-read https://deno.land/std@0.185.0/http/file_server.ts . -p 1123",
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.192.0/http/file_server.ts . -p 1123",
         "t": "deno test --parallel src/ test/ tools/ labs/fast_emulator",
         "w": "deno test --watch src/ test/ tools/ labs/fast_emulator/",
         "cy": "node ./node_modules/.bin/cypress open",

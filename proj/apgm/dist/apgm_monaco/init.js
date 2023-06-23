@@ -29,7 +29,7 @@ export function initMonaco() {
  */
 export function initEditor(container) {
     const editor = monaco.editor.create(container, {
-        value: "",
+        value: 'output("4");\noutput("2");\n',
         language: APGM_ID,
         theme: "vs-dark",
         // https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IStandaloneEditorConstructionOptions.html#suggest

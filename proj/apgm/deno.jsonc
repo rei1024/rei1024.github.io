@@ -11,21 +11,15 @@
         // "noUnusedLocals": true
     },
     "fmt": {
-        "options": {
-            "indentWidth": 4
-        },
-        "files": {
-            "exclude": ["coverage", "./dist/integration.js"]
-        }
+        "indentWidth": 4,
+        "exclude": ["coverage", "./dist/integration.js"]
     },
     "lint": {
-        "files": {
-            "exclude": [
-                "coverage",
-                "./dist/integration.js",
-                "./dist/apgm_monaco/monaco.d.ts"
-            ]
-        },
+        "exclude": [
+            "coverage",
+            "./dist/integration.js",
+            "./dist/apgm_monaco/monaco.d.ts"
+        ],
         "rules": {
             "include": ["no-throw-literal", "no-sparse-arrays", "no-eval"],
             "exclude": ["no-unused-vars", "no-ex-assign"]
@@ -42,7 +36,7 @@
         // reload dependency
         "reload": "deno test --reload",
         // local server
-        "up": "deno run --allow-net --allow-read https://deno.land/std@0.185.0/http/file_server.ts . -p 1618",
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.192.0/http/file_server.ts . -p 1618",
         // bundle
         "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run bundle.ts",
         // coverage

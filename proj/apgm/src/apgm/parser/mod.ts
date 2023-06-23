@@ -126,15 +126,15 @@ export const stringAPGMExpr = stringLit.wrap(_, _).map((x) =>
     new StringAPGMExpr(x.value, x.span)
 );
 
-export function seqAPGMExprRaw(): bnb.Parser<APGMExpr[]> {
-    return bnb.lazy(() => statement()).repeat();
-}
+// 括弧なし
+export const seqAPGMExprRaw: bnb.Parser<APGMExpr[]> = bnb.lazy(() =>
+    statement()
+).repeat();
 
-export function seqAPGMExpr(): bnb.Parser<SeqAPGMExpr> {
-    return seqAPGMExprRaw().wrap(curlyLeft, curlyRight).map((x) =>
-        new SeqAPGMExpr(x)
-    );
-}
+export const seqAPGMExpr: bnb.Parser<SeqAPGMExpr> = seqAPGMExprRaw.wrap(
+    curlyLeft,
+    curlyRight,
+).map((x) => new SeqAPGMExpr(x));
 
 export const whileKeyword = bnb.choice(token("while_z"), token("while_nz")).map(
     (x) => x === "while_z" ? "Z" : "NZ",
@@ -145,29 +145,25 @@ const exprWithParen: bnb.Parser<APGMExpr> = bnb.lazy(() => apgmExpr()).wrap(
     rightParen,
 );
 
-export function whileAPGMExpr(): bnb.Parser<WhileAPGMExpr> {
-    return whileKeyword.chain((mod) => {
+export const whileAPGMExpr: bnb.Parser<WhileAPGMExpr> = whileKeyword.chain(
+    (mod) => {
         return exprWithParen.chain((cond) => {
-            return bnb.lazy(() => apgmExpr()).map((body) =>
-                new WhileAPGMExpr(mod, cond, body)
-            );
+            return apgmExpr().map((body) => new WhileAPGMExpr(mod, cond, body));
         });
-    });
-}
+    },
+);
 
-export function loopAPGMExpr(): bnb.Parser<LoopAPGMExpr> {
-    return token("loop").next(bnb.lazy(() => apgmExpr())).map((x) =>
-        new LoopAPGMExpr(x)
-    );
-}
+export const loopAPGMExpr: bnb.Parser<LoopAPGMExpr> = token("loop").next(
+    bnb.lazy(() => apgmExpr()),
+).map((x) => new LoopAPGMExpr(x));
 
 export const ifKeyword: bnb.Parser<["Z" | "NZ", APGMSourceSpan]> = bnb.choice(
     tokenWithSpan("if_z"),
     tokenWithSpan("if_nz"),
 ).map((x) => x[0] === "if_z" ? ["Z", x[1]] : ["NZ", x[1]]);
 
-export function ifAPGMExpr(): bnb.Parser<IfAPGMExpr> {
-    return ifKeyword.chain(([mod, span]) => {
+export const ifAPGMExpr: bnb.Parser<IfAPGMExpr> = ifKeyword.chain(
+    ([mod, span]) => {
         return exprWithParen.chain((cond) => {
             return bnb.lazy(() => apgmExpr()).chain((body) => {
                 return bnb.choice(
@@ -178,22 +174,22 @@ export function ifAPGMExpr(): bnb.Parser<IfAPGMExpr> {
                 });
             });
         });
+    },
+);
+
+const MACRO = "macro";
+const macroKeyword: bnb.Parser<APGMSourceSpan> = _.chain((_) => {
+    return bnb.location.chain((location) => {
+        return bnb.text(MACRO).next(someSpaces).map((_) =>
+            createSpan(location, MACRO)
+        );
     });
-}
+});
 
 /** macro f!(a, b) */
 export function macroHead(): bnb.Parser<
     { span: APGMSourceSpan; name: string; args: VarAPGMExpr[] }
 > {
-    const MACRO = "macro";
-    const macroKeyword: bnb.Parser<APGMSourceSpan> = _.chain((_) => {
-        return bnb.location.chain((location) => {
-            return bnb.text(MACRO).next(someSpaces).map((_) =>
-                createSpan(location, MACRO)
-            );
-        });
-    });
-
     return macroKeyword.and(macroIdentifier).chain(([span, ident]) => {
         return argExprs(() => varAPGMExpr).map(
             (args) => {
@@ -231,12 +227,13 @@ export const header = bnb.text("#").next(bnb.match(/REGISTERS|COMPONENTS/))
 export const headers: bnb.Parser<Header[]> = header.wrap(_, _).repeat();
 
 export function apgmExpr(): bnb.Parser<APGMExpr> {
+    // varはfuncの後
     return bnb.choice(
-        loopAPGMExpr(),
-        whileAPGMExpr(),
-        ifAPGMExpr(),
-        funcAPGMExpr(),
-        seqAPGMExpr(),
+        loopAPGMExpr,
+        whileAPGMExpr,
+        ifAPGMExpr,
+        bnb.lazy(() => funcAPGMExpr()),
+        seqAPGMExpr,
         varAPGMExpr,
         numberAPGMExpr,
         stringAPGMExpr,
@@ -251,9 +248,9 @@ export function apgmExpr(): bnb.Parser<APGMExpr> {
 // element of SeqAPGMExpr
 export function statement(): bnb.Parser<APGMExpr> {
     return bnb.choice(
-        loopAPGMExpr(),
-        whileAPGMExpr(),
-        ifAPGMExpr(),
+        loopAPGMExpr,
+        whileAPGMExpr,
+        ifAPGMExpr,
         apgmExpr().skip(semicolon),
     );
 }
@@ -261,7 +258,7 @@ export function statement(): bnb.Parser<APGMExpr> {
 export function main(): bnb.Parser<Main> {
     return macro().repeat().chain((macros) => {
         return headers.chain((h) => {
-            return seqAPGMExprRaw().wrap(_, _).map((x) => {
+            return seqAPGMExprRaw.wrap(_, _).map((x) => {
                 return new Main(macros, h, new SeqAPGMExpr(x));
             });
         });

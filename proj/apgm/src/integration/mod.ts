@@ -22,16 +22,15 @@ import { optimizeSeq } from "../apgl/seq_optimizer/mod.ts";
 import { APGLExpr } from "../apgl/ast/core.ts";
 import { ErrorWithSpan } from "../apgm/ast/core.ts";
 
-function logged<T, S>(
-    f: (_: T) => S,
-    x: T,
+function logged<T extends unknown[], S>(
     logMessage: string | undefined = undefined,
+    f: (...args: T) => S,
+    ...args: T
 ): S {
-    const y = f(x);
-    if (logMessage !== undefined) {
-        console.log(logMessage, JSON.stringify(y, null, "  "));
-    }
-
+    logMessage && console.log(logMessage + " Start", performance.now());
+    const y = f(...args);
+    logMessage && console.log(logMessage + " End", performance.now());
+    // logMessage && console.log(logMessage, JSON.stringify(y, null, "  "));
     return y;
 }
 
@@ -44,14 +43,14 @@ function optimizeAPGL(
     }
 
     const seqOptimizedAPGL = logged(
+        log ? "optimize apgl seq" : undefined,
         optimizeSeq,
         apgl,
-        log ? "optimized apgl seq" : undefined,
     );
     const optimizedAPGL = logged(
+        log ? "optimize apgl action" : undefined,
         optimize,
         seqOptimizedAPGL,
-        log ? "optimized apgl action" : undefined,
     );
 
     return optimizedAPGL;
@@ -64,20 +63,29 @@ export function integration(
     options: IntegrationOptions = {},
 ): string[] {
     const log = options.log ?? false;
-    const apgm = logged(parseMain, str, log ? "apgm" : undefined);
+    const apgm = logged(log ? "apgm parse" : undefined, parseMain, str);
 
     try {
-        const expanded = logged(expand, apgm, log ? "apgm expaned" : undefined);
+        const expanded = logged(
+            log ? "apgm macro expaned" : undefined,
+            expand,
+            apgm,
+        );
         const apgl = logged(
+            log ? "apgm to apgl" : undefined,
             transpileAPGMExpr,
             expanded,
-            log ? "apgl" : undefined,
         );
         const optimizedAPGL = optimizeAPGL(apgl, {
             log,
             noOptimize: options.noOptimize,
         });
-        const apgs = transpileAPGL(optimizedAPGL, options);
+        const apgs = logged(
+            log ? "apgl to apgsembly" : undefined,
+            transpileAPGL,
+            optimizedAPGL,
+            options,
+        );
 
         const comment = [
             "# State    Input    Next state    Actions",

@@ -15,6 +15,7 @@ on:
       - "test/**"
       - "tools/**"
       - "labs/fast_emulator/**"
+
 jobs:
   test:
     runs-on: ubuntu-latest
