@@ -222,11 +222,4 @@ export class B2D {
         }
         arrayY[this.x] = 1;
     }
-
-    /**
-     * @returns {string}
-     */
-    toString() {
-        return this.array.map((a) => a.join("")).join("\n");
-    }
 }

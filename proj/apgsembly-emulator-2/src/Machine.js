@@ -113,7 +113,9 @@ export class Machine {
          * @type {number[]}
          * @private
          */
-        this.stateStatsArray = Array(lookup.length * 2).fill(0);
+        this.stateStatsArray = Array(lookup.length * 2)
+            // mapはHoley arrayにしないために必要
+            .map(() => 0).fill(0);
 
         const regHeader = program.registersHeader;
         if (regHeader) {

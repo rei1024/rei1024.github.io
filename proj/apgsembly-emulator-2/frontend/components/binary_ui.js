@@ -1,6 +1,10 @@
 // @ts-check
 
-import { BReg } from "../../src/components/BReg.js";
+import {
+    BReg,
+    toBinaryString,
+    toBinaryStringReverse,
+} from "../../src/components/BReg.js";
 import { create } from "../util/create.js";
 
 // ```
@@ -167,15 +171,14 @@ export class BinaryUI {
                 $suffix.innerHTML = "";
             } else if (reverseBits) {
                 const obj = reg.toObject();
-                // toObjectは新しい配列を返すため、reverseの副作用は無視する
-                $prefix.textContent = obj.suffix.reverse().join("");
+                $prefix.textContent = toBinaryStringReverse(obj.suffix);
                 $head.textContent = obj.head.toString();
-                $suffix.textContent = obj.prefix.reverse().join("");
+                $suffix.textContent = toBinaryStringReverse(obj.prefix);
             } else {
                 const obj = reg.toObject();
-                $prefix.textContent = obj.prefix.join("");
+                $prefix.textContent = toBinaryString(obj.prefix);
                 $head.textContent = obj.head.toString();
-                $suffix.textContent = obj.suffix.join("");
+                $suffix.textContent = toBinaryString(obj.suffix);
             }
 
             if (showBinaryValueInDecimal) {

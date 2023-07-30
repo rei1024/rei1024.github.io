@@ -34,9 +34,6 @@ export function validateNoSameComponentCommand(command) {
     for (let i = 0; i < len; i++) {
         const a = actions[i] ?? internalError();
         for (let j = i + 1; j < len; j++) {
-            // if (i === j) {
-            //     continue;
-            // }
             const b = actions[j] ?? internalError();
             if (a.isSameComponent(b)) {
                 return `Actions "${a.pretty()}" and "${b.pretty()}" use same component in "${command.pretty()}"${

@@ -44,14 +44,17 @@ test("BReg extend", () => {
 test("BReg set", () => {
     const x = new BReg();
     assertEquals(x.read(), 0);
+    assertEquals(x.getBits().length, 1);
     x.set();
     assertEquals(x.read(), 1);
+    assertEquals(x.getBits().length, 1);
 });
 
 test("BReg read twice", () => {
     const x = new BReg();
     x.set();
     assertEquals(x.read(), 1);
+    assertEquals(x.read(), 0);
     assertEquals(x.read(), 0);
 });
 
@@ -60,6 +63,7 @@ test("BReg inc and set", () => {
     x.inc();
     assertEquals(x.pointer, 1);
     assertEquals(x.read(), 0);
+    assertEquals(x.getBits(), [0, 0]);
 
     x.set();
     assertEquals(x.getBits(), [0, 1]);

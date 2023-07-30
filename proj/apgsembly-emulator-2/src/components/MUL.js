@@ -42,8 +42,9 @@ export class MUL {
      * @returns {0 | 1}
      */
     mul0() {
-        const r = this.value % 2;
-        this.value = this.value >> 1;
+        const value = this.value;
+        const r = value % 2;
+        this.value = value >> 1;
         // @ts-ignore
         return r;
     }
@@ -52,13 +53,14 @@ export class MUL {
      * @returns {0 | 1}
      */
     mul1() {
-        const r = this.value % 2;
-        if (this.value <= 21) {
+        const value = this.value;
+        const r = value % 2;
+        if (value <= 21) {
             // (x / 2) + 5
             // (x + 10) / 2
-            this.value = (this.value >> 1) + 5;
+            this.value = (value >> 1) + 5;
         } else {
-            this.value = (this.value - 22) >> 1;
+            this.value = (value - 22) >> 1;
         }
         // @ts-ignore
         return r;

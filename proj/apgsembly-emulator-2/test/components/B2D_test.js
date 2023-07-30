@@ -5,6 +5,11 @@ import { B2D } from "../../src/components/B2D.js";
 import { assertEquals, assertThrows, test, throwError } from "../deps.js";
 
 test("B2D constructor", () => {
+    const x = new B2D();
+    assertEquals(x.getArray(), [[0]]);
+});
+
+test("B2D constructor 2", () => {
     const x = new B2D(1, 2);
     assertEquals(x.getArray(), [[0, 0], [0, 0], [0, 0]]);
 });
@@ -115,11 +120,6 @@ test("B2D set Error", () => {
     assertThrows(() => {
         x.set();
     });
-});
-
-test("B2D toString", () => {
-    const x = new B2D();
-    assertEquals(x.toString(), "0");
 });
 
 // action

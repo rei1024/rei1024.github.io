@@ -179,6 +179,7 @@ export function commandsToLookupTable(commands) {
                 }`,
             );
         }
+
         switch (command.input) {
             case "Z": {
                 if (compiledCommand.z === undefined) {
