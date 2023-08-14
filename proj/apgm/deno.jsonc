@@ -36,7 +36,7 @@
         // reload dependency
         "reload": "deno test --reload",
         // local server
-        "up": "deno run --allow-net --allow-read https://deno.land/std@0.196.0/http/file_server.ts . -p 1618",
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.198.0/http/file_server.ts . -p 1618",
         // bundle
         "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run bundle.ts",
         // coverage

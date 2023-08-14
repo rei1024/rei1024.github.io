@@ -1,10 +1,7 @@
 // @ts-check
 
+import { ADD_A1, ADD_B0, ADD_B1 } from "../action_consts/Add_consts.js";
 import { Action } from "./Action.js";
-
-export const ADD_A1 = 0;
-export const ADD_B0 = 1;
-export const ADD_B1 = 2;
 
 const ADD_A1_STRING = "A1";
 const ADD_B0_STRING = "B0";

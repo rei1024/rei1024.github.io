@@ -1,14 +1,14 @@
 // @ts-check
 
+import { LegacyTRegAction } from "../actions/LegacyTRegAction.js";
+import { internalError } from "../actions/Action.js";
 import {
-    LegacyTRegAction,
     T_DEC,
     T_INC,
     T_READ,
     T_RESET,
     T_SET,
-} from "../actions/LegacyTRegAction.js";
-import { internalError } from "../actions/Action.js";
+} from "../action_consts/LegacyTReg_consts.js";
 
 /**
  * Compatibility for APGsembly 1.0
@@ -61,8 +61,9 @@ export class LegacyTReg {
      * @returns {0 | 1}
      */
     inc() {
-        if (this.pointer === this.bits.length - 1) {
-            this.bits.push(0);
+        const bits = this.bits;
+        if (this.pointer === bits.length - 1) {
+            bits.push(0);
             this.pointer++;
             return 0;
         } else {

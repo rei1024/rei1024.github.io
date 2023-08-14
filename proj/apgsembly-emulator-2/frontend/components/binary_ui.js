@@ -27,14 +27,14 @@ import { create } from "../util/create.js";
 /**
  * @returns {never}
  */
-function error() {
+const error = () => {
     throw Error("error");
-}
+};
 
 /**
  * value = ..., hex = ..., pointer = ...
  */
-function createMetaElem() {
+const createMetaElem = () => {
     const $decimal = create("span", { classes: ["decimal"] });
     const $hex = create("span", { classes: ["hex"] });
     const $maxPointer = create("span", { classes: ["max_pointer"] });
@@ -46,12 +46,12 @@ function createMetaElem() {
     });
 
     return { metaData, $decimal, $hex, $maxPointer, $pointer };
-}
+};
 
 /**
  * バイナリ表示
  */
-function createBinaryElem() {
+const createBinaryElem = () => {
     const $prefix = create("span", { classes: ["prefix"] });
     const $head = create("span", { classes: ["binary-head"] });
     const $suffix = create("span", { classes: ["suffix"] });
@@ -62,7 +62,7 @@ function createBinaryElem() {
     });
 
     return { binaryBits, $prefix, $head, $suffix };
-}
+};
 
 /**
  * UI for binary registers
@@ -169,16 +169,15 @@ export class BinaryUI {
                 $prefix.innerHTML = "";
                 $head.innerHTML = "";
                 $suffix.innerHTML = "";
-            } else if (reverseBits) {
-                const obj = reg.toObject();
-                $prefix.textContent = toBinaryStringReverse(obj.suffix);
-                $head.textContent = obj.head.toString();
-                $suffix.textContent = toBinaryStringReverse(obj.prefix);
             } else {
                 const obj = reg.toObject();
-                $prefix.textContent = toBinaryString(obj.prefix);
+                $prefix.textContent = reverseBits
+                    ? toBinaryStringReverse(obj.suffix)
+                    : toBinaryString(obj.prefix);
                 $head.textContent = obj.head.toString();
-                $suffix.textContent = toBinaryString(obj.suffix);
+                $suffix.textContent = reverseBits
+                    ? toBinaryStringReverse(obj.prefix)
+                    : toBinaryString(obj.suffix);
             }
 
             if (showBinaryValueInDecimal) {

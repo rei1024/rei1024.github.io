@@ -1,12 +1,13 @@
 // @ts-check
 
+import {
+    T_DEC,
+    T_INC,
+    T_READ,
+    T_RESET,
+    T_SET,
+} from "../action_consts/LegacyTReg_consts.js";
 import { Action } from "./Action.js";
-
-export const T_INC = 0;
-export const T_DEC = 1;
-export const T_READ = 2;
-export const T_SET = 3;
-export const T_RESET = 4;
 
 const T_INC_STRING = "INC";
 const T_DEC_STRING = "DEC";

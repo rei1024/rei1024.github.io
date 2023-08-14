@@ -1,11 +1,7 @@
 // @ts-check
 
+import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts.js";
 import { Action } from "./Action.js";
-
-export const B_INC = 0;
-export const B_TDEC = 1;
-export const B_READ = 2;
-export const B_SET = 3;
 
 const B_INC_STRING = "INC";
 const B_TDEC_STRING = "TDEC";

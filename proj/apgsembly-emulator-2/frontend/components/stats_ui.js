@@ -10,10 +10,15 @@ const CURRENT_STATE_CLASS = "stats_current_state";
  */
 
 /**
+ * @param {number} num
+ */
+const toLocaleString = (num) => num.toLocaleString();
+
+/**
  * @param {string} stateName
  * @param {StatsItem} stat
  */
-function createRow(stateName, { z, nz }) {
+const createRow = (stateName, { z, nz }) => {
     const $name = create("td", {
         fn: ($name) => {
             $name.colSpan = 2;
@@ -24,17 +29,17 @@ function createRow(stateName, { z, nz }) {
     const numClass = "num";
 
     const $sum = create("td", {
-        text: (z + nz).toLocaleString(),
+        text: toLocaleString(z + nz),
         classes: [numClass],
     });
 
     const $z = create("td", {
-        text: z.toLocaleString(),
+        text: toLocaleString(z),
         classes: [numClass],
     });
 
     const $nz = create("td", {
-        text: nz.toLocaleString(),
+        text: toLocaleString(nz),
         classes: [numClass],
     });
 
@@ -44,7 +49,7 @@ function createRow(stateName, { z, nz }) {
     });
 
     return { $tr, $sum, $z, $nz };
-}
+};
 
 /**
  * UI for statistics
@@ -80,7 +85,7 @@ export class StatsUI {
      * @param {string[]} states
      */
     initialize(stateStats, states) {
-        this.#statsNumberOfStates.textContent = states.length.toLocaleString();
+        this.#statsNumberOfStates.textContent = toLocaleString(states.length);
 
         this.cells = [];
         this.root.innerHTML = "";
@@ -117,9 +122,9 @@ export class StatsUI {
             }
 
             const { z, nz } = stats[i] ?? error();
-            item.$sum.textContent = (z + nz).toLocaleString();
-            item.$z.textContent = z.toLocaleString();
-            item.$nz.textContent = nz.toLocaleString();
+            item.$sum.textContent = toLocaleString(z + nz);
+            item.$z.textContent = toLocaleString(z);
+            item.$nz.textContent = toLocaleString(nz);
         }
     }
 }

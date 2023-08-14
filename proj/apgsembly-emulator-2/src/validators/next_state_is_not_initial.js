@@ -8,11 +8,11 @@ import { addLineNumber, Command, INITIAL_STATE } from "../Command.js";
  * @param {Command} command
  * @returns {string | undefined}
  */
-export function validateNextStateIsNotINITIALCommand(command) {
+export const validateNextStateIsNotINITIALCommand = (command) => {
     if (command.nextState === INITIAL_STATE) {
         return `Return to initial state in "${command.pretty()}"${
             addLineNumber(command)
         }`;
     }
     return undefined;
-}
+};

@@ -1,32 +1,34 @@
 // @ts-check
 
 import { addLineNumber, Command } from "./Command.js";
-import { Action } from "./actions/Action.js";
-import { B_INC, B_TDEC, BRegAction } from "./actions/BRegAction.js";
-import { U_TDEC, URegAction } from "./actions/URegAction.js";
+import { Action, internalError } from "./actions/Action.js";
+import { BRegAction } from "./actions/BRegAction.js";
+import { B_INC, B_TDEC } from "./action_consts/BReg_consts.js";
+import { URegAction } from "./actions/URegAction.js";
+import { U_TDEC } from "./action_consts/UReg_consts.js";
 import { HaltOutAction } from "./exports.js";
 
 /**
  * @param {Action} action
  * @returns {boolean}
  */
-function isBInc(action) {
+const isBInc = (action) => {
     return action instanceof BRegAction && action.op === B_INC;
-}
+};
 
 /**
  * @param {Action} action
  * @returns {boolean}
  */
-function isUTdec(action) {
+const isUTdec = (action) => {
     return action instanceof URegAction && action.op === U_TDEC;
-}
+};
 
 /**
  * @param {Command} command
  * @returns {undefined | { readonly tdecU: URegAction }}
  */
-function getOptimizedTdecU(command) {
+const getOptimizedTdecU = (command) => {
     // - 前の入力がNZであること
     // - 次の状態が自分自身であること
     // - HALT_OUTを含まないこと
@@ -40,6 +42,7 @@ function getOptimizedTdecU(command) {
             isBInc(action)
         )
     ) {
+        // TDECは2つ以上入らないため最初を取得でよい
         const tdecU = command.actions.find(isUTdec);
         if (tdecU && tdecU instanceof URegAction) {
             return { tdecU };
@@ -47,13 +50,13 @@ function getOptimizedTdecU(command) {
     }
 
     return undefined;
-}
+};
 
 /**
  * @param {Command} command
  * @returns {undefined | { readonly tdecB: BRegAction }}
  */
-function getOptimizedTdecB(command) {
+const getOptimizedTdecB = (command) => {
     // - 前の入力がNZであること
     // - 次の状態が自分自身であること
     // - HALT_OUTを含まないこと
@@ -65,6 +68,7 @@ function getOptimizedTdecB(command) {
         command.actions.length === 1 &&
         command.actions.every((action) => action instanceof BRegAction)
     ) {
+        // TDECは2つ以上入らないため最初を取得でよい
         const tdecB = command.actions.find((action) =>
             action instanceof BRegAction && action.op === B_TDEC
         );
@@ -74,7 +78,7 @@ function getOptimizedTdecB(command) {
     }
 
     return undefined;
-}
+};
 
 /**
  * コマンドと次の状態
@@ -123,13 +127,13 @@ export class CompiledCommand {
  * @param {Command} oldCommand
  * @param {Command} command
  */
-function throwDuplicated(oldCommand, command) {
+const throwDuplicated = (oldCommand, command) => {
     throw Error(
         `Duplicated command: "${oldCommand.pretty()}" and "${command.pretty()}"${
             addLineNumber(command)
         }`,
     );
-}
+};
 
 /**
  * 速く実行できる形式へ変換する
@@ -140,7 +144,7 @@ function throwDuplicated(oldCommand, command) {
  *   readonly lookup: CompiledCommand[];
  * }}
  */
-export function commandsToLookupTable(commands) {
+export const commandsToLookupTable = (commands) => {
     /**
      * 状態名から添字へのMap
      * @type {Map<string, number>}
@@ -149,13 +153,6 @@ export function commandsToLookupTable(commands) {
 
     /** @type {CompiledCommand[]} */
     const lookup = [];
-
-    /**
-     * @returns {never}
-     */
-    const error = () => {
-        throw Error("commandsToLookupTable internal error");
-    };
 
     // lookupを初期化
     for (const command of commands) {
@@ -168,8 +165,8 @@ export function commandsToLookupTable(commands) {
 
     for (const command of commands) {
         const compiledCommand =
-            lookup[stateMap.get(command.state) ?? error()] ??
-                error();
+            lookup[stateMap.get(command.state) ?? internalError()] ??
+                internalError();
         const nextState = stateMap.get(command.nextState);
         // 次の状態が見つからない場合はエラー
         if (nextState === undefined) {
@@ -249,7 +246,7 @@ export function commandsToLookupTable(commands) {
                 // type-check
                 /** @type {Error} */
                 const _ = command.input;
-                error();
+                internalError();
             }
         }
     }
@@ -259,4 +256,4 @@ export function commandsToLookupTable(commands) {
         stateMap,
         lookup,
     };
-}
+};

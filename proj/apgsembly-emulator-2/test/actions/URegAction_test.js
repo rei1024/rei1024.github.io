@@ -1,6 +1,7 @@
 // @ts-check
 
-import { U_INC, U_TDEC, URegAction } from "../../src/actions/URegAction.js";
+import { U_INC, U_TDEC } from "../../src/action_consts/UReg_consts.js";
+import { URegAction } from "../../src/actions/URegAction.js";
 import { assertEquals, never, test } from "../deps.js";
 
 test("URegAction parse", () => {

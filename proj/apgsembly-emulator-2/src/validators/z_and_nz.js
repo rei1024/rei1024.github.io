@@ -5,22 +5,22 @@ import { Command } from "../Command.js";
 /**
  * @returns {never}
  */
-function internalError() {
+const internalError = () => {
     throw Error("internal error");
-}
+};
 
 /**
  * @param {Command} command1
  * @param {Command | undefined} [command2]
  * @returns {string}
  */
-function addLineNumberTwo(command1, command2) {
+const addLineNumberTwo = (command1, command2) => {
     if (command1.line !== undefined && command2?.line !== undefined) {
         return ` at line ${command1.line} and ${command2.line}`;
     } else {
         return "";
     }
-}
+};
 
 /**
  * ZとNZがペアになっていることを検査する
@@ -28,7 +28,7 @@ function addLineNumberTwo(command1, command2) {
  * @param {ReadonlyArray<Command>} commands
  * @returns {string[] | undefined}
  */
-export function validateZAndNZ(commands) {
+export const validateZAndNZ = (commands) => {
     if (commands.length === 0) {
         return undefined;
     }
@@ -69,4 +69,4 @@ export function validateZAndNZ(commands) {
     }
 
     return undefined;
-}
+};

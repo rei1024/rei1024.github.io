@@ -1,5 +1,6 @@
 // @ts-check
 
+import { B2DAction } from "../actions/B2DAction.js";
 import {
     B2D_B2D,
     B2D_B2DX,
@@ -8,8 +9,8 @@ import {
     B2D_READ,
     B2D_SET,
     B2D_TDEC,
-    B2DAction,
-} from "../actions/B2DAction.js";
+} from "../action_consts/B2D_consts.js";
+
 import { internalError } from "../actions/Action.js";
 
 /**

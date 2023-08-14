@@ -1,13 +1,17 @@
 // @ts-check
 
+import { BRegAction } from "../../src/actions/BRegAction.js";
 import {
     B_INC,
     B_READ,
     B_SET,
     B_TDEC,
-    BRegAction,
-} from "../../src/actions/BRegAction.js";
-import { BReg } from "../../src/components/BReg.js";
+} from "../../src/action_consts/BReg_consts.js";
+import {
+    BReg,
+    toBinaryString,
+    toBinaryStringReverse,
+} from "../../src/components/BReg.js";
 import { assertEquals, assertThrows, test } from "../deps.js";
 
 test("BReg read initial", () => {
@@ -28,6 +32,7 @@ test("BReg set inc", () => {
     const res = x.inc();
     assertEquals(res, undefined);
     assertEquals(x.getBits(), [1, 0]);
+    assertEquals(x.toNumberString(), "1");
     assertEquals(x.pointer, 1);
 });
 
@@ -67,10 +72,11 @@ test("BReg inc and set", () => {
 
     x.set();
     assertEquals(x.getBits(), [0, 1]);
-
+    assertEquals(x.toNumberString(), "2");
     x.inc();
     assertEquals(x.pointer, 2);
     assertEquals(x.getBits(), [0, 1, 0]);
+    assertEquals(x.toNumberString(), "2");
 });
 
 test("BReg inc twice and set", () => {
@@ -80,6 +86,7 @@ test("BReg inc twice and set", () => {
     assertEquals(x.read(), 0);
     x.set();
     assertEquals(x.getBits(), [0, 0, 1]);
+    assertEquals(x.toNumberString(), "4");
 });
 
 test("BReg tdec", () => {
@@ -91,15 +98,14 @@ test("BReg tdec", () => {
 
 test("BReg toBinaryString", () => {
     const x = new BReg();
-    assertEquals(x.toBinaryString(), "0");
     x.inc();
     x.set();
     assertEquals(x.getBits(), [0, 1]);
-    assertEquals(x.toBinaryString(), "10");
     assertEquals(x.getBits(), [0, 1]);
+    assertEquals(toBinaryString(x.getBits()), "01");
+    assertEquals(toBinaryStringReverse(x.getBits()), "10");
     x.inc();
     assertEquals(x.getBits(), [0, 1, 0]);
-    assertEquals(x.toBinaryString(), "010");
 });
 
 test("BReg toNumberString", () => {
@@ -119,7 +125,6 @@ test("BReg toNumberString", () => {
 
 test("BReg toObject", () => {
     const x = new BReg();
-    assertEquals(x.toBinaryString(), "0");
     x.inc();
     x.set();
     x.inc();

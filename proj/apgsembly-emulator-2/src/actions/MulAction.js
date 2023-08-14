@@ -1,9 +1,7 @@
 // @ts-check
 
+import { MUL_0, MUL_1 } from "../action_consts/Mul_consts.js";
 import { Action } from "./Action.js";
-
-export const MUL_0 = 0;
-export const MUL_1 = 1;
 
 const MUL_0_STRING = "0";
 const MUL_1_STRING = "1";

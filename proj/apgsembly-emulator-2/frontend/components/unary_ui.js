@@ -9,7 +9,7 @@ import { create } from "../util/create.js";
  * @param {number} numberOfRegister
  * @returns {number}
  */
-function getNumberOfCols(numberOfRegister) {
+const getNumberOfCols = (numberOfRegister) => {
     const width = window.innerWidth;
     if (width < 768) {
         // 画面幅狭い場合は8個ごと
@@ -29,33 +29,33 @@ function getNumberOfCols(numberOfRegister) {
         return numberOfRegister;
     }
     return chunkSize;
-}
+};
 
 /**
  * @param {number} key
  */
-function createHeaderCell(key) {
+const createHeaderCell = (key) => {
     return create("th", `U${key}`);
-}
+};
 
 /**
  * @param {number} key
  * @param {UReg} value
  */
-function createDataCell(key, value) {
+const createDataCell = (key, value) => {
     return create("td", {
         text: value.getValue().toString(),
         fn: (td) => {
             td.dataset["test"] = `U${key}`;
         },
     });
-}
+};
 
 /**
  * @param {ReadonlyMap<number, UReg>} regs
  * @returns {{ table: HTMLTableElement, cells: HTMLElement[] }}
  */
-function createTable(regs) {
+const createTable = (regs) => {
     /**
      * @type {HTMLElement[]}
      */
@@ -97,7 +97,7 @@ function createTable(regs) {
         table,
         cells,
     };
-}
+};
 
 /**
  * 1進数レジスタのUI

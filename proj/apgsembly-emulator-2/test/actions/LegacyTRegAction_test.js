@@ -1,13 +1,13 @@
 // @ts-check
 
+import { LegacyTRegAction } from "../../src/actions/LegacyTRegAction.js";
 import {
-    LegacyTRegAction,
     T_DEC,
     T_INC,
     T_READ,
     T_RESET,
     T_SET,
-} from "../../src/actions/LegacyTRegAction.js";
+} from "../../src/action_consts/LegacyTReg_consts.js";
 import { assertEquals, never, test } from "../deps.js";
 
 test("LegacyTRegAction parse success", () => {

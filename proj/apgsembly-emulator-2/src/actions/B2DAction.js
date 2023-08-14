@@ -1,26 +1,19 @@
 // @ts-check
 
+import {
+    B2D_B2D,
+    B2D_B2DX,
+    B2D_B2DY,
+    B2D_INC,
+    B2D_READ,
+    B2D_SET,
+    B2D_TDEC,
+} from "../action_consts/B2D_consts.js";
 import { Action } from "./Action.js";
-
-export const B2D_INC = 0;
-export const B2D_TDEC = 1;
-export const B2D_READ = 2;
-export const B2D_SET = 3;
-export const B2D_B2DX = 4;
-export const B2D_B2DY = 5;
-export const B2D_B2D = 6;
-
-/**
- * @typedef {B2D_INC | B2D_TDEC | B2D_READ | B2D_SET} B2DOp
- */
 
 /**
  * @typedef {B2D_INC_STRING | B2D_TDEC_STRING |
  *          B2D_READ_STRING | B2D_SET_STRING} B2DOpString
- */
-
-/**
- * @typedef {B2D_B2DX | B2D_B2DY | B2D_B2D} B2DAxis
  */
 
 /**
@@ -39,6 +32,14 @@ const B2D_LEGACY_TDEC_STRING = "DEC";
 const B2D_LEGACY_B2DX_STRING = "SQX";
 const B2D_LEGACY_B2DY_STRING = "SQY";
 const B2D_LEGACY_B2D_STRING = "SQ";
+
+/**
+ * @typedef {import("../action_consts/B2D_consts.js").B2DOp} B2DOp
+ */
+
+/**
+ * @typedef {import("../action_consts/B2D_consts.js").B2DAxis} B2DAxis
+ */
 
 /**
  * @param {B2DOpString} op

@@ -3,7 +3,8 @@
 import { NopAction } from "../src/actions/NopAction.js";
 import { OutputAction } from "../src/actions/OutputAction.js";
 import { HaltOutAction } from "../src/actions/HaltOutAction.js";
-import { U_INC, URegAction } from "../src/actions/URegAction.js";
+import { URegAction } from "../src/actions/URegAction.js";
+import { U_INC } from "../src/action_consts/UReg_consts.js";
 import { Command } from "../src/Command.js";
 import { validateNoSameComponentCommand } from "../src/validators/no_same_component.js";
 import { validateActionReturnOnceCommand } from "../src/validators/action_return_once.js";

@@ -1,12 +1,12 @@
 // @ts-check
 
+import { BRegAction } from "../../src/actions/BRegAction.js";
 import {
     B_INC,
     B_READ,
     B_SET,
     B_TDEC,
-    BRegAction,
-} from "../../src/actions/BRegAction.js";
+} from "../../src/action_consts/BReg_consts.js";
 import { assertEquals, never, test } from "../deps.js";
 
 test("BRegAction parse success", () => {

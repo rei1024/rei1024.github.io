@@ -1,9 +1,7 @@
 // @ts-check
 
+import { U_INC, U_TDEC } from "../action_consts/UReg_consts.js";
 import { Action } from "./Action.js";
-
-export const U_INC = 0;
-export const U_TDEC = 1;
 
 const U_INC_STRING = "INC";
 const U_TDEC_STRING = "TDEC";

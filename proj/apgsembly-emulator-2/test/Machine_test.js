@@ -3,6 +3,7 @@
 /* eslint-disable camelcase */
 import { Machine } from "../src/Machine.js";
 import { Program } from "../src/Program.js";
+import { toBinaryStringReverse } from "../src/components/BReg.js";
 import {
     program9_1,
     program9_2,
@@ -129,6 +130,16 @@ test("Machine program9_1 new Machine", () => {
     assertEquals(machine.getCurrentState(), "INITIAL");
 });
 
+test("Machine NOP", () => {
+    const machine = Machine.fromString(`
+INITIAL; ZZ; A0; NOP
+A0; Z; A0; OUTPUT 0, HALT_OUT
+A0; NZ; A0; OUTPUT 1, HALT_OUT`);
+    machine.execCommand();
+    machine.execCommand();
+    assertEquals(machine.actionExecutor.output.getString(), "0");
+});
+
 test("Machine program9_1 fromString", () => {
     const machine = Machine.fromString(program9_1);
     assertEquals(machine.getCurrentState(), "INITIAL");
@@ -218,7 +229,12 @@ test("Machine program9_4", () => {
         throw Error("parse error program9_4");
     }
     const machine = new Machine(program);
-    assertEquals(machine.actionExecutor.getBReg(0)?.toBinaryString(), "0");
+    assertEquals(
+        toBinaryStringReverse(
+            machine.actionExecutor.getBReg(0)?.getBits() ?? [],
+        ),
+        "0",
+    );
 
     for (let i = 0; i < 100; i++) {
         const res = machine.execCommand();
@@ -227,7 +243,9 @@ test("Machine program9_4", () => {
         }
     }
     assertEquals(
-        machine.actionExecutor.getBReg(0)?.toBinaryString(),
+        toBinaryStringReverse(
+            machine.actionExecutor.getBReg(0)?.getBits() ?? [],
+        ),
         "10001011",
     );
 });
@@ -238,12 +256,19 @@ test("Machine program9_4 exec", () => {
         throw Error("parse error program9_4");
     }
     const machine = new Machine(program);
-    assertEquals(machine.actionExecutor.getBReg(0)?.toBinaryString(), "0");
+    assertEquals(
+        toBinaryStringReverse(
+            machine.actionExecutor.getBReg(0)?.getBits() ?? [],
+        ),
+        "0",
+    );
 
     machine.exec(100, false, -1, 0);
 
     assertEquals(
-        machine.actionExecutor.getBReg(0)?.toBinaryString(),
+        toBinaryStringReverse(
+            machine.actionExecutor.getBReg(0)?.getBits() ?? [],
+        ),
         "10001011",
     );
 });

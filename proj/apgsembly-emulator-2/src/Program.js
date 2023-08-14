@@ -128,16 +128,16 @@ export class Program {
  * @param {number[]} array
  * @returns {number[]}
  */
-function sortNub(array) {
+const sortNub = (array) => {
     return [...new Set(array)].sort((a, b) => a - b);
-}
+};
 
 /**
  * プログラムから使用されているレジスタ番号を抽出
  * @param {Program} program
  * @returns {{ unary: number[], binary: number[], legacyT: number[] }}
  */
-export function extractRegisterNumbers(program) {
+export const extractRegisterNumbers = (program) => {
     /** @type {readonly Action[]} */
     const actions = program.commands.flatMap((command) => command.actions);
 
@@ -157,4 +157,4 @@ export function extractRegisterNumbers(program) {
         binary: getNumbers(BRegAction),
         legacyT: getNumbers(LegacyTRegAction),
     };
-}
+};

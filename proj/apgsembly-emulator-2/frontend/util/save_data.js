@@ -4,7 +4,7 @@
  * undefinedは未実装
  * @returns {boolean | undefined}
  */
-export function getSaveData() {
+export const getSaveData = () => {
     const connection =
         // @ts-ignore
         navigator.connection ||
@@ -24,4 +24,4 @@ export function getSaveData() {
         return saveData;
     }
     return undefined;
-}
+};

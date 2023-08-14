@@ -3,7 +3,7 @@
 /**
  * @returns {number[]}
  */
-function getFrequencies() {
+const getFrequencies = () => {
     /** @type {number[]} */
     const frequencyArray = [];
     const maxOrder = 6;
@@ -20,7 +20,7 @@ function getFrequencies() {
     );
 
     return frequencyArray;
-}
+};
 
 /**
  * 周波数入力

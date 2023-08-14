@@ -1,13 +1,6 @@
 // @ts-check
 
-import {
-    LegacyTRegAction,
-    T_DEC,
-    T_INC,
-    T_READ,
-    T_RESET,
-    T_SET,
-} from "../../src/actions/LegacyTRegAction.js";
+import { LegacyTRegAction } from "../../src/actions/LegacyTRegAction.js";
 import { LegacyTReg } from "../../src/components/LegacyTReg.js";
 import { assertEquals, test, throwError } from "../deps.js";
 

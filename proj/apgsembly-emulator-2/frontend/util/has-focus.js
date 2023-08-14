@@ -18,10 +18,10 @@ const interactiveTags = new Set([
 /**
  * インタラクティブな要素にフォーカスがあるか？
  */
-export function hasFocus() {
+export const hasFocus = () => {
     const activeElementTagName =
         document.activeElement?.tagName.toLowerCase() ??
             "";
 
     return interactiveTags.has(activeElementTagName);
-}
+};

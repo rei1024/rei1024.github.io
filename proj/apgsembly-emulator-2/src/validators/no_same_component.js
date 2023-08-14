@@ -6,9 +6,9 @@ import { HaltOutAction } from "../actions/HaltOutAction.js";
 /**
  * @returns {never}
  */
-function internalError() {
+const internalError = () => {
     throw Error("internal error");
-}
+};
 
 /**
  * アクションが同じコンポーネントを使用していないか検査する

@@ -1,15 +1,16 @@
 // @ts-check
 
 import { ActionExecutor } from "../src/ActionExecutor.js";
+import { BRegAction } from "../src/actions/BRegAction.js";
 import {
     B_INC,
     B_READ,
     B_SET,
     B_TDEC,
-    BRegAction,
-} from "../src/actions/BRegAction.js";
-import { U_INC, U_TDEC, URegAction } from "../src/actions/URegAction.js";
-
+} from "../src/action_consts/BReg_consts.js";
+import { toBinaryString } from "../src/components/BReg.js";
+import { URegAction } from "../src/actions/URegAction.js";
+import { U_INC, U_TDEC } from "../src/action_consts/UReg_consts.js";
 import { assertEquals, assertThrows, test } from "./deps.js";
 
 test("ActionExecutor output", () => {
@@ -72,12 +73,12 @@ test("ActionExecutor setByRegistersInit", () => {
 
     x.setByRegistersInit({ B0: [0, "11010001"], B1: [2, "110"], U0: 8 });
     assertEquals(
-        [...bReg0.toBinaryString()].reverse().join(""),
+        toBinaryString(bReg0.getBits()),
         "11010001",
     );
     assertEquals(bReg0.pointer, 0);
     assertEquals(
-        [...bReg1.toBinaryString()].reverse().join(""),
+        toBinaryString(bReg1.getBits()),
         "110",
     );
     assertEquals(bReg1.pointer, 2);
@@ -103,7 +104,7 @@ test("ActionExecutor setByRegistersInit 2", () => {
         throw Error("bReg0 is undefined");
     }
     assertEquals(
-        [...bReg0.toBinaryString()].reverse().join(""),
+        toBinaryString(bReg0.getBits()),
         "1101",
     );
     assertEquals(bReg0.pointer, 0);

@@ -10,7 +10,7 @@ import { B2D } from "../../src/components/B2D.js";
  * @param {boolean} hidePointer ポインタを非表示にする
  * @param {boolean} flipUpsideDown 上下逆にする
  */
-export function renderB2D(context, b2d, hidePointer, flipUpsideDown) {
+export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
     const width = context.canvas.width;
     const prevHeight = context.canvas.height;
 
@@ -64,4 +64,4 @@ export function renderB2D(context, b2d, hidePointer, flipUpsideDown) {
             cellSize,
         );
     }
-}
+};

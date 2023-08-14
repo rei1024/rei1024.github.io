@@ -1,6 +1,7 @@
 // @ts-check
 
-import { MUL_0, MUL_1, MulAction } from "../actions/MulAction.js";
+import { MUL_0, MUL_1 } from "../action_consts/Mul_consts.js";
+import { MulAction } from "../actions/MulAction.js";
 
 /**
  * `MUL`

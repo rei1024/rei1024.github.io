@@ -1,6 +1,7 @@
 // @ts-check
 
-import { ADD_A1, AddAction } from "../../src/actions/AddAction.js";
+import { ADD_A1 } from "../../src/action_consts/Add_consts.js";
+import { AddAction } from "../../src/actions/AddAction.js";
 import { ADD } from "../../src/components/ADD.js";
 import { assertEquals, test, throwError } from "../deps.js";
 

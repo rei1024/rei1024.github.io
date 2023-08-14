@@ -2,9 +2,10 @@
 
 import { $type } from "./util/selector.js";
 
+const HTMLElement_ = HTMLElement;
 // エラーメッセージ
 // Error messsage
-export const $error = $type("#error", HTMLElement);
+export const $error = $type("#error", HTMLElement_);
 
 // 入力
 // APGsembly code
@@ -15,7 +16,7 @@ export const $input = $type("#input", HTMLTextAreaElement);
 export const $output = $type("#output", HTMLTextAreaElement);
 
 // ステップ数表示
-export const $stepCount = $type("#steps", HTMLElement);
+export const $stepCount = $type("#steps", HTMLElement_);
 
 // Toggle Start and Stop
 export const $toggle = $type("#toggle", HTMLButtonElement);
@@ -25,7 +26,7 @@ export const $reset = $type("#reset", HTMLButtonElement);
 
 // Step Button
 export const $step = $type("#step", HTMLButtonElement);
-export const $stepText = $type("#step-text", HTMLElement);
+export const $stepText = $type("#step-text", HTMLElement_);
 
 // Config modal button
 export const $configButton = $type("#config_button", HTMLButtonElement);
@@ -34,20 +35,20 @@ export const $configButton = $type("#config_button", HTMLButtonElement);
 export const $statsButton = $type("#stats_button", HTMLButtonElement);
 
 // 現在の状態
-export const $currentState = $type("#current_state", HTMLElement);
+export const $currentState = $type("#current_state", HTMLElement_);
 
 // 前回の出力
-export const $previousOutput = $type("#previous_output", HTMLElement);
+export const $previousOutput = $type("#previous_output", HTMLElement_);
 
 // スピード入力
 export const $frequencyInput = $type("#frequency_input", HTMLInputElement);
 
 // スピード表示
-export const $freqencyOutput = $type("#frequency_output", HTMLElement);
+export const $freqencyOutput = $type("#frequency_output", HTMLElement_);
 
 // 次のコマンド
 // Next command
-export const $command = $type("#command", HTMLElement);
+export const $command = $type("#command", HTMLElement_);
 
 // B2D
 export const $canvas = $type("#canvas", HTMLCanvasElement);
@@ -60,15 +61,15 @@ export const context = $canvas.getContext("2d") ?? (() => {
 })();
 
 export const $b2dPos = {
-    x: $type("#b2dx", HTMLElement),
-    y: $type("#b2dy", HTMLElement),
+    x: $type("#b2dx", HTMLElement_),
+    y: $type("#b2dy", HTMLElement_),
 };
 
 // B2Dの開閉
 export const $b2dDetail = $type("#b2d_detail", HTMLDetailsElement);
 
 // スライディングレジスタ
-export const $unaryRegister = $type("#unary_register", HTMLElement);
+export const $unaryRegister = $type("#unary_register", HTMLElement_);
 
 export const $unaryRegisterDetail = $type(
     "#unary_register_detail",
@@ -76,7 +77,7 @@ export const $unaryRegisterDetail = $type(
 );
 
 // バイナリレジスタ
-export const $binaryRegister = $type("#binary_register", HTMLElement);
+export const $binaryRegister = $type("#binary_register", HTMLElement_);
 
 // バイナリレジスタの開閉
 export const $binaryRegisterDetail = $type(
@@ -85,7 +86,7 @@ export const $binaryRegisterDetail = $type(
 );
 
 // ADD SUB MULの表示
-export const $addSubMul = $type("#add_sub_mul", HTMLElement);
+export const $addSubMul = $type("#add_sub_mul", HTMLElement_);
 
 // ファイルインポート
 export const $fileImport = $type("#import_file", HTMLInputElement);
@@ -101,7 +102,7 @@ export const $exampleCodes = document.querySelectorAll(".js_example");
 // --------- Modal --------- //
 
 // 設定モーダル
-export const $configModalContent = $type("#config_modal_content", HTMLElement);
+export const $configModalContent = $type("#config_modal_content", HTMLElement_);
 
 // ステップ数入力
 export const $stepInput = $type("#step_input", HTMLInputElement);
@@ -131,7 +132,7 @@ export const $breakpointInputSelect = $type(
 
 // ダークモード
 export const $darkMode = $type("#dark_mode", HTMLInputElement);
-export const $darkModeLabel = $type("#dark_mode_label", HTMLElement);
+export const $darkModeLabel = $type("#dark_mode_label", HTMLElement_);
 
 export const $b2dHidePointer = $type("#b2d_hide_pointer", HTMLInputElement);
 
@@ -142,13 +143,13 @@ export const $b2dFlipUpsideDown = $type(
 
 // Stats Modal
 
-export const $statsModal = $type("#stats_modal", HTMLElement);
+export const $statsModal = $type("#stats_modal", HTMLElement_);
 
 export const $statsBody = $type("#stats_body", HTMLTableSectionElement);
 
 export const $statsNumberOfStates = $type(
     "#stats_number_of_states",
-    HTMLElement,
+    HTMLElement_,
 );
 
 export const $viewStateDiagramButton = $type(

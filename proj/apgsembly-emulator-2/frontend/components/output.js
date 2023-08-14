@@ -19,7 +19,7 @@ if (windowInnerWidth >= 1200) {
  * @param {HTMLTextAreaElement} $output
  * @param {string | undefined} output
  */
-export function renderOutput($output, output) {
+export const renderOutput = ($output, output) => {
     output = output ?? "";
     if ($output.value === output) {
         return;
@@ -31,4 +31,4 @@ export function renderOutput($output, output) {
     const MAX_ROW = 6;
     const rows = Math.min(MAX_ROW, Math.max(1, Math.ceil(len / charNum)));
     $output.rows = rows;
-}
+};

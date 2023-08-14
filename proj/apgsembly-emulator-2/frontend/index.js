@@ -84,7 +84,7 @@ $exampleCodes.forEach((e) => {
         try {
             const response = await fetch(DATA_DIR + src);
             if (!response.ok) {
-                throw new Error("error");
+                throw Error("error");
             }
             app.setInputAndReset(await response.text());
             // スクロール
@@ -142,12 +142,12 @@ $stepInput.addEventListener("input", () => {
  * @param {HTMLInputElement} $checkbox
  * @param {string} key
  */
-function setupCheckbox($checkbox, key) {
+const setupCheckbox = ($checkbox, key) => {
     $checkbox.addEventListener("change", () => {
         app.render();
         localStorageSetItem(key, $checkbox.checked.toString());
     });
-}
+};
 
 // バイナリを非表示にする
 const HIDE_BITS_KEY = "hide_binary";
@@ -224,7 +224,7 @@ $darkMode.addEventListener("change", () => {
 // Space: Step
 document.addEventListener("keydown", (e) => {
     // 入力中は無し
-    if (hasFocus() || e.isComposing) {
+    if (hasFocus() || e.isComposing || e.metaKey || e.shiftKey || e.ctrlKey) {
         return;
     }
 
@@ -269,7 +269,7 @@ idle(() => {
     const INIT_CODE = "initial_code";
     const initCode = localStorageGetItem(INIT_CODE);
     if (initCode !== null) {
-        localStorage.removeItem(INIT_CODE);
+        localStorageRemoveItem(INIT_CODE);
         app.setInputAndReset(initCode);
     }
 });

@@ -1,0 +1,33 @@
+
+macro double_b!(binary, alloc_u, temp_u_0, temp_u_1) {
+
+}
+
+/**
+ * n: B
+ * d: B
+ * q: B = 0
+ * r: B = 0
+ * len: U
+ * temp_0: U = 0
+ * temp_1: U = 0
+ * temp_2: U = 0
+ */
+macro div!(n, d, q, r, len, temp_0, temp_1, temp_2) {
+    copy_u!(len, temp_0, temp_1);
+    while_nz (tdec_u(temp_0)) {
+        inc_b(q);
+        inc_b(n);
+    }
+
+    copy_u!(len, temp_0, temp_1);
+    while_nz (tdec_u(temp_0)) {
+        double_b!(r, len, temp_1, temp_2);
+        // TODO
+    }
+
+    b_head_to_0!(n);
+    b_head_to_0!(d);
+    b_head_to_0!(q);
+    b_head_to_0!(r);
+}

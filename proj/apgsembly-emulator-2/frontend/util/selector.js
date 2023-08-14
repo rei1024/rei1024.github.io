@@ -5,7 +5,7 @@
  * @type {<T extends Element>(selector: string, klass: new () => T) => T}
  * @throws {Error}
  */
-export function $type(selector, klass) {
+export const $type = (selector, klass) => {
     const el = document.querySelector(selector);
 
     if (el == null) {
@@ -17,4 +17,4 @@ export function $type(selector, klass) {
     }
 
     throw Error(`"${selector}" is not a ${klass.name}`);
-}
+};

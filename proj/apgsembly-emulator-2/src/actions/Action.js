@@ -3,9 +3,9 @@
 /**
  * @returns {never}
  */
-export function internalError() {
+export const internalError = () => {
     throw Error("internal error");
-}
+};
 
 /**
  * アクション

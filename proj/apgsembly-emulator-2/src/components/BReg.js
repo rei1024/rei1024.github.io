@@ -1,12 +1,7 @@
 // @ts-check
 
-import {
-    B_INC,
-    B_READ,
-    B_SET,
-    B_TDEC,
-    BRegAction,
-} from "../actions/BRegAction.js";
+import { BRegAction } from "../actions/BRegAction.js";
+import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts.js";
 import { internalError } from "../actions/Action.js";
 
 /**
@@ -222,10 +217,11 @@ export class BReg {
      */
     extend() {
         const pointer = this.pointer;
-        const len = this.bits.length;
+        const bits = this.bits;
+        const len = bits.length;
         if (pointer >= len) {
             if (pointer === len) {
-                this.bits.push(0);
+                bits.push(0);
             } else {
                 /**
                  * @type {0[]}
@@ -237,17 +233,12 @@ export class BReg {
     }
 
     /**
-     * @returns {string}
-     */
-    toBinaryString() {
-        return toBinaryStringReverse(this.bits);
-    }
-
-    /**
      * @param {number} [base] default is 10
      */
     toNumberString(base = 10) {
-        return (hasBigInt ? BigInt : Number)("0b" + this.toBinaryString())
+        return (hasBigInt ? BigInt : Number)(
+            "0b" + toBinaryStringReverse(this.bits),
+        )
             .toString(base);
     }
 

@@ -1,10 +1,7 @@
 // @ts-check
 
+import { SUB_A1, SUB_B0, SUB_B1 } from "../action_consts/Sub_consts.js";
 import { Action } from "./Action.js";
-
-export const SUB_A1 = 0;
-export const SUB_B0 = 1;
-export const SUB_B1 = 2;
 
 const SUB_A1_STRING = "A1";
 const SUB_B0_STRING = "B0";

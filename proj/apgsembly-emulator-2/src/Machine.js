@@ -18,9 +18,9 @@ export { INITIAL_STATE };
 /**
  * @returns {never}
  */
-function error(msg = "error") {
+const error = (msg = "error") => {
     throw Error(msg);
-}
+};
 
 /**
  * @typedef {"Z" | "NZ" | "ZZ" | "*"} Input
@@ -212,15 +212,6 @@ export class Machine {
     }
 
     /**
-     * @private
-     */
-    log() {
-        const currentStateIndex = this.currentStateIndex;
-        const prevOutput = this.prevOutput;
-        this.stateStatsArray[currentStateIndex * 2 + prevOutput]++;
-    }
-
-    /**
      * 次に実行するコマンドを返す
      * @throws internal error
      * @returns {CompiledCommandWithNextState}
@@ -371,7 +362,13 @@ export class Machine {
      */
     execCommandFor(compiledCommand) {
         this.stepCount += 1;
-        this.log();
+
+        // log
+        {
+            const currentStateIndex = this.currentStateIndex;
+            const prevOutput = this.prevOutput;
+            this.stateStatsArray[currentStateIndex * 2 + prevOutput]++;
+        }
 
         /**
          * -1は返り値無し
