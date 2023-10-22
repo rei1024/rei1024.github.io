@@ -1,6 +1,7 @@
 // @ts-check
 
 import { create } from "../util/create.js";
+import { toLocaleString } from "../util/toLocaleString.js";
 
 /* style.cssで設定 */
 const CURRENT_STATE_CLASS = "stats_current_state";
@@ -8,11 +9,6 @@ const CURRENT_STATE_CLASS = "stats_current_state";
 /**
  * @typedef {{ z: number, nz: number }} StatsItem
  */
-
-/**
- * @param {number} num
- */
-const toLocaleString = (num) => num.toLocaleString();
 
 /**
  * @param {string} stateName

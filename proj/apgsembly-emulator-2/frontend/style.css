@@ -160,11 +160,11 @@ body[apge_dark="on"] .alert-danger {
 }
 
 /* Statsの現在の状態 renderStats.jsで使用 */
-.stats_current_state {
+#stats_table .stats_current_state td {
     background-color: #e1f5fe;
 }
 
-body[apge_dark="on"] .stats_current_state {
+body[apge_dark="on"] #stats_table .stats_current_state td {
     background-color: #333;
 }
 
@@ -189,4 +189,11 @@ body[apge_dark="on"] {
 footer {
     contain: content;
     content-visibility: auto;
+}
+
+@media (pointer: coarse) {
+    footer li a {
+        /* タッチ端末で少し間隔空けて押しやすくする */
+        margin-bottom: 0.5rem;
+    }
 }

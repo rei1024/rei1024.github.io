@@ -1,6 +1,6 @@
 {
     "tasks": {
-        "up": "deno run --allow-net --allow-read https://deno.land/std@0.198.0/http/file_server.ts . -p 1123",
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.204.0/http/file_server.ts . -p 1123",
         "t": "deno test --parallel src/ test/ tools/ labs/fast_emulator",
         "w": "deno test --watch src/ test/ tools/ labs/fast_emulator/",
         "cy": "node ./node_modules/.bin/cypress open",
@@ -10,7 +10,8 @@
         "chore": "deno upgrade && npm audit && git gc",
         "bench": "deno bench --no-check test/bench.js",
         "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run build.ts",
-        "pre-commit": "deno fmt --check && deno task lint && deno task t"
+        "pre-commit": "deno fmt --check && deno task lint && deno task t && deno task tsc",
+        "tsc": "deno run --allow-read npm:typescript@5.2.2/tsc --noEmit"
     },
     "exclude": [
         "node_modules/",

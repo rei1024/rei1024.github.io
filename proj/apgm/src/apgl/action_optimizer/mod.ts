@@ -20,6 +20,8 @@ export function mergeActionAPGLExpr(
     return mergedActions === undefined ? undefined : fromActions(mergedActions);
 }
 
+const NOP_CACHE = new NopAction();
+
 function merge(
     as: readonly Action[],
     bs: readonly Action[],
@@ -70,7 +72,7 @@ function merge(
     const merged = asWithoutNOP.concat(bsWithoutNOP);
     if (asWithoutNOPNonReturn && bsWithoutNOPNonReturn) {
         // 両方とも値を返さなければNOPを追加
-        merged.push(new NopAction());
+        merged.push(NOP_CACHE);
     }
 
     return merged;

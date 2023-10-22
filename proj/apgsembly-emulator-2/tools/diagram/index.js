@@ -4,6 +4,7 @@
 
 import { create } from "./create.js";
 import { $type } from "../../frontend/util/selector.js";
+// @ts-ignore
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.3.0/dist/mermaid.esm.min.mjs";
 
 $type("#close", HTMLElement).addEventListener("click", () => {

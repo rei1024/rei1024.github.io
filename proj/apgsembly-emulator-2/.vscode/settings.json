@@ -1,4 +1,4 @@
 {
-    "trailing-spaces.trimOnSave": true,
+    "files.trimTrailingWhitespace": true,
     "deno.enablePaths": ["build.ts"]
 }

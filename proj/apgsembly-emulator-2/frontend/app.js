@@ -51,6 +51,7 @@ import {
     binaryConfig,
     context,
 } from "./bind.js";
+import { toLocaleString } from "./util/toLocaleString.js";
 
 /** index.htmlと同期すること */
 export const DEFUALT_FREQUENCY = 30;
@@ -246,7 +247,7 @@ export class App {
     #renderFrequencyOutput() {
         const currentFreqeucy = this.#valve.frequency;
         if (this.#prevFrequency !== currentFreqeucy) {
-            $freqencyOutput.textContent = currentFreqeucy.toLocaleString();
+            $freqencyOutput.textContent = toLocaleString(currentFreqeucy);
             this.#prevFrequency = currentFreqeucy;
         }
     }
@@ -427,11 +428,10 @@ export class App {
         $previousOutput.textContent = machine?.getPreviousOutput() ?? "";
         $stepCount.textContent = machine?.stepCount.toLocaleString() ?? "";
 
-        if (this.stepConfig === 1) {
-            $stepText.textContent = "Step";
-        } else {
-            $stepText.textContent = `${this.stepConfig.toLocaleString()} Steps`;
-        }
+        const stepConfig = this.stepConfig;
+        $stepText.textContent = stepConfig === 1
+            ? "Step"
+            : `${toLocaleString(stepConfig)} Steps`;
 
         this.#renderCommand();
         this.#renderOutput();

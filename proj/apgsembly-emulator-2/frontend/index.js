@@ -90,7 +90,7 @@ $exampleCodes.forEach((e) => {
             // スクロール
             scrollToTop();
         } catch (e) {
-            console.error(`Fetch: ${src}`);
+            throw e;
         } finally {
             $examples.removeAttribute("style");
         }

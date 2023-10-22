@@ -124,8 +124,9 @@ export class BReg {
                 bits[pointer] = 1;
                 break;
             }
-            default:
+            default: {
                 throw Error("BReg action: " + act.op);
+            }
         }
     }
 

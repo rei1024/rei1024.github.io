@@ -1,4 +1,21 @@
 {
+    "tasks": {
+        "pre-commit-hook": "deno lint && deno task fmt --check && deno task t",
+        // test
+        "t": "deno test --parallel",
+        // test with watcher
+        "w": "deno test --watch --no-check .",
+        // formatting
+        "fmt": "deno fmt",
+        // reload dependency
+        "reload": "deno test --reload",
+        // local server
+        "up": "deno run --allow-net --allow-read https://deno.land/std@0.204.0/http/file_server.ts . -p 1618",
+        // bundle
+        "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run bundle.ts",
+        // coverage
+        "cov": "rm ./coverage -r && rm ./coverage.lcov && deno test --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov && genhtml -o coverage/html coverage.lcov && open coverage/html/index.html"
+    },
     "compilerOptions": {
         "strict": true,
         // "noUnusedParameters": true,
@@ -11,8 +28,7 @@
         // "noUnusedLocals": true
     },
     "fmt": {
-        "indentWidth": 4,
-        "exclude": ["coverage", "./dist/integration.js"]
+        "indentWidth": 4
     },
     "exclude": [
         "coverage",
@@ -24,22 +40,5 @@
             "include": ["no-throw-literal", "no-sparse-arrays", "no-eval"],
             "exclude": ["no-unused-vars", "no-ex-assign"]
         }
-    },
-    "tasks": {
-        "pre-commit-hook": "deno lint && deno task fmt --check && deno task t",
-        // test
-        "t": "deno test --parallel",
-        // test with watcher
-        "w": "deno test --watch --no-check .",
-        // formatting
-        "fmt": "deno fmt",
-        // reload dependency
-        "reload": "deno test --reload",
-        // local server
-        "up": "deno run --allow-net --allow-read https://deno.land/std@0.198.0/http/file_server.ts . -p 1618",
-        // bundle
-        "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run bundle.ts",
-        // coverage
-        "cov": "rm ./coverage -r && rm ./coverage.lcov && deno test --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov && genhtml -o coverage/html coverage.lcov && open coverage/html/index.html"
     }
 }

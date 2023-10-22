@@ -20,9 +20,15 @@ export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
     }
 
     // reset canvas
-    context.clearRect(0, 0, width, width);
-    context.resetTransform();
-    context.beginPath();
+    // @ts-ignore new feature
+    if (context.reset) {
+        // @ts-ignore new feature
+        context.reset();
+    } else {
+        context.clearRect(0, 0, width, width);
+        context.resetTransform();
+        context.beginPath();
+    }
 
     const maxX = b2d.getMaxX();
     const maxY = b2d.getMaxY();

@@ -76,6 +76,30 @@ test("integration output non string", () => {
     });
 });
 
+test("integration undefined variable", () => {
+    const src = `
+    macro f!() {
+        x;
+    }
+    f!();
+    `;
+    assertThrows(() => {
+        integration(src);
+    });
+});
+
+test("integration arguments size", () => {
+    const src = `
+    macro f!(x) {
+        output("3");
+    }
+    f!();
+    `;
+    assertThrows(() => {
+        integration(src);
+    });
+});
+
 test("integration optimize", () => {
     const src = `
     inc_u(1);

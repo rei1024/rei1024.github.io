@@ -243,9 +243,6 @@ export const commandsToLookupTable = (commands) => {
                 break;
             }
             default: {
-                // type-check
-                /** @type {Error} */
-                const _ = command.input;
                 internalError();
             }
         }

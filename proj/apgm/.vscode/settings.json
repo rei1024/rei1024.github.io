@@ -1,5 +1,4 @@
 {
-    "trailing-spaces.trimOnSave": true,
-    "deno.enablePaths": ["bundle.ts", "./src"],
-    "deno.config": "./deno.jsonc"
+    "files.trimTrailingWhitespace": true,
+    "deno.enablePaths": ["bundle.ts", "./src"]
 }

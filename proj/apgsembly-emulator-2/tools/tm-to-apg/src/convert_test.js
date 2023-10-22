@@ -2,9 +2,7 @@
 
 import { test } from "./test_deps.js";
 import { TM } from "./TM.js";
-import { Line } from "./Line.js";
 import { TMMap } from "./TMMap.js";
-import { palindrome } from "./test_data_test.js";
 import { convert } from "./convert.js";
 
 const test1 = `
