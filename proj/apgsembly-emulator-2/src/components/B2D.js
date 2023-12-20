@@ -10,8 +10,7 @@ import {
     B2D_SET,
     B2D_TDEC,
 } from "../action_consts/B2D_consts.js";
-
-import { internalError } from "../actions/Action.js";
+import { internalError } from "../internalError.js";
 
 /**
  * @template A

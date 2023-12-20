@@ -1,7 +1,6 @@
 // @ts-check
 
 import { LegacyTRegAction } from "../actions/LegacyTRegAction.js";
-import { internalError } from "../actions/Action.js";
 import {
     T_DEC,
     T_INC,
@@ -9,6 +8,7 @@ import {
     T_RESET,
     T_SET,
 } from "../action_consts/LegacyTReg_consts.js";
+import { internalError } from "../internalError.js";
 
 /**
  * Compatibility for APGsembly 1.0

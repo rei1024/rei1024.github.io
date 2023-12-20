@@ -1,7 +1,4 @@
 - `deno task chore`を走らせる
-- cypressを確認してpackage.jsonを更新
-  - https://docs.cypress.io/guides/references/changelog
-    - `~/Library/Caches/Cypress`に古いバージョンが残るので削除する
 - Bootstrapの更新を確認する
   - https://blog.getbootstrap.com/
   - popperとBootstrapのJSが分かれている形式を選ぶ

@@ -2,13 +2,7 @@
 
 import { addLineNumber, Command } from "../Command.js";
 import { HaltOutAction } from "../actions/HaltOutAction.js";
-
-/**
- * @returns {never}
- */
-const internalError = () => {
-    throw Error("internal error");
-};
+import { internalError } from "../internalError.js";
 
 /**
  * アクションが同じコンポーネントを使用していないか検査する

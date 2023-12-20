@@ -2,7 +2,7 @@
 
 import { BRegAction } from "../actions/BRegAction.js";
 import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts.js";
-import { internalError } from "../actions/Action.js";
+import { internalError } from "../internalError.js";
 
 /**
  * バイナリの文字列を0と1の配列に変換する

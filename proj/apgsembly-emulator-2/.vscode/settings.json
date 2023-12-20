@@ -1,4 +1,15 @@
 {
     "files.trimTrailingWhitespace": true,
-    "deno.enablePaths": ["build.ts"]
+    "deno.enablePaths": ["build.ts"],
+    "cSpell.ignorePaths": [
+        "package-lock.json",
+        "node_modules",
+        "vscode-extension",
+        ".git/objects",
+        ".vscode",
+        ".vscode-insiders",
+        "frontend/index.dist.js",
+        "frontend/style.min.css"
+    ],
+    "cSpell.ignoreWords": ["turmites"]
 }

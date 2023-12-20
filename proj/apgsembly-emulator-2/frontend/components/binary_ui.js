@@ -5,6 +5,7 @@ import {
     toBinaryString,
     toBinaryStringReverse,
 } from "../../src/components/BReg.js";
+import { internalError } from "../../src/internalError.js";
 import { create } from "../util/create.js";
 
 // ```
@@ -23,13 +24,6 @@ import { create } from "../util/create.js";
 // </tr>
 // </table>
 // ```
-
-/**
- * @returns {never}
- */
-const error = () => {
-    throw Error("error");
-};
 
 /**
  * value = ..., hex = ..., pointer = ...
@@ -163,7 +157,7 @@ export class BinaryUI {
                 $hex,
                 $maxPointer,
                 $pointer,
-            } = cells[i] ?? error();
+            } = cells[i] ?? internalError();
 
             if (hideBits) {
                 $prefix.innerHTML = "";

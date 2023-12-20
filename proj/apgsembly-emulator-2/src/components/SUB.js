@@ -1,8 +1,8 @@
 // @ts-check
 
 import { SubAction } from "../actions/SubAction.js";
-import { internalError } from "../actions/Action.js";
 import { SUB_A1, SUB_B0, SUB_B1 } from "../action_consts/Sub_consts.js";
+import { internalError } from "../internalError.js";
 
 /**
  * `SUB`

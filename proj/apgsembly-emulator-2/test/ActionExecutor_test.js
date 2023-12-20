@@ -15,9 +15,9 @@ import { assertEquals, assertThrows, test } from "./deps.js";
 
 test("ActionExecutor output", () => {
     const x = new ActionExecutor({
-        unaryRegisterNumbers: [],
-        binaryRegisterNumbers: [],
-        legacyTRegisterNumbers: [],
+        unary: [],
+        binary: [],
+        legacyT: [],
     });
     x.output.output("3");
     assertEquals(x.output.getString(), "3");
@@ -25,18 +25,18 @@ test("ActionExecutor output", () => {
 
 test("ActionExecutor setByRegistersInit empty", () => {
     const x = new ActionExecutor({
-        unaryRegisterNumbers: [],
-        binaryRegisterNumbers: [],
-        legacyTRegisterNumbers: [],
+        unary: [],
+        binary: [],
+        legacyT: [],
     });
     x.setByRegistersInit({});
 });
 
 test("ActionExecutor constructor", () => {
     const x = new ActionExecutor({
-        unaryRegisterNumbers: [0],
-        binaryRegisterNumbers: [1],
-        legacyTRegisterNumbers: [2],
+        unary: [0],
+        binary: [1],
+        legacyT: [2],
     });
     assertEquals(x.getUReg(0) !== undefined, true);
     assertEquals(x.getBReg(1) !== undefined, true);
@@ -45,9 +45,9 @@ test("ActionExecutor constructor", () => {
 
 test("ActionExecutor setByRegistersInit", () => {
     const x = new ActionExecutor({
-        unaryRegisterNumbers: [0, 1],
-        binaryRegisterNumbers: [0, 1],
-        legacyTRegisterNumbers: [],
+        unary: [0, 1],
+        binary: [0, 1],
+        legacyT: [],
     });
 
     assertEquals(x.uRegMap.size, 2);
@@ -90,9 +90,9 @@ test("ActionExecutor setByRegistersInit", () => {
 
 test("ActionExecutor setByRegistersInit 2", () => {
     const x = new ActionExecutor({
-        unaryRegisterNumbers: [0, 1],
-        binaryRegisterNumbers: [0, 1],
-        legacyTRegisterNumbers: [],
+        unary: [0, 1],
+        binary: [0, 1],
+        legacyT: [],
     });
 
     assertEquals(x.uRegMap.size, 2);
@@ -112,9 +112,9 @@ test("ActionExecutor setByRegistersInit 2", () => {
 
 test("ActionExecutor setByRegistersInit error", () => {
     const x = new ActionExecutor({
-        unaryRegisterNumbers: [0, 1],
-        binaryRegisterNumbers: [0, 1],
-        legacyTRegisterNumbers: [],
+        unary: [0, 1],
+        binary: [0, 1],
+        legacyT: [],
     });
 
     assertEquals(x.uRegMap.size, 2);
@@ -160,9 +160,9 @@ test("ActionExecutor setByRegistersInit error", () => {
 
 test("ActionExecutor register not found error", () => {
     const x = new ActionExecutor({
-        unaryRegisterNumbers: [0],
-        binaryRegisterNumbers: [0],
-        legacyTRegisterNumbers: [],
+        unary: [0],
+        binary: [0],
+        legacyT: [],
     });
 
     assertEquals(x.execAction(new URegAction(U_INC, 0)), undefined);
@@ -175,9 +175,9 @@ test("ActionExecutor register not found error", () => {
 
 test("ActionExecutor BReg", () => {
     const x = new ActionExecutor({
-        unaryRegisterNumbers: [],
-        binaryRegisterNumbers: [0],
-        legacyTRegisterNumbers: [],
+        unary: [],
+        binary: [0],
+        legacyT: [],
     });
 
     assertEquals(x.execAction(new BRegAction(B_INC, 0)), undefined);

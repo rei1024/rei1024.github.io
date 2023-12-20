@@ -209,7 +209,7 @@ $darkMode.addEventListener("change", () => {
     $darkModeLabel.textContent = $darkMode.checked ? "On" : "Off";
 
     // アニメーションを付与
-    const ANIMATE = "animate-color-and-background-color";
+    const ANIMATE = "dark-mode-anim";
     document.body.classList.add(ANIMATE);
     $configModalContent.classList.add(ANIMATE);
     setTimeout(() => {

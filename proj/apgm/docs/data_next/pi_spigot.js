@@ -53,11 +53,19 @@ export function* piSpigot() {
     }
 }
 
+// deno run docs/data_next/pi_spigot.js
 let i = 0;
+const encoder = new TextEncoder();
+const writer = Deno.stdout.writable.getWriter();
 for (const x of piSpigot()) {
-    console.log(x);
+    await writer.write(encoder.encode(x.toString()));
     i++;
-    if (i >= 10) {
+    if (i >= 1000) {
         break;
     }
+    if (i === 1) {
+        await writer.write(encoder.encode("."));
+    }
 }
+
+await writer.write(encoder.encode("\n"));

@@ -1,4 +1,4 @@
 {
     "files.trimTrailingWhitespace": true,
-    "deno.enablePaths": ["bundle.ts", "./src"]
+    "deno.enablePaths": ["bundle.ts", "./src", "docs/data_next/pi_spigot.js"]
 }

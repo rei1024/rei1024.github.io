@@ -3,6 +3,7 @@
 
 import { Action } from "./actions/Action.js";
 import { parseAction } from "./actionParse.js";
+import { internalError } from "./internalError.js";
 
 /**
  * 初期状態
@@ -221,14 +222,6 @@ export class Command extends ProgramLine {
 }
 
 /**
- * @private
- * @returns {never}
- */
-function error() {
-    throw Error("internal error");
-}
-
-/**
  * Parse a line of source code
  * @param {string} str
  * @param {number | undefined} [line] 1 based line number
@@ -263,10 +256,10 @@ export function parseProgramLine(str, line) {
         return `Invalid line "${str}"${lineNumberMessage(line)}`;
     }
     // assert: length of array is 4
-    const state = array[0] ?? error();
-    const inputStr = array[1] ?? error();
-    const nextState = array[2] ?? error();
-    const actionsStr = array[3] ?? error();
+    const state = array[0] ?? internalError();
+    const inputStr = array[1] ?? internalError();
+    const nextState = array[2] ?? internalError();
+    const actionsStr = array[3] ?? internalError();
     // Remove empty string
     const actionStrs = actionsStr.trim().split(/\s*,\s*/u).filter((x) =>
         x !== ""

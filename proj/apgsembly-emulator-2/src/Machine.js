@@ -36,24 +36,17 @@ export class Machine {
      * @throws {Error} #REGISTERSでの初期化に失敗
      */
     constructor(program) {
-        if (!(program instanceof Program)) {
-            throw TypeError("program is not a Program");
-        }
-
         /**
          * ステップ数
          */
         this.stepCount = 0;
 
-        const registerNumbers = extractRegisterNumbers(program);
         /**
          * @readonly
          */
-        this.actionExecutor = new ActionExecutor({
-            binaryRegisterNumbers: registerNumbers.binary,
-            unaryRegisterNumbers: registerNumbers.unary,
-            legacyTRegisterNumbers: registerNumbers.legacyT,
-        });
+        this.actionExecutor = new ActionExecutor(
+            extractRegisterNumbers(program),
+        );
 
         /** @type {0 | 1} */
         this.prevOutput = 0;

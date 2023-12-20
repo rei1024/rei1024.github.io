@@ -1,12 +1,13 @@
 // @ts-check
 
 import { addLineNumber, Command } from "./Command.js";
-import { Action, internalError } from "./actions/Action.js";
+import { Action } from "./actions/Action.js";
 import { BRegAction } from "./actions/BRegAction.js";
 import { B_INC, B_TDEC } from "./action_consts/BReg_consts.js";
 import { URegAction } from "./actions/URegAction.js";
 import { U_TDEC } from "./action_consts/UReg_consts.js";
 import { HaltOutAction } from "./exports.js";
+import { internalError } from "./internalError.js";
 
 /**
  * @param {Action} action

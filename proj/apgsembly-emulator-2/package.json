@@ -9,8 +9,7 @@
         "doc": "doc",
         "test": "test"
     },
-    "scripts": {
-    },
+    "scripts": {},
     "repository": {
         "type": "git",
         "url": "https://github.com/TanakaSatoshiTC/apgsembly-emulator-2.git"
@@ -18,6 +17,7 @@
     "author": "Rei",
     "license": "MIT",
     "devDependencies": {
-        "cypress": "13.1.0"
+        "@playwright/test": "^1.40.1",
+        "@types/node": "^20.10.5"
     }
 }

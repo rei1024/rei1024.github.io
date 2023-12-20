@@ -7,13 +7,6 @@
         "lib": ["ES2020", "dom"],
         "module": "ESNext",
         "strict": true,
-        "noImplicitThis": true,
-        "useUnknownInCatchVariables": true,
-        "strictPropertyInitialization": true,
-        "strictBindCallApply": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-
         "noImplicitReturns": true,
         "exactOptionalPropertyTypes": true,
         "noFallthroughCasesInSwitch": true,

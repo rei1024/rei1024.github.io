@@ -48,33 +48,33 @@ export class ActionExecutor {
     /**
      * 使用するレジスタ番号を引数に取る
      * @param {{
-     *    unaryRegisterNumbers: ReadonlyArray<number>;
-     *    binaryRegisterNumbers: ReadonlyArray<number>;
-     *    legacyTRegisterNumbers: ReadonlyArray<number>;
+     *    unary: ReadonlyArray<number>;
+     *    binary: ReadonlyArray<number>;
+     *    legacyT: ReadonlyArray<number>;
      * }} param0
      */
     constructor(
-        { unaryRegisterNumbers, binaryRegisterNumbers, legacyTRegisterNumbers },
+        { unary, binary, legacyT },
     ) {
         /**
          * @readonly
          */
         this.uRegMap = new Map(
-            unaryRegisterNumbers.map((n) => [n, new UReg()]),
+            unary.map((n) => [n, new UReg()]),
         );
 
         /**
          * @readonly
          */
         this.bRegMap = new Map(
-            binaryRegisterNumbers.map((n) => [n, new BReg()]),
+            binary.map((n) => [n, new BReg()]),
         );
 
         /**
          * @readonly
          */
         this.legecyTRegMap = new Map(
-            legacyTRegisterNumbers.map((n) => [n, new LegacyTReg()]),
+            legacyT.map((n) => [n, new LegacyTReg()]),
         );
 
         /**

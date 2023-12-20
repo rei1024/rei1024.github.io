@@ -1,8 +1,8 @@
 // @ts-check
 
 import { AddAction } from "../actions/AddAction.js";
-import { internalError } from "../actions/Action.js";
 import { ADD_A1, ADD_B0, ADD_B1 } from "../action_consts/Add_consts.js";
+import { internalError } from "../internalError.js";
 
 /**
  * ADD

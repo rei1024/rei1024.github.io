@@ -5,10 +5,14 @@
 # Node.js
 **/node_modules/**
 
-cypress_default/**
-
 package-lock.json
 
 .eslintcache
 
 deno.lock
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

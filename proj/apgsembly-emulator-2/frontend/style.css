@@ -102,7 +102,7 @@ body[apge_dark="on"] .binary-head {
     --dark-mode-background-color: black;
 }
 
-.animate-color-and-background-color {
+.dark-mode-anim {
     transition: color .4s, background-color .4s;
 }
 

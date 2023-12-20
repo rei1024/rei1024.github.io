@@ -1,8 +1,8 @@
 // @ts-check
 
 import { URegAction } from "../actions/URegAction.js";
-import { internalError } from "../actions/Action.js";
 import { U_INC, U_TDEC } from "../action_consts/UReg_consts.js";
+import { internalError } from "../internalError.js";
 
 /**
  * Un: Sliding Block Register

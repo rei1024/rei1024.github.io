@@ -1,5 +1,6 @@
 // @ts-check
 
+import { internalError } from "../../src/internalError.js";
 import { create } from "../util/create.js";
 import { toLocaleString } from "../util/toLocaleString.js";
 
@@ -109,7 +110,7 @@ export class StatsUI {
         const cells = this.cells;
         const len = cells.length;
         for (let i = 0; i < len; i++) {
-            const item = cells[i] ?? error();
+            const item = cells[i] ?? internalError();
 
             if (currentIndex === i) {
                 item.$tr.classList.add(CURRENT_STATE_CLASS);
@@ -117,17 +118,10 @@ export class StatsUI {
                 item.$tr.classList.remove(CURRENT_STATE_CLASS);
             }
 
-            const { z, nz } = stats[i] ?? error();
+            const { z, nz } = stats[i] ?? internalError();
             item.$sum.textContent = toLocaleString(z + nz);
             item.$z.textContent = toLocaleString(z);
             item.$nz.textContent = toLocaleString(nz);
         }
     }
-}
-
-/**
- * @returns {never}
- */
-function error() {
-    throw Error("error");
 }

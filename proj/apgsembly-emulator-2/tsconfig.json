@@ -9,19 +9,14 @@
         "paths": {},
         "strict": true,
         "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "strictBindCallApply": true,
-        "strictPropertyInitialization": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
         "exactOptionalPropertyTypes": true,
-        "useUnknownInCatchVariables": true,
         "noPropertyAccessFromIndexSignature": true,
         "noUncheckedIndexedAccess": true,
-        "noUnusedLocals": true
+        "noUnusedLocals": true,
+        "skipLibCheck": true
     },
     "include": [
         "src/**/*.js",

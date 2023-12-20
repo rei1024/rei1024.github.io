@@ -1,5 +1,7 @@
 // @ts-check
 
+import { internalError } from "../../src/internalError.js";
+
 /**
  * @returns {number[]}
  */
@@ -35,10 +37,7 @@ export function setupFrequencyInput($frequencyInput, app) {
 
     $frequencyInput.addEventListener("input", () => {
         const value = parseInt($frequencyInput.value, 10);
-        const freq = frequencies[value];
-        if (freq === undefined) {
-            throw Error("internal error");
-        }
+        const freq = frequencies[value] ?? internalError();
         $frequencyInput.ariaValueText = `(${freq.toString()}Hz)`;
         app.setFrequency(freq);
     });

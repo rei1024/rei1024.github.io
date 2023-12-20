@@ -18,7 +18,7 @@ An emulator for APGsembly 2.0
 - `$ deno task t` Unit tests
 - `$ deno task w` Unit tests with file watcher
 - `$ deno task lint` Linting
-- `$ deno task cy` E2E tests
+- `$ deno task e2e` E2E tests
 - `$ deno task bundle` Bundle
 
 ### Structure
@@ -26,4 +26,4 @@ An emulator for APGsembly 2.0
 - `src/` an emulator for APGsembly
 - `test/` unit tests
 - `frontend/` UI of the emulator
-- `cypress/` E2E testing
+- `e2e/` E2E testing
