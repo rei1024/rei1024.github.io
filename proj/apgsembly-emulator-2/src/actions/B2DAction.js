@@ -45,7 +45,7 @@ const B2D_LEGACY_B2D_STRING = "SQ";
  * @param {B2DOpString} op
  * @returns {B2DOp}
  */
-function parseOp(op) {
+const parseOp = (op) => {
     switch (op) {
         case B2D_INC_STRING:
             return B2D_INC;
@@ -56,13 +56,13 @@ function parseOp(op) {
         case B2D_SET_STRING:
             return B2D_SET;
     }
-}
+};
 
 /**
  * @param {B2DOp} op
  * @returns {B2DOpString}
  */
-function prettyOp(op) {
+const prettyOp = (op) => {
     switch (op) {
         case B2D_INC:
             return B2D_INC_STRING;
@@ -73,12 +73,12 @@ function prettyOp(op) {
         case B2D_SET:
             return B2D_SET_STRING;
     }
-}
+};
 /**
  * @param {B2DAxisString} op
  * @returns {B2DAxis}
  */
-function parseAxis(op) {
+const parseAxis = (op) => {
     switch (op) {
         case B2D_B2DX_STRING:
             return B2D_B2DX;
@@ -87,13 +87,13 @@ function parseAxis(op) {
         case B2D_B2D_STRING:
             return B2D_B2D;
     }
-}
+};
 
 /**
  * @param {B2DAxis} op
  * @returns {B2DAxisString}
  */
-function prettyAxis(op) {
+const prettyAxis = (op) => {
     switch (op) {
         case B2D_B2DX:
             return B2D_B2DX_STRING;
@@ -102,7 +102,7 @@ function prettyAxis(op) {
         case B2D_B2D:
             return B2D_B2D_STRING;
     }
-}
+};
 
 /**
  * Action for `B2D`

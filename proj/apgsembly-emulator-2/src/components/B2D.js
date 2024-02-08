@@ -18,7 +18,7 @@ import { internalError } from "../internalError.js";
  * @param {(_: number) => A} f
  * @returns {A[]}
  */
-function generateArray(n, f) {
+const generateArray = (n, f) => {
     /**
      * @type {A[]}
      */
@@ -28,7 +28,7 @@ function generateArray(n, f) {
     }
 
     return array;
-}
+};
 
 /**
  * B2D
@@ -211,10 +211,7 @@ export class B2D {
      * @returns {void}
      */
     set() {
-        const arrayY = this.array[this.y];
-        if (arrayY === undefined) {
-            internalError();
-        }
+        const arrayY = this.array[this.y] ?? internalError();
         if (arrayY[this.x] === 1) {
             throw Error(
                 `SET B2D: Tried to set when it was already 1. x = ${this.x}, y = ${this.y}`,

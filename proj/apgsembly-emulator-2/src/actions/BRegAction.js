@@ -23,7 +23,7 @@ const B_STRING = "B";
  * @param {BOp} op
  * @returns {BOpString}
  */
-function prettyOp(op) {
+const prettyOp = (op) => {
     switch (op) {
         case B_INC:
             return B_INC_STRING;
@@ -34,13 +34,13 @@ function prettyOp(op) {
         case B_SET:
             return B_SET_STRING;
     }
-}
+};
 
 /**
  * @param {BOpString} op
  * @returns {BOp}
  */
-function parseOp(op) {
+const parseOp = (op) => {
     switch (op) {
         case B_INC_STRING:
             return B_INC;
@@ -51,7 +51,7 @@ function parseOp(op) {
         case B_SET_STRING:
             return B_SET;
     }
-}
+};
 
 /**
  * Action for `Bn`

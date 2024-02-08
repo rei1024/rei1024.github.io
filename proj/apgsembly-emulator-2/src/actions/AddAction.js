@@ -21,7 +21,7 @@ const ADD_STRING = "ADD";
  * @param {AddOp} op
  * @returns {AddOpString}
  */
-function prettyOp(op) {
+const prettyOp = (op) => {
     switch (op) {
         case ADD_A1:
             return ADD_A1_STRING;
@@ -30,13 +30,13 @@ function prettyOp(op) {
         case ADD_B1:
             return ADD_B1_STRING;
     }
-}
+};
 
 /**
  * @param {AddOpString} op
  * @returns {AddOp}
  */
-function parseOp(op) {
+const parseOp = (op) => {
     switch (op) {
         case ADD_A1_STRING:
             return ADD_A1;
@@ -45,7 +45,7 @@ function parseOp(op) {
         case ADD_B1_STRING:
             return ADD_B1;
     }
-}
+};
 
 /**
  * Action for `ADD`

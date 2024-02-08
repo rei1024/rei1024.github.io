@@ -18,7 +18,7 @@ import {
     VarAPGMExpr,
     WhileAPGMExpr,
 } from "../ast/mod.ts";
-import { APGMSourceSpan } from "../ast/core.ts";
+import { type APGMSourceSpan } from "../ast/core.ts";
 import { createSpan } from "./lib/create_span.ts";
 import { stringLit } from "./lib/string.ts";
 

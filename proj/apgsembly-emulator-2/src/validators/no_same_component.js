@@ -10,7 +10,7 @@ import { internalError } from "../internalError.js";
  * @param {Command} command
  * @returns {string | undefined}
  */
-export function validateNoSameComponentCommand(command) {
+export const validateNoSameComponentCommand = (command) => {
     const actions = command.actions;
 
     // HALT_OUTの場合は一旦無視
@@ -37,4 +37,4 @@ export function validateNoSameComponentCommand(command) {
         }
     }
     return undefined;
-}
+};

@@ -3,6 +3,7 @@
 import { chunk } from "../util/chunk.js";
 import { UReg } from "../../src/components/UReg.js";
 import { create } from "../util/create.js";
+import { internalError } from "../../src/internalError.js";
 
 /**
  * 列の数
@@ -143,10 +144,7 @@ export class UnaryUI {
         let i = 0;
         const cells = this.cells;
         for (const reg of regs.values()) {
-            const item = cells[i];
-            if (item === undefined) {
-                throw Error("internal error");
-            }
+            const item = cells[i] ?? internalError();
             item.textContent = reg.getValue().toString();
             i++;
         }

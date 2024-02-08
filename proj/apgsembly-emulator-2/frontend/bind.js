@@ -3,6 +3,9 @@
 import { $type } from "./util/selector.js";
 
 const HTMLElement_ = HTMLElement;
+const HTMLInputElement_ = HTMLInputElement;
+const HTMLButtonElement_ = HTMLButtonElement;
+
 // エラーメッセージ
 // Error messsage
 export const $error = $type("#error", HTMLElement_);
@@ -19,20 +22,20 @@ export const $output = $type("#output", HTMLTextAreaElement);
 export const $stepCount = $type("#steps", HTMLElement_);
 
 // Toggle Start and Stop
-export const $toggle = $type("#toggle", HTMLButtonElement);
+export const $toggle = $type("#toggle", HTMLButtonElement_);
 
 // Reset machine state and program
-export const $reset = $type("#reset", HTMLButtonElement);
+export const $reset = $type("#reset", HTMLButtonElement_);
 
 // Step Button
-export const $step = $type("#step", HTMLButtonElement);
+export const $step = $type("#step", HTMLButtonElement_);
 export const $stepText = $type("#step-text", HTMLElement_);
 
 // Config modal button
-export const $configButton = $type("#config_button", HTMLButtonElement);
+export const $configButton = $type("#config_button", HTMLButtonElement_);
 
 // Stats modal button
-export const $statsButton = $type("#stats_button", HTMLButtonElement);
+export const $statsButton = $type("#stats_button", HTMLButtonElement_);
 
 // 現在の状態
 export const $currentState = $type("#current_state", HTMLElement_);
@@ -41,7 +44,7 @@ export const $currentState = $type("#current_state", HTMLElement_);
 export const $previousOutput = $type("#previous_output", HTMLElement_);
 
 // スピード入力
-export const $frequencyInput = $type("#frequency_input", HTMLInputElement);
+export const $frequencyInput = $type("#frequency_input", HTMLInputElement_);
 
 // スピード表示
 export const $freqencyOutput = $type("#frequency_output", HTMLElement_);
@@ -89,9 +92,9 @@ export const $binaryRegisterDetail = $type(
 export const $addSubMul = $type("#add_sub_mul", HTMLElement_);
 
 // ファイルインポート
-export const $fileImport = $type("#import_file", HTMLInputElement);
+export const $fileImport = $type("#import_file", HTMLInputElement_);
 
-export const $examples = $type("#examples", HTMLButtonElement);
+export const $examples = $type("#examples", HTMLButtonElement_);
 
 // サンプルコード
 /**
@@ -105,20 +108,23 @@ export const $exampleCodes = document.querySelectorAll(".js_example");
 export const $configModalContent = $type("#config_modal_content", HTMLElement_);
 
 // ステップ数入力
-export const $stepInput = $type("#step_input", HTMLInputElement);
+export const $stepInput = $type("#step_input", HTMLInputElement_);
 
 export const binaryConfig = {
     /** 2進数を非表示にする */
-    $hideBits: $type("#hide_bits", HTMLInputElement),
+    $hideBits: $type("#hide_bits", HTMLInputElement_),
     /** 2進数を逆順にする */
-    $reverseBits: $type("#reverse_bits", HTMLInputElement),
+    $reverseBits: $type("#reverse_bits", HTMLInputElement_),
     /** 10進数に変換して表示 */
     $showBinaryValueInDecimal: $type(
         "#show_binary_value_in_decimal",
-        HTMLInputElement,
+        HTMLInputElement_,
     ),
     /** 16進数に変換して表示 */
-    $showBinaryValueInHex: $type("#show_binary_value_in_hex", HTMLInputElement),
+    $showBinaryValueInHex: $type(
+        "#show_binary_value_in_hex",
+        HTMLInputElement_,
+    ),
 };
 
 // ブレークポイント
@@ -131,21 +137,21 @@ export const $breakpointInputSelect = $type(
 );
 
 // ダークモード
-export const $darkMode = $type("#dark_mode", HTMLInputElement);
+export const $darkMode = $type("#dark_mode", HTMLInputElement_);
 export const $darkModeLabel = $type("#dark_mode_label", HTMLElement_);
 
-export const $b2dHidePointer = $type("#b2d_hide_pointer", HTMLInputElement);
+export const $b2dHidePointer = $type("#b2d_hide_pointer", HTMLInputElement_);
 
 export const $b2dFlipUpsideDown = $type(
     "#b2d_flip_upside_down",
-    HTMLInputElement,
+    HTMLInputElement_,
 );
 
 // Stats Modal
 
 export const $statsModal = $type("#stats_modal", HTMLElement_);
 
-export const $statsBody = $type("#stats_body", HTMLTableSectionElement);
+export const $statsBody = $type("#stats_body", HTMLElement_);
 
 export const $statsNumberOfStates = $type(
     "#stats_number_of_states",
@@ -154,5 +160,5 @@ export const $statsNumberOfStates = $type(
 
 export const $viewStateDiagramButton = $type(
     "#view-state-diagram",
-    HTMLButtonElement,
+    HTMLButtonElement_,
 );

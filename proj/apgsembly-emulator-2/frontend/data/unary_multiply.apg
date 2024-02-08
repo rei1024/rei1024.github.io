@@ -1,4 +1,5 @@
 # Unary registers multiplication
+# U2 = U0 * U1
 # https://conwaylife.com/book/ > 9.3 Multiplying and Reusing Registers > APGsembly 9.3
 #COMPONENTS U0-3,HALT_OUT
 #REGISTERS {"U0":7, "U1":5}

@@ -21,6 +21,7 @@ export class LegacyTReg {
         this.pointer = 0;
 
         /**
+         * -1 is undefined
          * @private
          * @type {(0 | 1 | -1)[]}
          */
@@ -95,12 +96,13 @@ export class LegacyTReg {
      */
     read() {
         const pointer = this.pointer;
-        const bit = this.bits[pointer];
+        const bits = this.bits;
+        const bit = bits[pointer];
         if (bit === 0) {
-            this.bits[pointer] = -1;
+            bits[pointer] = -1;
             return 0;
         } else if (bit === 1) {
-            this.bits[pointer] = -1;
+            bits[pointer] = -1;
             return 1;
         } else if (bit === -1) {
             throw Error("Error: reading empty space of T register");
@@ -114,8 +116,9 @@ export class LegacyTReg {
      * @returns {void}
      */
     set() {
-        if (this.bits[this.pointer] === -1) {
-            this.bits[this.pointer] = 1;
+        const pointer = this.pointer;
+        if (this.bits[pointer] === -1) {
+            this.bits[pointer] = 1;
         } else {
             throw Error("Error: SET to nonempty bit");
         }
@@ -126,8 +129,9 @@ export class LegacyTReg {
      * @returns {void}
      */
     reset() {
-        if (this.bits[this.pointer] === -1) {
-            this.bits[this.pointer] = 0;
+        const pointer = this.pointer;
+        if (this.bits[pointer] === -1) {
+            this.bits[pointer] = 0;
         } else {
             throw Error("Error: RESET to nonempty bit");
         }

@@ -21,27 +21,27 @@ const R_STRING = "R";
  * @param {UOp} op
  * @returns {UOpString}
  */
-function prettyOp(op) {
+const prettyOp = (op) => {
     switch (op) {
         case U_INC:
             return U_INC_STRING;
         case U_TDEC:
             return U_TDEC_STRING;
     }
-}
+};
 
 /**
  * @param {UOpString} op
  * @returns {UOp}
  */
-function parseOp(op) {
+const parseOp = (op) => {
     switch (op) {
         case U_INC_STRING:
             return U_INC;
         case U_TDEC_STRING:
             return U_TDEC;
     }
-}
+};
 
 /**
  * Action for `Un`

@@ -1,13 +1,7 @@
 // @ts-check
 
 import { Command } from "../Command.js";
-
-/**
- * @returns {never}
- */
-const internalError = () => {
-    throw Error("internal error");
-};
+import { internalError } from "../internalError.js";
 
 /**
  * @param {Command} command1

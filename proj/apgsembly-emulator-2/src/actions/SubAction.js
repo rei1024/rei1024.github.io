@@ -21,7 +21,7 @@ const SUB_STRING = "SUB";
  * @param {SubOp} op
  * @returns {SubOpString}
  */
-function prettyOp(op) {
+const prettyOp = (op) => {
     switch (op) {
         case SUB_A1:
             return SUB_A1_STRING;
@@ -30,13 +30,13 @@ function prettyOp(op) {
         case SUB_B1:
             return SUB_B1_STRING;
     }
-}
+};
 
 /**
  * @param {SubOpString} op
  * @returns {SubOp}
  */
-function parseOp(op) {
+const parseOp = (op) => {
     switch (op) {
         case SUB_A1_STRING:
             return SUB_A1;
@@ -45,7 +45,7 @@ function parseOp(op) {
         case SUB_B1_STRING:
             return SUB_B1;
     }
-}
+};
 
 /**
  * Action for `SUB`

@@ -20,27 +20,27 @@ const MUL_STRING = "MUL";
  * @param {MulOpString} op
  * @returns {MulOp}
  */
-function parseOp(op) {
+const parseOp = (op) => {
     switch (op) {
         case MUL_0_STRING:
             return MUL_0;
         case MUL_1_STRING:
             return MUL_1;
     }
-}
+};
 
 /**
  * @param {MulOp} op
  * @returns {MulOpString}
  */
-function prettyOp(op) {
+const prettyOp = (op) => {
     switch (op) {
         case MUL_0:
             return MUL_0_STRING;
         case MUL_1:
             return MUL_1_STRING;
     }
-}
+};
 
 /**
  * Action for `MUL`

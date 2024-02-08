@@ -13,9 +13,13 @@ export const tmToAPGURL = baseURL + "/tools/tm-to-apg/index.html";
 
 export const toggleSel = "#toggle";
 
+export async function clickReset(page: Page) {
+    await page.locator("#reset").click();
+}
+
 export async function setProgram(page: Page, program: string) {
     await page.locator("#input").fill(program);
-    await page.locator("#reset").click();
+    await clickReset(page);
 }
 
 export async function assertToggleStart(page: Page) {
@@ -79,20 +83,17 @@ export async function clickStep(page: Page) {
     await page.locator("#step").click();
 }
 
+const stepsSelector = "#steps";
 export async function assertSteps(page: Page, n: number) {
-    await expect(page.locator("#steps")).toHaveText(n.toLocaleString());
+    await expect(page.locator(stepsSelector)).toHaveText(n.toLocaleString());
 }
 
 export async function assertStepsNot(page: Page, n: number) {
-    await expect(page.locator("#steps")).not.toHaveText(n.toLocaleString());
+    await expect(page.locator(stepsSelector)).not.toHaveText(n.toLocaleString());
 }
 
 const outputSelector = "#output";
 
 export async function assertOutput(page: Page, output: string) {
     await expect(page.locator(outputSelector)).toHaveValue(output);
-}
-
-export async function clickReset(page: Page) {
-    await page.locator("#reset").click();
 }

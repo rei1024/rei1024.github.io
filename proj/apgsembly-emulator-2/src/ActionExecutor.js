@@ -26,9 +26,9 @@ import { LegacyTReg } from "./components/LegacyTReg.js";
  * @param {number} regNum
  * @returns {never}
  */
-function throwNotFound(type, regNum) {
+const throwNotFound = (type, regNum) => {
     throw Error(`Register ${type}${regNum} is not found.`);
-}
+};
 
 const parseNum = Number.parseInt;
 const isNaNLocal = Number.isNaN;
@@ -267,7 +267,7 @@ export class ActionExecutor {
  * @param {unknown} value
  * @returns {never}
  */
-function throwInitError(key, value) {
+const throwInitError = (key, value) => {
     const debugStr = `"${key}": ${JSON.stringify(value)}`;
     throw Error(`Invalid #REGISTERS ${debugStr}`);
-}
+};

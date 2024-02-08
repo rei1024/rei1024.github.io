@@ -13,7 +13,7 @@ import { validateZAndNZ } from "./validators/z_and_nz.js";
  * @param {ReadonlyArray<Command>} commands
  * @returns {undefined | string} string is error
  */
-export function validateAll(commands) {
+export const validateAll = (commands) => {
     /** @type {string[]} */
     let errors = [];
 
@@ -57,4 +57,4 @@ export function validateAll(commands) {
     }
 
     return undefined;
-}
+};

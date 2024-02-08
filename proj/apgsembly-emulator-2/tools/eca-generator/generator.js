@@ -54,17 +54,21 @@ function parseNum(str) {
 }
 
 rule.addEventListener("input", () => {
-    generateButton.disabled = parseNum(rule.value) === undefined;
+    const isValid = parseNum(rule.value) !== undefined;
+    generateButton.disabled = !isValid;
+    if (isValid) {
+        rule.classList.remove("is-invalid");
+    } else {
+        rule.classList.add("is-invalid");
+    }
 });
 
 generateButton.addEventListener("click", () => {
-    rule.classList.remove("is-invalid");
     code.value = "";
     copy.disabled = true;
 
     const n = parseNum(rule.value);
     if (n === undefined) {
-        rule.classList.add("is-invalid");
         return;
     }
     code.value = generate(n);

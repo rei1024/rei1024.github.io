@@ -6,43 +6,35 @@
 export class Valve {
     #fractionStep = 0;
     #prevTime = -1;
+    #enabled = false;
+    /**
+     * frequency of update
+     * 周波数[Hz]
+     */
+    #frequency = 0;
+    /**
+     * requestAnimationFrameは0を返さない
+     * https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animation-frames
+     */
+    #id = 0;
     /**
      * 作成時は非活性状態
      * @param {(value: number) => void} handler
      * @param {{ frequency: number, signal?: AbortSignal }} param0
      */
     constructor(handler, { frequency, signal }) {
-        /**
-         * frequency of update
-         * 周波数[Hz]
-         * @private
-         */
-        this._frequency = frequency;
-
-        /**
-         * @private
-         */
-        this._enabled = false;
-
-        /**
-         * requestAnimationFrameは0を返さない
-         * https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animation-frames
-         * @private
-         * @type {number}
-         */
-        this._id = 0;
-
+        this.#frequency = frequency;
         const raf = requestAnimationFrame;
 
         /**
          * @param {number} time
          */
         const update = (time) => {
-            if (this._enabled && this.#prevTime !== -1) {
+            if (this.#enabled && this.#prevTime !== -1) {
                 const diff = time - this.#prevTime;
                 const prevFractionStep = this.#fractionStep;
                 const nextFractionStep = prevFractionStep +
-                    (diff / 1000) * this._frequency;
+                    (diff / 1000) * this.#frequency;
                 const value = Math.floor(nextFractionStep) -
                     Math.floor(prevFractionStep);
                 this.#fractionStep = nextFractionStep;
@@ -50,10 +42,10 @@ export class Valve {
             }
 
             this.#prevTime = time;
-            this._id = raf(update);
+            this.#id = raf(update);
         };
 
-        this._id = raf(update);
+        this.#id = raf(update);
 
         signal?.addEventListener("abort", () => {
             this.abort();
@@ -61,8 +53,8 @@ export class Valve {
     }
 
     abort() {
-        if (this._id !== 0) {
-            cancelAnimationFrame(this._id);
+        if (this.#id !== 0) {
+            cancelAnimationFrame(this.#id);
         }
     }
 
@@ -70,25 +62,25 @@ export class Valve {
      * @returns {number}
      */
     get frequency() {
-        return this._frequency;
+        return this.#frequency;
     }
 
     /**
      * @param {number} frequency
      */
     set frequency(frequency) {
-        this._frequency = frequency;
+        this.#frequency = frequency;
     }
 
     get disabled() {
-        return !this._enabled;
+        return !this.#enabled;
     }
 
     /**
      * @param {boolean} value
      */
     set disabled(value) {
-        this._enabled = !value;
+        this.#enabled = !value;
     }
 
     reset() {

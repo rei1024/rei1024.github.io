@@ -8,7 +8,7 @@ import { addLineNumber, Command } from "../Command.js";
  * @param {Command} command
  * @returns {string | undefined}
  */
-export function validateNoDuplicatedActionCommand(command) {
+export const validateNoDuplicatedActionCommand = (command) => {
     const actions = command.actions;
     if (actions.length <= 1) {
         return undefined;
@@ -26,4 +26,4 @@ export function validateNoDuplicatedActionCommand(command) {
         }
     }
     return undefined;
-}
+};

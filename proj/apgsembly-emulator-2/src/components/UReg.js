@@ -108,7 +108,7 @@ export class UReg {
  * @param {unknown} value
  * @returns {never}
  */
-function initError(key, value) {
+const initError = (key, value) => {
     const debugStr = `"${key}": ${JSON.stringify(value)}`;
     throw Error(`Invalid #REGISTERS ${debugStr}`);
-}
+};

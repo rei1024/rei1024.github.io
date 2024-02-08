@@ -9,7 +9,7 @@ import { addLineNumber, Command } from "../Command.js";
  * @param {Command} command
  * @returns {string | undefined}
  */
-export function validateActionReturnOnceCommand(command) {
+export const validateActionReturnOnceCommand = (command) => {
     // FIXME: HALT_OUTが含まれる場合は一旦無視
     const actions = command.actions;
     if (actions.some((x) => x instanceof HaltOutAction)) {
@@ -28,4 +28,4 @@ export function validateActionReturnOnceCommand(command) {
             valueReturnActions.map((x) => `"${x.pretty()}"`).join(", ")
         }${addLineNumber(command)}`;
     }
-}
+};

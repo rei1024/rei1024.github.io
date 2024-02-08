@@ -28,7 +28,7 @@ const T_RESET_STRING = "RESET";
  * @param {TOp} op
  * @returns {TOpString}
  */
-function prettyOp(op) {
+const prettyOp = (op) => {
     switch (op) {
         case T_INC:
             return T_INC_STRING;
@@ -41,13 +41,13 @@ function prettyOp(op) {
         case T_RESET:
             return T_RESET_STRING;
     }
-}
+};
 
 /**
  * @param {TOpString} op
  * @returns {TOp}
  */
-function parseOp(op) {
+const parseOp = (op) => {
     switch (op) {
         case T_INC_STRING:
             return T_INC;
@@ -60,7 +60,7 @@ function parseOp(op) {
         case T_RESET_STRING:
             return T_RESET;
     }
-}
+};
 
 /**
  * Action for `Tn`

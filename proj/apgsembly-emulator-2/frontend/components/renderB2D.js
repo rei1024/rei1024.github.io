@@ -1,6 +1,7 @@
 // @ts-check
 
 import { B2D } from "../../src/components/B2D.js";
+import { internalError } from "../../src/internalError.js";
 
 /**
  * B2Dをcanvasに描画する
@@ -45,10 +46,7 @@ export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
     // context.rotate(Math.PI / 4);
     context.fillStyle = "#212529";
     for (let j = 0; j <= maxY; j++) {
-        const row = array[j];
-        if (row === undefined) {
-            throw Error("renderB2D: internal error");
-        }
+        const row = array[j] ?? internalError();
         const jMultCell = j * cellSize;
         for (let i = 0; i <= maxX; i++) {
             if (row[i] === 1) {

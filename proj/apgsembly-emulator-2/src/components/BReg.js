@@ -10,7 +10,7 @@ import { internalError } from "../internalError.js";
  * @returns {(0 | 1)[]} `[0, 1, 0, 1, 1]`
  * @throws
  */
-function parseBits(str) {
+const parseBits = (str) => {
     return [...str].map((c) => {
         if (c === "0") {
             return 0;
@@ -20,7 +20,7 @@ function parseBits(str) {
             throw Error(`Invalid #REGISTERS: "${str}"`);
         }
     });
-}
+};
 
 const hasBigInt = typeof BigInt !== "undefined";
 
@@ -31,27 +31,27 @@ const hasBigInt = typeof BigInt !== "undefined";
  * > toBinaryStringReverse([0, 1])
  * "10"
  */
-export function toBinaryStringReverse(bits) {
+export const toBinaryStringReverse = (bits) => {
     // faster than `bits.slice().reverse().join("")`
     let str = "";
     for (let i = bits.length - 1; i >= 0; i--) {
         str += bits[i] === 0 ? "0" : "1";
     }
     return str;
-}
+};
 
 /**
  * @param {(0 | 1)[]} bits
  * @returns {string}
  */
-export function toBinaryString(bits) {
+export const toBinaryString = (bits) => {
     let str = "";
     const len = bits.length;
     for (let i = 0; i < len; i++) {
         str += bits[i] === 0 ? "0" : "1";
     }
     return str;
-}
+};
 
 /**
  * Bn: Binary Register
@@ -125,7 +125,8 @@ export class BReg {
                 break;
             }
             default: {
-                throw Error("BReg action: " + act.op);
+                /** @type {never} */
+                const _ = act.op;
             }
         }
     }

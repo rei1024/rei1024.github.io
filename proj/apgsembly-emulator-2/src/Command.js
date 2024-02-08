@@ -143,7 +143,7 @@ export class EmptyLine extends ProgramLine {
  * @param {string} inputStr
  * @returns {"Z" | "NZ" | "ZZ" | "*" | undefined}
  */
-function parseInput(inputStr) {
+const parseInput = (inputStr) => {
     switch (inputStr) {
         case "Z":
             return inputStr;
@@ -156,7 +156,7 @@ function parseInput(inputStr) {
         default:
             return undefined;
     }
-}
+};
 
 /**
  * A line of APGsembly program
@@ -227,7 +227,7 @@ export class Command extends ProgramLine {
  * @param {number | undefined} [line] 1 based line number
  * @returns {ProgramLine | string} {@link ProgramLine} またはエラーメッセージ
  */
-export function parseProgramLine(str, line) {
+export const parseProgramLine = (str, line) => {
     const trimmedStr = str.trim();
     if (trimmedStr === "") {
         return new EmptyLine();
@@ -291,24 +291,17 @@ export function parseProgramLine(str, line) {
         actions: actions,
         line: line,
     });
-}
+};
 
 /**
  * @param {number | undefined} line
  * @returns {string}
  */
-function lineNumberMessage(line) {
-    if (line !== undefined) {
-        return ` at line ${line}`;
-    } else {
-        return "";
-    }
-}
+const lineNumberMessage = (line) =>
+    line !== undefined ? ` at line ${line}` : "";
 
 /**
  * @param {Command} command
  * @returns {string}
  */
-export function addLineNumber(command) {
-    return lineNumberMessage(command.line);
-}
+export const addLineNumber = (command) => lineNumberMessage(command.line);

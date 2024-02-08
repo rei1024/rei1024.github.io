@@ -15,7 +15,6 @@
         "exactOptionalPropertyTypes": true,
         "noPropertyAccessFromIndexSignature": true,
         "noUncheckedIndexedAccess": true,
-        "noUnusedLocals": true,
         "skipLibCheck": true
     },
     "include": [

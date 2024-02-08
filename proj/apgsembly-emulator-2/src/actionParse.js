@@ -17,7 +17,7 @@ import { LegacyTRegAction } from "./actions/LegacyTRegAction.js";
  * @param {string} str
  * @returns {Action | undefined}
  */
-export function parseAction(str) {
+export const parseAction = (str) => {
     /**
      * @type {((str: string) => Action | undefined)[]}
      */
@@ -42,4 +42,4 @@ export function parseAction(str) {
     }
 
     return undefined;
-}
+};
