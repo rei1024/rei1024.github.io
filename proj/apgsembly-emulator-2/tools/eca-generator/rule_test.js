@@ -9,6 +9,6 @@ test("rule", () => {
         "#COMPONENTS NOP,B2D",
         "# State    Input    Next state    Actions",
         "# ---------------------------------------",
-        "INITIAL; ZZ; NEXT_S00_READ_1; SET B2D, NOP",
+        "INITIAL;            ZZ; NEXT_S00_READ_1;    SET B2D, NOP",
     ]);
 });

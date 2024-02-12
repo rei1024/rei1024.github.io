@@ -1,5 +1,6 @@
 // @ts-check
 
+import { formatAPGsembly } from "../../../src/exports.js";
 import { BLANK_SYMBOL, isHaltState } from "./Line.js";
 import { TMMap } from "./TMMap.js";
 
@@ -197,5 +198,5 @@ export function convert(tmMap) {
         }
     }
 
-    return array.join("\n");
+    return formatAPGsembly(array.join("\n"));
 }

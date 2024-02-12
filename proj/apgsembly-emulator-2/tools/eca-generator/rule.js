@@ -1,5 +1,7 @@
 // @ts-check
 
+import { formatAPGsembly } from "../../src/exports.js";
+
 // Elementary cellular automata
 
 /**
@@ -185,5 +187,5 @@ export function generate(rule) {
     array.push(`RETURN_1; *; RETURN_2; INC B2DY, TDEC B2DX`);
     array.push(`RETURN_2; Z; NEXT_S${boundary}${boundary}_READ_1; TDEC B2DY`);
     array.push(`RETURN_2; NZ; RETURN_1; NOP`);
-    return array.join("\n");
+    return formatAPGsembly(array.join("\n"));
 }

@@ -34,7 +34,7 @@ import {} from "./Command.js";
 import {} from "./compile.js";
 import { Machine } from "./Machine.js";
 import {} from "./Program.js";
-import {} from "./ProgramLines.js";
+import { format, ProgramLines } from "./ProgramLines.js";
 import {} from "./validate.js";
 
 // for APGM
@@ -55,4 +55,19 @@ export function runAPGsembly(src) {
     }
 
     return machine;
+}
+
+/**
+ * APGsemblyをフォーマットする
+ * APGMの出力に使用する
+ * @param {string} src
+ * @returns {string}
+ * @throws パース不可
+ */
+export function formatAPGsembly(src) {
+    const lines = ProgramLines.parse(src);
+    if (typeof lines === "string") {
+        throw new Error(lines);
+    }
+    return format(lines);
 }

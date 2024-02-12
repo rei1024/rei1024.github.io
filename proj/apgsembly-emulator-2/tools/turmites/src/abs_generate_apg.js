@@ -3,6 +3,7 @@
 // https://github.com/GollyGang/ruletablerepository/wiki/UnresolvedTurmites2States2Colors
 // https://github.com/rm-hull/turmites
 
+import { formatAPGsembly } from "../../../src/exports.js";
 import {
     AbsTurmites,
     EAST,
@@ -109,7 +110,7 @@ SET_Y_2; NZ; SET_Y_1; INC B2DY, NOP
         );
     }
 
-    return array.join("\n");
+    return formatAPGsembly(array.join("\n"));
 }
 
 // console.log(generate(Turmites.fromObjectString("{{{1,2,0}, {0,8,0}}}"), 30, 30));

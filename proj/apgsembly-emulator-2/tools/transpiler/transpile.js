@@ -1,6 +1,7 @@
 // @ts-check
 
 import { Program } from "../../src/Program.js";
+import { format } from "../../src/ProgramLines.js";
 // import { ProgramLines } from "../src/ProgramLines.js";
 // import { Command, ProgramLine } from "../src/Command.js";
 // import { LegacyTRegAction, T_DEC, T_INC, T_READ, T_RESET, T_SET } from "../src/actions/LegacyTRegAction.js";
@@ -122,7 +123,7 @@ function transpileT(program) {
 export function transpile(input) {
     const program = Program.parse(input, { noValidate: true });
     if (program instanceof Program) {
-        return transpileT(program).pretty();
+        return format(transpileT(program).programLines);
     } else {
         return new Error(program);
     }

@@ -89,7 +89,9 @@ export async function assertSteps(page: Page, n: number) {
 }
 
 export async function assertStepsNot(page: Page, n: number) {
-    await expect(page.locator(stepsSelector)).not.toHaveText(n.toLocaleString());
+    await expect(page.locator(stepsSelector)).not.toHaveText(
+        n.toLocaleString(),
+    );
 }
 
 const outputSelector = "#output";
