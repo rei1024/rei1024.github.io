@@ -19,18 +19,25 @@ h1 {
     font-size: .875em;
 }
 
+main {
+    padding-inline: 8px;
+}
+
 .main_content {
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 #apgm_input {
-    width: 60%;
-    height: calc(100vh - 170px);
+    width: 55%;
+    height: calc(100vh - 120px);
+    resize: both;
 }
 
 #output {
-    width: 40%;
+    width: 45%;
+    font-size: 12px;
 }
 
 @media screen and (max-width: 768px) {

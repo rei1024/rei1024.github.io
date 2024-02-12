@@ -97,7 +97,7 @@ export class Transpiler {
 
     transpile(expr: APGLExpr): string[] {
         const initialState = "INITIAL";
-        const secondState = this.#getFreshName() + "_INITIAL";
+        const secondState = this.#getFreshName();
         const initial = this.#createTransition(initialState, secondState, "ZZ");
 
         const endState = this.#prefix + "END";

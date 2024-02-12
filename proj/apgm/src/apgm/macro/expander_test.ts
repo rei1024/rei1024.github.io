@@ -150,6 +150,6 @@ test("macro scope error", () => {
             expand(new Main(macros, [], new SeqAPGMExpr([whileExpr])));
         },
         Error,
-        `scope error: Unknown variable "y"`,
+        `Error: Unknown variable "y"`,
     );
 });

@@ -6,7 +6,7 @@ import { downloadBlob } from "./util/download.js";
 import { initEditor, initMonaco } from "./apgm_monaco/init.js";
 import { setupCopy } from "./copy.js";
 
-import { integration } from "./integration.js";
+import { formatAPGsembly, integration } from "./integration.js";
 
 initMonaco();
 
@@ -22,10 +22,6 @@ const $run = $$("#run", HTMLButtonElement);
 const $copy = $$("#copy", HTMLButtonElement);
 
 const $download = $$("#download", HTMLButtonElement);
-
-const $error = $$("#error", HTMLElement);
-
-const $errorMsg = $$("#error_msg", HTMLElement);
 
 const $prefixInput = $$("#prefix_input", HTMLInputElement);
 
@@ -67,7 +63,7 @@ export function showError(e) {
 
 const resetError = () => {
     editor.setMarker(undefined);
-    $error.classList.add("d-none");
+    $output.classList.remove("is-invalid");
     $apgmInput.style.borderColor = "";
     $output.style.borderColor = "";
     $compile.style.backgroundColor = "";
@@ -91,7 +87,7 @@ const compile = (withReaction = true) => {
         /**
          * @type {string}
          */
-        const result = integration(input, options).join("\n");
+        const result = formatAPGsembly(integration(input, options).join("\n"));
         $output.value = result;
         $download.disabled = false;
         $copy.disabled = false;
@@ -110,8 +106,8 @@ const compile = (withReaction = true) => {
             e = new Error("unknown error");
         }
 
-        $errorMsg.textContent = e.message;
-        $error.classList.remove("d-none");
+        $output.value = e.message;
+        $output.classList.add("is-invalid");
         $download.disabled = true;
         $copy.disabled = true;
         if (withReaction) {

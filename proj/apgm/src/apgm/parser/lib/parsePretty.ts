@@ -38,7 +38,7 @@ export function createErrorLines(
 export function prettyError(fail: bnb.ParseFail, source: string): string {
     const errorLines = createErrorLines(fail.location, source);
     return [
-        `parse error at line ${fail.location.line} column ${fail.location.column}:`,
+        `Error: Parse error at line ${fail.location.line} column ${fail.location.column}:`,
         `  expected ${fail.expected.join(", ")}`,
         ``,
         ...errorLines,

@@ -27,7 +27,7 @@ function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
             `Error at "${macro.name}": this macro takes ${
                 argumentsMessage(macro.args.length)
             } but ${argumentsMessage(exprs.length)} was supplied` +
-                +`${formatLocationAt(funcExpr.span?.start)}`,
+                `${formatLocationAt(funcExpr.span?.start)}`,
             funcExpr.span,
         );
     }
@@ -41,7 +41,7 @@ function replaceVarInBoby(macro: Macro, funcExpr: FuncAPGMExpr): APGMExpr {
             const expr = nameToExpr.get(x.name);
             if (expr === undefined) {
                 throw new ErrorWithSpan(
-                    `scope error: Unknown variable "${x.name}"${
+                    `Error: Unknown variable "${x.name}"${
                         formatLocationAt(x.span?.start)
                     }`,
                     x.span,

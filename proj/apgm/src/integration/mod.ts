@@ -21,6 +21,7 @@ import { optimize } from "../apgl/action_optimizer/mod.ts";
 import { optimizeSeq } from "../apgl/seq_optimizer/mod.ts";
 import { APGLExpr } from "../apgl/ast/core.ts";
 import { ErrorWithSpan } from "../apgm/ast/core.ts";
+export { formatAPGsembly } from "../deps.ts";
 
 function logged<T extends unknown[], S>(
     logMessage: string | undefined = undefined,
