@@ -203,10 +203,11 @@ export class Command extends ProgramLine {
 
         /**
          * 文字列表現のキャッシュ
+         * inputの後の空白はずれないように埋めている
          * @readonly
          * @private
          */
-        this._string = `${this.state}; ${this.input}; ${this.nextState}; ${
+        this._string = `${this.state}; ${this.input};${' '.repeat(2 - this.input.length)} ${this.nextState}; ${
             this.actions.map((a) => a.pretty()).join(", ")
         }`;
     }

@@ -26,6 +26,11 @@
 
 /**** App ****/
 
+#command {
+    /* 空白で調節しているためそのまま出力 */
+    white-space: pre-wrap;
+}
+
 /* Stepボタンのローディング表示 */
 #step {
     display: flex;

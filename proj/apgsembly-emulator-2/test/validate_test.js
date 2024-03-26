@@ -100,7 +100,7 @@ test("validateZAndNZ Z", () => {
     ]);
     assertEquals(
         err,
-        ['Need Z line followed by NZ line in "INITIAL; Z; A0; NOP"'],
+        ['Need Z line followed by NZ line in "INITIAL; Z;  A0; NOP"'],
     );
 });
 

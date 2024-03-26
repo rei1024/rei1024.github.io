@@ -24,15 +24,18 @@ test("transpile", () => {
     assertEquals(strOrError instanceof Error, false);
 });
 
-
-test('transpile 2', () => {
+test("transpile 2", () => {
     const strOrError = transpile(
         `
 INITIAL; ZZ; ID1; TDEC U0
-    ID1; *; ID2; INC U0, NOP`);
-    assertEquals(strOrError, `
+    ID1; *; ID2; INC U0, NOP`,
+    );
+    assertEquals(
+        strOrError,
+        `
 INITIAL; ZZ; ID1; TDEC U0
-ID1;     *;  ID2; INC U0, NOP`);
+ID1;     *;  ID2; INC U0, NOP`,
+    );
 });
 
 // test('transpile 2', () => {

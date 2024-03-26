@@ -18,17 +18,7 @@ import { internalError } from "../internalError.js";
  * @param {(_: number) => A} f
  * @returns {A[]}
  */
-const generateArray = (n, f) => {
-    /**
-     * @type {A[]}
-     */
-    const array = [];
-    for (let i = 0; i < n; i++) {
-        array.push(f(i));
-    }
-
-    return array;
-};
+const generateArray = (n, f) => Array(n).fill(0).map((_, i) => f(i))
 
 /**
  * B2D
@@ -60,9 +50,7 @@ export class B2D {
          * @private
          * @type {(0 | 1)[][]}
          */
-        this.array = generateArray(this.maxY + 1, () => {
-            return generateArray(this.maxX + 1, () => 0);
-        });
+        this.array = generateArray(y + 1, () => generateArray(x + 1, () => 0));
     }
 
     /**

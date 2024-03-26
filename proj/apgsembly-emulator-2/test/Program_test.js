@@ -6,9 +6,9 @@ import { assertEquals, test } from "./deps.js";
 
 export const program9_1 = `
 INITIAL; ZZ; ID1; TDEC U0
-ID1; Z; ID2; OUTPUT 0, HALT_OUT
+ID1; Z;  ID2; OUTPUT 0, HALT_OUT
 ID1; NZ; ID2; TDEC U1
-ID2; Z; ID1; OUTPUT 1, HALT_OUT
+ID2; Z;  ID1; OUTPUT 1, HALT_OUT
 ID2; NZ; ID1; TDEC U0
 `;
 
@@ -18,7 +18,7 @@ export const program9_2 = `
 # State Input Next state Actions
 # ---------------------------------------
 INITIAL; ZZ; ID1; TDEC U0
-ID1; Z; ID1; HALT_OUT
+ID1; Z;  ID1; HALT_OUT
 ID1; NZ; ID1; TDEC U0, INC U1
 `;
 
@@ -29,13 +29,13 @@ export const program9_3 = `
 # ---------------------------------------
 INITIAL; ZZ; ID1; TDEC U0
 # Loop over U0, TDECing it until it hits 0, and then halt.
-ID1; Z; ID1; HALT_OUT
+ID1; Z;  ID1; HALT_OUT
 ID1; NZ; ID2; TDEC U1
 # Copy U1 into U3 while setting U1 = 0.
-ID2; Z; ID3; TDEC U3
+ID2; Z;  ID3; TDEC U3
 ID2; NZ; ID2; TDEC U1, INC U3
 # Loop over U3, adding its value to U1 (restoring it) and U2.
-ID3; Z; ID1; TDEC U0
+ID3; Z;  ID1; TDEC U0
 ID3; NZ; ID3; TDEC U3, INC U1, INC U2
 `;
 
@@ -240,7 +240,7 @@ test("Program Z and NZ", () => {
     const errorMessage = parseProgramExpectError(src);
     assertEquals(
         errorMessage,
-        `Need Z line followed by NZ line in "ID1; Z; ID1; HALT_OUT"`,
+        `Need Z line followed by NZ line in "ID1; Z;  ID1; HALT_OUT"`,
     );
 });
 
