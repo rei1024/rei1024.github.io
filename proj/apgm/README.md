@@ -23,8 +23,8 @@ graph TD
 
 ### Requirements
 
-- `deno` above 1.31.1
-  - https://deno.land/#installation
+- `deno` above 1.43.1
+  - <https://docs.deno.com/runtime/manual>
 
 ### Usage
 

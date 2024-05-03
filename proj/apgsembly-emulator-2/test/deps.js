@@ -1,8 +1,4 @@
-export {
-    assertEquals,
-    assertIsError,
-    assertThrows,
-} from "https://deno.land/std@0.220.1/assert/mod.ts";
+export { assertEquals, assertIsError, assertThrows } from "@std/assert";
 
 /**
  * @returns {never}

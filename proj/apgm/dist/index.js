@@ -189,7 +189,7 @@ $copy.disabled = false;
 $download.disabled = false;
 
 try {
-    if (localStorage.getItem(watchMode) == "on") {
+    if (localStorage.getItem(watchMode) === "on") {
         $watchMode.checked = true;
         updateWatchMode();
     }

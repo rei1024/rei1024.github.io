@@ -18,7 +18,7 @@ import { internalError } from "../internalError.js";
  * @param {(_: number) => A} f
  * @returns {A[]}
  */
-const generateArray = (n, f) => Array(n).fill(0).map((_, i) => f(i))
+const generateArray = (n, f) => Array(n).fill(0).map((_, i) => f(i));
 
 /**
  * B2D

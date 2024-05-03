@@ -207,9 +207,9 @@ export class Command extends ProgramLine {
          * @readonly
          * @private
          */
-        this._string = `${this.state}; ${this.input};${' '.repeat(2 - this.input.length)} ${this.nextState}; ${
-            this.actions.map((a) => a.pretty()).join(", ")
-        }`;
+        this._string = `${this.state}; ${this.input};${
+            " ".repeat(2 - this.input.length)
+        } ${this.nextState}; ${this.actions.map((a) => a.pretty()).join(", ")}`;
     }
 
     /**

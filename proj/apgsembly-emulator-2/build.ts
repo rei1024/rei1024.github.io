@@ -1,4 +1,4 @@
-import * as esbuild from "https://deno.land/x/esbuild@v0.20.2/mod.js";
+import * as esbuild from "npm:esbuild@0.20.2";
 import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.10.3";
 
 // deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write=. --allow-run build.ts

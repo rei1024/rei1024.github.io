@@ -97,7 +97,14 @@ export function integration(
     } catch (error) {
         if (error instanceof ErrorWithSpan && error.apgmSpan) {
             throw new ErrorWithSpan(
-                [error.message, ...createErrorLines(error.apgmSpan.start, str)]
+                [
+                    error.message,
+                    ...createErrorLines(
+                        str,
+                        error.apgmSpan.start,
+                        error.apgmSpan.end,
+                    ),
+                ]
                     .join("\n"),
                 error.apgmSpan,
                 { cause: error.cause },

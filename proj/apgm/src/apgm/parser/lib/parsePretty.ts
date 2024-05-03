@@ -2,22 +2,26 @@ import { bnb } from "../../../deps.ts";
 import { APGMSourceLocation, ErrorWithSpan } from "../../ast/mod.ts";
 
 export function createErrorLines(
-    location: APGMSourceLocation,
     source: string,
+    start: APGMSourceLocation,
+    end?: APGMSourceLocation,
 ): string[] {
     const lines = source.split(/\r?\n/);
-    const above = lines[location.line - 2];
-    const errorLine = lines[location.line - 1];
+    const above = lines[start.line - 2];
+    const errorLine = lines[start.line - 1];
 
-    const below = lines[location.line];
-    const arrowLine = " ".repeat(Math.max(0, location.column - 1)) + "^";
+    const below = lines[start.line];
+    const arrowLine = " ".repeat(Math.max(0, start.column - 1)) +
+        "^".repeat(
+            end === undefined ? 1 : Math.max(1, end.column - start.column),
+        );
 
     const aboveLines = above === undefined ? [] : [above];
     const belowLines = below === undefined ? [] : [below];
 
     const prefix = " | ";
 
-    const errorLineIndexStr = location.line.toString();
+    const errorLineIndexStr = start.line.toString();
     const errorLineIndexStrPadding = " ".repeat(errorLineIndexStr.length);
 
     const errorLines = [
@@ -36,7 +40,7 @@ export function createErrorLines(
 //   |     ^
 //   | }
 export function prettyError(fail: bnb.ParseFail, source: string): string {
-    const errorLines = createErrorLines(fail.location, source);
+    const errorLines = createErrorLines(source, fail.location);
     return [
         `Error: Parse error at line ${fail.location.line} column ${fail.location.column}:`,
         `  expected ${fail.expected.join(", ")}`,
