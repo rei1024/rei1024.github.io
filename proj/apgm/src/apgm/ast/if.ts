@@ -33,4 +33,8 @@ export class IfAPGMExpr extends APGMExpr {
             : ` else ${this.elseBody.pretty()}`;
         return `${keyword} (${cond}) ${this.thenBody.pretty()}` + el;
     }
+
+    override getSpan(): APGMSourceSpan | undefined {
+        return this.span;
+    }
 }

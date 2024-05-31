@@ -1,20 +1,13 @@
 name: Test by Deno
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]
-    paths:
-      - "src/**"
-      - "test/**"
-      - "tools/**"
-      - "labs/fast_emulator/**"
   pull_request:
     branches: [main]
-    paths:
-      - "src/**"
-      - "test/**"
-      - "tools/**"
-      - "labs/fast_emulator/**"
 
 jobs:
   test:

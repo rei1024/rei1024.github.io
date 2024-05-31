@@ -68,7 +68,7 @@ export function integration(
 
     try {
         const expanded = logged(
-            log ? "apgm macro expaned" : undefined,
+            log ? "apgm macro expand" : undefined,
             expand,
             apgm,
         );

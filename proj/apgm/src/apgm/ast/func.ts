@@ -25,4 +25,8 @@ export class FuncAPGMExpr extends APGMExpr {
     override pretty(): string {
         return `${this.name}(${this.args.map((x) => x.pretty()).join(", ")})`;
     }
+
+    override getSpan(): APGMSourceSpan | undefined {
+        return this.span;
+    }
 }

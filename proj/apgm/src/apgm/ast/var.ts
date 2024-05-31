@@ -15,4 +15,8 @@ export class VarAPGMExpr extends APGMExpr {
     pretty(): string {
         return this.name;
     }
+
+    override getSpan(): APGMSourceSpan | undefined {
+        return this.span;
+    }
 }

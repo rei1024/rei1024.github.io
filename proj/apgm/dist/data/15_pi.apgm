@@ -90,9 +90,9 @@ macro sub_b!(b1, b2, temp_u1, temp_u2) {
     b_head_to_0!(b2);
 }
 
-/*
-    binary2 = binary2 + binary1
-*/
+/**
+ * binary2 = binary2 + binary1
+ */
 macro add_b!(binary1, binary2, temp_u1, temp_u2) {
     copy_u!(ALLOC_NUM!(), temp_u1, temp_u2);
 

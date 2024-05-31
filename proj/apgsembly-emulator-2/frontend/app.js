@@ -33,7 +33,7 @@ import {
     $command,
     $currentState,
     $error,
-    $freqencyOutput,
+    $frequencyOutput,
     $input,
     $output,
     $previousOutput,
@@ -54,7 +54,7 @@ import {
 import { toLocaleString } from "./util/toLocaleString.js";
 
 /** index.htmlと同期すること */
-export const DEFUALT_FREQUENCY = 30;
+export const DEFAULT_FREQUENCY = 30;
 
 /**
  * @typedef {"Initial" | "Running" | "Stop" | "ParseError" |
@@ -92,7 +92,7 @@ export class App {
 
         this.#valve = new Valve((value) => {
             this.run(value);
-        }, { frequency: DEFUALT_FREQUENCY });
+        }, { frequency: DEFAULT_FREQUENCY });
     }
 
     /**
@@ -245,10 +245,10 @@ export class App {
      * 周波数の表示
      */
     #renderFrequencyOutput() {
-        const currentFreqeucy = this.#valve.frequency;
-        if (this.#prevFrequency !== currentFreqeucy) {
-            $freqencyOutput.textContent = toLocaleString(currentFreqeucy);
-            this.#prevFrequency = currentFreqeucy;
+        const currentFrequency = this.#valve.frequency;
+        if (this.#prevFrequency !== currentFrequency) {
+            $frequencyOutput.textContent = toLocaleString(currentFrequency);
+            this.#prevFrequency = currentFrequency;
         }
     }
 

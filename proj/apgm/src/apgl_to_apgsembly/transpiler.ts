@@ -42,7 +42,7 @@ type LineInner = {
     readonly actions: string[];
 };
 
-function fromatLineInner(inner: LineInner): string {
+function formatLineInner(inner: LineInner): string {
     const prevOutput = inner.prevOutput;
     let prevOutputWithSpace: string = prevOutput;
 
@@ -115,7 +115,7 @@ export class Transpiler {
         });
 
         return [initial, ...body, end].map((line) =>
-            fromatLineInner(line.inner)
+            formatLineInner(line.inner)
         );
     }
 

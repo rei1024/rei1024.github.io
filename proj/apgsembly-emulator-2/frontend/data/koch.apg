@@ -1,4 +1,4 @@
-# Koch snowfrake printer
+# Koch snowflake printer
 # https://conwaylife.com/book/ > 9.7 A 2D Printer > APGsembly 9.9
 #COMPONENTS U0-5,B0,B2D,NOP
 #REGISTERS {'U4':6, 'U5':8}

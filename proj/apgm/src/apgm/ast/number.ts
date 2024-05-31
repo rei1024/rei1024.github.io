@@ -17,4 +17,8 @@ export class NumberAPGMExpr extends APGMExpr {
     pretty() {
         return this.value.toString();
     }
+
+    override getSpan(): APGMSourceSpan | undefined {
+        return this.span;
+    }
 }

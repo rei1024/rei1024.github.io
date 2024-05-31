@@ -1,4 +1,4 @@
-import { APGMExpr } from "./core.ts";
+import { APGMExpr, APGMSourceSpan } from "./core.ts";
 
 export class WhileAPGMExpr extends APGMExpr {
     constructor(
@@ -23,5 +23,9 @@ export class WhileAPGMExpr extends APGMExpr {
         return `while_${
             this.modifier === "Z" ? "z" : "nz"
         }(${this.cond.pretty()}) ${this.body.pretty()}`;
+    }
+
+    override getSpan(): APGMSourceSpan | undefined {
+        return undefined;
     }
 }

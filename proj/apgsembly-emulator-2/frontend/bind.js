@@ -7,7 +7,7 @@ const HTMLInputElement_ = HTMLInputElement;
 const HTMLButtonElement_ = HTMLButtonElement;
 
 // エラーメッセージ
-// Error messsage
+// Error message
 export const $error = $type("#error", HTMLElement_);
 
 // 入力
@@ -47,7 +47,7 @@ export const $previousOutput = $type("#previous_output", HTMLElement_);
 export const $frequencyInput = $type("#frequency_input", HTMLInputElement_);
 
 // スピード表示
-export const $freqencyOutput = $type("#frequency_output", HTMLElement_);
+export const $frequencyOutput = $type("#frequency_output", HTMLElement_);
 
 // 次のコマンド
 // Next command

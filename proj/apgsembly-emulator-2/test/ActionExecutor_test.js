@@ -40,7 +40,7 @@ test("ActionExecutor constructor", () => {
     });
     assertEquals(x.getUReg(0) !== undefined, true);
     assertEquals(x.getBReg(1) !== undefined, true);
-    assertEquals(x.legecyTRegMap.get(2) !== undefined, true);
+    assertEquals(x.legacyTRegMap.get(2) !== undefined, true);
 });
 
 test("ActionExecutor setByRegistersInit", () => {

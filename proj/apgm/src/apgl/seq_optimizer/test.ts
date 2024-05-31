@@ -13,7 +13,7 @@ test("seq optimize no", () => {
     assertEquals(optimizeSeq(before), before);
 });
 
-test("seq optimize emmpty elem", () => {
+test("seq optimize empty elem", () => {
     const before = new SeqAPGLExpr([
         new SeqAPGLExpr([]),
         new SeqAPGLExpr([]),

@@ -9,7 +9,7 @@
 
 loop {
     output("2");
-    break(); /* break from loop */
+    break(); /* break from loop (same as `break(1)`) */
 }
 
 /* break from nested loop */

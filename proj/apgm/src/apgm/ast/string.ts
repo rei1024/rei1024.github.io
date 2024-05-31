@@ -16,4 +16,8 @@ export class StringAPGMExpr extends APGMExpr {
         // TODO: escape
         return `"` + this.value + `"`;
     }
+
+    override getSpan(): APGMSourceSpan | undefined {
+        return this.span;
+    }
 }

@@ -1,4 +1,4 @@
-import { APGMExpr } from "./core.ts";
+import { APGMExpr, APGMSourceSpan } from "./core.ts";
 
 export class LoopAPGMExpr extends APGMExpr {
     constructor(
@@ -13,5 +13,8 @@ export class LoopAPGMExpr extends APGMExpr {
 
     pretty(): string {
         return `loop ${this.body.pretty()}`;
+    }
+    override getSpan(): APGMSourceSpan | undefined {
+        return undefined;
     }
 }

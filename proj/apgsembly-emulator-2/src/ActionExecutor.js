@@ -73,7 +73,7 @@ export class ActionExecutor {
         /**
          * @readonly
          */
-        this.legecyTRegMap = new Map(
+        this.legacyTRegMap = new Map(
             legacyT.map((n) => [n, new LegacyTReg()]),
         );
 
@@ -205,7 +205,7 @@ export class ActionExecutor {
         } else if (action instanceof HaltOutAction) {
             return -1;
         } else if (action instanceof LegacyTRegAction) {
-            const tReg = this.legecyTRegMap.get(action.regNumber) ??
+            const tReg = this.legacyTRegMap.get(action.regNumber) ??
                 throwNotFound("T", action.regNumber);
             return tReg.action(action);
         }

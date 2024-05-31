@@ -6,7 +6,7 @@ function actionAssert(action: ActionAPGLExpr, strs: string[]) {
     assertEquals(action.actions, strs);
 }
 
-test("acitons A", () => {
+test("actions A", () => {
     actionAssert(A.incU(1), ["INC U1", "NOP"]);
     actionAssert(A.incUMulti(1), ["INC U1", "NOP"]);
 

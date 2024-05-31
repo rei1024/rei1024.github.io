@@ -14,6 +14,8 @@ export abstract class APGMExpr {
      * Convert to string
      */
     abstract pretty(): string;
+
+    abstract getSpan(): APGMSourceSpan | undefined;
 }
 
 export interface APGMSourceLocation {

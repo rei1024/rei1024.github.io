@@ -1,4 +1,4 @@
-import { APGMExpr } from "./core.ts";
+import { APGMExpr, type APGMSourceSpan } from "./core.ts";
 import { IfAPGMExpr } from "./if.ts";
 import { LoopAPGMExpr } from "./loop.ts";
 import { WhileAPGMExpr } from "./mod.ts";
@@ -33,5 +33,9 @@ export class SeqAPGMExpr extends APGMExpr {
                 return x.pretty() + ";";
             }
         }).join("\n");
+    }
+
+    override getSpan(): APGMSourceSpan | undefined {
+        return undefined;
     }
 }

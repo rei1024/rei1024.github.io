@@ -1,0 +1,62 @@
+module.exports = {
+    "version": "0.2",
+    "ignorePaths": [
+        "package-lock.json",
+        "node_modules",
+        "vscode-extension",
+        ".git/objects",
+        ".vscode",
+        ".vscode-insiders",
+        "frontend/index.dist.js",
+        "frontend/style.min.css",
+        "frontend/data/",
+        "playwright-report",
+        "/tools/turmites/lib.js",
+        "/test/pi_calculator.js",
+        "/test/actions",
+        "/labs/apgompiler",
+    ],
+    "ignoreWords": [
+        // name
+        "pegg",
+        "Peggs",
+        "luca",
+
+        "turmite",
+        "turmites",
+        "TDEC",
+        "tdecu",
+        "tdecb",
+        "APGsembly",
+        "ruletablerepository",
+
+        "Strs",
+        "klass",
+        "COMPONENTSB", // テスト
+        "APGM",
+        "deno",
+        "apge",
+        "viewports",
+        "Comlink",
+        "lsys",
+        "regs",
+        "nums",
+        "noopener",
+        "noreferrer",
+        "Mult",
+        "apgompiler",
+        "npmjs",
+        "apgjson",
+        "APGC",
+        "divmod",
+
+        // uml
+        "plantuml",
+        "startuml",
+        "enduml",
+
+        "nodebrew",
+        "tspan",
+        "APGURL",
+    ],
+};

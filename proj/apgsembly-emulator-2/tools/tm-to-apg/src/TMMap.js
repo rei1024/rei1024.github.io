@@ -112,9 +112,9 @@ export class TMMap {
          * @returns {Line | Error}
          */
         function getLineBy(state, symbol) {
-            const frist = knownSymbolMap.get(state);
-            if (frist !== undefined) {
-                const x = frist.get(symbol);
+            const first = knownSymbolMap.get(state);
+            if (first !== undefined) {
+                const x = first.get(symbol);
                 if (x !== undefined) {
                     return x;
                 }
@@ -125,7 +125,7 @@ export class TMMap {
                 return second;
             }
 
-            const third = frist?.get(undefined);
+            const third = first?.get(undefined);
             if (third !== undefined) {
                 return third;
             }

@@ -17,12 +17,6 @@ export const monarchTokensProvider = {
     // symbols: /[\#\!\%\&\*\+\-\.\/\:\;\<\=\>\@\^\|_\?]+/,
     tokenizer: {
         root: [
-            // Raw string literals
-            // [/r(#*)"/, {
-            //     token: "string.quote",
-            //     bracket: "@open",
-            //     next: "@stringraw.$1",
-            // }],
             // header
             [
                 /#?[a-zA-Z][a-zA-Z0-9_]*!?|_[a-zA-Z0-9_]+/,
@@ -41,8 +35,6 @@ export const monarchTokensProvider = {
             // [/\$/, 'identifier'],
             // Lifetime annotations
             // [/'[a-zA-Z_][a-zA-Z0-9_]*(?=[^\'])/, 'identifier'],
-            // Byte literal
-            // [/'(\S|@escapes)'/, 'string.byteliteral'],
             // Strings
             [/"/, { token: "string.quote", bracket: "@open", next: "@string" }],
             { include: "@numbers" },
@@ -82,20 +74,6 @@ export const monarchTokensProvider = {
             // [/\\./, 'string.escape.invalid'],
             [/"/, { token: "string.quote", bracket: "@close", next: "@pop" }],
         ],
-
-        // stringraw: [
-        // 	[/[^"#]+/, { token: 'string' }],
-        // 	[
-        // 		/"(#*)/,
-        // 		{
-        // 			cases: {
-        // 				'$1==$S2': { token: 'string.quote', bracket: '@close', next: '@pop' },
-        // 				'@default': { token: 'string' }
-        // 			}
-        // 		}
-        // 	],
-        // 	[/["#]/, { token: 'string' }]
-        // ],
 
         numbers: [
             //Octal

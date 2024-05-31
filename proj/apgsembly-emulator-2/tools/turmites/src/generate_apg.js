@@ -33,8 +33,8 @@ function dirToAction(dir) {
 /**
  * @returns {never}
  */
-function intenalError() {
-    throw Error("intenal error");
+function internalError() {
+    throw Error("internal error");
 }
 
 /**
@@ -77,8 +77,8 @@ SET_Y_2; NZ; SET_Y_1; INC B2DY, NOP
         if (colors.length !== 2) {
             throw Error("Only works with two colors");
         }
-        const color0 = colors[0] ?? intenalError();
-        const color1 = colors[1] ?? intenalError();
+        const color0 = colors[0] ?? internalError();
+        const color1 = colors[1] ?? internalError();
         for (const dir of allDirs) {
             array.push(
                 `${dir}_${state}_1; *;  ${dir}_${state}_2; READ B2D, INC U2`,

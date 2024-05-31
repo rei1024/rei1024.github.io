@@ -25,7 +25,7 @@ import { A } from "../apgl/actions.ts";
 function transpileEmptyArgFunc(funcExpr: FuncAPGMExpr, expr: APGLExpr) {
     if (funcExpr.args.length !== 0) {
         throw new ErrorWithSpan(
-            `"${funcExpr.name}" expects empty argments${
+            `"${funcExpr.name}" expects empty arguments${
                 formatLocationAt(funcExpr.span?.start)
             }`,
             funcExpr.span,
@@ -40,7 +40,7 @@ function transpileNumArgFunc(
 ) {
     if (funcExpr.args.length !== 1) {
         throw new ErrorWithSpan(
-            `number of arguments is not 1: "${funcExpr.name}"${
+            `number of arguments is not 1:"${funcExpr.name}"${
                 formatLocationAt(funcExpr.span?.start)
             }`,
             funcExpr.span,
@@ -52,7 +52,7 @@ function transpileNumArgFunc(
             `argument is not a number: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.span?.start)
             }`,
-            funcExpr.span,
+            arg.getSpan() ?? funcExpr.span,
         );
     }
     return expr(arg.value);
@@ -76,7 +76,7 @@ function transpileStringArgFunc(
             `argument is not a string: "${funcExpr.name}"${
                 formatLocationAt(funcExpr.span?.start)
             }`,
-            funcExpr.span,
+            arg.getSpan() ?? funcExpr.span,
         );
     }
     return expr(arg.value);
@@ -175,7 +175,7 @@ function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
                     `first argument of "repeat" must be a number${
                         formatLocationAt(funcExpr.span?.start)
                     }`,
-                    funcExpr.span,
+                    n.getSpan() ?? funcExpr.span,
                 );
             }
 
