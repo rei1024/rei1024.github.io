@@ -97,7 +97,7 @@ export class UReg {
         if (
             typeof value !== "number" || value < 0 || !Number.isInteger(value)
         ) {
-            initError(key, value);
+            throwRegisterInitError(key, value);
         }
         this.setValue(value);
     }
@@ -108,7 +108,7 @@ export class UReg {
  * @param {unknown} value
  * @returns {never}
  */
-const initError = (key, value) => {
+export const throwRegisterInitError = (key, value) => {
     const debugStr = `"${key}": ${JSON.stringify(value)}`;
     throw Error(`Invalid #REGISTERS ${debugStr}`);
 };

@@ -39,7 +39,7 @@ type LineInner = {
     readonly currentState: string;
     readonly prevOutput: "Z" | "NZ" | "*" | "ZZ";
     readonly nextState: string;
-    readonly actions: string[];
+    readonly actions: readonly string[];
 };
 
 function formatLineInner(inner: LineInner): string {

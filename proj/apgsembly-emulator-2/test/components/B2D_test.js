@@ -7,11 +7,8 @@ import { assertEquals, assertThrows, test, throwError } from "../deps.js";
 test("B2D constructor", () => {
     const x = new B2D();
     assertEquals(x.getArray(), [[0]]);
-});
-
-test("B2D constructor 2", () => {
-    const x = new B2D(1, 2);
-    assertEquals(x.getArray(), [[0, 0], [0, 0], [0, 0]]);
+    assertEquals(x.x, 0);
+    assertEquals(x.y, 0);
 });
 
 test("B2D read initial", () => {

@@ -13,7 +13,7 @@ test.describe("Turmites integration", () => {
         await page.goto(turmitesURL);
 
         // Generate
-        await page.locator("#samples").click();
+        await page.locator("#example").click();
         await page.getByText("1: Langton's ant").click();
         await page.locator("#generate").click();
         await expect(page.locator("#copy")).toBeEnabled();

@@ -18,7 +18,7 @@ import { MUL } from "./components/MUL.js";
 import { NOP } from "./components/NOP.js";
 import { OUTPUT } from "./components/OUTPUT.js";
 import { SUB } from "./components/SUB.js";
-import { UReg } from "./components/UReg.js";
+import { UReg, throwRegisterInitError } from "./components/UReg.js";
 import { LegacyTReg } from "./components/LegacyTReg.js";
 
 /**
@@ -139,7 +139,7 @@ export class ActionExecutor {
         if (key.startsWith("U")) {
             const n = parseNum(key.slice(1), 10);
             if (isNaNLocal(n)) {
-                throwInitError(key, value);
+                throwRegisterInitError(key, value);
             }
             const reg = this.getUReg(n);
             if (reg === undefined) {
@@ -151,7 +151,7 @@ export class ActionExecutor {
         } else if (key.startsWith("B")) {
             const n = parseNum(key.slice(1), 10);
             if (isNaNLocal(n)) {
-                throwInitError(key, value);
+                throwRegisterInitError(key, value);
             }
             const reg = this.getBReg(n);
             if (reg === undefined) {
@@ -161,7 +161,7 @@ export class ActionExecutor {
             }
             reg.setByRegistersInit(key, value);
         } else {
-            throwInitError(key, value);
+            throwRegisterInitError(key, value);
         }
     }
 
@@ -261,13 +261,3 @@ export class ActionExecutor {
         `;
     }
 }
-
-/**
- * @param {string} key
- * @param {unknown} value
- * @returns {never}
- */
-const throwInitError = (key, value) => {
-    const debugStr = `"${key}": ${JSON.stringify(value)}`;
-    throw Error(`Invalid #REGISTERS ${debugStr}`);
-};

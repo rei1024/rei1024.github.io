@@ -10,7 +10,7 @@ export class Macro {
      */
     constructor(
         public readonly name: string,
-        public readonly args: VarAPGMExpr[],
+        public readonly args: readonly VarAPGMExpr[],
         public readonly body: APGMExpr,
         public readonly span: APGMSourceSpan | undefined,
     ) {

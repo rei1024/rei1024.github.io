@@ -5,7 +5,7 @@ import { WhileAPGMExpr } from "./mod.ts";
 
 export class SeqAPGMExpr extends APGMExpr {
     constructor(
-        public readonly exprs: APGMExpr[],
+        public readonly exprs: readonly APGMExpr[],
     ) {
         super();
     }

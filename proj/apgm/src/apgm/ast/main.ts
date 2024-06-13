@@ -4,8 +4,8 @@ import { Header } from "./header.ts";
 
 export class Main {
     constructor(
-        public readonly macros: Macro[],
-        public readonly headers: Header[],
+        public readonly macros: readonly Macro[],
+        public readonly headers: readonly Header[],
         public readonly seqExpr: SeqAPGMExpr,
     ) {
     }

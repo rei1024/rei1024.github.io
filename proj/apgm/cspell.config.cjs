@@ -3,7 +3,7 @@ module.exports = {
     "ignorePaths": [
         "package-lock.json",
         "node_modules",
-        "dist/integration.js"
+        "dist/integration.js",
     ],
     "ignoreWords": [
         "APGL",
@@ -11,7 +11,8 @@ module.exports = {
         "APGT",
         "apge",
         "dups",
-        "tdec", "mula",
+        "tdec",
+        "mula",
         "APGsembly",
         "apgs",
         "Boby",
@@ -26,9 +27,12 @@ module.exports = {
         "Ackermann",
         "Thue",
         "Lindenmayer",
-        "Utemp", "Bfrom",
+        "Utemp",
+        "Bfrom",
         "curr",
-        "luca", "npmjs", "genhtml",
+        "luca",
+        "npmjs",
+        "genhtml",
 
         "subtractor",
         "Decompiled",

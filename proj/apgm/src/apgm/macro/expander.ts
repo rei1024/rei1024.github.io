@@ -59,8 +59,8 @@ const MAX_COUNT = 100000;
 export class MacroExpander {
     readonly #macroMap: Map<string, Macro>;
     #count = 0;
-    public readonly main: Main;
-    constructor(main: Main, macroMap: Map<string, Macro>) {
+
+    constructor(private readonly main: Main, macroMap: Map<string, Macro>) {
         this.main = main;
         this.#macroMap = macroMap;
     }

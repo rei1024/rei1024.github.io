@@ -3,6 +3,7 @@
 import { BRegAction } from "../actions/BRegAction.js";
 import { B_INC, B_READ, B_SET, B_TDEC } from "../action_consts/BReg_consts.js";
 import { internalError } from "../internalError.js";
+import { throwRegisterInitError } from "./UReg.js";
 
 /**
  * バイナリの文字列を0と1の配列に変換する
@@ -268,29 +269,17 @@ export class BReg {
      * @param {unknown} value
      */
     setByRegistersInit(key, value) {
-        /**
-         * @param {string} msg
-         */
-        const error = (msg) => {
-            throw Error(`Invalid #REGISTERS ${msg}`);
-        };
-        const debugStr = `"${key}": ${JSON.stringify(value)}`;
         // 数字の場合の処理は数字をバイナリにして配置する TODO 必要か確認
         if (typeof value === "number") {
             this.setBits(parseBits(value.toString(2)).reverse());
             this.extend();
         } else if (!Array.isArray(value) || value.length !== 2) {
-            error(debugStr);
+            throwRegisterInitError(key, value);
         } else {
-            /** @type {unknown} */
-            const value0 = value[0];
-            /** @type {unknown} */
-            const value1 = value[1];
+            const [value0, value1] = /** @type {unknown[]} */ (value);
 
-            if (typeof value0 !== "number" || typeof value1 !== "string") {
-                error(debugStr);
-            } else if (value0 < 0 || !Number.isInteger(value0)) {
-                error(debugStr);
+            if (typeof value0 !== "number" || typeof value1 !== "string" || value0 < 0 || !Number.isInteger(value0)) {
+                throwRegisterInitError(key, value);
             } else {
                 const bits = parseBits(value1);
                 this.pointer = value0;

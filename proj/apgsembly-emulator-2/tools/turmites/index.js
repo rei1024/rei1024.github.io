@@ -14,7 +14,7 @@ const rule = $type("#rule", HTMLInputElement);
 
 const generateButton = $type("#generate", HTMLButtonElement);
 
-const $samplesButton = $type("#samples", HTMLButtonElement);
+const $exampleButton = $type("#example", HTMLButtonElement);
 
 const code = $type("#output", HTMLTextAreaElement);
 
@@ -28,7 +28,7 @@ const $dir = $type("#dir", HTMLSelectElement);
 
 const $flip = $type("#flip", HTMLInputElement);
 
-const $sampleList = $type("#sample_list", HTMLElement);
+const $exampleList = $type("#example_list", HTMLElement);
 
 const $ruleInvalid = $type("#rule_invalid", HTMLElement);
 
@@ -41,7 +41,7 @@ let comment = "";
  * @param {string} ruleString
  * @param {string} desc
  */
-const addSample = (ruleString, desc) => {
+const addExample = (ruleString, desc) => {
     // <button class="dropdown-item">Text</button>
     const button = document.createElement("button");
     button.classList.add("dropdown-item");
@@ -53,7 +53,7 @@ const addSample = (ruleString, desc) => {
     });
     const li = document.createElement("li");
     li.append(button);
-    $sampleList.append(li);
+    $exampleList.append(li);
 };
 
 // 何かしら変化したらコメント削除
@@ -64,7 +64,7 @@ rule.addEventListener("input", () => {
 const allRules = peggLibrary.concat(timLibrary, absLibrary);
 
 for (const [ruleString, desc] of allRules) {
-    addSample(ruleString, desc);
+    addExample(ruleString, desc);
 }
 
 function getInput() {
@@ -129,4 +129,4 @@ copy.addEventListener("click", () => {
 
 // ボタンを有効化
 generateButton.disabled = false;
-$samplesButton.disabled = false;
+$exampleButton.disabled = false;

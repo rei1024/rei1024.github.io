@@ -5,7 +5,7 @@ import { ActionAPGLExpr } from "./mod.ts";
  * Sequential expression
  */
 export class SeqAPGLExpr extends APGLExpr {
-    constructor(public readonly exprs: APGLExpr[]) {
+    constructor(public readonly exprs: readonly APGLExpr[]) {
         super();
     }
 

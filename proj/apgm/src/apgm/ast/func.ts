@@ -6,7 +6,7 @@ import { APGMExpr, type APGMSourceSpan } from "./core.ts";
 export class FuncAPGMExpr extends APGMExpr {
     constructor(
         public readonly name: string,
-        public readonly args: APGMExpr[],
+        public readonly args: readonly APGMExpr[],
         public readonly span: APGMSourceSpan | undefined,
     ) {
         super();

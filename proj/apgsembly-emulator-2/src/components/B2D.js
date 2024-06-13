@@ -25,14 +25,10 @@ const generateArray = (n, f) => Array(n).fill(0).map((_, i) => f(i));
  * binary 2-dimensional
  */
 export class B2D {
-    /**
-     * @param {number} x
-     * @param {number} y
-     */
-    constructor(x = 0, y = 0) {
-        if (x < 0 || y < 0) {
-            throw RangeError("B2D constructor: negative");
-        }
+    constructor() {
+        const x = 0; // 引数にできるが使用しないのでここで固定
+        const y = 0;
+
         this.x = x;
         this.y = y;
 
