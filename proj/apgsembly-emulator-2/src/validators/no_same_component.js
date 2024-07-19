@@ -1,6 +1,6 @@
 // @ts-check
 
-import { addLineNumber, Command } from "../Command.js";
+import { Command, commandWithLineNumber } from "../Command.js";
 import { HaltOutAction } from "../actions/HaltOutAction.js";
 import { internalError } from "../internalError.js";
 
@@ -30,8 +30,8 @@ export const validateNoSameComponentCommand = (command) => {
         for (let j = i + 1; j < len; j++) {
             const b = actions[j] ?? internalError();
             if (a.isSameComponent(b)) {
-                return `Actions "${a.pretty()}" and "${b.pretty()}" use same component in "${command.pretty()}"${
-                    addLineNumber(command)
+                return `Actions "${a.pretty()}" and "${b.pretty()}" use same component in ${
+                    commandWithLineNumber(command)
                 }`;
             }
         }

@@ -18,7 +18,7 @@ import { MUL } from "./components/MUL.js";
 import { NOP } from "./components/NOP.js";
 import { OUTPUT } from "./components/OUTPUT.js";
 import { SUB } from "./components/SUB.js";
-import { UReg, throwRegisterInitError } from "./components/UReg.js";
+import { throwRegisterInitError, UReg } from "./components/UReg.js";
 import { LegacyTReg } from "./components/LegacyTReg.js";
 
 /**

@@ -8,8 +8,8 @@ import {
 } from "./compile.js";
 import { extractRegisterNumbers, Program } from "./Program.js";
 import {
-    addLineNumber,
     Command,
+    commandWithLineNumber,
     INITIAL_STATE,
     RegistersHeader,
 } from "./Command.js";
@@ -346,8 +346,7 @@ export class Machine {
      */
     #throwError(err) {
         const command = this.getNextCommand().command;
-        const line = addLineNumber(command);
-        return error(err.message + ` in "${command.pretty()}"` + line);
+        return error(err.message + ` in ` + commandWithLineNumber(command));
     }
 
     /**
@@ -384,9 +383,7 @@ export class Machine {
                 } else {
                     error(
                         `Return value twice: ` +
-                            `line = ${command.pretty()}${
-                                addLineNumber(command)
-                            }`,
+                            `line = ${commandWithLineNumber(command)}`,
                     );
                 }
             }
@@ -394,9 +391,7 @@ export class Machine {
 
         if (result === -1) {
             error(
-                `No return value: line = ${command.pretty()}${
-                    addLineNumber(command)
-                }`,
+                `No return value: line = ${commandWithLineNumber(command)}`,
             );
         }
 

@@ -10,7 +10,7 @@
         // reload dependency
         "reload": "deno test --reload",
         // local server
-        "up": "deno run --allow-net --allow-read --allow-sys jsr:@std/http@^0.224.1/file-server . -p 1618",
+        "up": "deno run --allow-net --allow-read --allow-sys jsr:@std/http@^0.224.5/file-server . -p 1618",
         // bundle
         "bundle": "deno run --allow-net=deno.land,registry.npmjs.org --allow-env --allow-read --allow-write --allow-run bundle.ts",
         // coverage
@@ -43,6 +43,6 @@
         }
     },
     "imports": {
-        "@std/assert": "jsr:@std/assert@^0.225.3"
+        "@std/assert": "jsr:@std/assert@^1.0.0"
     }
 }

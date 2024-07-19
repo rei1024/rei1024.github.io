@@ -1,6 +1,6 @@
 // @ts-check
 
-import { addLineNumber, Command } from "../Command.js";
+import { Command, commandWithLineNumber } from "../Command.js";
 
 /**
  * 同じアクションが複数含まれていないか検査する
@@ -20,8 +20,8 @@ export const validateNoDuplicatedActionCommand = (command) => {
         const act1 = actionStrs[i];
         const act2 = actionStrs[i + 1];
         if (act1 === act2) {
-            return `Duplicated actions "${act1}" in "${command.pretty()}"${
-                addLineNumber(command)
+            return `Duplicated actions "${act1}" in ${
+                commandWithLineNumber(command)
             }`;
         }
     }

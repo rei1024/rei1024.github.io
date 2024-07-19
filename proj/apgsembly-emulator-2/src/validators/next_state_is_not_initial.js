@@ -1,6 +1,6 @@
 // @ts-check
 
-import { addLineNumber, Command, INITIAL_STATE } from "../Command.js";
+import { Command, commandWithLineNumber, INITIAL_STATE } from "../Command.js";
 
 /**
  * 次の状態が初期状態でないか検査する
@@ -10,9 +10,7 @@ import { addLineNumber, Command, INITIAL_STATE } from "../Command.js";
  */
 export const validateNextStateIsNotINITIALCommand = (command) => {
     if (command.nextState === INITIAL_STATE) {
-        return `Return to initial state in "${command.pretty()}"${
-            addLineNumber(command)
-        }`;
+        return `Return to initial state in ${commandWithLineNumber(command)}`;
     }
     return undefined;
 };

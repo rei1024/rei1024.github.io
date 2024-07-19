@@ -10,11 +10,11 @@ import { piCalculator } from "./pi_calculator.js";
 // const N = 1000000;
 
 // const program = Program.parse(piCalculator);
-// if (typeof program === "string") {
-//     throw Error("error");
-// }
 
 // function run() {
+//     if (typeof program === "string") {
+//         throw Error("error");
+//     }
 //     const machine = new Machine(program);
 //     for (let i = 0; i < N; i++) {
 //         try {
@@ -36,6 +36,9 @@ import { piCalculator } from "./pi_calculator.js";
 // }
 
 // function run2() {
+//     if (typeof program === "string") {
+//         throw Error("error");
+//     }
 //     const machine = new Machine(program);
 //     machine.exec(N, false, -1, -1);
 
@@ -305,3 +308,31 @@ import { piCalculator } from "./pi_calculator.js";
 //     },
 //     group: 'test'
 // });
+
+// ------ for vs of
+
+// const x = {}
+// const arrayLen = 6;
+// const array = new Array(arrayLen).fill(null).map(x => ({}));
+// const N = 10000000
+
+// Deno.bench('for', () => {
+//     for (let j = 0; j < N; j++) {
+//         for (let i = 0; i < arrayLen; i++) {
+//             const item = array[i];
+//             if (item === x) {
+//                 console.log('Hello')
+//             }
+//         }
+//     }
+// })
+// Deno.bench('of', () => {
+//     for (let j = 0; j < N; j++) {
+//         for (const item of array) {
+//             if (item === x) {
+//                 console.log('Hello')
+//             }
+//         }
+//     }
+// })
+// ------

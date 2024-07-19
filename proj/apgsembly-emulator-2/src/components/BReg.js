@@ -278,7 +278,10 @@ export class BReg {
         } else {
             const [value0, value1] = /** @type {unknown[]} */ (value);
 
-            if (typeof value0 !== "number" || typeof value1 !== "string" || value0 < 0 || !Number.isInteger(value0)) {
+            if (
+                typeof value0 !== "number" || typeof value1 !== "string" ||
+                value0 < 0 || !Number.isInteger(value0)
+            ) {
                 throwRegisterInitError(key, value);
             } else {
                 const bits = parseBits(value1);

@@ -1,7 +1,7 @@
 // @ts-check
 
 import { HaltOutAction } from "../actions/HaltOutAction.js";
-import { addLineNumber, Command } from "../Command.js";
+import { addLineNumber, Command, commandWithLineNumber } from "../Command.js";
 
 /**
  * アクションが値を一度だけ返すか検査する
@@ -20,8 +20,8 @@ export const validateActionReturnOnceCommand = (command) => {
     if (valueReturnActions.length === 1) {
         return undefined;
     } else if (valueReturnActions.length === 0) {
-        return `Does not produce the return value in "${command.pretty()}"${
-            addLineNumber(command)
+        return `Does not produce the return value in ${
+            commandWithLineNumber(command)
         }`;
     } else {
         return `Does not contain exactly one action that produces a return value in "${command.pretty()}": Actions that produce value are ${

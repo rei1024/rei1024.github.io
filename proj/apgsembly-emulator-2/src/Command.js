@@ -306,3 +306,10 @@ const lineNumberMessage = (line) =>
  * @returns {string}
  */
 export const addLineNumber = (command) => lineNumberMessage(command.line);
+
+/**
+ * @param {Command} command
+ * @returns {string}
+ */
+export const commandWithLineNumber = (command) =>
+    `"${command.pretty()}"${addLineNumber(command)}`;
