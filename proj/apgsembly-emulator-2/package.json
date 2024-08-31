@@ -17,7 +17,7 @@
     "author": "Rei",
     "license": "MIT",
     "devDependencies": {
-        "@playwright/test": "^1.44.0",
-        "@types/node": "^20.12.12"
+        "@playwright/test": "^1.46.1",
+        "@types/node": "^22.5.1"
     }
 }

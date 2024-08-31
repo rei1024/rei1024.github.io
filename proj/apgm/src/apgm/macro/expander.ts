@@ -59,9 +59,10 @@ const MAX_COUNT = 100000;
 export class MacroExpander {
     readonly #macroMap: Map<string, Macro>;
     #count = 0;
+    readonly  #main;
 
-    constructor(private readonly main: Main, macroMap: Map<string, Macro>) {
-        this.main = main;
+    constructor(main: Main, macroMap: Map<string, Macro>) {
+        this.#main = main;
         this.#macroMap = macroMap;
     }
 
@@ -83,7 +84,7 @@ export class MacroExpander {
     }
 
     expand(): APGMExpr {
-        return this.#expandExpr(this.main.seqExpr);
+        return this.#expandExpr(this.#main.seqExpr);
     }
 
     #expandExpr(expr: APGMExpr): APGMExpr {

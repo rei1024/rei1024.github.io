@@ -113,7 +113,7 @@ function transpileT(program) {
 
 //     lines.push(...tempLines);
 
-//     return new Program({ programLines: new ProgramLines(lines) });
+//     return new Program(new ProgramLines(lines));
 // }
 
 /**

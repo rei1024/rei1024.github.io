@@ -48,9 +48,9 @@ type Digit = "0" | DigitNonZero;
 export async function assertRegister(
     page: Page,
     reg: `${"U" | "B"}${`${Digit}` | `${DigitNonZero}${Digit}`}`,
-    x: string,
+    value: string,
 ) {
-    await expect(page.locator(`[data-test="${reg}"]`)).toHaveText(x);
+    await expect(page.locator(`[data-test="${reg}"]`)).toHaveText(value);
 }
 
 export async function assertError(page: Page, msg: string) {

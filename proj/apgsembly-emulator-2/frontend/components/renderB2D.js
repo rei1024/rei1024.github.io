@@ -21,9 +21,7 @@ export const renderB2D = (context, b2d, hidePointer, flipUpsideDown) => {
     }
 
     // reset canvas
-    // @ts-ignore new feature
     if (context.reset) {
-        // @ts-ignore new feature
         context.reset();
     } else {
         context.clearRect(0, 0, width, width);

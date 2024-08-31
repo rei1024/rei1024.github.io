@@ -13,14 +13,10 @@ import { validateAll } from "./validate.js";
  */
 export class Program {
     /**
-     * @param {{
-     *   programLines: ProgramLines
-     * }} param0
+     * @param {ProgramLines} programLines
      * @throw Error
      */
-    constructor({
-        programLines,
-    }) {
+    constructor(programLines) {
         const programLinesArray = programLines.getArray();
         /**
          * @readonly
@@ -102,9 +98,7 @@ export class Program {
         }
 
         try {
-            return new Program({
-                programLines,
-            });
+            return new Program(programLines);
         } catch (error) {
             if (error instanceof Error) {
                 return error.message;
