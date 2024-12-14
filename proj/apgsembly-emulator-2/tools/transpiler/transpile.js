@@ -1,7 +1,6 @@
 // @ts-check
 
-import { Program } from "../../src/Program.js";
-import { format } from "../../src/ProgramLines.js";
+import { format, ProgramLines } from "../../src/ProgramLines.js";
 // import { ProgramLines } from "../src/ProgramLines.js";
 // import { Command, ProgramLine } from "../src/Command.js";
 // import { LegacyTRegAction, T_DEC, T_INC, T_READ, T_RESET, T_SET } from "../src/actions/LegacyTRegAction.js";
@@ -9,14 +8,6 @@ import { format } from "../../src/ProgramLines.js";
 // import { BRegAction, B_INC, B_READ, B_SET, B_TDEC } from "../src/actions/BRegAction.js";
 // import { validateActionReturnOnceCommand } from "../src/validators/action_return_once.js";
 // import { validateNoSameComponentCommand } from "../src/validators/no_same_component.js";
-
-/**
- * @param {Program} program
- * @returns {Program}
- */
-function transpileT(program) {
-    return program;
-}
 
 // function transpileT(program) {
 //     const oldLines = program.programLines.getArray().slice();
@@ -121,9 +112,9 @@ function transpileT(program) {
  * @returns {string | Error}
  */
 export function transpile(input) {
-    const program = Program.parse(input, { noValidate: true });
-    if (program instanceof Program) {
-        return format(transpileT(program).programLines);
+    const program = ProgramLines.parse(input);
+    if (program instanceof ProgramLines) {
+        return format(program);
     } else {
         return new Error(program);
     }

@@ -1,4 +1,3 @@
-# import golly as g
 from typing import List, Optional, Dict
 import re
 
@@ -11,7 +10,6 @@ class Line:
   def __init__(
     self,
     state: str,
-    inputStr: str,
     nextState: str,
     actions: List[str]
   ) -> None:
@@ -51,7 +49,7 @@ def error(message: str):
   g.note(message)
   g.exit()
 
-def parse(source: str) -> Program:
+def parseProgram(source: str) -> Program:
   componentsHeader = None
   componentsKey = "#COMPONENTS"
   registersHeader = None
@@ -69,11 +67,11 @@ def parse(source: str) -> Program:
       continue
     if line.startswith("#"):
       continue
-    arr = re.split('\s*;\s*', line)
+    arr = re.split(r'\s*;\s*', line)
     if len(arr) != 4:
       error("Parse failed: " + line)
     [state, inputStr, nextState, actionsStr] = arr
-    actions = re.split('\s*,\s*', actionsStr)
+    actions = re.split(r'\s*,\s*', actionsStr)
     lines.append(Line(state, inputStr, nextState, actions))
   return Program(componentsHeader, registersHeader, lines)
 
@@ -100,13 +98,18 @@ def makeDict(program: Program) -> Dict[str, int]:
 def actionToPlace(program: Program) -> List[str]:
   def makeU(n: int):
     return ["TDEC U" + str(n), "INC U" + str(n)]
+  # TODO: 可変
   return [*makeU(0), *makeU(1), *makeU(2), *makeU(3), "HALT_OUT"]
+
+class CompiledProgram:
+  program: Program # preprocessed
+  allActions: List[str]
 
 def main():
   progStr = """
 
   """
-  program = preProcess(parse(progStr))
+  program = preProcess(parseProgram(progStr))
   stateDict = makeDict(program)
   actions = actionToPlace(program)
 
@@ -114,25 +117,26 @@ def main():
   for i in range(len(actions)):
     actionDict[actions[i]] = i
 
-# print(parse("""
-# # Unary registers multiplication
-# # https://conwaylife.com/book/ > 9.3 Multiplying and Reusing Registers > APGsembly 9.3
-# #COMPONENTS U0-3,HALT_OUT
-# #REGISTERS {"U0":7, "U1":5}
-# # State Input Next state Actions
-# # ---------------------------------------
-# INITIAL; ZZ; ID1; TDEC U0
+# import golly as g
+print(str(parseProgram("""
+# Unary registers multiplication
+# https://conwaylife.com/book/ > 9.3 Multiplying and Reusing Registers > APGsembly 9.3
+#COMPONENTS U0-3,HALT_OUT
+#REGISTERS {"U0":7, "U1":5}
+# State Input Next state Actions
+# ---------------------------------------
+INITIAL; ZZ; ID1; TDEC U0
 
-# # Loop over U0, TDECing it until it hits 0, and then halt.
-# ID1; Z; ID1; HALT_OUT
-# ID1; NZ; ID2; TDEC U1
+# Loop over U0, TDECing it until it hits 0, and then halt.
+ID1; Z; ID1; HALT_OUT
+ID1; NZ; ID2; TDEC U1
 
-# # Copy U1 into U3 while setting U1 = 0.
-# ID2; Z; ID3; TDEC U3
-# ID2; NZ; ID2; TDEC U1, INC U3
+# Copy U1 into U3 while setting U1 = 0.
+ID2; Z; ID3; TDEC U3
+ID2; NZ; ID2; TDEC U1, INC U3
 
-# # Loop over U3, adding its value to U1 (restoring it) and U2.
-# ID3; Z; ID1; TDEC U0
-# ID3; NZ; ID3; TDEC U3, INC U1, INC U2
+# Loop over U3, adding its value to U1 (restoring it) and U2.
+ID3; Z; ID1; TDEC U0
+ID3; NZ; ID3; TDEC U3, INC U1, INC U2
 
-# """).lines[4])
+""")))

@@ -7,7 +7,8 @@ An emulator for APGsembly 2.0
 ### Requirements
 
 - `deno`
-  - https://docs.deno.com/runtime/manual/getting_started/installation
+  - Above v2.0
+  - https://docs.deno.com/runtime/getting_started/installation/
 - `npm`
   - Run `$ npm install`
 

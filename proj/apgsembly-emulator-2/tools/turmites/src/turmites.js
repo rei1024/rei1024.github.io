@@ -201,6 +201,9 @@ export class Turmites {
                     throw error;
                 }
                 const [x, y, z] = nextObj;
+                if (x === undefined || y === undefined || z === undefined) {
+                    throw error;
+                }
                 const next = Next.fromNumbers(x, y, z);
                 if (next === undefined) {
                     throw error;

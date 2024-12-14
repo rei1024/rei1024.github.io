@@ -52,6 +52,7 @@ import {
     context,
 } from "./bind.js";
 import { toLocaleString } from "./util/toLocaleString.js";
+import { LibraryUI } from "./components/library_ui.js";
 
 /** index.htmlと同期すること */
 export const DEFAULT_FREQUENCY = 30;
@@ -80,6 +81,8 @@ export class App {
     /** @readonly */
     #statsUI = new StatsUI($statsBody, $statsNumberOfStates);
     /** @readonly */
+    $libraryUI = new LibraryUI();
+    /** @readonly */
     #valve;
     /**
      * アプリ状態
@@ -93,6 +96,8 @@ export class App {
         this.#valve = new Valve((value) => {
             this.run(value);
         }, { frequency: DEFAULT_FREQUENCY });
+
+        this.$libraryUI.initialize();
     }
 
     /**
@@ -227,7 +232,8 @@ export class App {
         this.#valve.reset();
 
         try {
-            this.#machine = Machine.fromString($input.value);
+            const libraryFiles = this.$libraryUI.getFiles();
+            this.#machine = Machine.fromString($input.value, libraryFiles);
             this.#onMachineSet();
             this.#appState = "Stop";
         } catch (e) {

@@ -112,8 +112,8 @@ export class Machine {
             this.stateStatsArray.push(0);
         }
 
-        const regHeader = program.registersHeader;
-        if (regHeader) {
+        const regHeaders = program.registersHeader;
+        for (const regHeader of regHeaders) {
             this.#setByRegistersHeader(regHeader);
         }
     }
@@ -121,11 +121,14 @@ export class Machine {
     /**
      * 文字列から作成する
      * @param {string} source
+     * @param {{ name: string; content: string }[]} [libraryFiles]
      * @returns {Machine}
      * @throws エラー
      */
-    static fromString(source) {
-        const program = Program.parse(source);
+    static fromString(source, libraryFiles) {
+        const program = Program.parse(source, {
+            libraryFiles: libraryFiles ?? [],
+        });
 
         if (typeof program === "string") {
             throw Error(program);
@@ -262,8 +265,9 @@ export class Machine {
                 throw error;
             }
         }
-        this.stateStatsArray[this.currentStateIndex * 2 + this.prevOutput] +=
-            num;
+        const statIndex = this.currentStateIndex * 2 + this.prevOutput;
+        this.stateStatsArray[statIndex] =
+            (this.stateStatsArray[statIndex] ?? 0) + num;
         this.stepCount += num;
     }
 
@@ -361,7 +365,9 @@ export class Machine {
         {
             const currentStateIndex = this.currentStateIndex;
             const prevOutput = this.prevOutput;
-            this.stateStatsArray[currentStateIndex * 2 + prevOutput]++;
+            const statIndex = currentStateIndex * 2 + prevOutput;
+            this.stateStatsArray[statIndex] =
+                (this.stateStatsArray[statIndex] ?? 0) + 1;
         }
 
         /**
