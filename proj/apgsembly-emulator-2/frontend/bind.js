@@ -162,3 +162,18 @@ export const $viewStateDiagramButton = $type(
     "#view-state-diagram",
     HTMLButtonElement_,
 );
+
+// Library modal
+export const $addLibraryFileButton = $type(
+    "#add-library-file",
+    HTMLButtonElement_,
+);
+export const $libraryList = $type("#library-list", HTMLElement_);
+export const $libraryModalClose = $type(
+    '#library_modal [data-bs-dismiss="modal"]',
+    HTMLElement_,
+);
+export const $addBinaryLibraryFile = $type(
+    "#add-binary-library-file",
+    HTMLButtonElement_,
+);

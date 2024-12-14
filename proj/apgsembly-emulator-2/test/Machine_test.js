@@ -10,7 +10,7 @@ import {
     program9_3,
     program9_4,
 } from "./Program_test.js";
-import { piCalculator } from "./pi_calculator.js";
+import { piCalculator, piCalculatorTemplate } from "./pi_calculator.js";
 import { assertEquals, assertThrows, test, throwError } from "./deps.js";
 
 /**
@@ -338,6 +338,50 @@ test("Machine PI Calculator", () => {
     }
 
     assertEquals(normalStats, execStats);
+});
+
+test("Machine template PI Calculator", () => {
+    const program = Program.parse(piCalculatorTemplate);
+    if (!(program instanceof Program)) {
+        throw Error("parse error PI Calculator template");
+    }
+    const machine = new Machine(program);
+
+    const N = 250000;
+    const result = machine.exec(N, false, -1, 0);
+    assertEquals(result, undefined);
+
+    assertEquals(machine.stepCount, N);
+    assertEquals(
+        machine.actionExecutor.output.getString(),
+        "3.1415926535897932",
+    );
+});
+
+test("Machine template insert recursive", () => {
+    const program = Program.parse(`
+INITIAL; ZZ; A_1; NOP
+
+#DEFINE inner_template
+A_1; *; A_2; OUTPUT 1, NOP
+A_2; *; A_2; HALT_OUT
+#ENDDEF
+#DEFINE outer_template
+#INSERT inner_template
+#ENDDEF
+#INSERT outer_template
+        `);
+    if (!(program instanceof Program)) {
+        throw Error("parse error PI Calculator template");
+    }
+    const machine = new Machine(program);
+
+    const N = 5;
+    machine.exec(N, false, -1, 0);
+    assertEquals(
+        machine.actionExecutor.output.getString(),
+        "1",
+    );
 });
 
 test("Machine exec opt", () => {

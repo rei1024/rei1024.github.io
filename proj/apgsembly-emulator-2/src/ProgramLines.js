@@ -1,6 +1,13 @@
 // @ts-check
 
-import { Command, parseProgramLine, ProgramLine } from "./Command.js";
+import {
+    Command,
+    Define,
+    Enddef,
+    parseProgramLine,
+    ProgramLine,
+} from "./Command.js";
+import { internalError } from "./internalError.js";
 
 /**
  * プログラムの行の配列
@@ -8,8 +15,14 @@ import { Command, parseProgramLine, ProgramLine } from "./Command.js";
 export class ProgramLines {
     /**
      * @param {ReadonlyArray<ProgramLine>} array
+     * @param {ReadonlyMap<string, { defaultReplacements: { needle: string; replacement: string }[]; lines: string[] }>} templates
      */
-    constructor(array) {
+    constructor(array, templates = new Map()) {
+        /**
+         * @private
+         * @readonly
+         */
+        this.templates = templates;
         /**
          * @private
          * @readonly
@@ -22,6 +35,13 @@ export class ProgramLines {
      */
     getArray() {
         return this.array;
+    }
+
+    /**
+     * @returns {ReadonlyMap<string, { defaultReplacements: { needle: string; replacement: string }[]; lines: string[] }>}
+     */
+    getTemplates() {
+        return this.templates;
     }
 
     /**
@@ -39,21 +59,68 @@ export class ProgramLines {
     static parse(str) {
         const lines = str.split(/\r\n|\n|\r/u);
 
-        const programLineWithErrorArray = lines.map((line, index) =>
-            parseProgramLine(line, index + 1)
-        );
+        /**
+         * @type {string[]}
+         */
+        const errors = [];
+        /**
+         * @type {ProgramLine[]}
+         */
+        const programLines = [];
 
-        const errors = programLineWithErrorArray
-            .flatMap((x) => typeof x === "string" ? [x] : []);
+        /**
+         * @type {Map<string, { defaultReplacements: { needle: string; replacement: string }[]; lines: string[] }>}
+         */
+        const templates = new Map();
+
+        /** @type {string | null} */
+        let activeTemplateName = null;
+        for (const [index, lineStr] of lines.entries()) {
+            if (activeTemplateName != null) {
+                if (lineStr.trimStart().startsWith(Enddef.key)) {
+                    const line = parseProgramLine(lineStr);
+                    if (line instanceof Enddef) {
+                        activeTemplateName = null;
+                        continue;
+                    }
+                }
+                const template = templates.get(activeTemplateName);
+                if (template == null) {
+                    internalError();
+                }
+                template.lines.push(lineStr);
+                continue;
+            }
+            const line = parseProgramLine(lineStr, index + 1);
+            if (line instanceof Define) {
+                if (activeTemplateName != null) {
+                    // TODO: line number
+                    return `#DEFINE needs #ENDDEF ${line.pretty()}`;
+                }
+                activeTemplateName = line.name;
+                if (templates.get(activeTemplateName) != null) {
+                    return `#DEFINE duplicate template name ${line.pretty()}`;
+                }
+                templates.set(activeTemplateName, {
+                    defaultReplacements: line.defaultReplacements,
+                    lines: [],
+                });
+            } else if (line instanceof Enddef) {
+                return `#ENDDEF needs #DEFINE ${line.pretty()}`;
+            } else if (line instanceof ProgramLine) {
+                programLines.push(line);
+            } else if (typeof line === "string") {
+                errors.push(line);
+            } else {
+                internalError();
+            }
+        }
 
         if (errors.length > 0) {
             return errors.join("\n");
         }
 
-        const programLines = programLineWithErrorArray
-            .flatMap((x) => typeof x !== "string" ? [x] : []);
-
-        return new ProgramLines(programLines);
+        return new ProgramLines(programLines, templates);
     }
 }
 

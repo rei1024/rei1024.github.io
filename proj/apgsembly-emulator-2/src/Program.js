@@ -7,84 +7,66 @@ import { LegacyTRegAction } from "./actions/LegacyTRegAction.js";
 import { URegAction } from "./actions/URegAction.js";
 import { ProgramLines } from "./ProgramLines.js";
 import { validateAll } from "./validate.js";
+import { expandTemplate } from "./expandTemplate.js";
 
 /**
  * APGsembly program
  */
 export class Program {
     /**
-     * @param {ProgramLines} programLines
+     * @param {ReadonlyArray<Command>} commands
+     * @param {ComponentsHeader[]} componentsHeaders
+     * @param {RegistersHeader[]} registersHeaders
      * @throw Error
      */
-    constructor(programLines) {
-        const programLinesArray = programLines.getArray();
+    constructor(commands, componentsHeaders, registersHeaders) {
         /**
          * @readonly
          * @type {ReadonlyArray<Command>}
          */
-        this.commands = programLinesArray.flatMap((x) => {
-            if (x instanceof Command) {
-                return [x];
-            } else {
-                return [];
-            }
-        });
+        this.commands = commands;
 
         /**
          * @readonly
-         * @type {ComponentsHeader | undefined}
+         * @type {ComponentsHeader[]}
          */
-        this.componentsHeader = undefined;
-        for (const x of programLinesArray) {
-            if (x instanceof ComponentsHeader) {
-                if (this.componentsHeader !== undefined) {
-                    throw Error(`Multiple ${ComponentsHeader.key}`);
-                }
-                this.componentsHeader = x;
-            }
-        }
+        this.componentsHeader = componentsHeaders;
 
         /**
          * @readonly
-         * @type {RegistersHeader | undefined}
+         * @type {RegistersHeader[]}
          */
-        this.registersHeader = undefined;
-
-        for (const x of programLinesArray) {
-            if (x instanceof RegistersHeader) {
-                if (this.registersHeader !== undefined) {
-                    throw Error(`Multiple ${RegistersHeader.key}`);
-                }
-                this.registersHeader = x;
-            }
-        }
-
-        /** @readonly */
-        this.programLines = programLines;
+        this.registersHeader = registersHeaders;
     }
 
     /**
      * プログラムまたはエラーメッセージ
      * Program or error message
      * @param {string} str
-     * @param {{ noValidate?: boolean }} param1
+     * @param {{ noValidate?: boolean, libraryFiles?: { name: string; content: string }[] }} param1
      * @returns {Program | string}
      */
-    static parse(str, { noValidate } = {}) {
+    static parse(str, { noValidate, libraryFiles } = {}) {
         const programLines = ProgramLines.parse(str);
         if (typeof programLines === "string") {
             return programLines;
         }
 
-        /** @type {Command[]} */
-        const commands = [];
-
-        for (const programLine of programLines.getArray()) {
-            if (programLine instanceof Command) {
-                commands.push(programLine);
+        /** @type {{ name: string; programLines: ProgramLines }[]} */
+        const libraries = [];
+        for (const libraryFile of libraryFiles ?? []) {
+            const libraryProgramLines = ProgramLines.parse(libraryFile.content);
+            if (typeof libraryProgramLines === "string") {
+                return libraryProgramLines;
             }
+            libraries.push({
+                name: libraryFile.name,
+                programLines: libraryProgramLines,
+            });
         }
 
+        /** @type {Command[]} */
+        const commands = expandTemplate(programLines, libraries);
         // validation
         if (!noValidate) {
             if (commands.length === 0) {
@@ -97,23 +79,15 @@ export class Program {
             }
         }
 
-        try {
-            return new Program(programLines);
-        } catch (error) {
-            if (error instanceof Error) {
-                return error.message;
-            } else {
-                return "Unknown error is occurred.";
-            }
-        }
-    }
-
-    /**
-     * 文字列化する
-     * @returns {string}
-     */
-    pretty() {
-        return this.programLines.pretty();
+        return new Program(
+            commands,
+            programLines.getArray().flatMap((x) => {
+                return x instanceof ComponentsHeader ? [x] : [];
+            }),
+            programLines.getArray().flatMap((x) => {
+                return x instanceof RegistersHeader ? [x] : [];
+            }),
+        );
     }
 }
 

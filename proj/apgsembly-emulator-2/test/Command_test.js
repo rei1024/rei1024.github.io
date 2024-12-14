@@ -4,7 +4,11 @@ import { URegAction } from "../src/actions/URegAction.js";
 import {
     Command,
     ComponentsHeader,
+    Define,
     EmptyLine,
+    Enddef,
+    Include,
+    Insert,
     parseProgramLine,
     RegistersHeader,
 } from "../src/Command.js";
@@ -133,6 +137,86 @@ test("Command COMPONENTS space", () => {
     const res = parseProgramLine(str);
     if (res instanceof ComponentsHeader) {
         assertEquals(res.content, "B2");
+    } else {
+        throw Error("parse error " + str);
+    }
+});
+
+test("Command #DEFINE", () => {
+    const str = "#DEFINE Bxx = Byy { zero = N }";
+    const res = parseProgramLine(str);
+    if (res instanceof Define) {
+        assertEquals(res.defaultReplacements, [{
+            needle: "zero",
+            replacement: "N",
+        }]);
+        assertEquals(res.name, "Bxx = Byy");
+        assertEquals(res.pretty(), str);
+    } else {
+        throw Error("parse error " + str);
+    }
+});
+
+test("Command #DEFINE 2", () => {
+    const str = "#DEFINE Bxx = Byy { zero = N; two = Y }";
+    const res = parseProgramLine(str);
+    if (res instanceof Define) {
+        assertEquals(res.defaultReplacements, [{
+            needle: "zero",
+            replacement: "N",
+        }, {
+            needle: "two",
+            replacement: "Y",
+        }]);
+        assertEquals(res.name, "Bxx = Byy");
+        assertEquals(res.pretty(), str);
+    } else {
+        throw Error("parse error " + str);
+    }
+});
+
+test("Command #DEFINE 0", () => {
+    const str = "#DEFINE Bxx = Byy";
+    const res = parseProgramLine(str);
+    if (res instanceof Define) {
+        assertEquals(res.defaultReplacements, []);
+        assertEquals(res.name, "Bxx = Byy");
+        assertEquals(res.pretty(), "#DEFINE Bxx = Byy");
+    } else {
+        throw Error("parse error " + str);
+    }
+});
+
+test("Command #INSERT", () => {
+    const str = "#INSERT Bxx += Byy { xx = 1; yy = 0 }";
+    const res = parseProgramLine(str);
+    if (res instanceof Insert) {
+        assertEquals(res.replacements, [
+            { needle: "xx", replacement: "1" },
+            { needle: "yy", replacement: "0" },
+        ]);
+        assertEquals(res.templateName, "Bxx += Byy");
+        assertEquals(res.pretty(), str);
+    } else {
+        throw Error("parse error " + str);
+    }
+});
+
+test("Command #ENDDEF", () => {
+    const str = "#ENDDEF";
+    const res = parseProgramLine(str);
+    if (res instanceof Enddef) {
+        return;
+    } else {
+        throw Error("parse error " + str);
+    }
+});
+
+test("Command #INCLUDE", () => {
+    const str = "#INCLUDE test.apglib";
+    const res = parseProgramLine(str);
+    if (res instanceof Include) {
+        assertEquals(res.filename, "test.apglib");
     } else {
         throw Error("parse error " + str);
     }

@@ -1,410 +1,887 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- CSP -->
-    <!-- `data://*` is close button for modal -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net 'sha256-XgSuI+ouCZFnUnMiuXyyjkBDGwBQtt1Lb700zhlq3yQ='; img-src 'self' data://*; object-src 'none'">
+        <!-- CSP -->
+        <!-- `data://*` is close button for modal -->
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; style-src 'self' cdn.jsdelivr.net; script-src 'self' cdn.jsdelivr.net 'sha256-fa3eqx2X2Kx8krLqgR/MzWA2SDdrnMcU5MEDUu6eA08='; img-src 'self' data://*; object-src 'none'"
+        />
 
-    <title>APGsembly 2.0 Emulator</title>
+        <title>APGsembly 2.0 Emulator</title>
 
-    <!-- main -->
-    <script src="./frontend/index.dist.js?ver=20220611" type="module"></script>
+        <!-- main -->
+        <script
+            src="./frontend/index.dist.js?ver=20220611"
+            type="module"
+        ></script>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha256-MBffSnbbXwHCuZtgPYiwMQbfE7z+GOZ7fBPCNB06Z98=" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha256-gvZPYrsDwbwYJLD5yeBfcNujPhRoGOY831wwbIzz3t0=" crossorigin="anonymous"></script>
+        <!-- Bootstrap -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            integrity="sha256-MBffSnbbXwHCuZtgPYiwMQbfE7z+GOZ7fBPCNB06Z98="
+            crossorigin="anonymous"
+        />
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha256-gvZPYrsDwbwYJLD5yeBfcNujPhRoGOY831wwbIzz3t0="
+            crossorigin="anonymous"
+        ></script>
 
-    <!-- Bootstrapの下で読み込む -->
-    <link rel="stylesheet" href="./frontend/style.min.css?ver=20221116">
+        <!-- Bootstrapの下で読み込む -->
+        <link rel="stylesheet" href="./frontend/style.min.css?ver=20221116" />
 
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+        <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
 
-    <meta name="description" content="An emulator for APGsembly 2.0. APGsembly is a programming language for general purpose calculator (GPC).">
-    <meta name="keywords" content="Conway's Game of Life,Game of Life,GoL,APGsembly,General purpose calculator,GPC">
+        <meta
+            name="description"
+            content="An emulator for APGsembly 2.0. APGsembly is a programming language for general purpose calculator (GPC)."
+        />
+        <meta
+            name="keywords"
+            content="Conway's Game of Life,Game of Life,GoL,APGsembly,General purpose calculator,GPC"
+        />
 
-    <link rel="canonical" href="https://rei1024.github.io/proj/apgsembly-emulator-2/">
+        <link
+            rel="canonical"
+            href="https://rei1024.github.io/proj/apgsembly-emulator-2/"
+        />
 
-    <meta property="og:title" content="APGsembly 2.0 Emulator">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://rei1024.github.io/proj/apgsembly-emulator-2/">
-    <meta property="og:image" content="https://rei1024.github.io/proj/apgsembly-emulator-2/images/favicon_png.png">
+        <meta property="og:title" content="APGsembly 2.0 Emulator" />
+        <meta property="og:type" content="article" />
+        <meta
+            property="og:url"
+            content="https://rei1024.github.io/proj/apgsembly-emulator-2/"
+        />
+        <meta
+            property="og:image"
+            content="https://rei1024.github.io/proj/apgsembly-emulator-2/images/favicon_png.png"
+        />
 
-    <meta property="og:description" content="An emulator for APGsembly 2.0. APGsembly is a programming language for general purpose calculator (GPC).">
+        <meta
+            property="og:description"
+            content="An emulator for APGsembly 2.0. APGsembly is a programming language for general purpose calculator (GPC)."
+        />
 
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:creator" content="@rei_1729">
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:creator" content="@rei_1729" />
 
-    <!-- PWA -->
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./images/favicon_png.png" sizes="600x600">
-    <link rel="apple-touch-icon" href="./images/apple-touch-icon-180x180.png" sizes="180x180">
-</head>
-<body>
-    <!-- CSP hash 'sha256-XgSuI+ouCZFnUnMiuXyyjkBDGwBQtt1Lb700zhlq3yQ=' -->
-    <script>
-        'use strict';
-        // Fix Dark mode flashing
-        try {
-            if (localStorage.getItem("dark_mode") === "on") {
-                document.body.setAttribute("apge_dark", "on");
-            }
-        } catch (_) {}
-    </script>
-    <header class="text-center">
-        <h1>APGsembly 2.0 Emulator</h1>
-    </header>
-    <main class="container">
-        <noscript class="alert alert-danger" role="alert">
-            This application requires JavaScript to be enabled.
-        </noscript>
-        <div class="mb-3">
-            <label for="input" class="visually-hidden form-label">APGsembly input</label>
-            <textarea spellcheck="false" class="code-mono form-control" name="input" id="input" cols="50" rows="8" placeholder="# Write APGsembly here!"></textarea>
-        </div>
-        <!-- Buttons -->
-        <div data-test="control_buttons" class="btn-group" role="group" aria-label="Control">
-            <!-- index.jsが読み込まれるまではdisabled -->
-            <button id="reset" type="button" class="btn btn-primary" disabled>
-                <!-- https://icons.getbootstrap.com/icons/arrow-clockwise/ -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                    <path stroke="currentColor" stroke-width="0.5" fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-                </svg>
-                Reset
-            </button>
-            <button id="toggle" type="button" class="btn btn-primary" disabled>Start</button>
-            <button id="step" type="button" class="btn btn-primary" disabled><span id="step-text">Step</span></button>
-            <button id="config_button" disabled data-test="config_button" type="button" class="btn btn-primary"
-                data-bs-toggle="modal" data-bs-target="#config_modal">
-                <!-- https://icons.getbootstrap.com/icons/gear/ -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-                    <path stroke="currentColor" stroke-width="0.5" d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-                    <path stroke="currentColor" stroke-width="0.5" d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
-                </svg>
-                Config
-            </button>
-            <button id="stats_button" disabled type="button" class="btn btn-primary"
-                data-bs-toggle="modal" data-bs-target="#stats_modal">
-                <!-- https://icons.getbootstrap.com/icons/bar-chart/ -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart" viewBox="0 0 16 16">
-                    <path stroke="currentColor" stroke-width="0.3" d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/>
-                </svg>
-                Stats
-            </button>
-            <button disabled type="button" class="btn btn-primary dropdown-toggle" id="examples" data-bs-toggle="dropdown" aria-expanded="false">Example</button>
-            <ul class="dropdown-menu" aria-labelledby="examples">
-                <li><button class="dropdown-item js_example" data-src="unary_multiply.apg">Unary register multiplication</button></li>
-                <li><button class="dropdown-item js_example" data-src="binary_ruler.apg">Binary ruler</button></li>
-                <li><button class="dropdown-item js_example" data-src="integers.apg">Integers</button></li>
-                <li><button class="dropdown-item js_example" data-src="primes.apg">Primes</button></li>
-                <li><button class="dropdown-item js_example" data-src="sqrt_log_t.apg">O(sqrt(log(t)))</button></li>
-                <li><button class="dropdown-item js_example" data-src="rule90.apg">Rule 90</button></li>
-                <li><button class="dropdown-item js_example" data-src="rule110.apg">Rule 110</button></li>
-                <li><button class="dropdown-item js_example" data-src="ant2.apg">Langton's ant</button></li>
-                <li><button class="dropdown-item js_example" data-src="alien_counter.apg">Alien Counter</button></li>
-                <li><button class="dropdown-item js_example" data-src="koch.apg">Koch snowflake</button></li>
-                <li><button class="dropdown-item js_example" data-src="pi_calc.apg">π Calculator</button></li>
-            </ul>
-            <input id="import_file" type="file" class="d-none">
-            <label for="import_file" class="btn btn-primary">
-                <!-- https://icons.getbootstrap.com/icons/upload/ -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
-                    <path stroke="currentColor" stroke-width="0.5" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                    <path stroke="currentColor" stroke-width="0.5" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-                </svg>
-                Import
-            </label>
-        </div>
-        <!-- End Buttons -->
-
-        <!-- エラー 初期は非表示 -->
-        <div id="error" class="mt-3 d-none alert alert-danger tabular-nums" role="alert"></div>
-        <div class="mt-1 mb-2">
-            <!-- チラつき防止のためデフォルト値を設定 DEFAULT_FREQUENCY と同期すること -->
-            <label for="frequency_input" class="form-label m-0">Speed <span id="frequency_output" class="tabular-nums">30</span>Hz</label>
-            <!-- frequency_input.jsでminとmaxは設定するが、ジャンプを防ぐため手動でも設定する -->
-            <input id="frequency_input" class="form-range" value="11" type="range" max="64" aria-valuetext="(30Hz)">
-        </div>
-        <div aria-label="info">
-            <table class="mb-1 table table-layout-fixed" id="state">
-                <thead>
-                    <tr>
-                        <th>Current state</th>
-                        <th>Previous output</th>
-                        <th>Steps</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="pb-0">
-                        <!-- CLSを防ぐため、レンダリングされた後の値と同じにする -->
-                        <td class="vertical-align-middle white-space-nowrap code-mono" id="current_state">
-                            <!-- INITIAL -->
-                        </td>
-                        <td class="vertical-align-middle code-mono" id="previous_output">
-                            <!-- Z -->
-                        </td>
-                        <td><code id="steps"></code></td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- mobileでLayout shiftを避けるため一行に収める -->
-            <p class="mb-1 white-space-nowrap">
-                <span class="command_prefix">Line: </span><code id="command"></code>
-            </p>
-        </div>
-        <div class="mb-2">
-            <details open>
-                <summary>
-                    Output
-                </summary>
-                <label for="output" class="visually-hidden">Output</label>
-                <textarea spellcheck="false" class="code-mono form-control" name="output" id="output" cols="50" rows="1"></textarea>
-            </details>
-        </div>
-        <div class="mb-2">
-            <details id="unary_register_detail" open>
-                <summary>
-                    Unary Registers
-                </summary>
-                <div id="unary_register" class="tabular-nums"></div>
-            </details>
-        </div>
-        <div class="mb-2">
-            <details id="binary_register_detail" open>
-                <summary>
-                    Binary Registers
-                </summary>
-                <div id="binary_register"></div>
-            </details>
-        </div>
-        <div class="mb-2">
-            <details id="add_sub_mul_detail" open>
-                <summary>
-                    ADD SUB MUL
-                </summary>
-                <code id="add_sub_mul"></code>
-            </details>
-        </div>
-        <div class="mb-2">
-            <details id="b2d_detail" open>
-                <summary>
-                    B2D
-                </summary>
-                <div class="code-mono">
-                    <!-- 初期状態の値を入れておく -->
-                    x = <span id="b2dx">0</span>,
-                    y = <span id="b2dy">0</span>
-                </div>
-                <canvas aria-label="B2D" id="canvas"></canvas>
-            </details>
-        </div>
-    </main>
-    <!-- Config Modal -->
-    <div class="modal fade" id="config_modal" tabindex="-1" aria-labelledby="config_modal_label" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content" id="config_modal_content">
-            <div class="modal-header">
-                <h2 class="modal-title fs-5" id="config_modal_label">
+        <!-- PWA -->
+        <link rel="manifest" href="./manifest.json" />
+        <link
+            rel="apple-touch-icon"
+            href="./images/favicon_png.png"
+            sizes="600x600"
+        />
+        <link
+            rel="apple-touch-icon"
+            href="./images/apple-touch-icon-180x180.png"
+            sizes="180x180"
+        />
+    </head>
+    <body>
+        <!-- CSP hash 'sha256-XgSuI+ouCZFnUnMiuXyyjkBDGwBQtt1Lb700zhlq3yQ=' -->
+        <script>
+            "use strict";
+            // Fix Dark mode flashing
+            try {
+                if (
+                    localStorage.getItem("dark_mode") === "on"
+                ) {
+                    document.body.setAttribute(
+                        "apge_dark",
+                        "on",
+                    );
+                }
+            } catch (_) {}
+        </script>
+        <header class="text-center">
+            <h1>APGsembly 2.0 Emulator</h1>
+        </header>
+        <main class="container">
+            <noscript class="alert alert-danger" role="alert">
+                This application requires JavaScript to be enabled.
+            </noscript>
+            <div class="mb-3">
+                <label for="input" class="visually-hidden form-label"
+                >APGsembly input</label>
+                <textarea
+                    spellcheck="false"
+                    class="code-mono form-control"
+                    name="input"
+                    id="input"
+                    cols="50"
+                    rows="8"
+                    placeholder="# Write APGsembly here!"
+                ></textarea>
+            </div>
+            <!-- Buttons -->
+            <div
+                data-test="control_buttons"
+                class="btn-group"
+                role="group"
+                aria-label="Control"
+            >
+                <!-- index.jsが読み込まれるまではdisabled -->
+                <button
+                    id="reset"
+                    type="button"
+                    class="btn btn-primary"
+                    disabled
+                >
+                    <!-- https://icons.getbootstrap.com/icons/arrow-clockwise/ -->
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-arrow-clockwise"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-width="0.5"
+                            fill-rule="evenodd"
+                            d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
+                        />
+                        <path
+                            d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"
+                        />
+                    </svg>
+                    Reset
+                </button>
+                <button
+                    id="toggle"
+                    type="button"
+                    class="btn btn-primary"
+                    disabled
+                >
+                    Start
+                </button>
+                <button
+                    id="step"
+                    type="button"
+                    class="btn btn-primary"
+                    disabled
+                >
+                    <span id="step-text">Step</span>
+                </button>
+                <button
+                    id="config_button"
+                    disabled
+                    data-test="config_button"
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#config_modal"
+                >
                     <!-- https://icons.getbootstrap.com/icons/gear/ -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-                        <path stroke="currentColor" stroke-width="0.5" d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-                        <path stroke="currentColor" stroke-width="0.5" d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-gear"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-width="0.5"
+                            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+                        />
+                        <path
+                            stroke="currentColor"
+                            stroke-width="0.5"
+                            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+                        />
                     </svg>
                     Config
-                </h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mt-0">
-                    <label for="step_input" class="form-label">Step: The number of steps to run</label>
-                    <input type="number" value="1" id="step_input" class="form-control">
-                </div>
-                <div class="mt-3">
-                    <label for="breakpoint_select" class="form-label">Breakpoint state</label>
-                    <select name="breakpoint_select" class="form-select" id="breakpoint_select">
-                    </select>
-                </div>
-                <div>
-                    <label for="breakpoint_input_select" class="form-label">Breakpoint input</label>
-                    <select name="breakpoint_input_select" class="form-select" id="breakpoint_input_select">
-                        <option value="*" selected>*</option>
-                        <option value="Z">Z</option>
-                        <option value="NZ">NZ</option>
-                    </select>
-                </div>
-                <div class="mt-3">
-                    <div>
-                        Binary registers:
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" id="hide_bits" class="form-check-input">
-                        <label for="hide_bits" class="form-check-label">Hide bits</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" id="reverse_bits" class="form-check-input">
-                        <label for="reverse_bits" class="form-check-label">Reverse bits</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="show_binary_value_in_decimal" class="form-check-input">
-                        <label for="show_binary_value_in_decimal" class="form-check-label">Show value in decimal</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="show_binary_value_in_hex" class="form-check-input">
-                        <label for="show_binary_value_in_hex" class="form-check-label">Show value in hex</label>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <div>
-                        B2D:
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" id="b2d_flip_upside_down" class="form-check-input">
-                        <label for="b2d_flip_upside_down" class="form-check-label">Flip upside down</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" id="b2d_hide_pointer" class="form-check-input">
-                        <label for="b2d_hide_pointer" class="form-check-label">Hide pointer</label>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <div>
-                        Dark mode
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" id="dark_mode" class="form-check-input">
-                        <label for="dark_mode" id="dark_mode_label" class="form-check-label">Off</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-    </div>
-    <!-- End Config Modal -->
-    <!-- Stats Modal -->
-    <div class="modal fade" id="stats_modal" tabindex="-1" aria-labelledby="stats_modal_label" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content tabular-nums">
-            <div class="modal-header">
-                <h2 class="modal-title fs-5" id="stats_modal_label">
+                </button>
+                <button
+                    id="stats_button"
+                    disabled
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#stats_modal"
+                >
                     <!-- https://icons.getbootstrap.com/icons/bar-chart/ -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart" viewBox="0 0 16 16">
-                        <path stroke="currentColor" stroke-width="0.3" d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-bar-chart"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-width="0.3"
+                            d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"
+                        />
                     </svg>
                     Stats
-                </h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </button>
+                <button
+                    disabled
+                    type="button"
+                    class="btn btn-primary dropdown-toggle"
+                    id="examples"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    Example
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="examples">
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="unary_multiply.apg"
+                        >
+                            Unary register multiplication
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="binary_ruler.apg"
+                        >
+                            Binary ruler
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="integers.apg"
+                        >
+                            Integers
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="primes.apg"
+                        >
+                            Primes
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="sqrt_log_t.apg"
+                        >
+                            O(sqrt(log(t)))
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="rule90.apg"
+                        >
+                            Rule 90
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="rule110.apg"
+                        >
+                            Rule 110
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="ant2.apg"
+                        >
+                            Langton's ant
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="alien_counter.apg"
+                        >
+                            Alien Counter
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="koch.apg"
+                        >
+                            Koch snowflake
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="dropdown-item js_example"
+                            data-src="pi_calc.apg"
+                        >
+                            π Calculator
+                        </button>
+                    </li>
+                </ul>
+                <input id="import_file" type="file" class="d-none" />
+                <label for="import_file" class="btn btn-primary">
+                    <!-- https://icons.getbootstrap.com/icons/upload/ -->
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-upload"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-width="0.5"
+                            d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
+                        />
+                        <path
+                            stroke="currentColor"
+                            stroke-width="0.5"
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"
+                        />
+                    </svg>
+                    Import
+                </label>
+                <button
+                    id="library_file_button"
+                    data-test="library_file_button"
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#library_modal"
+                >
+                    <!-- https://icons.getbootstrap.com/icons/plus-circle/ -->
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-plus-circle"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            stroke-width="1"
+                            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                        />
+                        <path
+                            stroke-width="1"
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+                        />
+                    </svg>
+                    Library file
+                </button>
             </div>
-            <div class="modal-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <div>
-                        Number of states: <span id="stats_number_of_states"></span>
-                    </div>
-                    <button class="btn btn-outline-primary" id="view-state-diagram">
-                        View state diagram
-                    </button>
-                </div>
-                <table id="stats_table" class="table table-layout-fixed">
+            <!-- End Buttons -->
+
+            <!-- エラー 初期は非表示 -->
+            <div
+                id="error"
+                class="mt-3 d-none alert alert-danger tabular-nums"
+                role="alert"
+            >
+            </div>
+            <div class="mt-1 mb-2">
+                <!-- チラつき防止のためデフォルト値を設定 DEFAULT_FREQUENCY と同期すること -->
+                <label for="frequency_input" class="form-label m-0"
+                >Speed <span id="frequency_output" class="tabular-nums"
+                    >30</span>Hz</label>
+                <!-- frequency_input.jsでminとmaxは設定するが、ジャンプを防ぐため手動でも設定する -->
+                <input
+                    id="frequency_input"
+                    class="form-range"
+                    value="11"
+                    type="range"
+                    max="64"
+                    aria-valuetext="(30Hz)"
+                />
+            </div>
+            <div aria-label="info">
+                <table class="mb-1 table table-layout-fixed" id="state">
                     <thead>
                         <tr>
-                            <th colspan="2">State</th>
-                            <th>Sum</th>
-                            <th>Z</th>
-                            <th>NZ</th>
+                            <th>Current state</th>
+                            <th>Previous output</th>
+                            <th>Steps</th>
                         </tr>
                     </thead>
-                    <tbody id="stats_body">
-                        <!-- <tr>
+                    <tbody>
+                        <tr class="pb-0">
+                            <!-- CLSを防ぐため、レンダリングされた後の値と同じにする -->
+                            <td
+                                class="vertical-align-middle white-space-nowrap code-mono"
+                                id="current_state"
+                            >
+                                <!-- INITIAL -->
+                            </td>
+                            <td
+                                class="vertical-align-middle code-mono"
+                                id="previous_output"
+                            >
+                                <!-- Z -->
+                            </td>
+                            <td><code id="steps"></code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- mobileでLayout shiftを避けるため一行に収める -->
+                <p class="mb-1 white-space-nowrap">
+                    <span class="command_prefix">Line: </span>
+                    <code id="command"></code>
+                </p>
+            </div>
+            <div class="mb-2">
+                <details open>
+                    <summary>
+                        Output
+                    </summary>
+                    <label for="output" class="visually-hidden">Output</label>
+                    <textarea
+                        spellcheck="false"
+                        class="code-mono form-control"
+                        name="output"
+                        id="output"
+                        cols="50"
+                        rows="1"
+                    ></textarea>
+                </details>
+            </div>
+            <div class="mb-2">
+                <details id="unary_register_detail" open>
+                    <summary>
+                        Unary Registers
+                    </summary>
+                    <div id="unary_register" class="tabular-nums"></div>
+                </details>
+            </div>
+            <div class="mb-2">
+                <details id="binary_register_detail" open>
+                    <summary>
+                        Binary Registers
+                    </summary>
+                    <div id="binary_register"></div>
+                </details>
+            </div>
+            <div class="mb-2">
+                <details id="add_sub_mul_detail" open>
+                    <summary>
+                        ADD SUB MUL
+                    </summary>
+                    <code id="add_sub_mul"></code>
+                </details>
+            </div>
+            <div class="mb-2">
+                <details id="b2d_detail" open>
+                    <summary>
+                        B2D
+                    </summary>
+                    <div class="code-mono">
+                        <!-- 初期状態の値を入れておく -->
+                        x = <span id="b2dx">0</span>, y = <span id="b2dy"
+                        >0</span>
+                    </div>
+                    <canvas aria-label="B2D" id="canvas"></canvas>
+                </details>
+            </div>
+        </main>
+        <!-- Config Modal -->
+        <div
+            class="modal fade"
+            id="config_modal"
+            tabindex="-1"
+            aria-labelledby="config_modal_label"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content" id="config_modal_content">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="config_modal_label">
+                            <!-- https://icons.getbootstrap.com/icons/gear/ -->
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                class="bi bi-gear"
+                                viewBox="0 0 16 16"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-width="0.5"
+                                    d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+                                />
+                                <path
+                                    stroke="currentColor"
+                                    stroke-width="0.5"
+                                    d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+                                />
+                            </svg>
+                            Config
+                        </h2>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        >
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mt-0">
+                            <label for="step_input" class="form-label"
+                            >Step: The number of steps to run</label>
+                            <input
+                                type="number"
+                                value="1"
+                                id="step_input"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="mt-3">
+                            <label for="breakpoint_select" class="form-label"
+                            >Breakpoint state</label>
+                            <select
+                                name="breakpoint_select"
+                                class="form-select"
+                                id="breakpoint_select"
+                            >
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                for="breakpoint_input_select"
+                                class="form-label"
+                            >Breakpoint input</label>
+                            <select
+                                name="breakpoint_input_select"
+                                class="form-select"
+                                id="breakpoint_input_select"
+                            >
+                                <option value="*" selected>*</option>
+                                <option value="Z">Z</option>
+                                <option value="NZ">NZ</option>
+                            </select>
+                        </div>
+                        <div class="mt-3">
+                            <div>
+                                Binary registers:
+                            </div>
+                            <div class="form-check">
+                                <input
+                                    type="checkbox"
+                                    id="hide_bits"
+                                    class="form-check-input"
+                                />
+                                <label for="hide_bits" class="form-check-label"
+                                >Hide bits</label>
+                            </div>
+                            <div class="form-check">
+                                <input
+                                    type="checkbox"
+                                    id="reverse_bits"
+                                    class="form-check-input"
+                                />
+                                <label
+                                    for="reverse_bits"
+                                    class="form-check-label"
+                                >Reverse bits</label>
+                            </div>
+                            <div>
+                                <input
+                                    type="checkbox"
+                                    id="show_binary_value_in_decimal"
+                                    class="form-check-input"
+                                />
+                                <label
+                                    for="show_binary_value_in_decimal"
+                                    class="form-check-label"
+                                >Show value in decimal</label>
+                            </div>
+                            <div>
+                                <input
+                                    type="checkbox"
+                                    id="show_binary_value_in_hex"
+                                    class="form-check-input"
+                                />
+                                <label
+                                    for="show_binary_value_in_hex"
+                                    class="form-check-label"
+                                >Show value in hex</label>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div>
+                                B2D:
+                            </div>
+                            <div class="form-check">
+                                <input
+                                    type="checkbox"
+                                    id="b2d_flip_upside_down"
+                                    class="form-check-input"
+                                />
+                                <label
+                                    for="b2d_flip_upside_down"
+                                    class="form-check-label"
+                                >Flip upside down</label>
+                            </div>
+                            <div class="form-check">
+                                <input
+                                    type="checkbox"
+                                    id="b2d_hide_pointer"
+                                    class="form-check-input"
+                                />
+                                <label
+                                    for="b2d_hide_pointer"
+                                    class="form-check-label"
+                                >Hide pointer</label>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div>
+                                Dark mode
+                            </div>
+                            <div class="form-check">
+                                <input
+                                    type="checkbox"
+                                    id="dark_mode"
+                                    class="form-check-input"
+                                />
+                                <label
+                                    for="dark_mode"
+                                    id="dark_mode_label"
+                                    class="form-check-label"
+                                >Off</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Config Modal -->
+        <!-- Stats Modal -->
+        <div
+            class="modal fade"
+            id="stats_modal"
+            tabindex="-1"
+            aria-labelledby="stats_modal_label"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content tabular-nums">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="stats_modal_label">
+                            <!-- https://icons.getbootstrap.com/icons/bar-chart/ -->
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                class="bi bi-bar-chart"
+                                viewBox="0 0 16 16"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-width="0.3"
+                                    d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"
+                                />
+                            </svg>
+                            Stats
+                        </h2>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        >
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div
+                            class="d-flex justify-content-between align-items-center mb-2"
+                        >
+                            <div>
+                                Number of states: <span
+                                    id="stats_number_of_states"
+                                ></span>
+                            </div>
+                            <button
+                                class="btn btn-outline-primary"
+                                id="view-state-diagram"
+                            >
+                                View state diagram
+                            </button>
+                        </div>
+                        <table
+                            id="stats_table"
+                            class="table table-layout-fixed"
+                        >
+                            <thead>
+                                <tr>
+                                    <th colspan="2">State</th>
+                                    <th>Sum</th>
+                                    <th>Z</th>
+                                    <th>NZ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stats_body">
+                                <!-- <tr>
                             <td colspan="2">I</td>
                             <td>1</td>
                             <td>2</td>
                             <td>2</td>
                         </tr> -->
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
-    </div>
-    <!-- End Stats Modal -->
+        <!-- End Stats Modal -->
 
-    <footer class="mt-3 container">
-        <section>
-            <h2 class="fs-4">Shortcuts</h2>
-            <table>
-                <tr>
-                    <th><kbd>Space</kbd></th>
-                    <td>Step</td>
-                </tr>
-                <tr>
-                    <th><kbd>Enter</kbd></th>
-                    <td>Toggle start and stop</td>
-                </tr>
-            </table>
-        </section>
-        <section>
-            <h2 class="fs-4 mt-3">Tools</h2>
-            <ul>
-                <li>
-                    <a href="./tools/eca-generator/index.html">
-                        Code generator for elementary cellular automata
-                    </a>
-                </li>
-                <li>
-                    <a href="./tools/turmites/index.html">
-                        Code generator for turmites
-                    </a>
-                </li>
-                <li>
-                    <a href="./tools/tm-to-apg/index.html">
-                        Turing machine to APGsembly
-                    </a>
-                </li>
-                <li>
-                    <a href="./tools/transpiler/index.html">
-                        Transpiler for APGsembly 1.0 to APGsembly 2.0
-                    </a>
-                </li>
-                <li>
-                    <a href="../apgm/">
-                        APGM - APGsembly macro language
-                    </a>
-                </li>
-            </ul>
-        </section>
-        <section>
-            <h2 class="fs-4 mt-3">Links</h2>
-            <ul>
-                <li>
-                    <a href="https://github.com/rei1024/rei1024.github.io/tree/main/proj/apgsembly-emulator-2">
-                        Source code for APGsembly 2.0 Emulator - GitHub
-                    </a>
-                </li>
-                <li>
-                    <a href="https://conwaylife.com/book/">
-                        Conway's Game of Life: Mathematics and Construction
-                    </a>
-                    (Chapter 9: Universal Computation)
-                </li>
-                <li>
-                    <a href="https://conwaylife.com/wiki/APGsembly">
-                        APGsembly - ConwayLife.com wiki
-                    </a>
-                </li>
-                <li>
-                    <a href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4192">
-                        Reverse engineering the phi and pi calculators - ConwayLife.com forums
-                    </a>
-                </li>
-                <li>
-                    <a href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4196">
-                        Smaller Pi Calculator Challenge - ConwayLife.com forums
-                    </a>
-                </li>
-            </ul>
-        </section>
-    </footer>
-</body>
+        <!-- Library file Modal -->
+        <div
+            class="modal fade"
+            id="library_modal"
+            tabindex="-1"
+            aria-labelledby="library_modal_label"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content tabular-nums">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="library_modal_label">
+                            Library
+                        </h2>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        >
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <button
+                            id="add-library-file"
+                            type="button"
+                            class="btn btn-primary"
+                        >
+                            Select file
+                        </button>
+                        <button
+                            id="add-binary-library-file"
+                            type="button"
+                            class="btn btn-outline-primary"
+                        >
+                            Add "binary.apglib"
+                        </button>
+                        <sup><a
+                                target="_blank"
+                                rel="noopener"
+                                href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=100#p199807"
+                            >ref</a></sup>
+                        <div
+                            class="d-flex justify-content-between align-items-center mb-2"
+                        >
+                            <table id="library-list"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Library Modal -->
+
+        <footer class="mt-3 container">
+            <section>
+                <h2 class="fs-4">Shortcuts</h2>
+                <table>
+                    <tr>
+                        <th><kbd>Space</kbd></th>
+                        <td>Step</td>
+                    </tr>
+                    <tr>
+                        <th><kbd>Enter</kbd></th>
+                        <td>Toggle start and stop</td>
+                    </tr>
+                </table>
+            </section>
+            <section>
+                <h2 class="fs-4 mt-3">Tools</h2>
+                <ul>
+                    <li>
+                        <a href="./tools/eca-generator/index.html">
+                            Code generator for elementary cellular automata
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./tools/turmites/index.html">
+                            Code generator for turmites
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./tools/tm-to-apg/index.html">
+                            Turing machine to APGsembly
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./tools/transpiler/index.html">
+                            Transpiler for APGsembly 1.0 to APGsembly 2.0
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../apgm/">
+                            APGM - APGsembly macro language
+                        </a>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h2 class="fs-4 mt-3">Links</h2>
+                <ul>
+                    <li>
+                        <a
+                            href="https://github.com/rei1024/rei1024.github.io/tree/main/proj/apgsembly-emulator-2"
+                        >
+                            Source code for APGsembly 2.0 Emulator - GitHub
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://conwaylife.com/book/">
+                            Conway's Game of Life: Mathematics and Construction
+                        </a>
+                        (Chapter 9: Universal Computation)
+                    </li>
+                    <li>
+                        <a href="https://conwaylife.com/wiki/APGsembly">
+                            APGsembly - LifeWiki
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4192"
+                        >
+                            Reverse engineering the phi and pi calculators -
+                            ConwayLife.com forums
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://conwaylife.com/forums/viewtopic.php?f=2&t=4196"
+                        >
+                            Smaller Pi Calculator Challenge - ConwayLife.com
+                            forums
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </footer>
+    </body>
 </html>

@@ -4,6 +4,8 @@
 import { Action } from "./actions/Action.js";
 import { parseAction } from "./actionParse.js";
 import { internalError } from "./internalError.js";
+import { lineNumberMessage } from "./parser/message.js";
+import { parseReplacements } from "./parser/parseReplacements.js";
 
 /**
  * 初期状態
@@ -86,6 +88,147 @@ export class RegistersHeader extends ProgramLine {
      */
     pretty() {
         return RegistersHeader.key + " " + this.content;
+    }
+}
+
+/**
+ * @param {{ needle: string; replacement: string; }[]} reps
+ */
+function prettyTemplateReplacement(reps) {
+    return ("{ " +
+        reps.map((x) => x.needle + " = " + x.replacement).join("; ") + " }");
+}
+
+/**
+ * `#DEFINE`
+ */
+export class Define extends ProgramLine {
+    /**
+     * @param {string} name
+     * @param {{ needle: string; replacement: string }[]} defaultReplacements
+     */
+    constructor(name, defaultReplacements) {
+        super();
+        /**
+         * @readonly
+         */
+        this.name = name;
+        /**
+         * @readonly
+         */
+        this.defaultReplacements = defaultReplacements;
+    }
+
+    /**
+     * @returns {string}
+     */
+    static get key() {
+        return "#DEFINE";
+    }
+
+    /**
+     * @override
+     * @returns {string}
+     */
+    pretty() {
+        return Define.key + " " + this.name +
+            (this.defaultReplacements.length === 0
+                ? ""
+                : (" " + prettyTemplateReplacement(this.defaultReplacements)));
+    }
+}
+
+/**
+ * `#ENDDEF`
+ */
+export class Enddef extends ProgramLine {
+    constructor() {
+        super();
+    }
+
+    /**
+     * @returns {string}
+     */
+    static get key() {
+        return "#ENDDEF";
+    }
+
+    /**
+     * @override
+     * @returns {string}
+     */
+    pretty() {
+        return Enddef.key;
+    }
+}
+
+/**
+ * `#INSERT`
+ */
+export class Insert extends ProgramLine {
+    /**
+     * @param {string} templateName
+     * @param {{ needle: string; replacement: string }[]} replacements
+     */
+    constructor(templateName, replacements) {
+        super();
+        /**
+         * @readonly
+         */
+        this.templateName = templateName;
+        /**
+         * @readonly
+         */
+        this.replacements = replacements;
+    }
+
+    /**
+     * @returns {string}
+     */
+    static get key() {
+        return "#INSERT";
+    }
+
+    /**
+     * @override
+     * @returns {string}
+     */
+    pretty() {
+        return Insert.key + " " + this.templateName +
+            (this.replacements.length === 0
+                ? ""
+                : (" " + prettyTemplateReplacement(this.replacements)));
+    }
+}
+
+/**
+ * `#INCLUDE`
+ */
+export class Include extends ProgramLine {
+    /**
+     * @param {string} filename
+     */
+    constructor(filename) {
+        super();
+        /**
+         * @readonly
+         */
+        this.filename = filename;
+    }
+
+    /**
+     * @returns {string}
+     */
+    static get key() {
+        return "#INCLUDE";
+    }
+
+    /**
+     * @override
+     * @returns {string}
+     */
+    pretty() {
+        return Insert.key + " " + this.filename;
     }
 }
 
@@ -243,10 +386,76 @@ export const parseProgramLine = (str, line) => {
             return new RegistersHeader(
                 trimmedStr.slice(RegistersHeader.key.length).trim(),
             );
+        } else if (trimmedStr.startsWith(Define.key)) {
+            const content = trimmedStr.slice(Define.key.length).trim();
+            if (content.length === 0) {
+                return `Invalid line "${str}"${
+                    lineNumberMessage(line)
+                }. #DEFINE needs a name.`;
+            }
+            /** @type {string} */
+            let name;
+            /** @type {{ needle: string; replacement: string }[]} */
+            let replacements = [];
+            if (content.includes("{")) {
+                name = content.slice(0, content.indexOf("{")).trim();
+                const replacements_ = parseReplacements(
+                    content.slice(content.indexOf("{")),
+                    line,
+                    str,
+                    "#DEFINE",
+                );
+                if (typeof replacements_ === "string") {
+                    return replacements_;
+                }
+                replacements = replacements_;
+            } else {
+                name = content;
+            }
+            return new Define(name, replacements ?? []);
+        } else if (trimmedStr.startsWith(Enddef.key)) {
+            return new Enddef();
+        } else if (trimmedStr.startsWith(Insert.key)) {
+            const content = trimmedStr.slice(Insert.key.length).trim();
+            if (content.length === 0) {
+                return `Invalid line "${str}"${
+                    lineNumberMessage(line)
+                }. #INSERT needs a name.`;
+            }
+            /** @type {string} */
+            let name;
+            /** @type {{ needle: string; replacement: string }[]} */
+            let replacements = [];
+            if (content.includes("{")) {
+                name = content.slice(0, content.indexOf("{")).trim();
+                const replacements_ = parseReplacements(
+                    content.slice(content.indexOf("{")),
+                    line,
+                    str,
+                    "#INSERT",
+                );
+                if (typeof replacements_ === "string") {
+                    return replacements_;
+                }
+                replacements = replacements_;
+            } else {
+                name = content;
+            }
+            return new Insert(name, replacements);
+        } else if (trimmedStr.startsWith(Include.key)) {
+            const filename = trimmedStr.slice(Include.key.length).trim();
+            if (filename === "") {
+                return `Invalid line "${str}"${
+                    lineNumberMessage(line)
+                }. #INCLUDE needs filename.`;
+            }
+            return new Include(filename);
         }
         return new Comment(str);
     }
-    const array = trimmedStr.split(/\s*;\s*/u);
+    const withoutTrailingComment = trimmedStr.split("#")[0] ?? "";
+
+    const array = withoutTrailingComment.split(/\s*;\s*/u);
     if (array.length < 4) {
         return `Invalid line "${str}"${lineNumberMessage(line)}`;
     }
@@ -293,13 +502,6 @@ export const parseProgramLine = (str, line) => {
         line: line,
     });
 };
-
-/**
- * @param {number | undefined} line
- * @returns {string}
- */
-const lineNumberMessage = (line) =>
-    line !== undefined ? ` at line ${line}` : "";
 
 /**
  * @param {Command} command

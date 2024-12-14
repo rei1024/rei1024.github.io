@@ -1,6 +1,9 @@
 # Prime printer
 # Transpiled from https://conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=25#p92224
 
+# https://conwaylife.com/forums/viewtopic.php?f=2&t=4196&start=100#p199823
+#COMPONENTS B0, U0-15, OUTPUT
+
 # B0: a log of which primes have been found so far
 # U0: the number that is being counted and will be printed
 # U1: number of digits in U0
