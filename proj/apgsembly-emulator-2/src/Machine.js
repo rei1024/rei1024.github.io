@@ -27,6 +27,7 @@ const error = (msg = "error") => {
  */
 
 /**
+ * Emulator
  * エミュレーター
  * プログラムと現在の状態、コンポーネントを保持する
  */
@@ -101,6 +102,7 @@ export class Machine {
         // this.initialIndex = this.currentStateIndex;
 
         /**
+         * Statistics
          * 統計
          * NとNZが交互に並ぶ
          * @type {number[]}

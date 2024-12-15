@@ -11,7 +11,7 @@
         "bench": "deno bench --no-check test/bench.js",
         "bundle": "deno run --allow-env --allow-read --allow-write --allow-run build.ts",
         "pre-commit": "deno fmt --check && deno task lint && deno task t && deno task tsc",
-        "tsc": "deno run --allow-read --allow-env npm:typescript@5.6.2/tsc --noEmit",
+        "tsc": "deno run --allow-read --allow-env npm:typescript@5.7.2/tsc --noEmit",
         "spell": "npx cspell ."
     },
     "exclude": [

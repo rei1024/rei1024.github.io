@@ -19,6 +19,7 @@ const getFrequencies = () => {
     frequencyArray.push(
         10 * 10 ** maxOrder,
         15 * 10 ** maxOrder,
+        20 * 10 ** maxOrder,
     );
 
     return frequencyArray;

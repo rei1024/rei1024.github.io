@@ -8,7 +8,7 @@ import { HaltOutAction } from "./actions/HaltOutAction.js";
 import {} from "./actions/MulAction.js";
 import { NopAction } from "./actions/NopAction.js";
 import {} from "./actions/OutputAction.js";
-import { parseAction } from "./actionParse.js";
+import { parseAction } from "./parser/parseAction.js";
 import {} from "./actions/SubAction.js";
 import {} from "./actions/URegAction.js";
 import {} from "./actions/LegacyTRegAction.js";
@@ -60,6 +60,7 @@ export function runAPGsembly(src) {
 /**
  * APGsemblyをフォーマットする
  * APGMの出力に使用する
+ * TODO: テンプレートには未対応
  * @param {string} src
  * @returns {string}
  * @throws パース不可

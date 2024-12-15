@@ -2,13 +2,13 @@
 // deno-lint-ignore-file no-unused-vars
 
 import { Action } from "./actions/Action.js";
-import { parseAction } from "./actionParse.js";
 import { internalError } from "./internalError.js";
+import { parseAction } from "./parser/parseAction.js";
 import { lineNumberMessage } from "./parser/message.js";
 import { parseReplacements } from "./parser/parseReplacements.js";
 
 /**
- * 初期状態
+ * Name of initial state
  */
 export const INITIAL_STATE = "INITIAL";
 
@@ -339,7 +339,7 @@ export class Command extends ProgramLine {
         this.actions = actions;
 
         /**
-         * 1始まりの行数
+         * Line number (1-based)
          * @readonly
          */
         this.line = line;

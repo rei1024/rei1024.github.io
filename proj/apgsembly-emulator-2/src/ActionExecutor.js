@@ -218,7 +218,7 @@ export class ActionExecutor {
      * @param {Action} action
      * @param {number} n
      * @returns {0 | 1 | -1 | void}
-     * @throws
+     * @throws `action` not `URegAction`, `BRegAction`, or `HaltOutAction`
      */
     execActionN(action, n) {
         if (action instanceof URegAction) {
@@ -238,6 +238,7 @@ export class ActionExecutor {
     }
 
     /**
+     * Get unary register
      * @param {number} n
      * @returns {UReg | undefined}
      */
@@ -246,6 +247,7 @@ export class ActionExecutor {
     }
 
     /**
+     * Get binary register
      * @param {number} n
      * @returns {BReg | undefined}
      */
