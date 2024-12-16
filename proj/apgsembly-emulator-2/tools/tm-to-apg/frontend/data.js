@@ -3,6 +3,7 @@
 // https://en.wikipedia.org/wiki/Busy_beaver#Examples
 
 export const bb3 = `; 3-state busy beaver
+; <current state> <current symbol> <new symbol> <direction> <new state>
 0 _ 1 r 1
 0 1 1 r halt
 1 _ _ r 2
@@ -14,6 +15,7 @@ export const bb4 = `; 4-state busy beaver
 ; When run with blank input, prints a number of 1's then halts.
 ; See, eg, http://en.wikipedia.org/wiki/Busy_beaver for background on the busy beaver problem.
 
+; <current state> <current symbol> <new symbol> <direction> <new state>
 0 * * * a
 
 a _ 1 r b
@@ -29,6 +31,7 @@ d 1 _ r a`;
  * https://discuss.bbchallenge.org/t/july-2nd-2024-we-have-proved-bb-5-47-176-870/237
  */
 export const bb5 = `; 5-state busy beaver
+; <current state> <current symbol> <new symbol> <direction> <new state>
 0 _ 1 r 1
 0 1 1 l 2
 1 _ 1 r 2
@@ -41,6 +44,7 @@ export const bb5 = `; 5-state busy beaver
 4 1 _ l 0`;
 
 export const maybeBB6 = `; 6-state busy beaver?
+; <current state> <current symbol> <new symbol> <direction> <new state>
 0 _ 1 r 1
 0 1 1 l 4
 1 _ 1 r 2
@@ -54,6 +58,8 @@ export const maybeBB6 = `; 6-state busy beaver?
 5 _ 1 l halt
 5 1 1 r 2
 `;
+
+export const bb5Std = `1RB1LC_1RC1RB_1RD0LE_1LA1LD_1RZ0LA`;
 
 /**
  * @type {{
@@ -77,5 +83,9 @@ export const list = [
     {
         name: "maybe BB(6)",
         prog: maybeBB6,
+    },
+    {
+        name: "BB(5) Standard text format",
+        prog: bb5Std,
     },
 ];

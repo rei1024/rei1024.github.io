@@ -4,6 +4,8 @@ import { convert } from "../src/convert.js";
 import { TMMap } from "../src/TMMap.js";
 import { TM } from "../src/TM.js";
 import { list } from "./data.js";
+import { parseStdFormat } from "../src/std-format/std-format-parser.js";
+import { convertStd } from "../src/std-format/convert-std.js";
 
 const $input = document.querySelector("#input");
 if (!($input instanceof HTMLTextAreaElement)) {
@@ -40,8 +42,20 @@ let comment = "";
 function integration(input) {
     const tm = TM.parse(input);
     if (tm instanceof Error) {
-        return tm;
+        try {
+            const std = parseStdFormat(input.trim());
+            return `# Standard text format: ${input.trim()}\n` + convertStd(std);
+        } catch (error) {
+            if (error instanceof SyntaxError) {
+                return new Error(tm.message + "\n" + error.message);
+            } else {
+                return new Error(
+                    error instanceof Error ? error.message : "",
+                );
+            }
+        }
     }
+
     const tmMap = TMMap.fromTM(tm);
     if (tmMap instanceof Error) {
         return tmMap;

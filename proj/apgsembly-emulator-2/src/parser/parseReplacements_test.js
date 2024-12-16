@@ -10,7 +10,7 @@ test("parseReplacements", () => {
     }]);
 });
 
-test("parseReplacements", () => {
+test("parseReplacements error", () => {
     assertEquals(
         parseReplacements("{ x = 2", undefined, "_", "#DEFINE"),
         `Invalid line "_". #DEFINE replacements does not end with "}"`,

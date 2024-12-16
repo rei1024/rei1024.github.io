@@ -100,6 +100,13 @@ body[apge_dark="on"] .binary-head {
     }
 }
 
+@media screen and (max-width: 992px) {
+    #library_file_button {
+        font-size: 14px;
+        padding-inline: 6px;
+    }
+}
+
 /**** Dark mode ****/
 
 :root {

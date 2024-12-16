@@ -78,7 +78,7 @@ export class ProgramLines {
         for (const [index, lineStr] of lines.entries()) {
             if (activeTemplateName != null) {
                 if (lineStr.trimStart().startsWith(Enddef.key)) {
-                    const line = parseProgramLine(lineStr);
+                    const line = parseProgramLine(lineStr, index + 1);
                     if (line instanceof Enddef) {
                         activeTemplateName = null;
                         continue;
@@ -98,7 +98,7 @@ export class ProgramLines {
                     return `#DEFINE needs #ENDDEF ${line.pretty()}`;
                 }
                 activeTemplateName = line.name;
-                if (templates.get(activeTemplateName) != null) {
+                if (templates.has(activeTemplateName)) {
                     return `#DEFINE duplicate template name ${line.pretty()}`;
                 }
                 templates.set(activeTemplateName, {
@@ -117,7 +117,7 @@ export class ProgramLines {
         }
 
         if (activeTemplateName != null) {
-            errors.push(`#DEFINE needs #ENDDEF. "${activeTemplateName}"`)
+            errors.push(`#DEFINE needs #ENDDEF. "${activeTemplateName}"`);
         }
 
         if (errors.length > 0) {

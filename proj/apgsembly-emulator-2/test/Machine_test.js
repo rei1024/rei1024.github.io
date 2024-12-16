@@ -22,7 +22,7 @@ import { assertEquals, assertThrows, test, throwError } from "./deps.js";
 function assertNewMachineThrows(src, ErrorClass, msgIncludes) {
     const program = Program.parse(src);
     if (!(program instanceof Program)) {
-        throw Error("parse error " + src);
+        throw Error("parse error " + src + "Error:" + program);
     }
     assertThrows(
         () => {
@@ -343,7 +343,7 @@ test("Machine PI Calculator", () => {
 test("Machine template PI Calculator", () => {
     const program = Program.parse(piCalculatorTemplate);
     if (!(program instanceof Program)) {
-        throw Error("parse error PI Calculator template");
+        throw Error("parse error PI Calculator template Error:" + program);
     }
     const machine = new Machine(program);
 
@@ -372,7 +372,7 @@ A_2; *; A_2; HALT_OUT
 #INSERT outer_template
         `);
     if (!(program instanceof Program)) {
-        throw Error("parse error PI Calculator template");
+        throw Error("parse error Error:" + program);
     }
     const machine = new Machine(program);
 
@@ -382,6 +382,19 @@ A_2; *; A_2; HALT_OUT
         machine.actionExecutor.output.getString(),
         "1",
     );
+});
+
+test("Machine template define duplicate", () => {
+    const program = Program.parse(`
+INITIAL; ZZ; A_1; NOP
+A_1; *; A_1; OUTPUT 1, NOP
+
+#DEFINE template1
+#ENDDEF
+#DEFINE template1
+#ENDDEF
+        `);
+    assertEquals(program, `#DEFINE duplicate template name #DEFINE template1`);
 });
 
 test("Machine exec opt", () => {
