@@ -59,7 +59,7 @@ const MAX_COUNT = 100000;
 export class MacroExpander {
     readonly #macroMap: Map<string, Macro>;
     #count = 0;
-    readonly  #main;
+    readonly #main;
 
     constructor(main: Main, macroMap: Map<string, Macro>) {
         this.#main = main;

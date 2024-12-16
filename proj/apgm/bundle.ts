@@ -1,5 +1,5 @@
-import * as esbuild from "npm:esbuild@0.20.2";
-import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.10.3";
+import * as esbuild from "esbuild";
+import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.1";
 
 // deno run --allow-env --allow-read --allow-write=. --allow-run build.ts
 
@@ -7,7 +7,8 @@ const entryPoint = "./src/integration/mod.ts";
 const outputPath = "./dist/integration.js";
 
 await esbuild.build({
-    plugins: [...denoPlugins()],
+    // FIXME: remove loader options
+    plugins: [...denoPlugins({ loader: "portable" })],
     entryPoints: [entryPoint],
     outfile: outputPath,
     bundle: true,

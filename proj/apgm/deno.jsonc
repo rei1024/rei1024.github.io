@@ -2,19 +2,19 @@
     "tasks": {
         "pre-commit-hook": "deno lint && deno task fmt --check && deno task t",
         // test
-        "t": "deno test --parallel",
+        "t": "deno test --allow-import --parallel",
         // test with watcher
-        "w": "deno test --watch --no-check .",
+        "w": "deno test --allow-import --watch --no-check .",
         // formatting
         "fmt": "deno fmt",
         // reload dependency
-        "reload": "deno test --reload",
+        "reload": "deno test --allow-import --reload",
         // local server
         "up": "deno run --allow-net --allow-read --allow-sys jsr:@std/http@^1.0.4/file-server . -p 1618",
         // bundle
-        "bundle": "deno run --allow-env --allow-read --allow-write --allow-run bundle.ts",
+        "bundle": "deno run --allow-net --allow-import --allow-env --allow-read --allow-write --allow-run bundle.ts",
         // coverage
-        "cov": "(rm ./coverage -r || true) && (rm ./coverage.lcov || true) && deno test --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov && genhtml --ignore-errors range -o coverage/html coverage.lcov && open coverage/html/index.html",
+        "cov": "(rm ./coverage -r || true) && (rm ./coverage.lcov || true) && deno test --allow-import --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov && genhtml --ignore-errors range -o coverage/html coverage.lcov && open coverage/html/index.html",
         "spell": "npx cspell ."
     },
     "compilerOptions": {
@@ -43,6 +43,7 @@
         }
     },
     "imports": {
-        "@std/assert": "jsr:@std/assert@^1.0.3"
+        "@std/assert": "jsr:@std/assert@^1.0.3",
+        "esbuild": "npm:esbuild@0.24.0"
     }
 }

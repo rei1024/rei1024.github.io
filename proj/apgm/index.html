@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- CSP -->
-    <!-- `data://*` is close button for modal -->
-    <!-- TODO: Firefox -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="
+        <!-- CSP -->
+        <!-- `data://*` is close button for modal -->
+        <!-- TODO: Firefox -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         style-src 'self' 'unsafe-inline'
             cdn.jsdelivr.net cdnjs.cloudflare.com;
@@ -18,150 +18,383 @@
         object-src 'none';
         font-src cdnjs.cloudflare.com"> -->
 
-    <title>APGM - APGsembly macro language</title>
+        <title>APGM - APGsembly macro language</title>
 
-    <meta name="robots" content="noindex">
+        <meta name="robots" content="noindex" />
 
-    <meta name="description" content="APGM is macro language for APGsembly.">
-    <meta name="keywords" content="Conway's Game of Life,Game of Life,GoL,APGsembly,General purpose calculator,GPC">
-    <link rel="canonical" href="https://rei1024.github.io/proj/apgm/">
+        <meta
+            name="description"
+            content="APGM is macro language for APGsembly."
+        />
+        <meta
+            name="keywords"
+            content="Conway's Game of Life,Game of Life,GoL,APGsembly,General purpose calculator,GPC"
+        />
+        <link rel="canonical" href="https://rei1024.github.io/proj/apgm/" />
 
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+        <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
 
-    <!-- importmapのpolyfill -->
-    <script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1.8.2/dist/es-module-shims.js" integrity="sha256-4usHv2gjoiKonwAmSfmTL5RaDjES3psSp0Vo1VeCINA=" crossorigin="anonymous"></script>
+        <!-- importmapのpolyfill -->
+        <script
+            async
+            src="https://cdn.jsdelivr.net/npm/es-module-shims@1.8.2/dist/es-module-shims.js"
+            integrity="sha256-4usHv2gjoiKonwAmSfmTL5RaDjES3psSp0Vo1VeCINA="
+            crossorigin="anonymous"
+        ></script>
 
-    <!-- Bootstrapのesm用 -->
-    <script type="importmap">
-        {
-            "imports": {
-                "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/esm/index.js"
+        <!-- Bootstrapのesm用 -->
+        <script type="importmap">
+            {
+                "imports": {
+                    "@popperjs/core": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/esm/index.js"
+                }
             }
-        }
-    </script>
+        </script>
 
-    <!-- Monaco -->
-    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.51.0/min/vs/editor/editor.main.min.css">
+        <!-- Monaco -->
+        <link
+            rel="stylesheet"
+            data-name="vs/editor/editor.main"
+            href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.51.0/min/vs/editor/editor.main.min.css"
+        />
 
-    <!-- no defer -->
-    <script src="./define-require.js"></script>
+        <!-- no defer -->
+        <script src="./define-require.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.51.0/min/vs/loader.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.51.0/min/vs/editor/editor.main.nls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.51.0/min/vs/editor/editor.main.js"></script>
-    <!-- End Monaco -->
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.51.0/min/vs/loader.min.js"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.51.0/min/vs/editor/editor.main.nls.js"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.51.0/min/vs/editor/editor.main.js"
+        ></script>
+        <!-- End Monaco -->
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha256-MBffSnbbXwHCuZtgPYiwMQbfE7z+GOZ7fBPCNB06Z98=" crossorigin="anonymous">
+        <!-- Bootstrap -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            integrity="sha256-MBffSnbbXwHCuZtgPYiwMQbfE7z+GOZ7fBPCNB06Z98="
+            crossorigin="anonymous"
+        />
 
-    <!-- Monacoのrequireと干渉する -->
-    <!-- <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+        <!-- Monacoのrequireと干渉する -->
+        <!-- <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script> -->
 
-    <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.esm.min.js" integrity="sha256-+vNOJguzhPmmF4alnI9xVXJdVXkjkX03sq9Klj5CpY0=" crossorigin="anonymous"></script>
-    <!-- End Bootstrap -->
+        <script
+            type="module"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.esm.min.js"
+            integrity="sha256-+vNOJguzhPmmF4alnI9xVXJdVXkjkX03sq9Klj5CpY0="
+            crossorigin="anonymous"
+        ></script>
+        <!-- End Bootstrap -->
 
-    <script src="./dist/integration.js" type="module"></script>
-    <script src="./dist/index.js" type="module"></script>
-    <link rel="stylesheet" href="./style.css">
-</head>
-<body>
-    <script>
-        const DARK_MODE_KEY = 'dark_mode';
-        try {
-            if (localStorage.getItem(DARK_MODE_KEY) === 'on') {
-                document.body.setAttribute('apge_dark', 'on');
-            }
-        } catch (_) {}
-    </script>
-    <header class="mt-1 text-center">
-        <h1 class="font-x-large">APGM - APGsembly macro language</h1>
-    </header>
-    <main>
-        <div class="mt-0 ms-0">
-            <div id="buttons" class="btn-group">
-                <button disabled id="compile" class="btn btn-primary">Compile</button>
-                <button disabled id="run" class="btn btn-primary">Run</button>
-                <button disabled type="button" class="btn btn-primary dropdown-toggle" id="examples" data-bs-toggle="dropdown" aria-expanded="false">Example</button>
-                <ul class="dropdown-menu" aria-labelledby="examples">
-                    <li><button class="dropdown-item js_example" data-src="01_output.apgm">Simple program</button></li>
-                    <li><button class="dropdown-item js_example" data-src="02_actions.apgm">Actions</button></li>
-                    <li><button class="dropdown-item js_example" data-src="02_if.apgm">Conditional</button></li>
-                    <li><button class="dropdown-item js_example" data-src="03_loop.apgm">Infinite loop</button></li>
-                    <li><button class="dropdown-item js_example" data-src="04_while.apgm">Loop with condition</button></li>
-                    <li><button class="dropdown-item js_example" data-src="06_macro_decl.apgm">Macro declaration</button></li>
-                    <li><button class="dropdown-item js_example" data-src="07_macro_args.apgm">Complex macro</button></li>
-                    <li><button class="dropdown-item js_example" data-src="08_macro_in_macro.apgm">Call macro in macro</button></li>
-                    <li><button class="dropdown-item js_example" data-src="09_header.apgm">Header</button></li>
-                    <li><button class="dropdown-item js_example" data-src="10_print_digit.apgm">Print digit</button></li>
-                    <li><button class="dropdown-item js_example" data-src="11_repeat.apgm">Repeat macro</button></li>
-                    <hr>
-                    <li><button class="dropdown-item js_example" data-src="12_dragon.apgm">Dragon curve</button></li>
-                    <li><button class="dropdown-item js_example" data-src="14_o_sqrt_log_t.apgm">O(sqrt(log(t)))</button></li>
-                    <li><button class="dropdown-item js_example" data-src="15_pi.apgm">π Calculator</button></li>
-                    <li><button class="dropdown-item js_example" data-src="17_pi_bin_v2.apgm">Faster π Calculator</button></li>
-                </ul>
-                <button disabled id="config_button" data-test="config_button" type="button" class="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#config_modal">
-                    <!-- https://icons.getbootstrap.com/icons/gear/ -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-                        <path stroke="currentColor" stroke-width="0.5" d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-                        <path stroke="currentColor" stroke-width="0.5" d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
-                    </svg>
-                    Config
-                </button>
-                <button disabled id="copy" disabled class="btn btn-primary">Copy</button>
-                <button disabled id="download" disabled class="btn btn-primary">Download</button>
+        <script src="./dist/integration.js" type="module"></script>
+        <script src="./dist/index.js" type="module"></script>
+        <link rel="stylesheet" href="./style.css" />
+    </head>
+    <body>
+        <script>
+            const DARK_MODE_KEY = "dark_mode";
+            try {
+                if (localStorage.getItem(DARK_MODE_KEY) === "on") {
+                    document.body.setAttribute("apge_dark", "on");
+                }
+            } catch (_) {}
+        </script>
+        <header class="mt-1 text-center">
+            <h1 class="font-x-large">APGM - APGsembly macro language</h1>
+        </header>
+        <main>
+            <div class="mt-0 ms-0">
+                <div id="buttons" class="btn-group">
+                    <button disabled id="compile" class="btn btn-primary">
+                        Compile
+                    </button>
+                    <button disabled id="run" class="btn btn-primary">
+                        Run
+                    </button>
+                    <button
+                        disabled
+                        type="button"
+                        class="btn btn-primary dropdown-toggle"
+                        id="examples"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        Example
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="examples">
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="01_output.apgm"
+                            >
+                                Simple program
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="02_actions.apgm"
+                            >
+                                Actions
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="02_if.apgm"
+                            >
+                                Conditional
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="03_loop.apgm"
+                            >
+                                Infinite loop
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="04_while.apgm"
+                            >
+                                Loop with condition
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="06_macro_decl.apgm"
+                            >
+                                Macro declaration
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="07_macro_args.apgm"
+                            >
+                                Complex macro
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="08_macro_in_macro.apgm"
+                            >
+                                Call macro in macro
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="09_header.apgm"
+                            >
+                                Header
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="10_print_digit.apgm"
+                            >
+                                Print digit
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="11_repeat.apgm"
+                            >
+                                Repeat macro
+                            </button>
+                        </li>
+                        <hr />
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="12_dragon.apgm"
+                            >
+                                Dragon curve
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="14_o_sqrt_log_t.apgm"
+                            >
+                                O(sqrt(log(t)))
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="15_pi.apgm"
+                            >
+                                π Calculator
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                class="dropdown-item js_example"
+                                data-src="17_pi_bin_v2.apgm"
+                            >
+                                Faster π Calculator
+                            </button>
+                        </li>
+                    </ul>
+                    <button
+                        disabled
+                        id="config_button"
+                        data-test="config_button"
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#config_modal"
+                    >
+                        <!-- https://icons.getbootstrap.com/icons/gear/ -->
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-gear"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                stroke="currentColor"
+                                stroke-width="0.5"
+                                d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+                            />
+                            <path
+                                stroke="currentColor"
+                                stroke-width="0.5"
+                                d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+                            />
+                        </svg>
+                        Config
+                    </button>
+                    <button disabled id="copy" disabled class="btn btn-primary">
+                        Copy
+                    </button>
+                    <button
+                        disabled
+                        id="download"
+                        disabled
+                        class="btn btn-primary"
+                    >
+                        Download
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="mt-1 main_content">
-            <div id="apgm_input" class="input-border"></div>
-            <textarea placeholder="# APGsembly" id="output" class="form-control mono" cols="30" rows="9"></textarea>
-        </div>
+            <div class="mt-1 main_content">
+                <div id="apgm_input" class="input-border"></div>
+                <textarea
+                    placeholder="# APGsembly"
+                    id="output"
+                    class="form-control mono"
+                    cols="30"
+                    rows="9"
+                ></textarea>
+            </div>
 
-        <!-- <div class="mt-2">
+            <!-- <div class="mt-2">
             <textarea name="input" id="input" class="form-control mono" cols="30" rows="14"></textarea>
         </div> -->
-    </main>
-    <footer class="mt-2 mb-1 fs-5 text-center">
-        <a href="https://rei1024.github.io/proj/apgsembly-emulator-2/">Back</a>
-    </footer>
+        </main>
+        <footer class="mt-2 mb-1 fs-5 text-center">
+            <a href="https://rei1024.github.io/proj/apgsembly-emulator-2/"
+            >Back</a>
+        </footer>
 
-    <!-- Modal -->
-    <div class="modal fade" id="config_modal" tabindex="-1" aria-labelledby="config_modal_label" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title fs-5" id="config_modal_label">
-                    <!-- https://icons.getbootstrap.com/icons/gear/ -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-                        <path stroke="currentColor" stroke-width="0.5" d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-                        <path stroke="currentColor" stroke-width="0.5" d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
-                    </svg>
-                    Config
-                </h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="prefix_input" class="form-label">APGsembly state prefix</label>
-                    <input type="text" placeholder="STATE_" value="" id="prefix_input" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <input type="checkbox" id="watch_mode" class="form-check-input">
-                    <label for="watch_mode" class="form-check-label">Watch Mode</label>
-                </div>
-                <div class="mb-3">
-                    <input type="checkbox" id="disable_optimization" class="form-check-input">
-                    <label for="disable_optimization" class="form-check-label">
-                        Disable Optimization
-                        <br><small>(might change behavior)</small>
-                    </label>
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="config_modal"
+            tabindex="-1"
+            aria-labelledby="config_modal_label"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="config_modal_label">
+                            <!-- https://icons.getbootstrap.com/icons/gear/ -->
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                class="bi bi-gear"
+                                viewBox="0 0 16 16"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-width="0.5"
+                                    d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
+                                />
+                                <path
+                                    stroke="currentColor"
+                                    stroke-width="0.5"
+                                    d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
+                                />
+                            </svg>
+                            Config
+                        </h2>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        >
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="prefix_input" class="form-label"
+                            >APGsembly state prefix</label>
+                            <input
+                                type="text"
+                                placeholder="STATE_"
+                                value=""
+                                id="prefix_input"
+                                class="form-control"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <input
+                                type="checkbox"
+                                id="watch_mode"
+                                class="form-check-input"
+                            />
+                            <label for="watch_mode" class="form-check-label"
+                            >Watch Mode</label>
+                        </div>
+                        <div class="mb-3">
+                            <input
+                                type="checkbox"
+                                id="disable_optimization"
+                                class="form-check-input"
+                            />
+                            <label
+                                for="disable_optimization"
+                                class="form-check-label"
+                            >
+                                Disable Optimization
+                                <br /><small>(might change behavior)</small>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        </div>
-    </div>
-    <!-- End Modal -->
-</body>
+        <!-- End Modal -->
+    </body>
 </html>

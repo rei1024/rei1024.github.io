@@ -6,7 +6,7 @@ import {
     commandsToLookupTable,
     CompiledCommandWithNextState,
 } from "./compile.js";
-import { extractRegisterNumbers, Program } from "./Program.js";
+import { analyzeProgram, Program } from "./Program.js";
 import {
     Command,
     commandWithLineNumber,
@@ -42,20 +42,15 @@ export class Machine {
          */
         this.stepCount = 0;
 
+        const analyzeResult = analyzeProgram(program);
+
         /**
          * @readonly
          */
-        this.actionExecutor = new ActionExecutor(
-            extractRegisterNumbers(program),
-        );
+        this.actionExecutor = new ActionExecutor(analyzeResult);
 
         /** @type {0 | 1} */
         this.prevOutput = 0;
-
-        /**
-         * @readonly
-         */
-        this.program = program;
 
         const { states, stateMap, lookup } = commandsToLookupTable(
             program.commands,
@@ -109,6 +104,17 @@ export class Machine {
          * @private
          */
         this.stateStatsArray = [];
+
+        /**
+         * @readonly
+         */
+        this.program = program;
+
+        /**
+         * @readonly
+         */
+        this.analyzeResult = analyzeResult;
+
         // holey arrayにならないように埋める
         for (let i = 0; i < lookup.length * 2; i++) {
             this.stateStatsArray.push(0);

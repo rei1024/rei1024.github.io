@@ -21,6 +21,7 @@ import { makeSpinner } from "./util/spinner.js";
 
 import {
     $addSubMul,
+    $addSubMulDetail,
     $b2dDetail,
     $b2dFlipUpsideDown,
     $b2dHidePointer,
@@ -36,6 +37,7 @@ import {
     $frequencyOutput,
     $input,
     $output,
+    $outputDetail,
     $previousOutput,
     $reset,
     $statsBody,
@@ -423,6 +425,25 @@ export class App {
             } else {
                 $input.classList.remove("is-invalid");
             }
+
+            const analyzeResult = this.#machine?.analyzeResult;
+            $unaryRegisterDetail.style.display =
+                analyzeResult == null || analyzeResult.unary.length === 0
+                    ? "none"
+                    : "";
+            $binaryRegisterDetail.style.display =
+                analyzeResult == null || analyzeResult.binary.length === 0
+                    ? "none"
+                    : "";
+            $addSubMulDetail.style.display =
+                analyzeResult?.hasAdd || analyzeResult?.hasSub ||
+                    analyzeResult?.hasMul
+                    ? ""
+                    : "none";
+            $b2dDetail.style.display = analyzeResult?.hasB2D ? "" : "none";
+            $outputDetail.style.display = analyzeResult?.hasOutput
+                ? ""
+                : "none";
         }
 
         renderErrorMessage($error, appState, this.#errorMessage);

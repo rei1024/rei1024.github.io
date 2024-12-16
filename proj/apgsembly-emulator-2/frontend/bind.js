@@ -16,6 +16,7 @@ export const $input = $type("#input", HTMLTextAreaElement);
 
 // 出力
 // OUTPUT component
+export const $outputDetail = $type("#output_detail", HTMLElement_);
 export const $output = $type("#output", HTMLTextAreaElement);
 
 // ステップ数表示
@@ -89,6 +90,7 @@ export const $binaryRegisterDetail = $type(
 );
 
 // ADD SUB MULの表示
+export const $addSubMulDetail = $type("#add_sub_mul_detail", HTMLElement_);
 export const $addSubMul = $type("#add_sub_mul", HTMLElement_);
 
 // ファイルインポート

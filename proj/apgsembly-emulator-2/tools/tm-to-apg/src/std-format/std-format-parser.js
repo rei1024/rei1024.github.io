@@ -43,7 +43,7 @@ export function parseStdFormat(src) {
 
     // Zもエラー
     if (array.length >= 26) {
-        throw new Error('too many states')
+        throw new Error("too many states");
     }
 
     const ZERO = "0".codePointAt(0) ?? internalError();

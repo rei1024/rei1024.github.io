@@ -1,6 +1,8 @@
 module.exports = {
     "version": "0.2",
     "ignorePaths": [
+        "coverage",
+        "coverage.lcov",
         "package-lock.json",
         "node_modules",
         "dist/integration.js",

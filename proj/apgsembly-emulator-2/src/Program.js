@@ -8,6 +8,11 @@ import { URegAction } from "./actions/URegAction.js";
 import { ProgramLines } from "./ProgramLines.js";
 import { validateAll } from "./validate.js";
 import { expandTemplate } from "./expandTemplate.js";
+import { AddAction } from "./actions/AddAction.js";
+import { MulAction } from "./actions/MulAction.js";
+import { SubAction } from "./actions/SubAction.js";
+import { B2DAction } from "./actions/B2DAction.js";
+import { OutputAction } from "./actions/OutputAction.js";
 
 /**
  * APGsembly program
@@ -101,11 +106,23 @@ const sortNub = (array) => {
 };
 
 /**
+ * @typedef {{
+ * unary: number[],
+ * binary: number[],
+ * legacyT: number[],
+ * hasAdd: boolean,
+ * hasSub: boolean,
+ * hasMul: boolean,
+ * hasB2D: boolean,
+ * hasOutput: boolean, }} AnalyzeProgramResult
+ */
+
+/**
  * プログラムから使用されているレジスタ番号を抽出
  * @param {Program} program
- * @returns {{ unary: number[], binary: number[], legacyT: number[] }}
+ * @returns {AnalyzeProgramResult}
  */
-export const extractRegisterNumbers = (program) => {
+export const analyzeProgram = (program) => {
     /** @type {readonly Action[]} */
     const actions = program.commands.flatMap((command) => command.actions);
 
@@ -120,9 +137,34 @@ export const extractRegisterNumbers = (program) => {
         ));
     };
 
+    let hasAdd = false;
+    let hasSub = false;
+    let hasMul = false;
+    let hasB2D = false;
+    let hasOutput = false;
+
+    for (const action of actions) {
+        if (action instanceof AddAction) {
+            hasAdd = true;
+        } else if (action instanceof SubAction) {
+            hasSub = true;
+        } else if (action instanceof MulAction) {
+            hasMul = true;
+        } else if (action instanceof B2DAction) {
+            hasB2D = true;
+        } else if (action instanceof OutputAction) {
+            hasOutput = true;
+        }
+    }
+
     return {
         unary: getNumbers(URegAction),
         binary: getNumbers(BRegAction),
         legacyT: getNumbers(LegacyTRegAction),
+        hasAdd,
+        hasSub,
+        hasMul,
+        hasB2D,
+        hasOutput,
     };
 };

@@ -44,7 +44,8 @@ function integration(input) {
     if (tm instanceof Error) {
         try {
             const std = parseStdFormat(input.trim());
-            return `# Standard text format: ${input.trim()}\n` + convertStd(std);
+            return `# Standard text format: ${input.trim()}\n` +
+                convertStd(std);
         } catch (error) {
             if (error instanceof SyntaxError) {
                 return new Error(tm.message + "\n" + error.message);
