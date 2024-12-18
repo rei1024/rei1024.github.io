@@ -76,7 +76,7 @@ macro sub_b!(b1, b2, temp_u1, temp_u2) {
             if_z (read_b(b2)) {
                 sub_b0();
             } else {
-                set_b(2);
+                set_b(b2);
                 sub_b1();
             }
         ) {
