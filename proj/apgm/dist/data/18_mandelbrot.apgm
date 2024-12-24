@@ -1,0 +1,683 @@
+/*
+    # APGM code for Mandelbrot set renderer
+    # 2024-12-21 (Rei): Created
+*/
+
+/**
+ * Copy Ua to Ub with help of Utemp
+ */
+macro copy_u!(a, b, temp) {
+    add_u!(a, b, temp);
+}
+
+/* Ub = Ua + Ub */
+macro add_u!(a, b, temp) {
+    while_nz (tdec_u(a)) {
+        inc_u(b);
+        inc_u(temp);
+    }
+    while_nz (tdec_u(temp)) {
+        inc_u(a);
+    }
+}
+
+/* safe `SET Bn` */
+macro safe_set_b!(n) {
+    read_b(n);
+    set_b(n);
+}
+
+/* move head to 0 */
+macro b_head_to_0!(n) {
+    while_nz (tdec_b(n)) {}
+}
+
+/* Reset Un to 0 */
+macro u_to_0!(n) {
+    while_nz (tdec_u(n)) {}
+}
+
+/**
+ * copy bits from Bfrom to Bto
+ */
+macro copy_binary!(from, to, temp_u1) {
+    while_nz (tdec_u(ALLOC_NUM!())) {
+        inc_u(temp_u1);
+        if_z (read_b(from)) {
+            read_b(to);
+        } else {
+            set_b(from);
+            safe_set_b!(to);
+        }
+        inc_b(from);
+        inc_b(to);
+    }
+
+    b_head_to_0!(from);
+    b_head_to_0!(to);
+
+    while_nz (tdec_u(temp_u1)) {
+        inc_u(ALLOC_NUM!()); /* recover */
+    }
+}
+
+/**
+ * b1 = b1 - b2
+ */
+macro sub_b!(b1, b2, temp_u1, temp_u2, alloc_u) {
+    copy_u!(alloc_u, temp_u2, temp_u1);
+
+    while_nz (tdec_u(temp_u2)) {
+        if_nz (read_b(b1)) {
+            sub_a1();
+        }
+
+        if_nz (
+            if_z (read_b(b2)) {
+                sub_b0();
+            } else {
+                set_b(b2);
+                sub_b1();
+            }
+        ) {
+            set_b(b1);
+        }
+        inc_b(b1);
+        inc_b(b2);
+    }
+
+    b_head_to_0!(b1);
+    b_head_to_0!(b2);
+}
+
+/**
+ * b2 = b1 - b2
+ */
+macro sub_b_rev!(b1, b2, temp_u1, temp_u2, alloc_u) {
+    copy_u!(alloc_u, temp_u2, temp_u1);
+
+    while_nz (tdec_u(temp_u2)) {
+        if_nz (read_b(b1)) {
+            set_b(b1);
+            sub_a1();
+        }
+
+        if_nz (
+            if_z (read_b(b2)) {
+                sub_b0();
+            } else {
+                sub_b1();
+            }
+        ) {
+            set_b(b2);
+        }
+        inc_b(b1);
+        inc_b(b2);
+    }
+
+    b_head_to_0!(b1);
+    b_head_to_0!(b2);
+}
+
+/**
+ * binary2 = binary2 + binary1 (signed)
+ */
+macro add_b_signed!(binary1, binary1_sign, binary2, binary2_sign, temp_u1, temp_u2, temp_u3, temp_u4) {
+    /* temp_u4 0: add, 1: sub_rev, 2: sub */
+    if_nz (tdec_u(binary1_sign)) {
+        inc_u(binary1_sign);
+        if_nz (tdec_u(binary2_sign)) {
+            /* - - */
+            inc_u(binary2_sign);
+            /* temp_u4 = 0 */
+        } else {
+            /* - + */
+            compare_binary!(binary1, binary2, temp_u1, temp_u2, temp_u3, ALLOC_NUM!());
+            if_nz (tdec_u(temp_u1)) {
+                /* binary1 > binary2 */
+                inc_u(binary2_sign);
+                inc_u(temp_u4);
+            } else {
+                /* binary1 <= binary2 */
+                inc_u(temp_u4);
+                inc_u(temp_u4);
+            }
+        }
+    } else {
+        if_nz (tdec_u(binary2_sign)) {
+            /* + - */
+            compare_binary!(binary1, binary2, temp_u1, temp_u2, temp_u3, ALLOC_NUM!());
+            if_nz (tdec_u(temp_u1)) {
+                /* binary1 > binary2 */
+                inc_u(temp_u4);
+            } else {
+                /* binary1 <= binary2 */
+                inc_u(binary2_sign);
+                inc_u(temp_u4);
+                inc_u(temp_u4);
+            }
+        } else {
+            /* + + */
+            /* temp_u4 = 0 */
+        }
+    }
+
+    if_z (tdec_u(temp_u4)) {
+        add_b!(binary1, binary2, temp_u1, temp_u2);
+    } else if_z (tdec_u(temp_u4)) {
+        sub_b_rev!(binary1, binary2, temp_u1, temp_u2, ALLOC_NUM!());
+    } else {
+        sub_b!(binary2, binary1, temp_u1, temp_u2, ALLOC_NUM!());
+    }
+
+    /* fix negative zero */
+    binary_is_not_zero!(binary2, temp_u1, temp_u2, temp_u3);
+    if_z (tdec_u(temp_u1)) {
+        /* zero is non negative */
+        tdec_u(binary2_sign);
+    }
+}
+
+/**
+ * binary2 = binary2 + binary1
+ *
+ * # Shifted addition
+ * ```
+ * repeat(n, inc_b(binary2));
+ * add_b!(binary1, binary2, temp_u1, temp_u2);
+ * ```
+ * -> binary2 = binary2 + (binary1 << n)
+ */
+macro add_b!(binary1, binary2, temp_u1, temp_u2) {
+    copy_u!(ALLOC_NUM!(), temp_u1, temp_u2);
+
+    while_nz (tdec_u(temp_u1)) {
+        if_nz (read_b(binary1)) {
+            set_b(binary1);
+            add_a1();
+        }
+
+        if_nz (
+            /* use value from add_b0 or add_b1 */
+            if_z (read_b(binary2)) {
+                add_b0();
+            } else {
+                add_b1();
+            }
+        ) {
+            set_b(binary2);
+        }
+
+        inc_b(binary1);
+        inc_b(binary2);
+    }
+
+    b_head_to_0!(binary1);
+    b_head_to_0!(binary2);
+}
+
+/**
+ * binary = binary + constant
+ * constant must be 1 or 2
+ */
+macro add_1_or_2_to_binary!(binary, constant) {
+    repeat(constant, {
+        loop {
+            if_z (read_b(binary)) {
+                set_b(binary);
+                break();
+            } else {
+                inc_b(binary);
+            }
+        }
+
+        b_head_to_0!(binary);
+    });
+}
+
+/* binary = binary + 1 */
+macro add_1_to_binary!(binary) {
+    add_1_or_2_to_binary!(binary, 1);
+}
+
+/**
+ * binary = binary - 1
+ * binary must not be zero
+ */
+macro sub_1_from_binary!(binary) {
+    loop {
+        if_z (read_b(binary)) {
+            set_b(binary);
+            inc_b(binary);
+        } else {
+            break();
+        }
+    }
+    b_head_to_0!(binary);
+}
+
+/* binary = binary + 1 */
+macro add_1_signed!(binary, binary_sign, temp_u1, temp_u2, temp_u3) {
+    if_nz (tdec_u(binary_sign)) {
+        inc_u(binary_sign);
+        sub_1_from_binary!(binary);
+
+        /* fix negative zero */
+        binary_is_not_zero!(binary, temp_u1, temp_u2, temp_u3);
+        if_z (tdec_u(temp_u1)) {
+            /* zero is non negative */
+            tdec_u(binary_sign);
+        }
+    } else {
+        add_1_to_binary!(binary);
+    }
+}
+
+/*
+    output_binary = output_binary + binary * small_binary
+*/
+macro mul_b_b!(
+    binary, small_binary, small_binary_max_pointer, output_binary,
+    temp_u1, temp_u2, temp_u3, temp_u4) {
+    copy_u!(small_binary_max_pointer, temp_u1, temp_u2);
+
+    inc_u(temp_u1);
+
+    while_nz (tdec_u(temp_u1)) {
+        while_nz (tdec_u(temp_u4)) {
+            /* Shift */
+            inc_b(output_binary);
+            inc_u(temp_u2);
+        }
+
+        while_nz (tdec_u(temp_u2)) {
+            inc_u(temp_u4);
+        }
+
+        inc_u(temp_u4);
+
+        if_nz (read_b(small_binary)) {
+            set_b(small_binary);
+            add_b!(binary, output_binary, temp_u2, temp_u3);
+        }
+
+        inc_b(small_binary);
+        b_head_to_0!(output_binary);
+    }
+
+    u_to_0!(temp_u4);
+
+    b_head_to_0!(small_binary);
+    b_head_to_0!(output_binary);
+}
+
+/*
+    temp_binary = binary
+    binary = binary * small_binary
+*/
+macro mul_b_b_self!(
+    binary, small_binary, small_binary_max_pointer, temp_binary,
+    temp_u1, temp_u2, temp_u3, temp_u4) {
+    copy_binary!(binary, temp_binary, temp_u1);
+    binary_zero!(binary);
+    mul_b_b!(
+        temp_binary,
+        small_binary,
+        small_binary_max_pointer,
+        binary,
+        temp_u1, temp_u2, temp_u3, temp_u4
+    );
+}
+
+/*
+    binary1 = binary1 * binary2
+*/
+macro mul_b_b_signed!(binary1, binary1_sign, binary2, binary2_sign,
+  temp_binary, temp_u1, temp_u2, temp_u3, temp_u4) {
+    mul_b_b_self!(binary1, binary2, ALLOC_NUM!(), temp_binary, temp_u1, temp_u2, temp_u3, temp_u4);
+    binary_zero!(temp_binary);
+
+    /* set sign */
+    if_z (tdec_u(binary1_sign)) {
+        /* + */
+        if_z (tdec_u(binary2_sign)) {
+            /* + */
+            /* nop */
+        } else {
+            /* - */
+            inc_u(binary2_sign);
+            inc_u(binary1_sign); /* output */
+        }
+    } else {
+        /* - */
+        if_z (tdec_u(binary2_sign)) {
+            /* + */
+            inc_u(binary1_sign); /* output */
+        } else {
+            /* - */
+            inc_u(binary2_sign);
+        }
+    }
+}
+
+/* Set all bits to 0 */
+macro binary_zero!(binary) {
+    while_nz (tdec_u(ALLOC_NUM!())) {
+        inc_b(binary);
+    }
+    while_nz (tdec_b(binary)) {
+        read_b(binary);
+        inc_u(ALLOC_NUM!()); /* recover */
+    }
+}
+
+/* out_is_not_zero_u = 1 if binary is not zero */
+macro binary_is_not_zero!(binary, out_is_not_zero_u, temp_u1, temp_u2) {
+    copy_u!(ALLOC_NUM!(), temp_u1, temp_u2);
+    while_nz (tdec_u(temp_u1)) {
+        if_nz (read_b(binary)) {
+            set_b(binary);
+            inc_u(out_is_not_zero_u);
+            break();
+        }
+        inc_b(binary);
+    }
+    u_to_0!(temp_u1);
+    b_head_to_0!(binary);
+}
+
+/**
+ * b1 > b2 --> result_u = 1
+ * b1 <= b2 --> result_u = 0
+ */
+macro compare_binary!(b1, b2, result_u, temp_u1, temp_u2, alloc_u) {
+    copy_u!(alloc_u, temp_u1, temp_u2);
+
+    while_nz (tdec_u(temp_u1)) {
+        inc_b(b1);
+        inc_b(b2);
+    }
+
+    loop {
+        if_z (read_b(b2)) {
+            if_z (read_b(b1)) {
+                tdec_b(b1);
+                if_z (tdec_b(b2)) {
+                    break();
+                }
+            } else {
+                set_b(b1);
+                /* b1 = 1, b2 = 0 --> b1 > b2 */
+                inc_u(result_u);
+                break();
+            }
+        } else {
+            set_b(b2);
+            if_z (read_b(b1)) {
+                /* b1 = 0, b2 = 1 --> b1 < b2 */
+                break();
+            } else {
+                set_b(b1);
+                tdec_b(b1);
+                if_z (tdec_b(b2)) {
+                    break();
+                }
+            }
+        }
+    }
+
+    b_head_to_0!(b1);
+    b_head_to_0!(b2);
+}
+
+/* binary = binary << count */
+macro right_shift_binary!(binary, count, temp_u1, temp_u2) {
+    copy_u!(ALLOC_NUM!(), temp_u1, temp_u2);
+    while_nz (tdec_u(temp_u1)) {
+        repeat(count, inc_b(binary));
+        if_z (read_b(binary)) {
+            repeat(count, tdec_b(binary));
+            /* set to 0 */
+            read_b(binary);
+        } else {
+            repeat(count, tdec_b(binary));
+            safe_set_b!(binary);
+        }
+        inc_b(binary);
+    }
+    b_head_to_0!(binary);
+}
+
+/* binary = binary << count */
+macro right_shift_binary_signed!(binary, binary_sign, count, temp_u1, temp_u2, temp_u3) {
+    right_shift_binary!(binary, count, temp_u1, temp_u2);
+    /* fix negative zero */
+    binary_is_not_zero!(binary, temp_u1, temp_u2, temp_u3);
+    if_z (tdec_u(temp_u1)) {
+        /* zero is non negative */
+        tdec_u(binary_sign);
+    }
+}
+
+/* out = binary >= 2^power_u */
+macro is_greater_than_or_equal_power!(binary, power_u, out, temp_u1, temp_u2, temp_u3) {
+    copy_u!(ALLOC_NUM!(), temp_u2, temp_u1);
+    while_nz (tdec_u(power_u)) {
+        inc_u(temp_u3);
+        inc_b(binary);
+        tdec_u(temp_u2);
+    }
+
+    while_nz (tdec_u(temp_u3)) {
+        inc_u(power_u);
+    }
+
+    while_nz (tdec_u(temp_u2)) {
+        if_nz (read_b(binary)) {
+            set_b(binary);
+            inc_u(out);
+            break();
+        }
+        inc_b(binary);
+    }
+    u_to_0!(temp_u2);
+    b_head_to_0!(binary);
+}
+
+macro set_b2dx_0!() {
+    while_nz (tdec_b2dx()) {}
+}
+
+macro set_b2dy_0!() {
+    while_nz (tdec_b2dy()) {}
+}
+
+macro copy_sign!(from, to) {
+    tdec_u(to);
+    if_nz (tdec_u(from)) {
+        inc_u(from);
+        inc_u(to);
+    }
+}
+
+/* draw one cell based on cx and cy */
+macro draw!() {
+    /* skip first iteration */
+    /* X = CX */
+    copy_binary!(CX_B!(), X_B!(), 4);
+    copy_sign!(CX_SIGN!(), X_SIGN!());
+
+    /* Y = CY */
+    copy_binary!(CY_B!(), Y_B!(), 4);
+    copy_sign!(CY_SIGN!(), Y_SIGN!());
+
+    copy_u!(ITERATION_U!(), 3, 4);
+    while_nz (tdec_u(3)) {
+        copy_binary!(Y_B!(), TEMP_B2!(), 4);
+        tdec_u(TEMP_B2_SIGN!()); /* square is positive */
+
+        /* TEMP_B2 = Y^2 */
+        mul_b_b_self!(TEMP_B2!(), Y_B!(), ALLOC_NUM!(), TEMP_B10!(), 4, 5, 6, 7);
+        /* binary_zero!(TEMP_B10!()); */
+
+        right_shift_binary!(TEMP_B2!(), SIZE_LOG2!(), 4, 5);
+
+        is_greater_than_or_equal_power!(TEMP_B2!(), DIVERGE_LIMIT_LOG2_U!(), 4, 5, 6, 7);
+        if_nz (tdec_u(4)) {
+            /* diverged */
+            inc_u(4);
+            break();
+        }
+
+        copy_binary!(X_B!(), TEMP_B1!(), 4);
+        tdec_u(TEMP_B1_SIGN!()); /* square is positive */
+
+        /* TEMP_B1 = X^2 */
+        mul_b_b_self!(TEMP_B1!(), X_B!(), ALLOC_NUM!(), TEMP_B10!(), 4, 5, 6, 7);
+        /* binary_zero!(TEMP_B10!()); */
+
+        right_shift_binary!(TEMP_B1!(), SIZE_LOG2!(), 4, 5);
+
+        is_greater_than_or_equal_power!(TEMP_B1!(), DIVERGE_LIMIT_LOG2_U!(), 4, 5, 6, 7);
+        if_nz (tdec_u(4)) {
+            /* diverged */
+            inc_u(4);
+            break();
+        }
+
+        /* TEMP_B2 = -TEMP_B2 */
+        if_z (tdec_u(TEMP_B2_SIGN!())) {
+            inc_u(TEMP_B2_SIGN!());
+        }
+        /* TEMP_B1 = TEMPB1 + TEMP_B2 */
+
+        /* add_b_signed! binary1, binary1_sign, binary2, binary2_sign, temp_u1, temp_u2, temp_u3, temp_u4 */
+        add_b_signed!(TEMP_B2!(), TEMP_B2_SIGN!(), TEMP_B1!(), TEMP_B1_SIGN!(), 4, 5, 6, 7);
+
+        /* x temporary */
+        add_b_signed!(CX_B!(), CX_SIGN!(), TEMP_B1!(), TEMP_B1_SIGN!(), 4, 5, 6, 7);
+
+        /* y = y * x */
+        mul_b_b_signed!(Y_B!(), Y_SIGN!(), X_B!(), X_SIGN!(), TEMP_B10!(), 4, 5, 6, 7);
+
+        /* y = 2 * y / SIZE */
+        right_shift_binary_signed!(Y_B!(), Y_SIGN!(), SIZE_LOG2_MINUS_1!(), 4, 5, 6);
+        /* y = y + cy */
+        add_b_signed!(CY_B!(), CY_SIGN!(), Y_B!(), Y_SIGN!(), 4, 5, 6, 7);
+        /* x = x temporary */
+        copy_binary!(TEMP_B1!(), X_B!(), 4);
+        copy_sign!(TEMP_B1_SIGN!(), X_SIGN!());
+    }
+
+    if_z (tdec_u(4)) {
+        /* Does not diverge */
+        set_b2d();
+    }
+
+    u_to_0!(3);
+}
+
+/*
+U0: SIZE * 4
+U1: canvasX
+U2: canvasY
+U3, U4, U5, U6, U7: temporary
+
+sign flag
+  0 -> nonnegative
+  1 -> negative
+U10: Sign of current cx value
+U11: Sign of current cy value
+U12: Sign of current x value
+U13: Sign of current y value
+
+B10: Current cx value (absolute)
+  Initial value is -SIZE * 2
+B11: Current cy value (absolute)
+  Initial value is -SIZE * 2
+B12: Current x value (absolute)
+B13: Current y value (absolute)
+
+U50: Binary number allocated bits
+U51: Number of iterations
+U52: log_2(SIZE) + 2
+*/
+
+/*
+Must be a power of 2
+SIZE = 32
+*/
+
+/* U0 = SIZE * 4 */
+macro SIZE_TIMES_4_U!() 0
+
+/* U51 */
+macro ITERATION_U!() 51
+
+/* log_2(SIZE) = 5 */
+macro SIZE_LOG2!() 5
+
+/* log_2(SIZE) - 1 = 4 */
+macro SIZE_LOG2_MINUS_1!() 4
+
+/* log_2(SIZE) + 1 = 6 */
+macro SIZE_LOG2_PLUS_1!() 6
+
+/* U52 = log_2(SIZE) + 2 = 7 */
+macro DIVERGE_LIMIT_LOG2_U!() 52
+
+/* U50
+   rule of thumb
+   ceil(log_2(SIZE)) * 3 + 4 = 19
+ */
+macro ALLOC_NUM!() 50
+
+/* c = cx + cy * i */
+/* Initial value: CX = -(2^(SIZE+1)) */
+macro CX_B!() 10
+macro CX_SIGN!() 10
+
+/* Initial value: CY = -(2^(SIZE+1)) */
+macro CY_B!() 11
+macro CY_SIGN!() 11
+
+/* z = x + y * i */
+macro X_B!() 12
+macro X_SIGN!() 12
+macro Y_B!() 13
+macro Y_SIGN!() 13
+
+macro TEMP_B1!() 14
+macro TEMP_B1_SIGN!() 14
+macro TEMP_B2!() 15
+macro TEMP_B2_SIGN!() 15
+macro TEMP_B10!() 16
+
+#COMPONENTS U0-7, U10-15, U50-52, B10-16, ADD, SUB, MUL, B2D
+#REGISTERS { "U0": 128, "U50": 19, "U51": 14, "U52": 7, "U10": 1, "B10": [0, "0000001"], "U11": 1, "B11": [0, "0000001"] }
+
+copy_u!(SIZE_TIMES_4_U!(), 1, 2);
+
+while_nz (tdec_u(1)) {
+    copy_u!(SIZE_TIMES_4_U!(), 2, 3);
+    while_nz (tdec_u(2)) {
+        draw!();
+        /* CX += 1 */
+        add_1_signed!(CX_B!(), CX_SIGN!(), 3, 4, 5);
+        inc_b2dx();
+    }
+    set_b2dx_0!();
+    inc_b2dy();
+
+    {
+        /* CX = -SIZE * 2 */
+        binary_zero!(CX_B!());
+        repeat(SIZE_LOG2_PLUS_1!(), inc_b(CX_B!()));
+        set_b(CX_B!());
+        b_head_to_0!(CX_B!());
+        inc_u(CX_SIGN!());
+    };
+
+    /* CY += 1 */
+    add_1_signed!(CY_B!(), CY_SIGN!(), 3, 4, 5);
+}

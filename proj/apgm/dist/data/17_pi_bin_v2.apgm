@@ -209,7 +209,7 @@ macro mul_b_b_self!(
     binary, small_binary, small_binary_max_pointer, temp_binary,
     temp_u1, temp_u2, temp_u3, temp_u4) {
     copy_binary!(binary, temp_binary, temp_u1, temp_u2);
-    binary_zero!(binary, temp_u1, temp_u2);
+    binary_zero!(binary);
     mul_b_b!(
         temp_binary,
         small_binary,
@@ -220,15 +220,14 @@ macro mul_b_b_self!(
 }
 
 /* Set all bits to 0 */
-macro binary_zero!(binary, temp_u1, temp_u2) {
-    copy_u!(ALLOC_NUM!(), temp_u1, temp_u2);
-
-    while_nz (tdec_u(temp_u1)) {
-        read_b(binary);
+macro binary_zero!(binary) {
+    while_nz (tdec_u(ALLOC_NUM!())) {
         inc_b(binary);
     }
-
-    b_head_to_0!(binary);
+    while_nz (tdec_b(binary)) {
+        read_b(binary);
+        inc_u(ALLOC_NUM!());
+    }
 }
 
 /**
