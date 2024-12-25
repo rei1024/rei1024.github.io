@@ -1,6 +1,6 @@
 # apgsembly-emulator-2
 
-An emulator for APGsembly 2.0
+An emulator for [APGsembly](https://conwaylife.com/wiki/APGsembly) 2.0
 
 ## Development
 

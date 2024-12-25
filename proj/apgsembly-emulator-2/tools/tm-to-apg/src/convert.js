@@ -67,13 +67,13 @@ export function convert(tmMap) {
     const array = [];
 
     if (tmMap.symbols.length > 2) {
-        return Error("only works with 2 color");
+        return Error("only works with 2 symbols");
     }
 
     const otherSymbols = tmMap.symbols.filter((x) => x !== BLANK_SYMBOL);
 
     if (otherSymbols.length > 1) {
-        return Error("only works with 2 color");
+        return Error("only works with 2 symbols");
     }
 
     const otherSymbol = otherSymbols[0] ?? "1";

@@ -68,7 +68,7 @@ export function convertStd(map) {
     }
 
     if ((map.get("A")?.size ?? 0) != 2) {
-        return Error("only works with 2 color");
+        return Error("only works with 2 symbols");
     }
 
     const BLANK_SYMBOL = "0";

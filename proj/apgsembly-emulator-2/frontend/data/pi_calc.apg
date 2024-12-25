@@ -1,5 +1,8 @@
 # π Calculator
-# https://conwaylife.com/book/ > B.8 π Calculator APGsembly Code
+# "Conway's Game of Life: Mathematics and Construction" (2022) Nathaniel Johnston and Dave Greene
+# <https://conwaylife.com/book/>
+# Appendix B.8 π Calculator APGsembly Code
+
 #COMPONENTS NOP,OUTPUT,B0-3,U0-9,ADD,SUB,MUL
 #REGISTERS {'U1':1, 'U6':6, 'B0':[0,'01'] , 'B2':[0,'1']}
 # State  Input Next state Actions

@@ -1,5 +1,8 @@
 # Binary ruler
-# https://conwaylife.com/book/ > 9.4 A Binary Register > APGsembly 9.5
+# "Conway's Game of Life: Mathematics and Construction" (2022) Nathaniel Johnston and Dave Greene
+# <https://conwaylife.com/book/>
+# Section 9.4 A Binary Register, APGsembly 9.5
+
 #COMPONENTS B0,NOP
 #REGISTERS {}
 # State  Input  Next state  Actions

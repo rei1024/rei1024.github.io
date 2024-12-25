@@ -58,17 +58,6 @@ export class Machine {
 
         /**
          * @readonly
-         */
-        this.states = states;
-
-        /**
-         * @readonly
-         * @private
-         */
-        this.stateMap = stateMap;
-
-        /**
-         * @readonly
          * @private
          */
         this.lookup = lookup;
@@ -104,6 +93,17 @@ export class Machine {
          * @private
          */
         this.stateStatsArray = [];
+
+        /**
+         * @readonly
+         */
+        this.states = states;
+
+        /**
+         * @readonly
+         * @private
+         */
+        this.stateMap = stateMap;
 
         /**
          * @readonly

@@ -178,7 +178,7 @@ test("Program duplicated actions", () => {
         errorMessage,
         [
             `Duplicated actions "NOP" in "INITIAL; ZZ; A0; NOP, NOP" at line 2`,
-            `Does not contain exactly one action that produces a return value in "INITIAL; ZZ; A0; NOP, NOP": Actions that produce value are "NOP", "NOP" at line 2`,
+            `Does not contain exactly one action that returns a value in "INITIAL; ZZ; A0; NOP, NOP": Actions that produce value are "NOP", "NOP" at line 2`,
             `Actions "NOP" and "NOP" use same component in "INITIAL; ZZ; A0; NOP, NOP" at line 2`,
         ].join("\n"),
     );
@@ -191,7 +191,7 @@ test("Program return one value: no return", () => {
     const errorMessage = parseProgramExpectError(src);
     assertEquals(
         errorMessage,
-        `Does not produce the return value in "INITIAL; ZZ; A0; OUTPUT 1" at line 2`,
+        `Does not return a value in "INITIAL; ZZ; A0; OUTPUT 1" at line 2`,
     );
 });
 
@@ -202,7 +202,7 @@ test("Program return one value", () => {
     const errorMessage = parseProgramExpectError(src);
     assertEquals(
         errorMessage,
-        "Does not contain exactly one action that produces a return value in" +
+        "Does not contain exactly one action that returns a value in" +
             ' "INITIAL; ZZ; A0; NOP, TDEC U0": Actions that produce value are "NOP", "TDEC U0"' +
             " at line 2",
     );
@@ -288,7 +288,7 @@ ID0; ZZ; ID0; NOP
     const errorMessage = parseProgramExpectError(str);
     assertEquals(
         errorMessage,
-        'Does not produce the return value in "INITIAL; ZZ; ID0; OUTPUT 3" at line 2',
+        'Does not return a value in "INITIAL; ZZ; ID0; OUTPUT 3" at line 2',
     );
 });
 
@@ -300,7 +300,7 @@ ID0; ZZ; ID0; NOP
     const errorMessage = parseProgramExpectError(str);
     assertEquals(
         errorMessage,
-        "Does not contain exactly one action that produces a return value in " +
+        "Does not contain exactly one action that returns a value in " +
             '"INITIAL; ZZ; ID0; NOP, TDEC U0": ' +
             'Actions that produce value are "NOP", "TDEC U0"' +
             " at line 2",
