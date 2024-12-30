@@ -7,6 +7,6 @@ test("parse HALT_OUT", () => {
     assertEquals(HaltOutAction.parse("HALT_OUT")?.pretty(), "HALT_OUT");
 });
 
-test("parse HALT_OUT fail", () => {
-    assertEquals(HaltOutAction.parse("HALT"), undefined);
+test("parse HALT", () => {
+    assertEquals(HaltOutAction.parse("HALT")?.pretty(), "HALT");
 });

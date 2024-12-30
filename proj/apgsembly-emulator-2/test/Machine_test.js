@@ -34,6 +34,19 @@ function assertNewMachineThrows(src, ErrorClass, msgIncludes) {
     );
 }
 
+test("Machine #COMPONENTS", () => {
+    const str = `
+#COMPONENTS
+INITIAL; ZZ; ID0; OUTPUT 3, NOP
+ID0; ZZ; ID0; NOP
+    `;
+    assertNewMachineThrows(
+        str,
+        Error,
+        "Program uses OUTPUT component but the #COMPONENTS header does not include it.",
+    );
+});
+
 test("Machine duplicated command", () => {
     const str = `
 INITIAL; ZZ; ID0; OUTPUT 3, NOP

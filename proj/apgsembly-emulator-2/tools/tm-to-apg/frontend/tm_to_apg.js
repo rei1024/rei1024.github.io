@@ -42,9 +42,14 @@ let comment = "";
 function integration(input) {
     const tm = TM.parse(input);
     if (tm instanceof Error) {
+        const inputTrim = input.trim();
+        if (inputTrim.includes("\n")) {
+            return tm;
+        }
+
         try {
-            const std = parseStdFormat(input.trim());
-            return `# Standard text format: ${input.trim()}\n` +
+            const std = parseStdFormat(inputTrim);
+            return `# Standard text format: ${inputTrim}\n` +
                 convertStd(std);
         } catch (error) {
             if (error instanceof SyntaxError) {

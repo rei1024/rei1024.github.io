@@ -4,9 +4,11 @@ const CLOCK_PREFIX = "CLOCK-2^";
 
 /**
  * @param {string} content `B0-5, U0-5, U8-9, ADD, SUB, MUL, OUTPUT`
- * @param {string[]} components mutable output
+ * @returns {string[]} `["B0", "B1", "B2", ..., "OUTPUT"]`
  */
-export function parseComponentsHeader(content, components) {
+export function parseComponentsHeader(content) {
+    /** @type {string[]} */
+    const components = [];
     const strArray = content.split(",").map((x) => x.trim());
     for (const str of strArray) {
         if (str === "...") {
@@ -21,15 +23,7 @@ export function parseComponentsHeader(content, components) {
         ) {
             components.push(str);
         } else if (str.startsWith(CLOCK_PREFIX)) {
-            const clockPeriod = Number(str.slice(CLOCK_PREFIX.length));
-            if (
-                Number.isNaN(clockPeriod) || clockPeriod < 18 ||
-                clockPeriod > 24
-            ) {
-                throw new Error(
-                    `#COMPONENTS Clock period 2^${clockPeriod} is not supported.`,
-                );
-            }
+            const _clockPeriod = Number(str.slice(CLOCK_PREFIX.length));
         } else if (str.startsWith("B")) {
             const numList = parseRange(str.slice(1));
             for (const x of numList.map((x) => `B${x}`)) {
@@ -42,6 +36,8 @@ export function parseComponentsHeader(content, components) {
             }
         }
     }
+
+    return components;
 }
 
 /**

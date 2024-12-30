@@ -13,6 +13,7 @@ import { MulAction } from "./actions/MulAction.js";
 import { SubAction } from "./actions/SubAction.js";
 import { B2DAction } from "./actions/B2DAction.js";
 import { OutputAction } from "./actions/OutputAction.js";
+import { parseComponentsHeader } from "./parser/parseComponentsHeader.js";
 
 /**
  * APGsembly program
@@ -167,4 +168,96 @@ export const analyzeProgram = (program) => {
         hasB2D,
         hasOutput,
     };
+};
+
+/**
+ * @param {ComponentsHeader[]} componentsHeaders
+ * @param {AnalyzeProgramResult} analyzeResult
+ */
+export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
+    /** @type {string[]} */
+    const errors = [];
+    const components = new Set(
+        componentsHeaders.flatMap((c) => parseComponentsHeader(c.content)),
+    );
+
+    if (analyzeResult.hasAdd) {
+        if (!components.has("ADD")) {
+            errors.push(
+                "Program uses ADD component but the #COMPONENTS header does not include it.",
+            );
+        }
+    }
+
+    if (analyzeResult.hasSub) {
+        if (!components.has("SUB")) {
+            errors.push(
+                "Program uses SUB component but the #COMPONENTS header does not include it.",
+            );
+        }
+    }
+
+    if (analyzeResult.hasMul) {
+        if (!components.has("MUL")) {
+            errors.push(
+                "Program uses MUL component but the #COMPONENTS header does not include it.",
+            );
+        }
+    }
+
+    if (analyzeResult.hasB2D) {
+        if (!components.has("B2D")) {
+            errors.push(
+                "Program uses B2D component but the #COMPONENTS header does not include it.",
+            );
+        }
+    }
+
+    if (analyzeResult.hasOutput) {
+        if (!components.has("OUTPUT")) {
+            errors.push(
+                "Program uses OUTPUT component but the #COMPONENTS header does not include it.",
+            );
+        }
+    }
+
+    /** @type {number[]} */
+    const neededUnary = [];
+    for (const u of analyzeResult.unary) {
+        if (!components.has("U" + u)) {
+            neededUnary.push(u);
+        }
+    }
+
+    if (neededUnary.length > 0) {
+        errors.push(
+            `Program uses ${
+                neededUnary.map((u) => "U" + u).join(", ")
+            } component${
+                neededUnary.length === 1 ? "" : "s"
+            } but the #COMPONENTS header does not include it.`,
+        );
+    }
+
+    /** @type {number[]} */
+    const neededBinary = [];
+    for (const b of analyzeResult.binary) {
+        if (!components.has("B" + b)) {
+            neededBinary.push(b);
+        }
+    }
+
+    if (neededBinary.length > 0) {
+        errors.push(
+            `Program uses ${
+                neededBinary.map((u) => "B" + u).join(", ")
+            } component${
+                neededBinary.length === 1 ? "" : "s"
+            } but the #COMPONENTS header does not include it.`,
+        );
+    }
+
+    if (errors.length !== 0) {
+        throw new Error(errors.join("\n"));
+    }
 };

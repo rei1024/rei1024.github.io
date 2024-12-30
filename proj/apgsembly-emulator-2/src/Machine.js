@@ -6,7 +6,11 @@ import {
     commandsToLookupTable,
     CompiledCommandWithNextState,
 } from "./compile.js";
-import { analyzeProgram, Program } from "./Program.js";
+import {
+    analyzeProgram,
+    Program,
+    validateComponentsHeader,
+} from "./Program.js";
 import {
     Command,
     commandWithLineNumber,
@@ -123,6 +127,11 @@ export class Machine {
         const regHeaders = program.registersHeader;
         for (const regHeader of regHeaders) {
             this.#setByRegistersHeader(regHeader);
+        }
+
+        // 存在する場合のみ検証
+        if (program.componentsHeader.length > 0) {
+            validateComponentsHeader(program.componentsHeader, analyzeResult);
         }
     }
 

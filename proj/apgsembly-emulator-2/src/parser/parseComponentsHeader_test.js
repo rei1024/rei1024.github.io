@@ -7,10 +7,7 @@ import { parseComponentsHeader } from "./parseComponentsHeader.js";
  * @param {string} str
  */
 function parse(str) {
-    /** @type {string[]} */
-    const components = [];
-    parseComponentsHeader(str, components);
-    return { components };
+    return { components: parseComponentsHeader(str) };
 }
 
 test("parseComponentsHeader", () => {

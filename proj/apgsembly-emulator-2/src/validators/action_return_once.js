@@ -20,9 +20,7 @@ export const validateActionReturnOnceCommand = (command) => {
     if (valueReturnActions.length === 1) {
         return undefined;
     } else if (valueReturnActions.length === 0) {
-        return `Does not return a value in ${
-            commandWithLineNumber(command)
-        }`;
+        return `Does not return a value in ${commandWithLineNumber(command)}`;
     } else {
         return `Does not contain exactly one action that returns a value in "${command.pretty()}": Actions that produce value are ${
             valueReturnActions.map((x) => `"${x.pretty()}"`).join(", ")

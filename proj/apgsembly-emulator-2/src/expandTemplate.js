@@ -88,7 +88,9 @@ export function expandTemplate(programLines, libraries) {
         } else if (line instanceof Insert) {
             const template = templates.get(line.templateName);
             if (template == null) {
-                throw new Error(`Undefined template: "${line.templateName}"`);
+                throw new Error(
+                    `Undefined template: "${line.templateName}" at line "${line.pretty()}"`,
+                );
             }
             const replacedSource = template.lines.map((templateLine) =>
                 replaceTemplate(templateLine, template, line.replacements)
