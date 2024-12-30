@@ -14,6 +14,7 @@ import { SubAction } from "./actions/SubAction.js";
 import { B2DAction } from "./actions/B2DAction.js";
 import { OutputAction } from "./actions/OutputAction.js";
 import { parseComponentsHeader } from "./parser/parseComponentsHeader.js";
+import { internalError } from "./internalError.js";
 
 /**
  * APGsembly program
@@ -260,4 +261,70 @@ export const validateComponentsHeader = (componentsHeaders, analyzeResult) => {
     if (errors.length !== 0) {
         throw new Error(errors.join("\n"));
     }
+};
+
+/**
+ * @param {number[]} arr sorted
+ * @returns {string[]}
+ */
+function compactRanges(arr) {
+    if (arr.length === 0) {
+        return [];
+    }
+    const result = [];
+    let start = arr[0];
+    let end = arr[0] ?? internalError();
+    const len = arr.length;
+
+    for (let i = 1; i < len; i++) {
+        const item = arr[i] ?? internalError();
+        if (item === end + 1) {
+            end = item;
+        } else {
+            result.push(start === end ? `${start}` : `${start}-${end}`);
+            start = item;
+            end = item;
+        }
+    }
+
+    result.push(start === end ? `${start}` : `${start}-${end}`);
+    return result;
+}
+
+/**
+ * Generate #COMPONENTS header content
+ * @param {AnalyzeProgramResult} analyzeResult
+ * @returns {string}
+ */
+export const generateComponentsHeader = (analyzeResult) => {
+    /** @type {string[]} */
+    let components = [];
+
+    if (analyzeResult.hasB2D) {
+        components.push("B2D");
+    }
+
+    const binary = analyzeResult.binary.slice().sort((a, b) => a - b);
+    components = components.concat(compactRanges(binary).map((x) => "B" + x));
+
+    const unary = analyzeResult.unary.slice().sort((a, b) => a - b);
+    components = components.concat(compactRanges(unary).map((x) => "U" + x));
+
+    if (analyzeResult.hasAdd) {
+        components.push("ADD");
+    }
+
+    if (analyzeResult.hasSub) {
+        components.push("SUB");
+    }
+
+    if (analyzeResult.hasMul) {
+        components.push("MUL");
+    }
+
+    if (analyzeResult.hasOutput) {
+        components.push("OUTPUT");
+    }
+
+    return components.join(", ");
 };

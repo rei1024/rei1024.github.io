@@ -33,7 +33,11 @@ import {} from "./ActionExecutor.js";
 import {} from "./Command.js";
 import {} from "./compile.js";
 import { Machine } from "./Machine.js";
-import {} from "./Program.js";
+import {
+    analyzeProgram,
+    generateComponentsHeader,
+    Program,
+} from "./Program.js";
 import { format, ProgramLines } from "./ProgramLines.js";
 import {} from "./validate.js";
 
@@ -71,4 +75,16 @@ export function formatAPGsembly(src) {
         throw new Error(lines);
     }
     return format(lines);
+}
+
+/**
+ * @param {string} src
+ * @returns {string}
+ */
+export function generateComponentsHeaderForSource(src) {
+    const program = Program.parse(src);
+    if (typeof program === "string") {
+        throw new Error(program);
+    }
+    return generateComponentsHeader(analyzeProgram(program));
 }
