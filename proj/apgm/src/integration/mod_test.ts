@@ -27,6 +27,7 @@ test("integration 0", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS OUTPUT",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; OUTPUT 1, NOP",
@@ -41,6 +42,7 @@ test("integration optimize", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS U1-2",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; INC U1, INC U2, NOP",
@@ -60,6 +62,7 @@ test("integration optimize seq", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS U1-2",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; INC U1, INC U2, NOP",
@@ -107,6 +110,7 @@ test("integration optimize", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS U1-2",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; INC U1, INC U2, NOP",
@@ -123,6 +127,7 @@ test("integration optimize loop", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS U1-2",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_1; INC U1, INC U2, NOP",
@@ -139,6 +144,7 @@ test("integration 1 macro", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS OUTPUT",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; OUTPUT 1, NOP",
@@ -158,6 +164,7 @@ test("integration 2 macro", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS OUTPUT",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; OUTPUT 1, NOP",
@@ -175,6 +182,7 @@ test("integration actions", () => {
     const res = integration(src);
 
     assertEquals(res, [
+        "#COMPONENTS B2-3, U0-1",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_2; INC U0, TDEC U1, INC B2",
@@ -193,6 +201,7 @@ test("integration if", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS U0, OUTPUT",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_2; TDEC U0",
@@ -213,6 +222,7 @@ test("integration if multi", () => {
       `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS OUTPUT",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_2; NOP",
@@ -307,6 +317,7 @@ test("integration repeat", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS OUTPUT",
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_2; OUTPUT 1, NOP",

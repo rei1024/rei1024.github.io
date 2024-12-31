@@ -21,4 +21,10 @@ export class Macro {
             this.args.map((x) => x.pretty()).join(", ")
         }) ${this.body.pretty()}`;
     }
+
+    prettyHead(): string {
+        return `macro ${this.name}(${
+            this.args.map((x) => x.pretty()).join(", ")
+        })`;
+    }
 }

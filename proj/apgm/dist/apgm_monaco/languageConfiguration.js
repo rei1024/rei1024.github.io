@@ -1,6 +1,6 @@
 // @ts-check
 
-// https://microsoft.github.io/monaco-editor/api/modules/monaco.languages.html#setLanguageConfiguration
+// https://microsoft.github.io/monaco-editor/docs.html#functions/languages.setLanguageConfiguration.html
 
 export const languageConfiguration = {
     folding: {

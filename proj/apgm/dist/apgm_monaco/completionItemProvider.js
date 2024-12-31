@@ -2,7 +2,7 @@
 
 /// <reference types="./monaco" />
 
-// https://microsoft.github.io/monaco-editor/api/modules/monaco.languages.html#registerCompletionItemProvider
+// https://microsoft.github.io/monaco-editor/docs.html#functions/languages.registerCompletionItemProvider.html
 
 import {
     completionParser,
@@ -144,14 +144,13 @@ function generateSuggestion(decls) {
 
 export const completionItemProvider = {
     /**
-     * @param {any} model
+     * @param {{ getValue(): string }} model
      * @param {unknown} _position
      * @param {unknown} _context
      * @param {unknown} _token
      * @returns
      */
     provideCompletionItems: (model, _position, _context, _token) => {
-        /** @type {string} */
         const str = model.getValue();
 
         /**

@@ -82,67 +82,127 @@ function transpileStringArgFunc(
     return expr(arg.value);
 }
 
-export const emptyArgFuncs: Map<string, APGLExpr> = new Map([
-    // NOP
-    ["nop", A.nop()],
+// desription from  "Conway's Game of Life: Mathematics and Construction" (2022)
 
-    // B2D
-    ["inc_b2dx", A.incB2DX()],
-    ["inc_b2dy", A.incB2DY()],
-    ["tdec_b2dx", A.tdecB2DX()],
-    ["tdec_b2dy", A.tdecB2DY()],
-    ["read_b2d", A.readB2D()],
-    ["set_b2d", A.setB2D()],
+export const emptyArgFuncs: Map<string, { expr: APGLExpr; desc: string }> =
+    new Map([
+        // NOP
+        ["nop", { expr: A.nop(), desc: "returns Z and does nothing else" }],
 
-    // ADD
-    ["add_a1", A.addA1()],
-    ["add_b0", A.addB0()],
-    ["add_b1", A.addB1()],
+        // B2D
+        ["inc_b2dx", {
+            expr: A.incB2DX(),
+            desc: "increases the X position of the read head",
+        }],
+        ["inc_b2dy", {
+            expr: A.incB2DY(),
+            desc: "increases the Y position of the read head",
+        }],
+        ["tdec_b2dx", {
+            expr: A.tdecB2DX(),
+            desc:
+                "returns Z if X read head is at least significant bit and NZ otherwise, and then decreases X position by 1 if NZ",
+        }],
+        ["tdec_b2dy", {
+            expr: A.tdecB2DY(),
+            desc:
+                "returns Z if Y read head is at least significant bit and NZ otherwise, and then decreases Y position by 1 if NZ",
+        }],
+        ["read_b2d", {
+            expr: A.readB2D(),
+            desc:
+                "returns the bit (Z = 0 or NZ = 1) at the read head, and then sets it equal to 0",
+        }],
+        ["set_b2d", {
+            expr: A.setB2D(),
+            desc:
+                "set the bit at the read head to 1, breaks if that bit already equals 1",
+        }],
 
-    // SUB
-    ["sub_a1", A.subA1()],
-    ["sub_b0", A.subB0()],
-    ["sub_b1", A.subB1()],
+        // ADD
+        ["add_a1", { expr: A.addA1(), desc: "binary adder" }],
+        ["add_b0", { expr: A.addB0(), desc: "binary adder" }],
+        ["add_b1", { expr: A.addB1(), desc: "binary adder" }],
 
-    // MUL
-    ["mul_0", A.mul0()],
-    ["mul_1", A.mul1()],
+        // SUB
+        ["sub_a1", { expr: A.subA1(), desc: "binary subtractor" }],
+        ["sub_b0", { expr: A.subB0(), desc: "binary subtractor" }],
+        ["sub_b1", { expr: A.subB1(), desc: "binary subtractor" }],
 
-    // HALT_OUT
-    ["halt_out", A.haltOUT()],
-]);
+        // MUL
+        ["mul_0", { expr: A.mul0(), desc: "binary multiplier" }],
+        ["mul_1", { expr: A.mul1(), desc: "binary multiplier" }],
 
-export const numArgFuncs: Map<string, (_: number) => APGLExpr> = new Map([
+        // HALT_OUT
+        ["halt_out", {
+            expr: A.haltOUT(),
+            desc: "halts the entire computation and emits a glider",
+        }],
+    ]);
+
+export const numArgFuncs: Map<
+    string,
+    { expr: (_: number) => APGLExpr; desc: string }
+> = new Map([
     // U
-    ["inc_u", A.incU],
-    ["tdec_u", A.tdecU],
+    ["inc_u", {
+        expr: A.incU,
+        desc: "increases the value of the register by 1",
+    }],
+    ["tdec_u", {
+        expr: A.tdecU,
+        desc:
+            "returns Z if Un = 0 and NZ otherwise, and then decreases the value of the register by 1 if NZ",
+    }],
 
     // B
-    ["inc_b", A.incB],
-    ["tdec_b", A.tdecB],
-    ["read_b", A.readB],
-    ["set_b", A.setB],
+    ["inc_b", {
+        expr: A.incB,
+        desc: "increases the position of the read head",
+    }],
+    ["tdec_b", {
+        expr: A.tdecB,
+        desc:
+            "returns Z if read head is at least significant bit and NZ otherwise, and then decreases position by 1 if NZ",
+    }],
+    ["read_b", {
+        expr: A.readB,
+        desc:
+            "returns the bit (Z = 0 or NZ = 1) at the read head, and then sets it equal to 0",
+    }],
+    ["set_b", {
+        expr: A.setB,
+        desc:
+            "set the bit at the read head to 1, breaks if that bit already equals 1",
+    }],
 ]);
 
-export const strArgFuncs: Map<string, (_: string) => APGLExpr> = new Map([
+export const strArgFuncs: Map<
+    string,
+    { expr: (_: string) => APGLExpr; desc: string }
+> = new Map([
     // OUTPUT
-    ["output", A.output],
+    ["output", {
+        expr: A.output,
+        desc:
+            "prints x in a font made up of blocks, x must be one of 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, or.",
+    }],
 ]);
 
 function transpileFuncAPGMExpr(funcExpr: FuncAPGMExpr): APGLExpr {
     const emptyOrUndefined = emptyArgFuncs.get(funcExpr.name);
     if (emptyOrUndefined !== undefined) {
-        return transpileEmptyArgFunc(funcExpr, emptyOrUndefined);
+        return transpileEmptyArgFunc(funcExpr, emptyOrUndefined.expr);
     }
 
     const numArgOrUndefined = numArgFuncs.get(funcExpr.name);
     if (numArgOrUndefined !== undefined) {
-        return transpileNumArgFunc(funcExpr, numArgOrUndefined);
+        return transpileNumArgFunc(funcExpr, numArgOrUndefined.expr);
     }
 
     const strArgOrUndefined = strArgFuncs.get(funcExpr.name);
     if (strArgOrUndefined !== undefined) {
-        return transpileStringArgFunc(funcExpr, strArgOrUndefined);
+        return transpileStringArgFunc(funcExpr, strArgOrUndefined.expr);
     }
 
     switch (funcExpr.name) {

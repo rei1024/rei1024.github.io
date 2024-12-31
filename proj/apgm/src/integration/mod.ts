@@ -8,7 +8,7 @@ import {
 
 // for editor
 // deno-fmt-ignore
-export { emptyArgFuncs, numArgFuncs, strArgFuncs }
+export { emptyArgFuncs, numArgFuncs, strArgFuncs, parseMain }
 
 export { completionParser } from "../apgm/parser/completion_parser.ts";
 
@@ -100,7 +100,9 @@ export function integration(
                 const componentsHeader = generateComponentsHeaderForSource(
                     apgs.join("\n"),
                 );
-                all.unshift("#COMPONENTS " + componentsHeader);
+                if (componentsHeader.length !== 0) {
+                    all.unshift("#COMPONENTS " + componentsHeader);
+                }
             } catch (error) {
                 console.error(error);
             }

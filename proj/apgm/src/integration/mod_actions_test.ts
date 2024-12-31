@@ -9,6 +9,7 @@ test("integration 0 actions", () => {
     `;
     const res = integration(src);
     assertEquals(res, [
+        "#COMPONENTS MUL",
         "# State    Input    Next state    Actions",
         "# ---------------------------------------",
         "INITIAL; ZZ; STATE_1; NOP",
