@@ -100,8 +100,13 @@
         <script>
             const DARK_MODE_KEY = "dark_mode";
             try {
-                if (localStorage.getItem(DARK_MODE_KEY) === "on") {
-                    document.body.setAttribute("apge_dark", "on");
+                if (
+                    localStorage.getItem(DARK_MODE_KEY) === "on"
+                ) {
+                    document.body.setAttribute(
+                        "apge_dark",
+                        "on",
+                    );
                 }
             } catch (_) {}
         </script>

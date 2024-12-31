@@ -22,6 +22,7 @@ import { optimizeSeq } from "../apgl/seq_optimizer/mod.ts";
 import { APGLExpr } from "../apgl/ast/core.ts";
 import { ErrorWithSpan } from "../apgm/ast/core.ts";
 export { formatAPGsembly } from "../deps.ts";
+import { generateComponentsHeaderForSource } from "../deps.ts";
 
 function logged<T extends unknown[], S>(
     logMessage: string | undefined = undefined,
@@ -93,7 +94,18 @@ export function integration(
             "# ---------------------------------------",
         ];
         const head = apgm.headers.map((x) => x.toString());
-        return head.concat(comment, apgs);
+        const all = head.concat(comment, apgs);
+        if (apgm.headers.every((x) => x.name !== "COMPONENTS")) {
+            try {
+                const componentsHeader = generateComponentsHeaderForSource(
+                    apgs.join("\n"),
+                );
+                all.unshift("#COMPONENTS " + componentsHeader);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        return all;
     } catch (error) {
         if (error instanceof ErrorWithSpan && error.apgmSpan) {
             throw new ErrorWithSpan(

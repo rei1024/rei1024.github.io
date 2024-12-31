@@ -1,7 +1,10 @@
 /*
     # π Calculator
 
-    Decompiled from the book https://conwaylife.com/book/
+    Decompiled from the book
+    "Conway's Game of Life: Mathematics and Construction" (2022) Nathaniel Johnston and Dave Greene
+    <https://conwaylife.com/book/>
+    Appendix B.8 π Calculator APGsembly Code
 */
 
 /**

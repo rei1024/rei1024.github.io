@@ -1,5 +1,8 @@
 /*
     # APGsembly Header
+
+    The #REGISTERS header can be written in the code.
+    The #COMPONENTS header is generated automatically.
 */
 
 #REGISTERS { "U0": 5 }
