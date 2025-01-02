@@ -111,7 +111,7 @@ export class Transpiler {
             currentState: endState,
             prevOutput: "*",
             nextState: endState,
-            actions: ["HALT_OUT"],
+            actions: ["HALT"],
         });
 
         return [initial, ...body, end].map((line) =>

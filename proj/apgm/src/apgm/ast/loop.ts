@@ -14,6 +14,7 @@ export class LoopAPGMExpr extends APGMExpr {
     pretty(): string {
         return `loop ${this.body.pretty()}`;
     }
+
     override getSpan(): APGMSourceSpan | undefined {
         return undefined;
     }

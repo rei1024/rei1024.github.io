@@ -31,7 +31,7 @@ test("integration 0", () => {
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; OUTPUT 1, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -46,7 +46,7 @@ test("integration optimize", () => {
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; INC U1, INC U2, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -66,7 +66,7 @@ test("integration optimize seq", () => {
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; INC U1, INC U2, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -114,7 +114,7 @@ test("integration optimize", () => {
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; INC U1, INC U2, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -131,7 +131,7 @@ test("integration optimize loop", () => {
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_1; INC U1, INC U2, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -148,7 +148,7 @@ test("integration 1 macro", () => {
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; OUTPUT 1, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -168,7 +168,7 @@ test("integration 2 macro", () => {
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; OUTPUT 1, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -187,7 +187,7 @@ test("integration actions", () => {
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_2; INC U0, TDEC U1, INC B2",
         "STATE_2;  *; STATE_END; TDEC B3",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -207,7 +207,7 @@ test("integration if", () => {
         "STATE_1;  *; STATE_2; TDEC U0",
         "STATE_2;  Z; STATE_END; OUTPUT 0, NOP",
         "STATE_2; NZ; STATE_END; OUTPUT 1, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -230,7 +230,7 @@ test("integration if multi", () => {
         "STATE_2; NZ; STATE_4; OUTPUT 3, NOP",
         "STATE_3;  *; STATE_END; OUTPUT 2, NOP",
         "STATE_4;  *; STATE_END; OUTPUT 4, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -249,7 +249,7 @@ test("integration loop if", () => {
         "STATE_2;  Z; STATE_3; NOP",
         "STATE_2; NZ; STATE_END; NOP",
         "STATE_3;  *; STATE_3; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -278,7 +278,7 @@ test("integration break(2)", () => {
         ...comment,
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -322,7 +322,7 @@ test("integration repeat", () => {
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_2; OUTPUT 1, NOP",
         "STATE_2;  *; STATE_END; OUTPUT 1, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 

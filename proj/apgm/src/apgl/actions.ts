@@ -76,6 +76,10 @@ export class A {
         return A.single("HALT_OUT");
     }
 
+    static halt() {
+        return A.single("HALT");
+    }
+
     // MUL
     static mul0() {
         return A.single("MUL 0");

@@ -15,7 +15,7 @@ test("transpileAPGL NOP", () => {
     assertEquals(transpileAPGL(expr), [
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -38,7 +38,7 @@ test("transpileAPGL Seq empty", () => {
     const expected = [
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ];
     assertEquals(transpileAPGL(expr1), expected);
     assertEquals(transpileAPGL(expr2), expected);
@@ -58,7 +58,7 @@ test("transpileAPGL if", () => {
         "STATE_1;  *; STATE_2; TDEC U0",
         "STATE_2;  Z; STATE_END; INC U0, NOP",
         "STATE_2; NZ; STATE_END; INC U1, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -84,7 +84,7 @@ test("transpileAPGL if multi", () => {
         "STATE_2; NZ; STATE_4; INC U2, NOP",
         "STATE_3;  *; STATE_END; TDEC U1",
         "STATE_4;  *; STATE_END; TDEC U2",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -100,7 +100,7 @@ test("transpileAPGL if empty", () => {
     assertEquals(transpileAPGL(expr), [
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; TDEC U0",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -116,7 +116,7 @@ test("transpileAPGL if all empty", () => {
     assertEquals(transpileAPGL(expr), [
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -140,7 +140,7 @@ test("transpileAPGL if nest", () => {
         "STATE_2; NZ; STATE_3; TDEC U1",
         "STATE_3;  Z; STATE_END; INC U1, NOP",
         "STATE_3; NZ; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -164,7 +164,7 @@ test("transpileAPGL if nest 2", () => {
         "STATE_2; NZ; STATE_3; TDEC U1",
         "STATE_3;  Z; STATE_END; INC U1, NOP",
         "STATE_3; NZ; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -182,7 +182,7 @@ test("transpileAPGL if z", () => {
         "STATE_1;  *; STATE_2; TDEC U0",
         "STATE_2;  Z; STATE_END; INC U0, NOP",
         "STATE_2; NZ; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -200,7 +200,7 @@ test("transpileAPGL if nz", () => {
         "STATE_1;  *; STATE_2; TDEC U0",
         "STATE_2;  Z; STATE_END; NOP",
         "STATE_2; NZ; STATE_END; INC U0, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -212,7 +212,7 @@ test("transpileAPGL empty loop", () => {
     assertEquals(transpileAPGL(expr), [
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_1; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -224,7 +224,7 @@ test("transpileAPGL loop", () => {
     assertEquals(transpileAPGL(expr), [
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_1; INC U0, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -240,7 +240,7 @@ test("transpileAPGL loop break", () => {
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_2; INC U0, NOP",
         "STATE_2;  *; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -258,7 +258,7 @@ test("transpileAPGL loop 2 break 1", () => {
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_2; INC U0, NOP",
         "STATE_2;  *; STATE_1; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -276,7 +276,7 @@ test("transpileAPGL loop 2 break 2", () => {
         "INITIAL; ZZ; STATE_1; NOP",
         "STATE_1;  *; STATE_2; INC U0, NOP",
         "STATE_2;  *; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -320,7 +320,7 @@ test("transpileAPGL while nz", () => {
         "STATE_1;  *; STATE_2; TDEC U0",
         "STATE_2;  Z; STATE_END; NOP",
         "STATE_2; NZ; STATE_2; TDEC U0",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -336,7 +336,7 @@ test("transpileAPGL while z", () => {
         "STATE_1;  *; STATE_2; TDEC U0",
         "STATE_2;  Z; STATE_2; TDEC U0",
         "STATE_2; NZ; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -359,7 +359,7 @@ test("transpileAPGL while z 2", () => {
         "STATE_2; NZ; STATE_END; NOP",
         "STATE_3_WHILE_BODY;  *; STATE_4; TDEC U1",
         "STATE_4;  *; STATE_1; TDEC U2",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -383,7 +383,7 @@ test("transpileAPGL if while", () => {
         "STATE_4;  Z; STATE_5_WHILE_BODY; NOP",
         "STATE_4; NZ; STATE_END; NOP",
         "STATE_5_WHILE_BODY;  *; STATE_3; TDEC U2",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -406,7 +406,7 @@ test("transpileAPGL if while empty", () => {
         "STATE_3;  *; STATE_4; TDEC U0",
         "STATE_4;  Z; STATE_4; TDEC U0",
         "STATE_4; NZ; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 
     const expr2 = new IfAPGLExpr(
@@ -437,7 +437,7 @@ test("transpileAPGL while", () => {
         "STATE_2;  Z; STATE_3_WHILE_BODY; NOP",
         "STATE_2; NZ; STATE_END; NOP",
         "STATE_3_WHILE_BODY;  *; STATE_1; TDEC U2",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -458,7 +458,7 @@ test("transpileAPGL while multiple return in cond", () => {
         "STATE_2;  Z; STATE_4_WHILE_BODY; NOP",
         "STATE_2; NZ; STATE_END; NOP",
         "STATE_4_WHILE_BODY;  *; STATE_1; TDEC U2",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -476,7 +476,7 @@ test("transpileAPGL while body", () => {
         "STATE_1;  *; STATE_2; TDEC U0",
         "STATE_2;  Z; STATE_END; NOP",
         "STATE_2; NZ; STATE_2; OUTPUT 1, TDEC U0",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -495,7 +495,7 @@ test("transpileAPGL while body no merge", () => {
         "STATE_2;  Z; STATE_END; NOP",
         "STATE_2; NZ; STATE_3_WHILE_BODY; NOP",
         "STATE_3_WHILE_BODY;  *; STATE_1; INC U0, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -516,7 +516,7 @@ test("transpileAPGL while body 2", () => {
         "STATE_2; NZ; STATE_3_WHILE_BODY; NOP",
         "STATE_3_WHILE_BODY;  *; STATE_4; OUTPUT 1, NOP",
         "STATE_4;  *; STATE_1; OUTPUT 2, NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -534,7 +534,7 @@ test("transpileAPGL while empty", () => {
         "STATE_1;  *; STATE_2; TDEC U0",
         "STATE_2;  Z; STATE_2; TDEC U0",
         "STATE_2; NZ; STATE_END; NOP",
-        "STATE_END;  *; STATE_END; HALT_OUT",
+        "STATE_END;  *; STATE_END; HALT",
     ]);
 });
 
@@ -543,6 +543,6 @@ test("transpileAPGL options prefix", () => {
     assertEquals(transpileAPGL(expr, { prefix: "X_" }), [
         "INITIAL; ZZ; X_1; NOP",
         "X_1;  *; X_END; NOP",
-        "X_END;  *; X_END; HALT_OUT",
+        "X_END;  *; X_END; HALT",
     ]);
 });

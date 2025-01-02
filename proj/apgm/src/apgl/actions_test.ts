@@ -25,6 +25,7 @@ test("actions A", () => {
     actionAssert(A.setB(1), ["SET B1", "NOP"]);
 
     actionAssert(A.haltOUT(), ["HALT_OUT"]);
+    actionAssert(A.halt(), ["HALT"]);
 
     actionAssert(A.mul0(), ["MUL 0"]);
     actionAssert(A.mul1(), ["MUL 1"]);

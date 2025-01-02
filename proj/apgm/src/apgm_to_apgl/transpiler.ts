@@ -138,6 +138,12 @@ export const emptyArgFuncs: Map<string, { expr: APGLExpr; desc: string }> =
             expr: A.haltOUT(),
             desc: "halts the entire computation and emits a glider",
         }],
+
+        // HALT
+        ["halt", {
+            expr: A.halt(),
+            desc: "halts the entire computation",
+        }],
     ]);
 
 export const numArgFuncs: Map<
