@@ -1,9 +1,0 @@
-{
-    "files.trimTrailingWhitespace": true,
-    "deno.enablePaths": ["build.ts"],
-    "files.readonlyInclude": {
-        "/node_modules/**/*": true,
-        "/playwright-report/**/*": true,
-        "/test-results/**/*": true
-    }
-}

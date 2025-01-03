@@ -1,1 +1,0 @@
-deno task lint && deno task t
